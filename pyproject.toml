@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "FoSpy"
+version = "0.0.1"
+authors = [
+  { name="Travis Errthum" },
+]
+description = "A package for opening, editing, and saving Files of Synthesis (*.fos)"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+    "pandas"
+]
+
+[project.urls]
+Homepage = "https://github.com/errthumt/FoSpy"
+Issues = "https://github.com/errthumt/FoSpy/issues"
