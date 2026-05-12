@@ -1,0 +1,104 @@
+[Metadata]
+name: TE001
+date: 03-11-2026
+experimenters: [
+    name: Travis Errthum
+    affiliation: Kovnir Group - Iowa State University
+    orcid: 0009-0006-1937-5672
+]
+
+nominal_mass: 250.0
+nominal_mass_units: mg
+
+internal_project_ID: Ba2-TM5-Pn6
+other_comments: Clathrate
+
+[[Materials]]
+    :name
+    :type
+    :supplier
+    :cas
+    :form
+    :purity
+    :env
+    :ratio
+    :treatments
+
+        Barium
+        reagent
+        Unk
+        1234-56-7
+        lump
+        0.999
+        Ar (g)
+        2.0
+        [
+            type: cutting
+            repeats: 1
+            observations: smaller pieces improve homogenization
+        ]
+
+        reagent
+        Zn
+        Unk
+        1234-56-7
+        powder
+        0.995
+        Ar (g)
+        5.0
+        []
+
+        reagent
+        As
+        Unk
+        1234-56-7
+        lump
+        0.9995
+        Ar (g)
+        6.0
+        [
+            type: Grinding
+            repeats: 1
+            observations: ground into powder for weighing and homogenization
+        ]
+
+[[treatments]]
+    :type
+    :repeats
+    :observations
+
+        weighing
+        1
+        Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
+
+        Sealed
+        1
+        Evacuated ampoule and sealed with H2/O2 torch
+
+        annealing
+        1
+        Ba lumps reacted but not homogeneous. Small Ba reaction with silica
+        program: [
+            type: ramp
+            temp: 600 C
+            time: 10 hr
+
+            type: dwell
+            time: 120hr
+        ]
+
+        grinding
+        3
+        dark gray powder now
+
+        annealing
+        1
+        dark gray powder when opening
+        program: [
+            type: ramp
+            temp: 600 C
+            time: 10 hr
+
+            type: dwell
+            time: 120hr
+        ]
