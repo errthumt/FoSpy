@@ -1,7 +1,10 @@
 
 
-def parse_FOS(filepath):
-    outDict = {"sourceFile":filepath}
+def read_FOS(filepath):
+    blockDict = {"sourceFile":filepath}
 
 
-    return outDict
+    return blockDict
+
+def write_FOS(blockDict, filepath):
+    pass
