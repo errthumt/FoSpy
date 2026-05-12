@@ -1,8 +1,8 @@
 from FoSpy.parsing import read_FOS, write_FOS
 
 class Synthesis:
-    def __init__(self, blockDict):
-        self.blocks = blockDict.copy()
+    def __init__(self, blocksDict):
+        self.blocks = blocksDict.copy()
         self.meta = self.blocks.pop("meta") # needs validation routine
         self._sourceFile = self.blocks.pop("sourceFile")
         self._comments = self.blocks.pop("comments")
@@ -12,8 +12,8 @@ class Synthesis:
 
     @classmethod
     def fromFile(cls, filepath):
-        blockDict = read_FOS(filepath)
-        return cls(blockDict)
+        blocksDict = read_FOS(filepath)
+        return cls(blocksDict)
     
 
     def insert_material(self, mat, idx=-1):
@@ -40,9 +40,9 @@ class Synthesis:
                 filepath = self._sourceFile
         
         self._sourceFile = filepath
-        blockDict = self.serialize()
+        blocksDict = self.serialize()
 
-        write_FOS(blockDict, filepath)
+        write_FOS(blocksDict, filepath)
 
 
         

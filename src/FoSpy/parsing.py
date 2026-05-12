@@ -1,10 +1,10 @@
 
 
 def read_FOS(filepath):
-    blockDict = {"sourceFile":filepath}
+    blocksDict = {"sourceFile":filepath}
 
 
-    return blockDict
+    return blocksDict
 
-def write_FOS(blockDict, filepath):
+def write_FOS(blocksDict, filepath):
     pass
