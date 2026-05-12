@@ -47,7 +47,7 @@ A glorified dictionary
 
 <ins>Methods</ins>
 * `__init__(self, filepath)`
-* `add_material`
+* `insert_material, insert_treatment, etc.`
 * serializer
   * Converts class structure into simple python structure for printing (probably `dict`)
 * `save(self, filepath=self.sourceFile)`
@@ -98,14 +98,6 @@ Can be applied to materials or to main synthesis
 
 ### Experimental Data
 Internal `data` class contains x/y/z data, but other metadata should be contained here too, like type or instrument
-
-<ins>Desired functionality</ins>
-
-<ins>Attributes</ins> (variables)
-
-<ins>Methods</ins>
-
-### Annealing Profiles (treatment subclass)
 
 <ins>Desired functionality</ins>
 
