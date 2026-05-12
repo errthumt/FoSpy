@@ -1,11 +1,48 @@
-from FoSpy.parsing import parse_FOS
+from FoSpy.parsing import read_FOS, write_FOS
 
 class Synthesis:
     def __init__(self, blockDict):
-        self.sourceFile = blockDict.get("sourceFile")
+        self.blocks = blockDict.copy()
+        self.meta = self.blocks.pop("meta") # needs validation routine
+        self._sourceFile = self.blocks.pop("sourceFile")
+        self._comments = self.blocks.pop("comments")
 
-    
+        self.materials = self.blocks.pop("materials") # needs validation routine
+        self.treatments = self.blocks.pop("treatments") # needs validation routine
+
     @classmethod
     def fromFile(cls, filepath):
-        blockDict = parse_FOS(filepath)
+        blockDict = read_FOS(filepath)
         return cls(blockDict)
+    
+
+    def insert_material(self, mat, idx=-1):
+        # placeholder. modify for insertion at idx
+        self.materials.append(mat)
+
+    def insert_treatment(self, treat, idx=-1):
+        # placeholder. modify for insertion at idx
+        self.treatments.append(treat)
+
+    def serialize(self):
+        """
+            Placeholder.
+            Recurse through blocks and serialize when necessary
+            Return dictionary
+        """
+        return {}
+    
+    def save(self, filepath=None):
+        if filepath is None:
+            if self._sourceFile is None:
+                raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
+            else:
+                filepath = self._sourceFile
+        
+        self._sourceFile = filepath
+        blockDict = self.serialize()
+
+        write_FOS(blockDict, filepath)
+
+
+        
