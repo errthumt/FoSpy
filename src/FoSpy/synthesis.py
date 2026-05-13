@@ -1,19 +1,23 @@
-from FoSpy.parsing import read_FOS, write_FOS
+from .parsing import (
+    dict_from_file,
+    write_dict_to_file
+)
+from .parsing import syntax as st
+
 
 class Synthesis:
-    def __init__(self, blocksDict):
+    def __init__(self, blocksDict, _sourceFile=None):
         self.blocks = blocksDict.copy()
-        self.meta = self.blocks.pop("meta") # needs validation routine
-        self._sourceFile = self.blocks.pop("sourceFile")
-        self._comments = self.blocks.pop("comments")
+        self.meta = self.blocks.pop("metadata") # needs validation routine
+        self._comments = self.blocks.pop(st.comment_key)
 
-        self.materials = self.blocks.pop("materials") # needs validation routine
-        self.treatments = self.blocks.pop("treatments") # needs validation routine
+        self.materials = self.blocks.pop("Materials") # needs validation routine
+        self.treatments = self.blocks.pop("Treatments") # needs validation routine
 
     @classmethod
     def fromFile(cls, filepath):
-        blocksDict = read_FOS(filepath)
-        return cls(blocksDict)
+        blocksDict = dict_from_file(filepath)
+        return cls(blocksDict, _sourceFile = filepath)
     
 
     def insert_material(self, mat, idx=-1):
@@ -42,7 +46,7 @@ class Synthesis:
         self._sourceFile = filepath
         blocksDict = self.serialize()
 
-        write_FOS(blocksDict, filepath)
+        write_dict_to_file(blocksDict, filepath)
 
 
         
