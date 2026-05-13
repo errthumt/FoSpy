@@ -1,0 +1,117 @@
+name= TE001
+date= 03-11-2026
+experimenters= [
+name= Travis Errthum
+affiliation= Kovnir Group - Iowa State University
+orcid= 0009-0006-1937-5672
+]
+// This is a comment on the nominal_mass
+nominal_mass= 250.0
+nominal_mass_units= mg
+internal_project_ID= Ba2-TM5-Pn6
+other_comments= Clathrate
+
+//This is a comment on the Materials block
+//This comment is so important it gets two lines
+[[Materials]]
+=name
+=type
+//This is a comment on the supplier key in the Materials block
+=supplier
+=cas
+=form
+=purity
+=env
+=ratio
+=treatments
+
+Barium
+reagent
+//This is a comment on the supplier value in the Materials block
+Unk
+1234-56-7
+lump
+0.999
+Ar (g)
+2.0
+[
+type= cutting
+//This is a comment on the repeats value for the treatments of Barium
+repeats= 1
+observations= smaller pieces improve homogenization
+]
+
+reagent
+Zinc
+Unk
+1234-56-7
+powder
+0.995
+Ar (g)
+5.0
+[]
+
+reagent
+Arsenic
+Unk
+1234-56-7
+lump
+0.9995
+Ar (g)
+6.0
+//This is a comment on the treatments value for Arsenic
+[
+type= Grinding
+repeats= 1
+observations= ground into powder for weighing and homogenization
+]
+
+// This is a comment on the treatments block
+[[Treatments]]
+=type
+=repeats
+=observations
+
+weighing
+1
+Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
+
+Sealed
+1
+Evacuated ampoule and sealed with H2/O2 torch
+
+annealing
+1
+Ba lumps reacted but not homogeneous. Small Ba reaction with silica
+program= [[
+type= ramp
+//This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
+temp= 600 C
+time= 10 hr
+
+//Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
+//It actually links to the type of the next section of the program
+type= dwell
+time= 120hr
+]]
+
+grinding
+3
+dark gray powder now
+
+annealing
+1
+dark gray powder when opening
+program= [[
+=type
+//Nested looped key comment
+=time
+
+ramp
+10 hr
+temp= 600 C
+
+dwell
+120hr
+]]
+
