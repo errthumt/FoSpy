@@ -34,7 +34,7 @@ def dict_from_file(filepath):
                 else:
                     current_type = "single"
 
-                current_block = txt.strip("[]")
+                current_block = txt.strip("[]").lower()
                 comments[current_block] = endComments
                 endComments = []
                 continue

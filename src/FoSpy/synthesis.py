@@ -3,21 +3,18 @@ from .parsing import (
     write_dict_to_file
 )
 from .parsing import syntax as st
+from .blocks import SingleBlock
 
-
-class Synthesis:
-    def __init__(self, blocksDict, _sourceFile=None):
-        self.blocks = blocksDict.copy()
-        self.meta = self.blocks.pop("metadata") # needs validation routine
-        self._comments = self.blocks.pop(st.comment_key)
-
-        self.materials = self.blocks.pop("Materials") # needs validation routine
-        self.treatments = self.blocks.pop("Treatments") # needs validation routine
+class Synthesis(SingleBlock):
+    def __init__(self, blockDict, _sourceFile=None):
+        blockDict = blockDict.copy()
+        self._comments = blockDict.pop(st.meta_keys["comments"])
+        super().__init__(blockDict)
 
     @classmethod
     def fromFile(cls, filepath):
-        blocksDict = dict_from_file(filepath)
-        return cls(blocksDict, _sourceFile = filepath)
+        blockDict = dict_from_file(filepath)
+        return cls(blockDict, _sourceFile = filepath)
     
 
     def insert_material(self, mat, idx=-1):
@@ -44,9 +41,9 @@ class Synthesis:
                 filepath = self._sourceFile
         
         self._sourceFile = filepath
-        blocksDict = self.serialize()
+        blockDict = self.serialize()
 
-        write_dict_to_file(blocksDict, filepath)
+        write_dict_to_file(blockDict, filepath)
 
 
         

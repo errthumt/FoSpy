@@ -20,7 +20,7 @@ def readTest(report=False):
     if report:
         print_dict = file_dict.copy()
 
-        comments = print_dict.pop(st.comment_key)
+        comments = print_dict.pop(st.meta_keys["comments"])
 
         for blockname, blocks in print_dict.items():
             print(f'NEW BLOCK: {blockname}')
@@ -98,7 +98,7 @@ def retTest(old_dict, new_fp):
         pprint(deep_diff(old_dict, new_dict))
 
 def test1():
-    readResult = readTest()
+    readResult = readTest(True)
     writeResult = writeTest(readResult)
     retResult = retTest(*writeResult)
 
@@ -109,5 +109,7 @@ def syntaxSwap():
     st.key_delimiter = "="
     st.indent = ""
     writeResult = writeTest(readResult)
+
+test1()
 
 
