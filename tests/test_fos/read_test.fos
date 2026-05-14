@@ -5,13 +5,14 @@ experimenters: [
     affiliation: Kovnir Group - Iowa State University
     orcid: 0009-0006-1937-5672
 ]
+internal_project_ID: Ba2-TM5-Pn6
+internal_project_description: Unique Clathrate
 
+[Reaction]
 // This is a comment on the nominal_mass
 nominal_mass: 250.0
 nominal_mass_units: mg
 
-internal_project_ID: Ba2-TM5-Pn6
-other_comments: Clathrate
 
 //This is a comment on the Materials block
 //This comment is so important it gets two lines
@@ -74,15 +75,15 @@ other_comments: Clathrate
     :repeats
     :observations
 
-        weighing
+        weigh
         1
         Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
 
-        Sealed
+        seal
         1
         Evacuated ampoule and sealed with H2/O2 torch
 
-        annealing
+        anneal
         1
         Ba lumps reacted but not homogeneous. Small Ba reaction with silica
         program: [[
@@ -98,11 +99,11 @@ other_comments: Clathrate
             time: 120hr
         ]]
 
-        grinding
+        grind
         3
         dark gray powder now
 
-        annealing
+        anneal
         1
         dark gray powder when opening
         program: [[
