@@ -74,15 +74,15 @@ nominal_mass_units: mg
 :repeats
 :observations
 
-    weighing
+    weigh
     1
     Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
 
-    Sealed
+    seal
     1
     Evacuated ampoule and sealed with H2/O2 torch
 
-    annealing
+    anneal
     1
     Ba lumps reacted but not homogeneous. Small Ba reaction with silica
     program: [[
@@ -97,11 +97,11 @@ nominal_mass_units: mg
     time: 120hr
     ]]
 
-    grinding
+    grind
     3
     dark gray powder now
 
-    annealing
+    anneal
     1
     dark gray powder when opening
     program: [[
