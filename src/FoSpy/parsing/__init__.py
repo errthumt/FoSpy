@@ -59,6 +59,8 @@ def dict_from_file(filepath):
     return blocks
 
 def create_single_block_dict(lines, _list_type="explicit"):
+    """"""
+
     """ _debug.msg('Processing the following lines as a single block:')
     for line in lines:
         _debug.msg(line)
@@ -350,9 +352,9 @@ def write_dict_to_file(blocks, filepath):
                 for comment in comments:
                     f.write(f'{comment}\n')
                 if len(blocklist) > 1:
-                    f.write(f'[[{name}]]\n')
+                    f.write(f'[[{name.capitalize()}]]\n')
                 else:
-                    f.write(f'[{name}]\n')           
+                    f.write(f'[{name.capitalize()}]\n')           
             
             for line in block_list_to_lines(blocklist):
                 f.write(f'{line}\n')
