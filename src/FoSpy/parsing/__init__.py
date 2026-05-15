@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 
 from .._debug import Debug
 _debug = Debug()
@@ -35,7 +34,7 @@ def dict_from_file(filepath):
                     current_type = "single"
 
                 current_block = txt.strip("[]").lower()
-                comments[current_block] = endComments
+                comments[current_block] = [l.lstrip(f'{st.line_comment} ') for l in endComments]
                 endComments = []
                 continue
 
@@ -77,7 +76,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
             if nested > 0:
                 nested_lines.append(line)
             else:
-                comments.append(line)
+                comments.append(line.lstrip(f'{st.line_comment} '))
         elif nested==0:
             split = line.split(st.key_delimiter)
             key, val = split[0], st.key_delimiter.join(split[1:]).strip()
@@ -151,7 +150,7 @@ def create_list_block_dict(lines):
             # _debug.msg(f'processing list line: {line}')
 
             if getting_keys and line.startswith(st.line_comment):
-                comments.append(line)
+                comments.append(line.lstrip(f'{st.line_comment} '))
             elif nested>0 or line.startswith(st.line_comment):
                 current_lines.append(line)
             elif line.startswith(st.key_delimiter):
@@ -271,7 +270,7 @@ def block_list_to_lines(blocklist:list, indent=0):
 
         for key in loop_keys:
             for comment in key_comments[key]:
-                lines.append(f"{indent*st.indent}{comment}")
+                lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
             lines.append(f"{indent*st.indent}{st.key_delimiter}{key}")
         lines.append("")
 
@@ -294,7 +293,7 @@ def block_to_lines(block, indent=0, loop_keys=[]):
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{comment}")
+                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
             
             for line in expand_lists(key, val, indent):
                 lines.append(line)
@@ -304,14 +303,14 @@ def block_to_lines(block, indent=0, loop_keys=[]):
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{comment}")
+                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
             for line in expand_lists(key, val, indent, looped=True):
                 lines.append(line)
         for key,val in block.items():
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{comment}")
+                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
             for line in expand_lists(key, val, indent, looped=False):
                 lines.append(line)
     else:
@@ -350,7 +349,7 @@ def write_dict_to_file(blocks, filepath):
             if name != "metadata":
                 comments = block_comments[name]
                 for comment in comments:
-                    f.write(f'{comment}\n')
+                    f.write(f'{st.line_comment} {comment}\n')
                 if len(blocklist) > 1:
                     f.write(f'[[{name.capitalize()}]]\n')
                 else:

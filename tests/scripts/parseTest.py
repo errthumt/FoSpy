@@ -98,11 +98,11 @@ def retTest(old_dict, new_fp):
         pprint(deep_diff(old_dict, new_dict))
 
 def test1():
-    readResult = readTest(True)
+    readResult = readTest(False)
     writeResult = writeTest(readResult)
     retResult = retTest(*writeResult)
 
-    return retResult
+    #return retResult
 
 def syntaxSwap():
     readResult = readTest()
@@ -111,5 +111,7 @@ def syntaxSwap():
     writeResult = writeTest(readResult)
 
 test1()
+
+pass
 
 
