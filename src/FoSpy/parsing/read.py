@@ -1,4 +1,5 @@
 from .syntax import meta_keys as mk
+from .syntax import meta_defaults as md
 from .syntax import SYNTAX
 from . import _debug
 from . import regex as rx
@@ -68,6 +69,10 @@ def dict_from_file(filepath):
         else:
             raise ValueError(f"Unrecognized block type: '{typ}', expected either single or list")
     blocks[mk["comments"]] = comments
+
+    for meta_key in mk.values():
+        if meta_key not in blocks:
+            blocks[meta_key] = md[meta_key]
 
     return blocks
 
@@ -150,6 +155,10 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 nested_type = None
             else:
                 nested_lines.append(line)
+    for meta_key in mk.values():
+        if meta_key not in out_dict:
+            out_dict[meta_key] = md[meta_key]
+
     return out_dict
 
 
