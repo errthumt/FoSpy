@@ -18,7 +18,8 @@ classifiers = [
 license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
-    "pandas"
+    "pandas",
+    "chemformula"
 ]
 
 [project.urls]
