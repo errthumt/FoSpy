@@ -36,3 +36,9 @@ meta_keys = {
     "key_comments" : "_fos_key_comments",
     "list_type" : "_list_type"
 }
+
+meta_defaults = {
+    "_fos_comments" : [],
+    "_fos_key_comments" : [],
+    "_list_type" : ""
+}

@@ -1,5 +1,8 @@
 
 
+from ..parsing.syntax import meta_keys as mk
+from ..parsing.syntax import meta_defaults as md
+
 class SubContainer:
     def __init__(self):
         pass
@@ -40,13 +43,13 @@ class SingleBlock:
 
     def __init__(self, blockDict):
         from ..parsing.validation import required_keys, optional_keys
-        from ..parsing.syntax import meta_keys as mk
+
         blockDict = blockDict.copy()
         
         self._meta = SubContainer()
 
         for attr, key in mk.items():
-            setattr(self._meta, attr, blockDict.pop(key,None))
+            setattr(self._meta, attr, blockDict.pop(key,md[key]))
 
         validators = self.build_validators()
 
@@ -125,7 +128,7 @@ class SingleBlock:
             out[key] = try_serial(val)
 
         for attr, key in mk.items():
-            val = getattr(self._meta,attr,[])
+            val = getattr(self._meta,attr,md[key])
             out[key] = val
 
         return [out]

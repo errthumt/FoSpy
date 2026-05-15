@@ -9,7 +9,7 @@ def constructTest():
     #pp(file_dict)
 
     mySyn = Synthesis.fromFile(READ_PATH)
-
+    # pp(mySyn._meta.__dict__)
     new_dict = mySyn.serialize()
 
     #pp(new_dict)
