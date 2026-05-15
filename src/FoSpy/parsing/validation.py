@@ -5,6 +5,8 @@ from ..blocks import *
 from ..blocks.synthesis import Synthesis
 from . import validators
 
+from chemformula import ChemFormula
+
 required_keys = {
     Synthesis: {
         "metadata" : MetaData,
@@ -32,6 +34,7 @@ required_keys = {
     Material: {
         "name": str,
         "type": str,
+        "formula": ChemFormula,
         "supplier": str,
         "cas": str,
         "form": str,
