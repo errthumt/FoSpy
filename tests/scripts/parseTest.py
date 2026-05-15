@@ -48,33 +48,30 @@ def writeTest(file_dict):
 
     return file_dict, new_fp
 
+def deep_diff(d1, d2, path=""):
+    diffs = []
+
+    # keys only in d1
+    for k in d1.keys() - d2.keys():
+        diffs.append(f"{path}/{k}: missing in d2")
+
+    # keys only in d2
+    for k in d2.keys() - d1.keys():
+        diffs.append(f"{path}/{k}: missing in d1")
+
+    # keys in both
+    for k in d1.keys() & d2.keys():
+        v1, v2 = d1[k], d2[k]
+        new_path = f"{path}/{k}"
+
+        if isinstance(v1, dict) and isinstance(v2, dict):
+            diffs.extend(deep_diff(v1, v2, new_path))
+        elif v1 != v2:
+            diffs.append(f"{new_path}: {v1} != {v2}")
+
+    return diffs
+
 def retTest(old_dict, new_fp):
-
-    def deep_diff(d1, d2, path=""):
-        diffs = []
-
-        # keys only in d1
-        for k in d1.keys() - d2.keys():
-            diffs.append(f"{path}/{k}: missing in d2")
-
-        # keys only in d2
-        for k in d2.keys() - d1.keys():
-            diffs.append(f"{path}/{k}: missing in d1")
-
-        # keys in both
-        for k in d1.keys() & d2.keys():
-            v1, v2 = d1[k], d2[k]
-            new_path = f"{path}/{k}"
-
-            if isinstance(v1, dict) and isinstance(v2, dict):
-                diffs.extend(deep_diff(v1, v2, new_path))
-            elif v1 != v2:
-                diffs.append(f"{new_path}: {v1} != {v2}")
-
-        return diffs
-
-
-
     print('##### RETENTION TEST #####')
 
     print(f"Generating a new dictionary from: {new_fp}")
@@ -120,9 +117,10 @@ def syntaxSwap():
     writeResult = writeTest(readResult)
     retResult = retTest(*writeResult)
 
-#syntaxSwap()
-test1()
+if __name__ == "__main__":
+    #syntaxSwap()
+    test1()
+    pass
 
-pass
 
 

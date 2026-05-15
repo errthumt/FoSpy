@@ -2,7 +2,7 @@ from .._debug import Debug
 _debug = Debug()
 
 from ..blocks import *
-from ..synthesis import Synthesis
+from ..blocks.synthesis import Synthesis
 from . import validators
 
 required_keys = {
@@ -48,6 +48,13 @@ required_keys = {
     AnnealSection: {
         "type": str,
         "time": str,
+    },
+
+    Annealing: {
+        "type": str,
+        "repeats": int,
+        "observations": str,
+        "program": AnnealProgram
     }
 }
 

@@ -8,14 +8,14 @@ orcid: 0009-0006-1937-5672
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
-[reaction]
+[Reaction]
 // This is a comment on the nominal_mass
-nominal_mass: 250.0
+nominal_mass: 300.0
 nominal_mass_units: mg
 
 // This is a comment on the Materials block
 // This comment is so important it gets two lines
-[[materials]]
+[[Materials]]
 :name
 :type
 // This is a comment on the supplier key in the Materials block
@@ -69,7 +69,7 @@ nominal_mass_units: mg
     ]
 
 // This is a comment on the treatments block
-[[treatments]]
+[[Treatments]]
 :type
 :repeats
 :observations
