@@ -1,7 +1,8 @@
 from .syntax import meta_keys as mk
+from .syntax import SYNTAX
 from . import _debug
-from .regex import *
-from .format import format_key_value
+from . import regex as rx
+from .format import format_key_value, empty_nested
 
 def dict_from_file(filepath):
     _debug.msg("Parsing Debug Mode is On")
@@ -32,7 +33,7 @@ def dict_from_file(filepath):
                     current_type = "single"
 
                 current_block = txt.strip("[]").lower()'''
-            m = BLOCK_HEADER.match(txt)
+            m = rx.BLOCK_HEADER.match(txt)
             if m:
                 name_found = False
                 for regex_name, typ in zip(("list_name", "single_name"),("list","single")):
@@ -47,11 +48,11 @@ def dict_from_file(filepath):
                 #_debug.msg(f"Identified {current_type} block header in line: {txt}")
                 #_debug.msg(f"Block name: {current_block}")
 
-                comments[current_block] = [COMMENT_LINE.match(l).group("text").lstrip() for l in endComments]
+                comments[current_block] = [rx.COMMENT_LINE.match(l).group("text").lstrip() for l in endComments]
                 endComments = []
                 continue
 
-            if COMMENT_LINE.match(txt):
+            if rx.COMMENT_LINE.match(txt):
                 endComments.append(txt)
                 continue
 
@@ -77,6 +78,10 @@ def create_single_block_dict(lines, _list_type="explicit"):
     for line in lines:
         _debug.msg(line)
     _debug.msg('-----') """
+
+    open_br = SYNTAX["nested"]["open"]
+    close_br = SYNTAX["nested"]["close"]
+
     nested_lines = []
     nested_type = None
     out_dict = {mk["list_type"]:_list_type, mk["comments"]:{}}
@@ -85,14 +90,14 @@ def create_single_block_dict(lines, _list_type="explicit"):
     comments = []
     for line in lines:
         # _debug.msg(f'processing: {line}')
-        is_comment = COMMENT_LINE.match(line)
+        is_comment = rx.COMMENT_LINE.match(line)
         if is_comment:
             if nested > 0:
                 nested_lines.append(line)
             else:
                 comments.append(is_comment.group("text").lstrip())
         elif nested==0:
-            m = KEY_VALUE.match(line)
+            m = rx.KEY_VALUE.match(line)
             if m:
                 key, val = m.group("key"), m.group("val")
             else:
@@ -101,8 +106,8 @@ def create_single_block_dict(lines, _list_type="explicit"):
             if key in out_dict:
                 raise ValueError(f"Duplicate key found: '{key}' Each key can only appear once within a block.")
             
-            m = NESTED_START.match(val)
-            if val in ("[]","[[]]"):
+            m = rx.NESTED_START.match(val)
+            if val in (empty_nested(True),empty_nested(False)):
                 out_dict[key] = []
                 out_dict[mk["comments"]][key]=comments
                 comments = []
@@ -129,14 +134,14 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 out_dict[mk["comments"]][key] = comments
                 comments = []
         else:
-            nested += line.count("[")
-            nested -= line.count("]")
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
 
             if nested < 0:
                 raise ValueError("Mismatched brackets when trying to parse blocks.")
             elif nested == 0:
                 # _debug.msg(f'ended nesting on line: {line}')
-                stripped = line.rstrip("]")
+                stripped = line.rstrip(close_br)
                 if stripped:
                     nested_lines.append(stripped)
                 out_dict[nested_key] = [create_single_block_dict(nested_lines)] if nested_type == "single" else create_list_block_dict(nested_lines)
@@ -151,6 +156,10 @@ def create_single_block_dict(lines, _list_type="explicit"):
             
 
 def create_list_block_dict(lines):
+
+    open_br = SYNTAX["nested"]["open"]
+    close_br = SYNTAX["nested"]["close"]
+
     for line in lines:
         # _debug.msg(line)
         pass
@@ -160,7 +169,7 @@ def create_list_block_dict(lines):
 
     nested = 0
 
-    m = LOOP_KEY.match(lines[0])
+    m = rx.LOOP_KEY.match(lines[0])
     if m: # loop_key mode
         getting_keys = True
         comments = []
@@ -170,9 +179,9 @@ def create_list_block_dict(lines):
         for line in lines:
             # _debug.msg(f'processing list line: {line}')
 
-            is_loop_key = LOOP_KEY.match(line)
-            is_key_val = KEY_VALUE.match(line)
-            is_comment = COMMENT_LINE.match(line)
+            is_loop_key = rx.LOOP_KEY.match(line)
+            is_key_val = rx.KEY_VALUE.match(line)
+            is_comment = rx.COMMENT_LINE.match(line)
             if getting_keys and is_comment:
                 comments.append(is_comment.group("text").lstrip())
             elif nested>0 or is_comment:
@@ -204,7 +213,7 @@ def create_list_block_dict(lines):
                     block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
                     trailing_comments = []
                     for l in reversed(current_lines):
-                        if COMMENT_LINE.match(l):
+                        if rx.COMMENT_LINE.match(l):
                             trailing_comments.append(l)
                         else:
                             break
@@ -218,11 +227,8 @@ def create_list_block_dict(lines):
                 key_idx += 1
                 
 
-            if "[" in line:
-                # _debug.msg(f'found [ in line: {line}')
-                nested += 1
-            if "]" in line:
-                nested -= 1
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
             if nested<0:
                 raise ValueError("Mismatched brackets when trying to parse blocks.")
 
@@ -237,7 +243,7 @@ def create_list_block_dict(lines):
         block_list[0][mk["key_comments"]] = key_comments
     else:
         for line in lines:
-            is_key_val, is_comment = KEY_VALUE.match(line), COMMENT_LINE.match(line)
+            is_key_val, is_comment = rx.KEY_VALUE.match(line), rx.COMMENT_LINE.match(line)
             if not (is_key_val or is_comment):
                 raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
             key = is_key_val.group("key") if is_key_val else None
@@ -247,7 +253,7 @@ def create_list_block_dict(lines):
                 block_list.append(create_single_block_dict(current_lines))
                 trailing_comments = []
                 for l in reversed(current_lines):
-                    if COMMENT_LINE.match(l):
+                    if rx.COMMENT_LINE.match(l):
                         trailing_comments.append(l)
                     else:
                         break
@@ -260,10 +266,8 @@ def create_list_block_dict(lines):
                 #_debug.pmsg(keys)
                 current_lines.append(line)
 
-            if "[" in line:
-                nested += 1
-            if "]" in line:
-                nested -= 1
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
             if nested<0:
                 raise ValueError("Mismatched brackets when trying to parse blocks.")
 

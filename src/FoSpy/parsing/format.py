@@ -44,7 +44,14 @@ def format_nested_end(is_list, ind=0):
     close = close_br *(2 if is_list else 1)
     return _indent(close, ind)
 
+def empty_nested(is_list):
+    spec = SYNTAX["nested"]
+    open_br = spec["open"]
+    opn = open_br * (2 if is_list else 1)
+    close_br = spec["close"]
+    close = close_br *(2 if is_list else 1)
 
+    return f"{opn}{close}"
 
 def format_loop_key(key: str, ind=0):
     spec = SYNTAX["key_value"]

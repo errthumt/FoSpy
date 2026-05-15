@@ -21,12 +21,12 @@ def build_key_value_regex(spec):
     delim = re.escape(spec["delimiter"])
     prefix = spec.get("prefix")
 
-    # If prefix is a real string (not False), require it before the key
+    # Key cannot contain the delimiter
     if prefix:
-        prefix = re.escape(prefix)
-        key_pattern = rf"{prefix}(?P<key>[^:]+)"
+        prefix_esc = re.escape(prefix)
+        key_pattern = rf"{prefix_esc}(?P<key>[^{delim}]+)"
     else:
-        key_pattern = r"(?P<key>[^:]+)"
+        key_pattern = rf"(?P<key>[^{delim}]+)"
 
     if spec["require_value"]:
         pattern = rf"^{key_pattern}\s*{delim}\s*(?P<val>.+)$"

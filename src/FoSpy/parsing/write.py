@@ -87,7 +87,7 @@ def expand_lists(key, val, indent, looped=False):
     lines = []
     if type(val) == list:
         if len(val) == 0:
-            lines.append(format_key_value(key, '[]', indent, looped))
+            lines.append(format_key_value(key, empty_nested(False), indent, looped))
         else:
             bracket_num = 1 if len(val) == 1 else 2
             lines.append(format_nested_start(key,len(val)>1, looped,indent))
