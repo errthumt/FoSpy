@@ -1,6 +1,7 @@
 from .syntax import meta_keys as mk
 from . import _debug
 from .regex import *
+from .format import format_key_value
 
 def dict_from_file(filepath):
     _debug.msg("Parsing Debug Mode is On")
@@ -213,7 +214,7 @@ def create_list_block_dict(lines):
                     key_idx = 0
 
                 key = keys[key_idx]
-                current_lines.append(f'{key}:{line}')
+                current_lines.append(format_key_value(key, line))
                 key_idx += 1
                 
 

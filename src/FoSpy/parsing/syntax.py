@@ -14,7 +14,8 @@ SYNTAX = {
         }
     },
     "nested": { 
-        "open": "["
+        "open": "[",
+        "close" : "]"
     },
 
     "key_value": {
@@ -25,7 +26,8 @@ SYNTAX = {
     "comment": {
         "prefix": "//",
         "allow_leading_ws": True,
-    }
+    },
+    "indent_size": 4
 }
 
 
