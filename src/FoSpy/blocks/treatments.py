@@ -1,4 +1,8 @@
 from . import SingleBlock, ListBlock
+from .._debug import Debug
+
+_debug = Debug()
+_debug.on = True
 
 class Treatment(SingleBlock):
     # Maps type strings to subclass constructors.
@@ -25,6 +29,7 @@ class AnnealSection(SingleBlock):
 
 class AnnealProgram(ListBlock):
     def __init__(self, blockList):
+        _debug.msg("Constructing annealing program")
         super().__init__(blockList, AnnealSection)
 
 class TreatmentList(ListBlock):

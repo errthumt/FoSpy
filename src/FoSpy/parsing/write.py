@@ -109,6 +109,8 @@ def write_dict_to_file(blocks, filepath):
 
     with open(filepath, "w") as f:
         for name, blocklist in blocks.items():
+            if name in mk.values():
+                continue
             if name != "metadata":
                 comments = block_comments[name]
                 for comment in comments:

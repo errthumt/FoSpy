@@ -7,9 +7,7 @@ from . import SingleBlock
 
 class Synthesis(SingleBlock):
     def __init__(self, blockDict, _sourceFile=None):
-        blockDict = blockDict.copy()
         self._sourceFile = _sourceFile
-        self._comments = blockDict.pop(mk["comments"])
         super().__init__(blockDict)
 
     @classmethod
@@ -25,6 +23,9 @@ class Synthesis(SingleBlock):
     def insert_treatment(self, treat, idx=-1):
         # placeholder. modify for insertion at idx
         self.treatments.append(treat)
+    
+    def serialize(self):
+        return super().serialize()[0]
     
     def save(self, filepath=None):
         if filepath is None:

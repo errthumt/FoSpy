@@ -25,6 +25,18 @@ class SingleBlock:
         """
         # Default: construct normally.
         return cls(blockDict)
+    
+    @classmethod
+    def build_validators(cls):
+        from ..parsing.validation import required_keys, optional_keys
+        merged = {}
+        for base in reversed(cls.__mro__):
+            req = required_keys.get(base, {})
+            opt = optional_keys.get(base, {})
+            merged.update(req)
+            merged.update(opt)
+        return merged
+
 
     def __init__(self, blockDict):
         from ..parsing.validation import required_keys, optional_keys
@@ -36,12 +48,15 @@ class SingleBlock:
         for attr, key in mk.items():
             setattr(self._meta, attr, blockDict.pop(key,None))
 
-        validators = required_keys.get(self.__class__,{}) | optional_keys.get(self.__class__,{})
+        validators = self.build_validators()
 
         self._key_order = []
         self.ext = SubContainer()
 
         for key, val in blockDict.items():
+            self._key_order.append(key)
+            setattr(self, key, val)
+            '''
             self._key_order.append(key)
             if key in validators:
                 validator = validators[key]
@@ -53,7 +68,26 @@ class SingleBlock:
                 setattr(self, key, validator(val))
 
             else:
-                setattr(self.ext, key, val)
+                setattr(self.ext, key, val)'''
+
+    def __setattr__(self, name, value):
+        validators = self.build_validators()
+        if name == 'ext' or name.startswith("_"):
+            return super().__setattr__(name, value)
+
+        if name in validators:
+            validator = validators[name]
+            if isinstance(validator, type):
+                if issubclass(validator, SingleBlock):
+                    if isinstance(value, list):
+                        if len(value) > 1:
+                            raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
+                        value = value[0]
+                if isinstance(value, validator):
+                    return super().__setattr__(name, value)
+            return super().__setattr__(name, validator(value))
+        else:
+            return setattr(self.ext, name, value)
 
     def __getattr__(self, name):
         try:
@@ -74,7 +108,6 @@ class SingleBlock:
                 return obj.serialize()
             return obj
 
-
         for attr,val in self.__dict__.items():
             if attr == "ext" and val is not None:
                 for ext_attr, ext_val in val.__dict__.items():
@@ -90,6 +123,12 @@ class SingleBlock:
         
         for key, val in all_attrs.items():
             out[key] = try_serial(val)
+
+        for attr, key in mk.items():
+            val = getattr(self._meta,attr,[])
+            out[key] = val
+
+        return [out]
 
 
 
@@ -111,19 +150,44 @@ class ListBlock:
         Class used to construct each item. Validation is delegated to `cls`.
     """
     def __init__(self, blockList, cls):
-
-        self.objs = []
+        self._objs = []
+        self._reqCls = cls
         for blockDict in blockList:
-            self.objs.append(cls.from_blockList(blockDict))
+            self._objs.append(cls.from_blockList(blockDict))
+
+    def __setattr__(self, name, value):
+        if name == "_objs":
+            if type(value) is not list:
+                raise TypeError(f"{type(self).__name__}._objs must be a list of objects.")
+
+            elif hasattr(self, "_reqCls"):
+                typ = self._reqCls
+                for obj in value:
+                    if not isinstance(obj, typ):
+                        raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
+            return super().__setattr__(name, value)
+
+        elif name.startswith("_"):
+            return super().__setattr__(name,value)
+        else:
+            raise AttributeError(
+                f"{type(self).__name__} does not allow setting attribute '{name}'. "
+                f"Only private names starting with '_' can be used. "
+                f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
+                f"Or you can replace {type(self).__name__}._objs with a new list of objects."
+            )
+        
+        
+        
 
     def __getitem__(self, idx):
-        return self.objs[idx]
+        return self._objs[idx]
     
     def __len__(self):
-        return len(self.objs)
+        return len(self._objs)
     
     def __iter__(self):
-        return iter(self.objs)
+        return iter(self._objs)
         
     def serialize(self):
         return [obj.serialize()[0] for obj in self]

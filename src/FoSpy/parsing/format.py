@@ -6,9 +6,9 @@ def _indent(st:str, ind):
 def format_block_header(name: str, list_type: str):
     spec = SYNTAX["block_header"]
     if list_type == "list":
-        return f"{spec['list']['open']}{name}{spec['list']['close']}"
+        return f"{spec['list']['open']}{name.capitalize()}{spec['list']['close']}"
     else:
-        return f"{spec['single']['open']}{name}{spec['single']['close']}"
+        return f"{spec['single']['open']}{name.capitalize()}{spec['single']['close']}"
 
 
 def format_key_value(key: str, val: str, ind=0, looped=False):
