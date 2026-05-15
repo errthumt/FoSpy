@@ -3,6 +3,12 @@
 from ..parsing.syntax import meta_keys as mk
 from ..parsing.syntax import meta_defaults as md
 
+from pprint import pp
+
+from .._debug import Debug
+_debug = Debug()
+_debug.on = True
+
 class SubContainer:
     def __init__(self):
         pass
@@ -30,6 +36,14 @@ class SingleBlock:
         return cls(blockDict)
     
     @classmethod
+    def build_req_validators(cls):
+        from ..parsing.validation import required_keys
+        merged = {}
+        for base in reversed(cls.__mro__):
+            merged.update(required_keys.get(base,{}))
+        return merged
+
+    @classmethod
     def build_validators(cls):
         from ..parsing.validation import required_keys, optional_keys
         merged = {}
@@ -45,13 +59,16 @@ class SingleBlock:
         from ..parsing.validation import required_keys, optional_keys
 
         blockDict = blockDict.copy()
+
+        req = self.build_req_validators()
+        for key in req:
+            if key not in blockDict:
+                raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
         
         self._meta = SubContainer()
 
         for attr, key in mk.items():
             setattr(self._meta, attr, blockDict.pop(key,md[key]))
-
-        validators = self.build_validators()
 
         self._key_order = []
         self.ext = SubContainer()
@@ -59,19 +76,8 @@ class SingleBlock:
         for key, val in blockDict.items():
             self._key_order.append(key)
             setattr(self, key, val)
-            '''
-            self._key_order.append(key)
-            if key in validators:
-                validator = validators[key]
-                if isinstance(validator, type) and issubclass(validator, SingleBlock):
-                    if type(val) == list:
-                        if len(val) > 1:
-                            raise ValueError(f"Block '{key}' must be a single block. It can only be constructed from a list of length 1.")
-                        val = val[0]
-                setattr(self, key, validator(val))
 
-            else:
-                setattr(self.ext, key, val)'''
+        
 
     def __setattr__(self, name, value):
         validators = self.build_validators()
