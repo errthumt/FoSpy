@@ -1,6 +1,6 @@
-from . import syntax as st
 from .syntax import meta_keys as mk
 from . import _debug
+from .regex import *
 
 def dict_from_file(filepath):
     _debug.msg("Parsing Debug Mode is On")
@@ -22,18 +22,35 @@ def dict_from_file(filepath):
             else:
                 block = block[1]
 
-            if txt.startswith("[") and txt.endswith("]") and txt != "[]":
+            
+            '''
+            if txt.startswith("[") and txt.endswith("]") and txt not in ("[]","[[]]"):
                 if txt.startswith("[["):
                     current_type = "list"
                 else:
                     current_type = "single"
 
-                current_block = txt.strip("[]").lower()
-                comments[current_block] = [l.lstrip(f'{st.line_comment} ') for l in endComments]
+                current_block = txt.strip("[]").lower()'''
+            m = BLOCK_HEADER.match(txt)
+            if m:
+                name_found = False
+                for regex_name, typ in zip(("list_name", "single_name"),("list","single")):
+                    if m.group(regex_name) is not None:
+                        current_block = m.group(regex_name).lower()
+                        current_type = typ
+                        name_found = True
+                        break
+                if not name_found:
+                    raise SyntaxError(f"Line: '{txt}' was identified as a block header but no header name could be identified")
+
+                #_debug.msg(f"Identified {current_type} block header in line: {txt}")
+                #_debug.msg(f"Block name: {current_block}")
+
+                comments[current_block] = [COMMENT_LINE.match(l).group("text").lstrip() for l in endComments]
                 endComments = []
                 continue
 
-            if txt.startswith(st.line_comment):
+            if COMMENT_LINE.match(txt):
                 endComments.append(txt)
                 continue
 
@@ -67,37 +84,44 @@ def create_single_block_dict(lines, _list_type="explicit"):
     comments = []
     for line in lines:
         # _debug.msg(f'processing: {line}')
-        if line.startswith(st.line_comment):
+        is_comment = COMMENT_LINE.match(line)
+        if is_comment:
             if nested > 0:
                 nested_lines.append(line)
             else:
-                comments.append(line.lstrip(f'{st.line_comment} '))
+                comments.append(is_comment.group("text").lstrip())
         elif nested==0:
-            split = line.split(st.key_delimiter)
-            key, val = split[0], st.key_delimiter.join(split[1:]).strip()
+            m = KEY_VALUE.match(line)
+            if m:
+                key, val = m.group("key"), m.group("val")
+            else:
+                raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
             # _debug.msg(f"processed: key:'{key}', val:'{val}'")
             if key in out_dict:
                 raise ValueError(f"Duplicate key found: '{key}' Each key can only appear once within a block.")
             
+            m = NESTED_START.match(val)
             if val in ("[]","[[]]"):
                 out_dict[key] = []
                 out_dict[mk["comments"]][key]=comments
                 comments = []
             
-            elif val.startswith("["):
+            elif m:
                 # _debug.msg(f'{key} is nested')
-                nested += 1
                 nested_key = key
-                out_dict[mk["comments"]][nested_key] = comments
-                comments = []
-                if val.startswith("[["):
+                if m.group("list"):
                     nested_type = "list"
-                    nested += 1
+                    nested += 2
                 else:
                     nested_type = "single"
-                val = val.lstrip("[")
-                if len(val) > 0:
-                    nested_lines.append(val)
+                    nested += 1
+
+                out_dict[mk["comments"]][nested_key] = comments
+                comments = []
+
+                remainder = m.group("rest")
+                if remainder:
+                    nested_lines.append(remainder)
                 continue
             else:
                 out_dict[key] = val
@@ -135,7 +159,8 @@ def create_list_block_dict(lines):
 
     nested = 0
 
-    if lines[0].startswith(st.key_delimiter):
+    m = LOOP_KEY.match(lines[0])
+    if m: # loop_key mode
         getting_keys = True
         comments = []
         key_comments = {}
@@ -144,12 +169,17 @@ def create_list_block_dict(lines):
         for line in lines:
             # _debug.msg(f'processing list line: {line}')
 
-            if getting_keys and line.startswith(st.line_comment):
-                comments.append(line.lstrip(f'{st.line_comment} '))
-            elif nested>0 or line.startswith(st.line_comment):
+            is_loop_key = LOOP_KEY.match(line)
+            is_key_val = KEY_VALUE.match(line)
+            is_comment = COMMENT_LINE.match(line)
+            if getting_keys and is_comment:
+                comments.append(is_comment.group("text").lstrip())
+            elif nested>0 or is_comment:
                 current_lines.append(line)
-            elif line.startswith(st.key_delimiter):
-                key = line[1:]
+            elif is_loop_key:
+                if not getting_keys:
+                    raise SyntaxError(f"Error on line: '{line}'. You cannot declare more loop keys after starting values.")
+                key = is_loop_key.group("key")
                 if key in keys:
                     raise ValueError(f"Duplicate key found: '{key}'. Each key can only be specified once at the beginning of a looped list block.")
                 key_comments[key] = comments
@@ -157,7 +187,7 @@ def create_list_block_dict(lines):
                 keys.append(key)
                 # _debug.msg(f'added key: {key}')
             
-            elif st.key_delimiter in line:
+            elif is_key_val:
                 if getting_keys:
                     getting_keys = False
                     for l in comments:
@@ -173,7 +203,7 @@ def create_list_block_dict(lines):
                     block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
                     trailing_comments = []
                     for l in reversed(current_lines):
-                        if l.startswith(st.line_comment):
+                        if COMMENT_LINE.match(l):
                             trailing_comments.append(l)
                         else:
                             break
@@ -206,14 +236,17 @@ def create_list_block_dict(lines):
         block_list[0][mk["key_comments"]] = key_comments
     else:
         for line in lines:
-            key = line.split(st.key_delimiter)[0].strip()
+            is_key_val, is_comment = KEY_VALUE.match(line), COMMENT_LINE.match(line)
+            if not (is_key_val or is_comment):
+                raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
+            key = is_key_val.group("key") if is_key_val else None
             if nested > 0:
                 current_lines.append(line)
             elif key in keys:
                 block_list.append(create_single_block_dict(current_lines))
                 trailing_comments = []
                 for l in reversed(current_lines):
-                    if l.startswith(st.line_comment):
+                    if COMMENT_LINE.match(l):
                         trailing_comments.append(l)
                     else:
                         break
@@ -223,10 +256,11 @@ def create_list_block_dict(lines):
                 keys = []
             else:
                 keys.append(key)
+                #_debug.pmsg(keys)
                 current_lines.append(line)
 
             if "[" in line:
-                    nested += 1
+                nested += 1
             if "]" in line:
                 nested -= 1
             if nested<0:

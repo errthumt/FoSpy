@@ -2,13 +2,13 @@ from .parsing import (
     dict_from_file,
     write_dict_to_file
 )
-from .parsing import syntax as st
+from .parsing import syntax as snt
 from .blocks import SingleBlock
 
 class Synthesis(SingleBlock):
     def __init__(self, blockDict, _sourceFile=None):
         blockDict = blockDict.copy()
-        self._comments = blockDict.pop(st.meta_keys["comments"])
+        self._comments = blockDict.pop(snt.meta_keys["comments"])
         super().__init__(blockDict)
 
     @classmethod
