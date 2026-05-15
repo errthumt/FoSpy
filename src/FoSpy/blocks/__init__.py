@@ -106,7 +106,7 @@ class SingleBlock:
             serialize = getattr(obj, "serialize", None)
             if callable(serialize):
                 return obj.serialize()
-            return obj
+            return str(obj)
 
         for attr,val in self.__dict__.items():
             if attr == "ext" and val is not None:
