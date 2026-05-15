@@ -48,6 +48,7 @@ def writeTest(file_dict):
 
     return file_dict, new_fp
 
+'''
 def deep_diff(d1, d2, path=""):
     diffs = []
 
@@ -69,7 +70,47 @@ def deep_diff(d1, d2, path=""):
         elif v1 != v2:
             diffs.append(f"{new_path}: {v1} != {v2}")
 
+    return diffs'''
+
+def deep_diff(d1, d2, path=""):
+    diffs = []
+
+    # Case 1 — both dicts
+    if isinstance(d1, dict) and isinstance(d2, dict):
+        # keys only in d1
+        for k in d1.keys() - d2.keys():
+            diffs.append(f"{path}/{k}: missing in d2")
+
+        # keys only in d2
+        for k in d2.keys() - d1.keys():
+            diffs.append(f"{path}/{k}: missing in d1")
+
+        # keys in both
+        for k in d1.keys() & d2.keys():
+            diffs.extend(deep_diff(d1[k], d2[k], f"{path}/{k}"))
+        return diffs
+
+    # Case 2 — both lists
+    if isinstance(d1, list) and isinstance(d2, list):
+        # length mismatch
+        if len(d1) != len(d2):
+            diffs.append(f"{path}: list length {len(d1)} != {len(d2)}")
+            # still compare overlapping indices
+            min_len = min(len(d1), len(d2))
+        else:
+            min_len = len(d1)
+
+        # compare element‑wise
+        for i in range(min_len):
+            diffs.extend(deep_diff(d1[i], d2[i], f"{path}[{i}]"))
+        return diffs
+
+    # Case 3 — scalar mismatch
+    if d1 != d2:
+        diffs.append(f"{path}: {d1!r} != {d2!r}")
+
     return diffs
+
 
 def retTest(old_dict, new_fp):
     print('##### RETENTION TEST #####')

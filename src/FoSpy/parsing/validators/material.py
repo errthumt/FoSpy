@@ -1,7 +1,9 @@
+from decimal import Decimal
+
 def purity(block:str):
     def func(val):
         try:
-            purity = float(val)
+            purity = Decimal(val)
         except:
             raise ValueError(f"Unable to convert purity: '{val}' into a number for '{block}' block.")
         if purity > 0 and purity <=1:
@@ -12,7 +14,7 @@ def purity(block:str):
         
 def ratio(val):
     try:
-        ratio = float(val)
+        ratio = Decimal(val)
     except:
         raise ValueError(f"Unable to convert ratio: '{val}' into a number for 'Material' block.")
     
