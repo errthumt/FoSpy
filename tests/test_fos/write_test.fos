@@ -1,35 +1,35 @@
-name: TE001
-date: 03-11-2026
-experimenters: [
-name: Travis Errthum
-affiliation: Kovnir Group - Iowa State University
-orcid: 0009-0006-1937-5672
+_name TE001
+_date 03-11-2026
+_experimenters [
+_name Travis Errthum
+_affiliation Kovnir Group - Iowa State University
+_orcid 0009-0006-1937-5672
 ]
-internal_project_ID: Ba2-TM5-Pn6
-internal_project_description: Unique Clathrate
+_internal_project_ID Ba2-TM5-Pn6
+_internal_project_description Unique Clathrate
 
-[Reaction]
-// This is a comment on the nominal_mass
-nominal_mass: 250.0
-nominal_mass_units: mg
+[reaction]
+# This is a comment on the nominal_mass
+_nominal_mass 250.0
+_nominal_mass_units mg
 
-// This is a comment on the Materials block
-// This comment is so important it gets two lines
-[[Materials]]
-:name
-:type
-// This is a comment on the supplier key in the Materials block
-:supplier
-:cas
-:form
-:purity
-:env
-:ratio
-:treatments
+# This is a comment on the Materials block
+# This comment is so important it gets two lines
+[[materials]]
+name_
+type_
+# This is a comment on the supplier key in the Materials block
+supplier_
+cas_
+form_
+purity_
+env_
+ratio_
+treatments_
 
     Barium
     reagent
-    // This is a comment on the supplier value in the Materials block
+    # This is a comment on the supplier value in the Materials block
     Unk
     1234-56-7
     lump
@@ -37,10 +37,10 @@ nominal_mass_units: mg
     Ar (g)
     2.0
     [
-    type: cutting
-    // This is a comment on the repeats value for the treatments of Barium
-    repeats: 1
-    observations: smaller pieces improve homogenization
+    _type cutting
+    # This is a comment on the repeats value for the treatments of Barium
+    _repeats 1
+    _observations smaller pieces improve homogenization
     ]
 
     reagent
@@ -61,18 +61,18 @@ nominal_mass_units: mg
     0.9995
     Ar (g)
     6.0
-    // This is a comment on the treatments value for Arsenic
+    # This is a comment on the treatments value for Arsenic
     [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
+    _type Grinding
+    _repeats 1
+    _observations ground into powder for weighing and homogenization
     ]
 
-// This is a comment on the treatments block
-[[Treatments]]
-:type
-:repeats
-:observations
+# This is a comment on the treatments block
+[[treatments]]
+type_
+repeats_
+observations_
 
     weigh
     1
@@ -85,16 +85,16 @@ nominal_mass_units: mg
     anneal
     1
     Ba lumps reacted but not homogeneous. Small Ba reaction with silica
-    program: [[
-    type: ramp
-    // This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
-    temp: 600 C
-    time: 10 hr
+    _program [[
+    _type ramp
+    # This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
+    _temp 600 C
+    _time 10 hr
 
-    // Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
-    // It actually links to the type of the next section of the program
-    type: dwell
-    time: 120hr
+    # Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
+    # It actually links to the type of the next section of the program
+    _type dwell
+    _time 120hr
     ]]
 
     grind
@@ -104,14 +104,14 @@ nominal_mass_units: mg
     anneal
     1
     dark gray powder when opening
-    program: [[
-    :type
-    // Nested looped key comment
-    :time
+    _program [[
+    type_
+    # Nested looped key comment
+    time_
 
         ramp
         10 hr
-        temp: 600 C
+        _temp 600 C
 
         dwell
         120hr

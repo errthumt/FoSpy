@@ -106,11 +106,18 @@ def test1():
 
 def syntaxSwap():
     readResult = readTest()
-    snt.key_delimiter = "="
-    snt.indent = ""
+
+    from FoSpy.parsing.syntax import SYNTAX
+    from FoSpy.parsing.regex import refresh
+
+    SYNTAX["comment"]["prefix"] = "#"
+    SYNTAX["key_value"]["prefix"] = "_"
+    SYNTAX["key_value"]["delimiter"] = " "
+    refresh()
+
     writeResult = writeTest(readResult)
 
-test1()
+syntaxSwap()
 
 pass
 
