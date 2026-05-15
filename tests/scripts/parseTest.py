@@ -113,11 +113,15 @@ def syntaxSwap():
     SYNTAX["comment"]["prefix"] = "#"
     SYNTAX["key_value"]["prefix"] = "_"
     SYNTAX["key_value"]["delimiter"] = " "
+    SYNTAX["nested"]["open"] = "{"
+    SYNTAX["nested"]["close"] = "}"
     refresh()
 
     writeResult = writeTest(readResult)
+    retResult = retTest(*writeResult)
 
-syntaxSwap()
+#syntaxSwap()
+test1()
 
 pass
 
