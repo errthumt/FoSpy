@@ -17,8 +17,6 @@ def build_block_header_regex(spec):
 
 BLOCK_HEADER = build_block_header_regex(SYNTAX["block_header"])
 
-import re
-
 def build_key_value_regex(spec):
     delim = re.escape(spec["delimiter"])
     prefix = spec.get("prefix")
@@ -37,7 +35,6 @@ def build_key_value_regex(spec):
 
     return re.compile(pattern)
 
-
 KEY_VALUE = build_key_value_regex(SYNTAX["key_value"])
 
 def build_comment_regex(spec):
@@ -48,8 +45,6 @@ def build_comment_regex(spec):
         return re.compile(rf"^{prefix}(?P<text>.*)$")
 
 COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
-
-import re
 
 def build_nested_start_regex(spec):
     open_bracket = re.escape(spec["open"])  # usually "["
@@ -78,9 +73,7 @@ def build_loop_key_regex(spec):
 
     return re.compile(pattern)
 
-
 LOOP_KEY = build_loop_key_regex(SYNTAX["key_value"])
-
 
 def build_comment_regex(spec):
     prefix = re.escape(spec["prefix"])  # usually "//"
