@@ -1,6 +1,6 @@
 import os
 
-from . import syntax as st
+from . import syntax as snt
 from .syntax import meta_keys as mk
 
 def block_list_to_lines(blocklist:list, indent=0):
@@ -32,8 +32,8 @@ def block_list_to_lines(blocklist:list, indent=0):
 
         for key in loop_keys:
             for comment in key_comments[key]:
-                lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
-            lines.append(f"{indent*st.indent}{st.key_delimiter}{key}")
+                lines.append(f"{indent*snt.indent}{snt.line_comment} {comment}")
+            lines.append(f"{indent*snt.indent}{snt.key_delimiter}{key}")
         lines.append("")
 
     for block in blocklist: 
@@ -55,7 +55,7 @@ def block_to_lines(block, indent=0, loop_keys=[]):
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
+                    lines.append(f"{indent*snt.indent}{snt.line_comment} {comment}")
             
             for line in expand_lists(key, val, indent):
                 lines.append(line)
@@ -65,14 +65,14 @@ def block_to_lines(block, indent=0, loop_keys=[]):
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
+                    lines.append(f"{indent*snt.indent}{snt.line_comment} {comment}")
             for line in expand_lists(key, val, indent, looped=True):
                 lines.append(line)
         for key,val in block.items():
             key_comments = comments.get(key)
             if key_comments:
                 for comment in key_comments:
-                    lines.append(f"{indent*st.indent}{st.line_comment} {comment}")
+                    lines.append(f"{indent*snt.indent}{snt.line_comment} {comment}")
             for line in expand_lists(key, val, indent, looped=False):
                 lines.append(line)
     else:
@@ -86,16 +86,16 @@ def expand_lists(key, val, indent, looped=False):
     lines = []
     if type(val) == list:
         if len(val) == 0:
-            lines.append(f'{indent*st.indent}{f"{key}{st.key_delimiter} " if not looped else ""}[]')
+            lines.append(f'{indent*snt.indent}{f"{key}{snt.key_delimiter} " if not looped else ""}[]')
         else:
             bracket_num = 1 if len(val) == 1 else 2
-            lines.append(f'{indent*st.indent}{f"{key}{st.key_delimiter} " if not looped else ""}{"["*bracket_num}')
+            lines.append(f'{indent*snt.indent}{f"{key}{snt.key_delimiter} " if not looped else ""}{"["*bracket_num}')
             for line in block_list_to_lines(val, indent=indent):
                 lines.append(line)
             lines.pop()
-            lines.append(f"{indent*st.indent}{"]"*bracket_num}")
+            lines.append(f"{indent*snt.indent}{"]"*bracket_num}")
     else:
-        lines.append(f'{indent*st.indent}{f"{key}{st.key_delimiter} " if not looped else ""}{val}')
+        lines.append(f'{indent*snt.indent}{f"{key}{snt.key_delimiter} " if not looped else ""}{val}')
 
     return lines
 
@@ -111,7 +111,7 @@ def write_dict_to_file(blocks, filepath):
             if name != "metadata":
                 comments = block_comments[name]
                 for comment in comments:
-                    f.write(f'{st.line_comment} {comment}\n')
+                    f.write(f'{snt.line_comment} {comment}\n')
                 if len(blocklist) > 1:
                     f.write(f'[[{name.capitalize()}]]\n')
                 else:

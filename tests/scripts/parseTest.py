@@ -3,10 +3,10 @@ _debug = Debug()
 _debug.on = True
 
 from FoSpy import parsing
-parsing._debug.on = False
+parsing._debug.on = True
 
 from FoSpy.parsing import dict_from_file, write_dict_to_file
-from FoSpy.parsing import syntax as st
+from FoSpy.parsing import syntax as snt
 
 from pprint import pprint
 
@@ -20,7 +20,7 @@ def readTest(report=False):
     if report:
         print_dict = file_dict.copy()
 
-        comments = print_dict.pop(st.meta_keys["comments"])
+        comments = print_dict.pop(snt.meta_keys["comments"])
 
         for blockname, blocks in print_dict.items():
             print(f'NEW BLOCK: {blockname}')
@@ -106,8 +106,8 @@ def test1():
 
 def syntaxSwap():
     readResult = readTest()
-    st.key_delimiter = "="
-    st.indent = ""
+    snt.key_delimiter = "="
+    snt.indent = ""
     writeResult = writeTest(readResult)
 
 test1()

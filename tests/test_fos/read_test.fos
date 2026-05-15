@@ -13,7 +13,6 @@ internal_project_description: Unique Clathrate
 nominal_mass: 250.0
 nominal_mass_units: mg
 
-
 //This is a comment on the Materials block
 //This comment is so important it gets two lines
 [[Materials]]
