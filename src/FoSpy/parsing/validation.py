@@ -51,9 +51,6 @@ required_keys = {
     },
 
     Annealing: {
-        "type": str,
-        "repeats": int,
-        "observations": str,
         "program": AnnealProgram
     }
 }

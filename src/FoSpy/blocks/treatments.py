@@ -29,7 +29,7 @@ class AnnealSection(SingleBlock):
 
 class AnnealProgram(ListBlock):
     def __init__(self, blockList):
-        _debug.msg("Constructing annealing program")
+        # _debug.msg("Constructing annealing program")
         super().__init__(blockList, AnnealSection)
 
 class TreatmentList(ListBlock):

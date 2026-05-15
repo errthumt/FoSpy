@@ -9,6 +9,7 @@ def constructTest():
     #pp(file_dict)
 
     mySyn = Synthesis.fromFile(READ_PATH)
+
     # pp(mySyn._meta.__dict__)
     new_dict = mySyn.serialize()
 
@@ -24,6 +25,7 @@ def constructTest():
     mySyn.reaction.nominal_mass = "300.0"
 
     mySyn.save(WRITE_PATH)
+    pass
 
 
 constructTest()
