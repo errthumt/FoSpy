@@ -13,12 +13,12 @@ internal_project_description: Unique Clathrate
 nominal_mass: 250.0
 nominal_mass_units: mg
 
-//This is a comment on the Materials block
-//This comment is so important it gets two lines
+// This is a comment on the Materials block
+// This comment is so important it gets two lines
 [[Materials]]
 :name
 :type
-//This is a comment on the supplier key in the Materials block
+// This is a comment on the supplier key in the Materials block
 :supplier
 :cas
 :form
@@ -29,7 +29,7 @@ nominal_mass_units: mg
 
     Barium
     reagent
-    //This is a comment on the supplier value in the Materials block
+    // This is a comment on the supplier value in the Materials block
     Unk
     1234-56-7
     lump
@@ -38,7 +38,7 @@ nominal_mass_units: mg
     2.0
     [
     type: cutting
-    //This is a comment on the repeats value for the treatments of Barium
+    // This is a comment on the repeats value for the treatments of Barium
     repeats: 1
     observations: smaller pieces improve homogenization
     ]
@@ -61,7 +61,7 @@ nominal_mass_units: mg
     0.9995
     Ar (g)
     6.0
-    //This is a comment on the treatments value for Arsenic
+    // This is a comment on the treatments value for Arsenic
     [
     type: Grinding
     repeats: 1
@@ -87,12 +87,12 @@ nominal_mass_units: mg
     Ba lumps reacted but not homogeneous. Small Ba reaction with silica
     program: [[
     type: ramp
-    //This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
+    // This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
     temp: 600 C
     time: 10 hr
 
-    //Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
-    //It actually links to the type of the next section of the program
+    // Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
+    // It actually links to the type of the next section of the program
     type: dwell
     time: 120hr
     ]]
@@ -106,7 +106,7 @@ nominal_mass_units: mg
     dark gray powder when opening
     program: [[
     :type
-    //Nested looped key comment
+    // Nested looped key comment
     :time
 
         ramp
