@@ -1,4 +1,7 @@
-from . import SingleBlock, ListBlock, calc_routine
+from . import (
+    SingleBlock, ListBlock, 
+    TemplateBlock, TemplateList,
+    calc_routine)
 from .._debug import Debug
 _debug = Debug()
 _debug.on = True
@@ -12,10 +15,13 @@ class Material(SingleBlock):
         _debug.msg(f"Running example calc routine for material: {self.name}")
         return None
 
+class MaterialTemplate(Material, TemplateBlock):
+    def __init__(self, blockDict):
+        super().__init__(blockDict)
 
 class MaterialList(ListBlock):
-    def __init__(self, blockList):
-        super().__init__(blockList, Material)
+    def __init__(self, blockList, cls=Material):
+        super().__init__(blockList, cls)
 
     def calc_weight_pcts(self, typ=None):
         from decimal import Decimal
@@ -41,3 +47,7 @@ class MaterialList(ListBlock):
             comment = f"{label} weight percent: {pct:.2f}%"
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("ratio",comment, f"{label}_pct")
+
+class MatTempList(MaterialList, TemplateList):
+    def __init__(self, blockDict):
+        super().__init__(blockDict, MaterialTemplate)

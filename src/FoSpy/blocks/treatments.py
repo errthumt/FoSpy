@@ -1,4 +1,7 @@
-from . import SingleBlock, ListBlock, calc_routine
+from . import (
+    SingleBlock, ListBlock, 
+    TemplateBlock, TemplateList,
+    calc_routine)
 from .._debug import Debug
 
 _debug = Debug()
@@ -22,6 +25,10 @@ class Treatment(SingleBlock):
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
+    
+class TreatmentTemplate(Treatment, TemplateBlock):
+    def __init__(self, blockDict):
+        super().__init__(blockDict)
 
 class Annealing(Treatment):
     def __init__(self, blockDict):
@@ -38,5 +45,9 @@ class AnnealProgram(ListBlock):
         super().__init__(blockList, AnnealSection)
 
 class TreatmentList(ListBlock):
+    def __init__(self, blockList, cls=Treatment):
+        super().__init__(blockList, cls)
+
+class TreatTempList(TreatmentList, TemplateList):
     def __init__(self, blockList):
-        super().__init__(blockList, Treatment)
+        super().__init__(blockList, cls=TreatmentTemplate)

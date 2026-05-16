@@ -1,9 +1,16 @@
-from . import SingleBlock, ListBlock, calc_routine
+from . import (
+    SingleBlock, ListBlock, 
+    TemplateBlock, TemplateList,
+    calc_routine)
 from .._debug import Debug
 _debug = Debug()
 _debug.on = True
 
 class MetaData(SingleBlock):
+    def __init__(self, blockDict):
+        super().__init__(blockDict)
+
+class TemplateMeta(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
 
@@ -27,6 +34,14 @@ class Experimenter(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
 
+class ExpTemplate(Experimenter, TemplateBlock):
+    def __init__(self, blockDict):
+        super().__init__(blockDict)
+
 class ExperimenterList(ListBlock):
+    def __init__(self, blockList, cls=Experimenter):
+        super().__init__(blockList, cls)
+
+class ExpTempList(ExperimenterList, TemplateList):
     def __init__(self, blockList):
-        super().__init__(blockList, Experimenter)
+        super().__inist__(blockList, ExpTemplate)

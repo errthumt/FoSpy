@@ -15,6 +15,19 @@ required_keys = {
         "treatments" : TreatmentList
     },
 
+    TemplateSet: {
+        "metadata" : TemplateMeta
+    },
+
+    TemplateMeta: {
+        "name" : str,
+        "description" : str
+    },
+
+    TemplateBlock: {
+        "template_name" : str
+    },
+
     MetaData: {
         "name": str,
         "date": str,
@@ -75,5 +88,10 @@ optional_keys = {
 
     AnnealSection: {
         "temp": str
+    },
+
+    TemplateSet: {
+        "materials": MatTempList,
+        "treatments": TreatTempList
     }
 }
