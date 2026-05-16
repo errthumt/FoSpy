@@ -38,7 +38,7 @@ description: A collection of select templates
     0
     []
 
-[[Treatments]]
+[Treatments]
 :template_name
 :type
 :repeats
@@ -48,20 +48,4 @@ description: A collection of select templates
     weigh
     1
     Weighed each reagent by stoichiometric amount into a carbonized ampoule under argon atmosphere
-
-    600 for 120hr
-    anneal
-    1
-    None
-    program: [[
-    :type
-    :time
-
-        ramp
-        10 hr
-        temp: 600 C
-
-        dwell
-        120 hr
-    ]]
 

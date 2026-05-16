@@ -371,3 +371,17 @@ class ListBlock:
     def copy(self):
         cls = type(self)
         return cls(self.serialize())
+    
+    def remove_any(self, **kwargs):
+        if len(kwargs) != 1:
+            raise TypeError("Exactly one keyword argument is required")
+        
+        key, val = next(iter(kwargs.items()))
+        
+        objs = self._objs.copy()
+        removed = 0
+        for obj in objs:
+            if getattr(obj, key, None) == val:
+                self._objs.remove(obj)
+                removed += 1
+        _debug.msg(f"Removed {removed} {self._reqCls.__name__} objects matching {key} = {val}.")
