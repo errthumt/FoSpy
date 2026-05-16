@@ -1,4 +1,7 @@
-from . import SingleBlock, ListBlock
+from . import SingleBlock, ListBlock, calc_routine
+from .._debug import Debug
+_debug = Debug()
+_debug.on = True
 
 class MetaData(SingleBlock):
     def __init__(self, blockDict):
@@ -10,13 +13,14 @@ class Reaction(SingleBlock):
         self.nominal_mass = blockDict["nominal_mass"]
         super().__init__(blockDict)
 
-    def serialize(self):
-        mw = self.get_nom_MW()
-        self.add_calc_comment("nominal_formula",f"Nominal MW: {mw:.2f} g/mol","Nominal MW")
-        return super().serialize()
-
     def get_nom_MW(self):
         return self.nominal_formula.formula_weight
+    
+    @calc_routine
+    def add_nom_MW(self):
+        mw = self.get_nom_MW()
+        _debug.msg(f"Calculated Nominal MW: {mw:.2f} for Reaction block.")
+        self.add_calc_comment("nominal_formula",f"Nominal MW: {mw:.2f} g/mol","Nominal MW")
 
 
 class Experimenter(SingleBlock):
