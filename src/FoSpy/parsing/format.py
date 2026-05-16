@@ -23,6 +23,16 @@ def format_key_value(key: str, val: str, ind=0, looped=False):
 
     return _indent(f"{key}{delim}{"" if " " in delim else " "}{val}",ind)
 
+def format_embed_start(key:str, ind=0, looped=False):
+    prefix = SYNTAX["key_value"].get("prefix")
+    delim = SYNTAX["key_value"]["delimiter"]
+    if looped:
+        return _indent(SYNTAX["embedded"]["open"], ind)
+    
+    if prefix:
+        key = f"{prefix}{key}"
+    return _indent(f"{key}{delim}{"" if " " in delim else " "}{SYNTAX["embedded"]["open"]}", ind)
+
 
 def format_comment(text: str, ind: int = 0):
     spec = SYNTAX["comment"]

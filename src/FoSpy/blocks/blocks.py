@@ -142,10 +142,10 @@ class SingleBlock:
         for key in self._key_order:
             if key in all_attrs:
                 val = all_attrs.pop(key)
-                out[key] = try_serial(val)
+                out[key] = try_serial(val) if key != "embedded" else val
         
         for key, val in all_attrs.items():
-            out[key] = try_serial(val)
+            out[key] = try_serial(val) if key != "embedded" else val
 
         for attr, key in mk.items():
             val = getattr(self._meta,attr,md[key])

@@ -105,8 +105,21 @@ def build_comment_regex(spec):
 
 COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
 
+def build_embedded_start_regex(spec):
+    open_tok = re.escape(SYNTAX["embedded"]["open"])
+    return re.compile(rf".*{open_tok}.*")
+
+EMBEDDED_START = build_embedded_start_regex(SYNTAX["embedded"])
+
+def build_embedded_end_regex(spec):
+    end_tok = re.escape(spec["close"])
+    return re.compile(rf"^{end_tok}\s*$")
+EMBEDDED_END = build_embedded_end_regex(SYNTAX["embedded"])
+
+
+
 def refresh():
-    global BLOCK_HEADER, KEY_VALUE, COMMENT_LINE, CALC_COMMENT_LINE, NESTED_START, LOOP_KEY
+    global BLOCK_HEADER, KEY_VALUE, COMMENT_LINE, CALC_COMMENT_LINE, NESTED_START, LOOP_KEY, EMBEDDED_START, EMBEDDED_END
 
     BLOCK_HEADER = build_block_header_regex(SYNTAX["block_header"])
     KEY_VALUE = build_key_value_regex(SYNTAX["key_value"])
@@ -115,6 +128,8 @@ def refresh():
     NESTED_START = build_nested_start_regex(SYNTAX["nested"])
     LOOP_KEY = build_loop_key_regex(SYNTAX["key_value"])
     COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
+    EMBEDDED_START = build_embedded_start_regex(SYNTAX["embedded"])
+    EMBEDDED_END = build_embedded_end_regex(SYNTAX["embedded"])
 
 
 

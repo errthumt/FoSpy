@@ -85,7 +85,12 @@ def block_to_lines(block, indent=0, loop_keys=[]):
 
 def expand_lists(key, val, indent, looped=False):
     lines = []
-    if type(val) == list:
+    if key == "embedded":
+        lines.append(format_embed_start(key, indent, looped))
+        for line in val:
+            lines.append(line.rstrip())
+        lines.append(SYNTAX["embedded"]["close"])
+    elif type(val) == list:
         if len(val) == 0:
             lines.append(format_key_value(key, empty_nested(False), indent, looped))
         else:
