@@ -18,6 +18,7 @@ class Material(SingleBlock):
 class MaterialTemplate(Material, TemplateBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
+        self.ratio = 0
 
 class MaterialList(ListBlock):
     def __init__(self, blockList, cls=Material):

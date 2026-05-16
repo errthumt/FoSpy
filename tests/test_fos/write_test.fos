@@ -14,7 +14,7 @@ internal_project_description: Unique Clathrate
 // like a calculated value. You can mark these comments with a ! character:
 nominal_formula: Ba2Zn5As6
 // This is a comment on the nominal_mass
-nominal_mass: 300.0
+nominal_mass: 250.0
 nominal_mass_units: mg
 
 // This is a comment on the Materials block
@@ -41,7 +41,6 @@ nominal_mass_units: mg
     lump
     0.999
     Ar (g)
-    // ! Reagent weight percent: 26.13%
     2.0
     [
     type: cutting
@@ -58,7 +57,6 @@ nominal_mass_units: mg
     powder
     0.995
     Ar (g)
-    // ! Reagent weight percent: 31.10%
     5.0
     []
 
@@ -70,7 +68,6 @@ nominal_mass_units: mg
     lump
     0.9995
     Ar (g)
-    // ! Reagent weight percent: 42.77%
     6.0
     // This is a comment on the treatments value for Arsenic
     [
@@ -78,6 +75,17 @@ nominal_mass_units: mg
     repeats: 1
     observations: ground into powder for weighing and homogenization
     ]
+
+    Antimony
+    reagent
+    Sb
+    Unk
+    1234-56-7
+    powder
+    0.999
+    Ar (g)
+    6.0
+    []
 
 // This is a comment on the treatments block
 [[Treatments]]

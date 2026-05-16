@@ -1,0 +1,67 @@
+name: My Templates
+description: A collection of select templates
+
+[[Materials]]
+:template_name
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:purity
+:env
+:ratio
+:treatments
+
+    Antimony, Glovebox
+    Antimony
+    reagent
+    Sb
+    Unk
+    1234-56-7
+    powder
+    0.999
+    Ar (g)
+    0
+    []
+
+    Zinc powder, Glovebox
+    Zinc
+    reagent
+    Zn
+    Unk
+    1234-56-7
+    powder
+    0.995
+    Ar (g)
+    0
+    []
+
+[[Treatments]]
+:template_name
+:type
+:repeats
+:observations
+
+    Basic Weighing, carbonized ampoule, glovebox
+    weigh
+    1
+    Weighed each reagent by stoichiometric amount into a carbonized ampoule under argon atmosphere
+
+    600 for 120hr
+    anneal
+    1
+    None
+    program: [[
+    :type
+    :time
+
+        ramp
+        10 hr
+        temp: 600 C
+
+        dwell
+        120 hr
+    ]]
+

@@ -22,9 +22,19 @@ class TemplateList(ListBlock):
             and base not in (TemplateBlock, SingleBlock, ListBlock)
         )
 
-        serial = temp_obj.serialize()
-        serial.pop("template_name", None)
-        return parent_cls(serial)
+        serial = temp_obj.serialize()[0]
+        serial.pop("template_name",None)
+        return parent_cls.from_blockList(serial)
+    
+    def append(self, obj:SingleBlock, template_name=""):
+        serial = obj.serialize()[0]
+        if template_name:
+            serial["template_name"] = template_name
+        elif not serial.get("template_name"):
+            raise ValueError("Cannot append object to a template list without an existing "
+                             "template_name or a new template_name passed as an argument.")
+        return super().append(self._reqCls.from_blockList(serial))
+
 
 class TemplateBlock(SingleBlock):
     pass
