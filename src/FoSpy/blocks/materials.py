@@ -1,8 +1,17 @@
-from . import SingleBlock, ListBlock
+from . import SingleBlock, ListBlock, calc_routine
+from .._debug import Debug
+_debug = Debug()
+_debug.on = True
 
 class Material(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
+
+    @calc_routine
+    def example_calc(self):
+        _debug.msg(f"Running example calc routine for material: {self.name}")
+        return None
+
 
 class MaterialList(ListBlock):
     def __init__(self, blockList):
@@ -25,7 +34,10 @@ class MaterialList(ListBlock):
             percents[mat] = pct
         return percents
     
+    @calc_routine
     def add_weight_pcts(self, typ=None):
-        for mat, pct in self.calc_weight_pcts("reagent").items():
-            comment = f"Reagent weight percent: {pct:.2f}%"
-            mat.add_calc_comment("ratio",comment, "reagent_pct")
+        for mat, pct in self.calc_weight_pcts(typ).items():
+            label = typ.capitalize() if typ else "Total"
+            comment = f"{label} weight percent: {pct:.2f}%"
+            _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
+            mat.add_calc_comment("ratio",comment, f"{label}_pct")

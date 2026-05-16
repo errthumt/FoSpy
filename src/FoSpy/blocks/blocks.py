@@ -17,7 +17,10 @@ class SubContainer:
         pass
     def __iter__(self):
         return iter(self.__dict__)
-
+    
+def calc_routine(func):
+    func._is_calc_routine = True
+    return func
 
 class SingleBlock:
     """
@@ -70,6 +73,7 @@ class SingleBlock:
         
         self._meta = SubContainer()
         self._calc_comments = {}
+        self._calc_routines = []
 
         for attr, key in mk.items():
             setattr(self._meta, attr, blockDict.pop(key,md[key]))
@@ -118,6 +122,9 @@ class SingleBlock:
         all_attrs = {}
         out = {}
 
+        for routine in self._calc_routines:
+            routine()
+
         def try_serial(obj):
             serialize = getattr(obj, "serialize", None)
             if callable(serialize):
@@ -146,6 +153,7 @@ class SingleBlock:
 
         out = deepcopy(out)
 
+        # _debug.pmsg(self._calc_comments)
         for key, comments in self._calc_comments.items():
             for comment in comments.values():
                 out[mk["comments"]][key].append(format_calc_comment(comment))
@@ -156,6 +164,72 @@ class SingleBlock:
         calc_comments = self._calc_comments.get(key, {})
         self._calc_comments[key] = calc_comments
         self._calc_comments[key][calc_id]=comment
+
+
+
+    def _resolve_relative_path(self, path: str):
+        import re
+
+        _index_re = re.compile(r"^([A-Za-z_]\w*)\[(\d+)\]$")
+        obj = self
+
+        for part in path.split("."):
+
+            # Case: attr[index]
+            m = _index_re.match(part)
+            if m:
+                attr_name, idx_str = m.groups()
+                idx = int(idx_str)
+
+                # Get the ListBlock
+                obj = getattr(obj, attr_name)
+
+                # Index into its _objs
+                obj = obj._objs[idx]
+                continue
+
+            # Case: simple attribute
+            obj = getattr(obj, part)
+
+        return obj
+    
+    def add_calc_routine(self, path, **kwargs):
+        func = self._resolve_relative_path(path)
+        if not getattr(func, "_is_calc_routine", False):
+            raise TypeError(f"'{path}' is not a registered calc routine.")
+
+        def wrapped():
+            return func(**kwargs)
+
+        self._calc_routines.append(wrapped)
+
+    def list_calc_routines(self, recursive=False, prefix="", abbreviated=False):
+        routines = []
+
+        # Local routines
+        for name in dir(self):
+            attr = getattr(self, name)
+            if callable(attr) and getattr(attr, "_is_calc_routine", False):
+                routines.append(prefix + name)
+
+        if recursive:
+            for attr, val in self.__dict__.items():
+                if attr.startswith("_"):
+                    continue
+
+                # Recurse into child blocks
+                if hasattr(val, "list_calc_routines"):
+                    child_prefix = f"{prefix}{attr}."
+                    routines.extend(val.list_calc_routines(True, child_prefix, abbreviated))
+
+        return routines
+    
+    def add_all_calc_routines(self, recursive=False):
+        for path in self.list_calc_routines(recursive=recursive, abbreviated=False):
+            self.add_calc_routine(path)
+
+
+
 
 
 class FileBlock(SingleBlock):
@@ -241,3 +315,47 @@ class ListBlock:
         
     def serialize(self):
         return [obj.serialize()[0] for obj in self]
+    
+    def list_calc_routines(self, recursive=False, prefix="", abbreviated=False):
+        routines = []
+
+        # Local routines on the ListBlock itself
+        for name in dir(self):
+            attr = getattr(self, name)
+            if callable(attr) and getattr(attr, "_is_calc_routine", False):
+                routines.append(prefix + name)
+
+        if recursive:
+            if abbreviated:
+                obj_routines = {}
+                idx_str = "i"
+                idx_num = 0
+                while f"[{idx_str}{idx_num if idx_num > 0 else ''}]" in prefix:
+                    if idx_str == "z":
+                        idx_str = "i"
+                        idx_num += 1
+                    else:
+                        idx_str = chr(ord(idx_str)+1)
+
+                idx_str = f"{idx_str}{idx_num if idx_num > 0 else ''}"
+
+                for i, obj in enumerate(self._objs):
+                    if hasattr(obj, "list_calc_routines"):
+                        rtns = obj.list_calc_routines(True,f"{prefix[:-1]}[{idx_str}].",abbreviated=True)
+                        for routine in rtns:
+                            if routine not in obj_routines:
+                                obj_routines[routine] = []
+                            obj_routines[routine].append(i)
+                for routine, i_list in obj_routines.items():
+                    routines.append(f"{routine}; {idx_str} = {i_list}")
+            else:
+                for i, obj in enumerate(self._objs):
+                    if hasattr(obj, "list_calc_routines"):
+                        child_prefix = f"{prefix[:-1]}[{i}]."
+                        routines.extend(obj.list_calc_routines(
+                            recursive=True,
+                            prefix=child_prefix,
+                            abbreviated=False
+                        ))
+
+        return routines

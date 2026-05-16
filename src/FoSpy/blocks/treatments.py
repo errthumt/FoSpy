@@ -1,4 +1,4 @@
-from . import SingleBlock, ListBlock
+from . import SingleBlock, ListBlock, calc_routine
 from .._debug import Debug
 
 _debug = Debug()
@@ -17,6 +17,11 @@ class Treatment(SingleBlock):
 
     def __init__(self, blockDict):
         super().__init__(blockDict)
+    
+    @calc_routine
+    def example_calc(self):
+        _debug.msg(f"Running example routine for {self.type} treatment")
+        return None
 
 class Annealing(Treatment):
     def __init__(self, blockDict):

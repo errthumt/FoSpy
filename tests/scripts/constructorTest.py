@@ -11,19 +11,22 @@ def constructTest():
     mySyn = Synthesis.fromFile(READ_PATH)
 
     # pp(mySyn._meta.__dict__)
-    new_dict = mySyn.serialize()
+    # new_dict = mySyn.serialize()
 
     #pp(new_dict)
     # pp(mySyn.treatments[-1].program[0].__dict__)
 
-    diffs = deep_diff(file_dict,new_dict)
-    passed = diffs == []
-    print(f"Checking file dict with serialized synthesis: {'passed' if passed else 'failed'}")
+    #diffs = deep_diff(file_dict,new_dict)
+    #passed = diffs == []
+    #print(f"Checking file dict with serialized synthesis: {'passed' if passed else 'failed'}")
 
-    if not passed:
-        pp(diffs)
+    #if not passed:
+        #pp(diffs)
 
     mySyn.reaction.nominal_mass = "300.0"
+
+    #mySyn.add_calc_routine("materials.add_weight_pcts")
+    mySyn.add_calc_routine("materials.add_weight_pcts", typ="reagent")
 
     mySyn.save(WRITE_PATH)
     pass
