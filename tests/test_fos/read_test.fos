@@ -9,6 +9,11 @@ internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
 [Reaction]
+// Sometimes you don't want a comment to be read into the synthesis
+// because it is meant to be overwritten when saving the synthesis,
+// like a calculated value. You can mark these comments with a ! character:
+// ! Nominal MW: 1051.08 g/mol
+nominal_formula: Ba2Zn5As6
 // This is a comment on the nominal_mass
 nominal_mass: 250.0
 nominal_mass_units: mg

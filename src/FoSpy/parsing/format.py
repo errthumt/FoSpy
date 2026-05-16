@@ -29,6 +29,10 @@ def format_comment(text: str, ind: int = 0):
     prefix = spec["prefix"]
     return _indent(f"{prefix} {text}", ind)
 
+def format_calc_comment(text:str):
+    spec = SYNTAX["calc_comment"]
+    prefix = spec["prefix"]
+    return f"{prefix} {text}"
 
 def format_nested_start(key, is_list: bool, looped=False, ind=0):
     spec = SYNTAX["nested"]

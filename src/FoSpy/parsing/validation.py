@@ -27,6 +27,7 @@ required_keys = {
     },
 
     Reaction: {
+        "nominal_formula": ChemFormula,
         "nominal_mass" : validators.reaction.nominal_mass,
         "nominal_mass_units": validators.units.mass_unit("Reaction/nominal_mass_units")
     },

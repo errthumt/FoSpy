@@ -66,6 +66,7 @@ class SingleBlock:
                 raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
         
         self._meta = SubContainer()
+        self._calc_comments = {}
 
         for attr, key in mk.items():
             setattr(self._meta, attr, blockDict.pop(key,md[key]))
@@ -108,6 +109,9 @@ class SingleBlock:
             )
         
     def serialize(self):
+        from copy import deepcopy
+        from ..parsing.format import format_calc_comment
+
         all_attrs = {}
         out = {}
 
@@ -137,7 +141,18 @@ class SingleBlock:
             val = getattr(self._meta,attr,md[key])
             out[key] = val
 
+        out = deepcopy(out)
+
+        for key, comments in self._calc_comments.items():
+            for comment in comments.values():
+                out[mk["comments"]][key].append(format_calc_comment(comment))
+        
         return [out]
+    
+    def add_calc_comment(self, key, comment, calc_id):
+        calc_comments = self._calc_comments.get(key, {})
+        self._calc_comments[key] = calc_comments
+        self._calc_comments[key][calc_id]=comment
 
 
 

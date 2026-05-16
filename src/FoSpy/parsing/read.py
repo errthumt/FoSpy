@@ -15,7 +15,7 @@ def dict_from_file(filepath):
         endComments = []
         for line in f:
             txt = line.strip()     
-            if txt == "":
+            if txt == "" or rx.CALC_COMMENT_LINE.match(txt):
                 continue
 
             block = blocks.get(current_block)
