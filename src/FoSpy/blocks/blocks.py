@@ -13,24 +13,51 @@ _debug = Debug()
 _debug.on = True
 
 class SubContainer:
+    """A simple container object for storing unexpected attributes of a `SingleBlock`
+    
+    Values are only assigned directly to `SingleBlock` attributes if they are an expected
+    property. Otherwise they are assigned to a `SubContainer` at `SingleBlock.ext`
+
+    Usage:
+    ```
+    class SingleBlock:
+        ...
+        def __setattr__(self, name, value):
+            ...
+            if name not in expected:
+                return setattr(self.ext, name, value)
+    ```
+    """
     def __init__(self):
         pass
     def __iter__(self):
         return iter(self.__dict__)
     
 def calc_routine(func):
+    """Decorator for `SingleBlock` or `ListBlock` methods that calculate values from existing attributes.
+    `calc_routine` functions can be called at any time, but can also be queued
+    to run at serialization, as in refreshing relevant calculated values before saving the file.
+    See `SingleBlock.add_calc_routine()`"""
     func._is_calc_routine = True
     return func
 
 class SingleBlock:
     """
-    A single key–value block parsed from a FOS file.
+    Represents a single block of key:value pairs parsed from a FOS file.
 
-    Parameters
-    ----------
-    blockDict : dict
-        Mapping of field names to scalar values. Subclasses perform
-        validation and type conversion.
+    Subclasses are mapped to expected keys and validation routines in
+    `FoSpy.parsing.validation`. Expected values are validated and 
+    assigned to attributes. Unexpected values are assigned to attributes
+    of `self.ext`.
+
+    Some notable subclasses:```
+        FileBlock(SingleBlock)
+        Synthesis(FileBlock)
+        Reaction(SingleBlock)
+        Material(SingleBlock)
+        TemplateBlock(SingleBlock)
+        MaterialTempBlock(Material, TemplateBlock)
+        ```
     """
     @classmethod
     def from_blockList(cls, blockDict):
