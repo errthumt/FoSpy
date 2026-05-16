@@ -225,14 +225,17 @@ class SingleBlock:
             return super().__setattr__(name, validator(value))
         else:
             return setattr(self.ext, name, value)
-
+        
     def __getattr__(self, name):
+        """
+        Check both self and self.ext for attribute before returning.
+        """
         try:
             return getattr(self.ext, name)
         except AttributeError:
             raise AttributeError(
-                f"{type(self).__name__} '{self.name if hasattr(self, "name") else '<name unknown>'}'"
-                f"has no attribute '{name!r}'."
+                f"{type(self).__name__} object: '{self.name if hasattr(self, "name") else '<name unknown>'}' "
+                f"has no attribute {name!r}."
             )
         
     def serialize(self):
