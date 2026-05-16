@@ -1,20 +1,9 @@
-from ..parsing import (
-    dict_from_file,
-    write_dict_to_file
-)
-from ..parsing.syntax import meta_keys as mk
-from . import SingleBlock
 
-class Synthesis(SingleBlock):
+from .blocks import FileBlock
+
+class Synthesis(FileBlock):
     def __init__(self, blockDict, _sourceFile=None):
-        self._sourceFile = _sourceFile
-        super().__init__(blockDict)
-
-    @classmethod
-    def fromFile(cls, filepath):
-        blockDict = dict_from_file(filepath)
-        return cls(blockDict, _sourceFile = filepath)
-    
+        super().__init__(blockDict, _sourceFile)
 
     def insert_material(self, mat, idx=-1):
         # placeholder. modify for insertion at idx
@@ -24,20 +13,6 @@ class Synthesis(SingleBlock):
         # placeholder. modify for insertion at idx
         self.treatments.append(treat)
     
-    def serialize(self):
-        return super().serialize()[0]
-    
-    def save(self, filepath=None):
-        if filepath is None:
-            if self._sourceFile is None:
-                raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
-            else:
-                filepath = self._sourceFile
-        
-        self._sourceFile = filepath
-        blockDict = self.serialize()
-
-        write_dict_to_file(blockDict, filepath)
 
 
         

@@ -24,9 +24,8 @@ class MaterialList(ListBlock):
             pct = 100 * wt / total_weight
             percents[mat] = pct
         return percents
-
-    def serialize(self):
+    
+    def add_weight_pcts(self, typ=None):
         for mat, pct in self.calc_weight_pcts("reagent").items():
             comment = f"Reagent weight percent: {pct:.2f}%"
             mat.add_calc_comment("ratio",comment, "reagent_pct")
-        return super().serialize()
