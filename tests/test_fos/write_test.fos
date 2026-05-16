@@ -16,6 +16,7 @@ nominal_formula: Ba2Zn5As6
 // This is a comment on the nominal_mass
 nominal_mass: 250.0
 nominal_mass_units: mg
+hijinks: plenty
 
 // This is a comment on the Materials block
 // This comment is so important it gets two lines
