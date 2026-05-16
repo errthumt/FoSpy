@@ -24,7 +24,7 @@ class TemplateList(ListBlock):
 
         serial = temp_obj.serialize()[0]
         serial.pop("template_name",None)
-        return parent_cls.from_blockList(serial)
+        return parent_cls.subclass(serial)
     
     def append(self, obj:SingleBlock, template_name=""):
         serial = obj.serialize()[0]

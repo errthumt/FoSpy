@@ -13,7 +13,7 @@ class Treatment(SingleBlock):
     dispatch = {}
 
     @classmethod
-    def from_blockList(cls, blockDict):
+    def subclass(cls, blockDict):
         t = blockDict.get("type")
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
