@@ -127,7 +127,7 @@ nominal_mass_units: mg
             120hr
         ]]
 
-[CIF]
+[CIFs]
 file_name: my_cif
 extension: .CIF
 embedded: {{{
@@ -217,4 +217,4 @@ P4 P1- 1.090(63) 0.782(79) 1.215(76) 0.124(64) 0.713(55) -0.018(56)
 P5 P1- 0.92(11) 0.63(11) 0.85(11) 0 0.539(73) 0
 P6 P1- 0.711(83) 0.58(11) 0.866(90) 0 0.343(73) 0
 #End of TTdata_357-ICSD
-END FOS EMBED}}}
+#################### END FOS EMBED }}}

@@ -112,8 +112,12 @@ def build_embedded_start_regex(spec):
 EMBEDDED_START = build_embedded_start_regex(SYNTAX["embedded"])
 
 def build_embedded_end_regex(spec):
-    end_tok = re.escape(spec["close"])
-    return re.compile(rf"^{end_tok}\s*$")
+    prefix = re.escape(spec["prefix"])
+    close_tok = re.escape(spec["close"])
+
+    pattern = rf"^{prefix}*\s*{close_tok}\s*$"
+    return re.compile(pattern)
+
 EMBEDDED_END = build_embedded_end_regex(SYNTAX["embedded"])
 
 

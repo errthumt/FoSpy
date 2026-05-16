@@ -89,7 +89,7 @@ def expand_lists(key, val, indent, looped=False):
         lines.append(format_embed_start(key, indent, looped))
         for line in val:
             lines.append(line.rstrip())
-        lines.append(SYNTAX["embedded"]["close"])
+        lines.append(f'{SYNTAX["embedded"]["prefix"]*20} {SYNTAX["embedded"]["close"]}')
     elif type(val) == list:
         if len(val) == 0:
             lines.append(format_key_value(key, empty_nested(False), indent, looped))
