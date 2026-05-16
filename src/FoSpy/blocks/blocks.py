@@ -1,3 +1,4 @@
+from .. import inherit_docstring
 from ..parsing.syntax import meta_keys as mk
 from ..parsing.syntax import meta_defaults as md
 
@@ -13,17 +14,19 @@ _debug = Debug()
 _debug.on = True
 
 class SubContainer:
-    """A simple container object for storing unexpected attributes of a `SingleBlock`
+    """
+    A simple container for storing hidden or unexpected attributes of a
+    `SingleBlock`
     
-    Values are only assigned directly to `SingleBlock` attributes if they are an expected
-    property. Otherwise they are assigned to a `SubContainer` at `SingleBlock.ext`
+    Values are only assigned directly to `SingleBlock` attributes if they are an
+    expected property. Otherwise they are assigned to a `SubContainer` at
+    `SingleBlock.ext`. Also assigned to `SingleBlock._meta`.
 
-    Usage:
-    ```
+    Example Usage: ```
     class SingleBlock:
-        ...
+        ... 
         def __setattr__(self, name, value):
-            ...
+            ... 
             if name not in expected:
                 return setattr(self.ext, name, value)
     ```
@@ -34,10 +37,14 @@ class SubContainer:
         return iter(self.__dict__)
     
 def calc_routine(func):
-    """Decorator for `SingleBlock` or `ListBlock` methods that calculate values from existing attributes.
+    """
+    Decorator for `SingleBlock` or `ListBlock` methods that calculate values
+    from existing attributes.
+
     `calc_routine` functions can be called at any time, but can also be queued
-    to run at serialization, as in refreshing relevant calculated values before saving the file.
-    See `SingleBlock.add_calc_routine()`"""
+    to run at serialization, as in refreshing relevant calculated values before
+    saving the file. See `SingleBlock.add_calc_routine()`
+    """
     func._is_calc_routine = True
     return func
 
@@ -46,9 +53,8 @@ class SingleBlock:
     Represents a single block of key:value pairs parsed from a FOS file.
 
     Subclasses are mapped to expected keys and validation routines in
-    `FoSpy.parsing.validation`. Expected values are validated and 
-    assigned to attributes. Unexpected values are assigned to attributes
-    of `self.ext`.
+    `FoSpy.parsing.validation`. Expected values are validated and assigned to
+    attributes. Unexpected values are assigned to attributes of `self.ext`.
 
     Some notable subclasses:```
         FileBlock(SingleBlock)
@@ -57,19 +63,43 @@ class SingleBlock:
         Material(SingleBlock)
         TemplateBlock(SingleBlock)
         MaterialTempBlock(Material, TemplateBlock)
-        ```
+    ```
     """
     @classmethod
-    def from_blockList(cls, blockDict):
+    def subclass(cls, blockDict):
         """
-        Optional dispatcher to allow subclass delegation when constructing
-        from ListBlock. Overridden in some subclasses
+        Recommended dispatcher to allow subclass delegation when constructing.
+        
+        Overridden in some subclasses
         """
         # Default: construct normally.
         return cls(blockDict)
     
     @classmethod
     def build_req_validators(cls):
+        """
+        Builds required keys and validators mapped to subclass.
+
+        Walks all parent classes and builds a map of all keys that are required
+        during `__init__`, and their respective validation routines. Subclasses
+        are mapped to expected keys and validations in
+        `FoSpy.parsing.validation`. Subclass validations override parent classes
+        when applicable.
+
+        Returns:
+            a dict mapping required keys to validation routines. Routines may be
+            a class constructor or a func taking one arg. Example:``` {
+                "name": str,
+                "type": str,
+                "formula": ChemFormula, # class constructor
+                "supplier": str,
+                "cas": str,
+                "form": str,
+                "env": str,
+                "ratio": validators.material.ratio # validator function
+            }
+            ```
+        """
         from ..parsing.validation import required_keys
         merged = {}
         for base in reversed(cls.__mro__):
@@ -78,6 +108,15 @@ class SingleBlock:
 
     @classmethod
     def build_validators(cls):
+        """
+        Builds expected keys and validators mapped to subclass.
+
+        Walks all parent classes and builds a map of all keys that are allowed
+        (required or optional), and their respective validation routines.
+        Subclasses are mapped to keys and validations in
+        `FoSpy.parsing.validation`. Subclass validations override parent classes
+        when applicable. See `SingleBlock.build_req_validators()`
+        """
         from ..parsing.validation import required_keys, optional_keys
         merged = {}
         for base in reversed(cls.__mro__):
@@ -88,12 +127,39 @@ class SingleBlock:
         return merged
 
 
-    def __init__(self, blockDict):
+    def __init__(self, blockDict:dict):
+        """Constructs a SingleBlock object from a dictionary
+
+        SingleBlocks are constructed recursively from an arbitrarily nested
+        dictionary. All keys identified by `SingleBlock.build_req_validators()`
+        must be present at the top level. Required keys at nested levels are
+        handled by the recursed constructor.
+
+        Args:
+            blockDict:
+                An arbitrarily nested dictionary mapping attribute names to
+                values. 
+
+                Unexpected attributes will be assigned under `self.ext` instead
+                (see `SingleBlock.__setattr__`). 
+                
+                It is possible to pass a blockDict already containing objects,
+                but validation routines will fail if objects are not the correct
+                type. Best practice is to serialize all nested objects into
+                lists, dicts, and strings to allow full type coersion.
+
+        Raises:
+            ValueError:
+                A key required by `SingleBlock.build_req_validators()` is not
+                present.
+
+        """
         from ..parsing.validation import required_keys, optional_keys
 
         blockDict = blockDict.copy()
 
         req = self.build_req_validators()
+        req.pop("ext",None)
         for key in req:
             if key not in blockDict:
                 raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
@@ -113,10 +179,37 @@ class SingleBlock:
             setattr(self, key, val)
 
         
-
+    @inherit_docstring(object)
     def __setattr__(self, name, value):
+        """
+        Assign an attribute with validation and controlled namespace behavior.
+
+        Contract:
+            `SingleBlock` enforces type correctness and validator execution for
+            all public attributes defined by its subclass.
+
+            Required types and validators are mapped by subclass in
+            `FoSpy.parsing.validation`
+
+        Rules:
+            1. Private attributes (`_`-prefixed) bypass validation.
+            2. Attributes with registered validators are processed through the
+            validator before assignment.
+            3. Attributes with required types are coerced by calling the type
+            constructor when necessary.
+                3a. If required type is a SingleBlock subclass and value is
+                wrapped as a list, list is unwrapped to the first entry
+            4. Unrecognized attribute names are redirected to `self.ext`.
+
+        Raises:
+            ValueError:
+                Required `SingleBlock`s can be coerced from a dict or a list with
+                a single dict entry. Error raised if a list of length > 1 is
+                passed for a `SingleBlock` attribute.
+        """
+
         validators = self.build_validators()
-        if name == 'ext' or name.startswith("_"):
+        if name.startswith("_"):
             return super().__setattr__(name, value)
 
         if name in validators:
@@ -257,7 +350,7 @@ class SingleBlock:
 
     def copy(self):
         cls = type(self)
-        return cls.from_blockList(self.serialize())
+        return cls.subclass(self.serialize())
 
 
 
@@ -308,7 +401,7 @@ class ListBlock:
         self._objs = []
         self._reqCls = cls
         for blockDict in blockList:
-            self._objs.append(cls.from_blockList(blockDict))
+            self._objs.append(cls.subclass(blockDict))
 
     def __setattr__(self, name, value):
         if name == "_objs":

@@ -8,6 +8,10 @@ from . import validators
 from chemformula import ChemFormula
 
 required_keys = {
+    SingleBlock: {
+        "ext" : SubContainer
+    },
+    
     Synthesis: {
         "metadata" : MetaData,
         "reaction" : Reaction,
