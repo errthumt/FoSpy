@@ -27,6 +27,10 @@ SYNTAX = {
         "prefix": "//",
         "allow_leading_ws": True,
     },
+    "calc_comment" :{
+        "prefix": "!",
+        "allow_leading_ws": True
+    },
     "indent_size": 4
 }
 

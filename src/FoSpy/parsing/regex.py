@@ -46,6 +46,23 @@ def build_comment_regex(spec):
 
 COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
 
+def build_calc_comment_regex(spec):
+    """
+    Matches calculated comments of the form:
+        <comment_prefix> <calc_prefix> <text>
+    Example:
+        // ## Calculated MW: 123.45 g/mol
+    """
+    comment_prefix = re.escape(SYNTAX["comment"]["prefix"])
+    calc_prefix = re.escape(spec["prefix"])
+
+    # Allow leading whitespace before the comment prefix
+    return re.compile(
+        rf"^\s*{comment_prefix}\s+{calc_prefix}\s+(?P<text>.*)$"
+    )
+
+CALC_COMMENT_LINE = build_calc_comment_regex(SYNTAX["calc_comment"])
+
 def build_nested_start_regex(spec):
     open_bracket = re.escape(spec["open"])  # usually "["
 
@@ -89,11 +106,12 @@ def build_comment_regex(spec):
 COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
 
 def refresh():
-    global BLOCK_HEADER, KEY_VALUE, COMMENT_LINE, NESTED_START, LOOP_KEY
+    global BLOCK_HEADER, KEY_VALUE, COMMENT_LINE, CALC_COMMENT_LINE, NESTED_START, LOOP_KEY
 
     BLOCK_HEADER = build_block_header_regex(SYNTAX["block_header"])
     KEY_VALUE = build_key_value_regex(SYNTAX["key_value"])
     COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
+    CALC_COMMENT_LINE = build_calc_comment_regex(SYNTAX["calc_comment"])
     NESTED_START = build_nested_start_regex(SYNTAX["nested"])
     LOOP_KEY = build_loop_key_regex(SYNTAX["key_value"])
     COMMENT_LINE = build_comment_regex(SYNTAX["comment"])
