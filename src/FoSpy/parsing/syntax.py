@@ -20,7 +20,8 @@ SYNTAX = {
 
     "embedded": {
         "open": "{{{",
-        "close": "END FOS EMBED}}}"
+        "close": "END FOS EMBED }}}",
+        "prefix" : "#"
     },
 
     "key_value": {
