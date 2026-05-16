@@ -92,6 +92,7 @@ optional_keys = {
 
     TemplateSet: {
         "materials": MatTempList,
-        "treatments": TreatTempList
+        "treatments": TreatTempList,
+        "experimenters": ExpTempList
     }
 }

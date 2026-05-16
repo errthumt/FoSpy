@@ -111,7 +111,7 @@ class SingleBlock:
             return getattr(self.ext, name)
         except AttributeError:
             raise AttributeError(
-                f"{type(self).__name__} '{self.name if self.name else '<name unknown>'}'"
+                f"{type(self).__name__} '{self.name if hasattr(self, "name") else '<name unknown>'}'"
                 f"has no attribute '{name!r}'."
             )
         
@@ -228,6 +228,10 @@ class SingleBlock:
         for path in self.list_calc_routines(recursive=recursive, abbreviated=False):
             self.add_calc_routine(path)
 
+    def copy(self):
+        cls = type(self)
+        return cls.from_blockList(self.serialize())
+
 
 
 
@@ -300,6 +304,10 @@ class ListBlock:
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
+    def append(self, obj):
+        objs = self._objs.copy()
+        objs.append(obj)
+        self._objs = objs
         
         
         
@@ -359,3 +367,7 @@ class ListBlock:
                         ))
 
         return routines
+    
+    def copy(self):
+        cls = type(self)
+        return cls(self.serialize())
