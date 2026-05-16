@@ -60,22 +60,6 @@ nominal_mass_units: mg
     5.0
     []
 
-    Arsenic
-    reagent
-    As
-    Unk
-    1234-56-7
-    lump
-    0.9995
-    Ar (g)
-    6.0
-    // This is a comment on the treatments value for Arsenic
-    [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
-    ]
-
     Antimony
     reagent
     Sb
