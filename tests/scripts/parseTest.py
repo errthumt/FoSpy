@@ -48,32 +48,22 @@ def writeTest(file_dict):
 
     return file_dict, new_fp
 
-'''
-def deep_diff(d1, d2, path=""):
-    diffs = []
 
-    # keys only in d1
-    for k in d1.keys() - d2.keys():
-        diffs.append(f"{path}/{k}: missing in d2")
+from FoSpy.parsing.syntax import SYNTAX
 
-    # keys only in d2
-    for k in d2.keys() - d1.keys():
-        diffs.append(f"{path}/{k}: missing in d1")
-
-    # keys in both
-    for k in d1.keys() & d2.keys():
-        v1, v2 = d1[k], d2[k]
-        new_path = f"{path}/{k}"
-
-        if isinstance(v1, dict) and isinstance(v2, dict):
-            diffs.extend(deep_diff(v1, v2, new_path))
-        elif v1 != v2:
-            diffs.append(f"{new_path}: {v1} != {v2}")
-
-    return diffs'''
 
 def deep_diff(d1, d2, path=""):
+    """
+    Recursively diff two nested dict/list structures.
+    Ignores calculated comments (strings starting with SYNTAX["calc_comment"]["prefix"]).
+    """
+
+    calc_prefix = SYNTAX["calc_comment"]["prefix"]
     diffs = []
+
+    # Helper: detect calculated comment strings
+    def is_calc_comment(x):
+        return isinstance(x, str) and x.strip().startswith(calc_prefix)
 
     # Case 1 — both dicts
     if isinstance(d1, dict) and isinstance(d2, dict):
@@ -88,28 +78,38 @@ def deep_diff(d1, d2, path=""):
         # keys in both
         for k in d1.keys() & d2.keys():
             diffs.extend(deep_diff(d1[k], d2[k], f"{path}/{k}"))
+
         return diffs
 
     # Case 2 — both lists
     if isinstance(d1, list) and isinstance(d2, list):
+        # Filter out calculated comments
+        f1 = [x for x in d1 if not is_calc_comment(x)]
+        f2 = [x for x in d2 if not is_calc_comment(x)]
+
         # length mismatch
-        if len(d1) != len(d2):
-            diffs.append(f"{path}: list length {len(d1)} != {len(d2)}")
-            # still compare overlapping indices
-            min_len = min(len(d1), len(d2))
+        if len(f1) != len(f2):
+            diffs.append(f"{path}: list length {len(f1)} != {len(f2)}")
+            min_len = min(len(f1), len(f2))
         else:
-            min_len = len(d1)
+            min_len = len(f1)
 
         # compare element‑wise
         for i in range(min_len):
-            diffs.extend(deep_diff(d1[i], d2[i], f"{path}[{i}]"))
+            diffs.extend(deep_diff(f1[i], f2[i], f"{path}[{i}]"))
+
         return diffs
 
     # Case 3 — scalar mismatch
     if d1 != d2:
+        # Ignore calculated comments entirely
+        if is_calc_comment(d1) or is_calc_comment(d2):
+            return diffs
+
         diffs.append(f"{path}: {d1!r} != {d2!r}")
 
     return diffs
+
 
 
 def retTest(old_dict, new_fp):
@@ -119,10 +119,11 @@ def retTest(old_dict, new_fp):
     new_dict = dict_from_file(new_fp)
 
     print(f'Testing to see if original dictionary from read test matches new dictionary')
-    passed = old_dict == new_dict
+    diffs = deep_diff(old_dict,new_dict)
+    passed = diffs == []
     print(f'>>> User-level Retention Test: {"passed" if passed else "failed"}')
     if not passed:
-        pprint(deep_diff(old_dict, new_dict))
+        pprint(diffs)
 
     print("Taking the new dictionary on a round trip to file and back")
     old_dict = new_dict
@@ -130,10 +131,11 @@ def retTest(old_dict, new_fp):
     new_dict = dict_from_file(new_fp)
 
     print("Testing to see if dictionary was preserved on round trip:")
-    passed = old_dict == new_dict
+    diffs = deep_diff(old_dict,new_dict)
+    passed = diffs == []
     print(f'>>> Script-level Retention Test: {"passed" if passed else "failed"}')
     if not passed:
-        pprint(deep_diff(old_dict, new_dict))
+        pprint(diffs)
 
 def test1():
     readResult = readTest(False)

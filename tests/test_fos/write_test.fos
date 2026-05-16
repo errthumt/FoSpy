@@ -42,6 +42,7 @@ nominal_mass_units: mg
     lump
     0.999
     Ar (g)
+    // ! Reagent weight percent: 26.13%
     2.0
     [
     type: cutting
@@ -58,6 +59,7 @@ nominal_mass_units: mg
     powder
     0.995
     Ar (g)
+    // ! Reagent weight percent: 31.10%
     5.0
     []
 
@@ -69,6 +71,7 @@ nominal_mass_units: mg
     lump
     0.9995
     Ar (g)
+    // ! Reagent weight percent: 42.77%
     6.0
     // This is a comment on the treatments value for Arsenic
     [
