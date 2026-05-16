@@ -1,4 +1,5 @@
 from .blocks import * 
+from .embedded import *
 from .template import *
 from .synthesis import *   
 from .data import *

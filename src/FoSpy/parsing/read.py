@@ -11,12 +11,25 @@ def dict_from_file(filepath):
     comments = {}
     current_block = "metadata"
     current_type = "single"
+    embedding = False
     with open(filepath, "r", encoding="utf-8") as f:
         endComments = []
         for line in f:
+            if rx.EMBEDDED_END.match(line):
+                embedding = False
+                block.append(line)
+                continue
+
+            if embedding:
+                block.append(line)
+                continue
+
             txt = line.strip()     
             if txt == "" or rx.CALC_COMMENT_LINE.match(txt):
                 continue
+
+            if rx.EMBEDDED_START.match(txt):
+                embedding = True
 
             block = blocks.get(current_block)
             if block is None:
@@ -26,14 +39,6 @@ def dict_from_file(filepath):
                 block = block[1]
 
             
-            '''
-            if txt.startswith("[") and txt.endswith("]") and txt not in ("[]","[[]]"):
-                if txt.startswith("[["):
-                    current_type = "list"
-                else:
-                    current_type = "single"
-
-                current_block = txt.strip("[]").lower()'''
             m = rx.BLOCK_HEADER.match(txt)
             if m:
                 name_found = False
@@ -93,6 +98,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
     nested = 0
     nested_key = None
     comments = []
+    embedding = False
     for line in lines:
         # _debug.msg(f'processing: {line}')
         is_comment = rx.COMMENT_LINE.match(line)
@@ -101,6 +107,16 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 nested_lines.append(line)
             else:
                 comments.append(is_comment.group("text").lstrip())
+        elif embedding:
+            if rx.EMBEDDED_END.match(line):
+                embedding = False
+                out_dict[nested_key] = nested_lines
+                nested_lines = []
+                nested_key = None
+                nested_type = None
+                _debug.msg("Ending Embedding")
+            else:
+                nested_lines.append(line)
         elif nested==0:
             m = rx.KEY_VALUE.match(line)
             if m:
@@ -111,7 +127,8 @@ def create_single_block_dict(lines, _list_type="explicit"):
             if key in out_dict:
                 raise ValueError(f"Duplicate key found: '{key}' Each key can only appear once within a block.")
             
-            m = rx.NESTED_START.match(val)
+            emb = rx.EMBEDDED_START.match(line)
+            m = rx.NESTED_START.match(val) or emb
             if val in (empty_nested(True),empty_nested(False)):
                 out_dict[key] = []
                 out_dict[mk["comments"]][key]=comments
@@ -119,10 +136,15 @@ def create_single_block_dict(lines, _list_type="explicit"):
             
             elif m:
                 # _debug.msg(f'{key} is nested')
+                
                 nested_key = key
-                if m.group("list"):
+                if rx.EMBEDDED_START.match(line):
+                    embedding = True
+
+                elif m.group("list"):
                     nested_type = "list"
                     nested += 2
+                
                 else:
                     nested_type = "single"
                     nested += 1
@@ -130,7 +152,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 out_dict[mk["comments"]][nested_key] = comments
                 comments = []
 
-                remainder = m.group("rest")
+                remainder = m.group("rest") if not emb else None
                 if remainder:
                     nested_lines.append(remainder)
                 continue
@@ -185,12 +207,20 @@ def create_list_block_dict(lines):
         key_comments = {}
 
         key_idx = 0
+        embedding = False
         for line in lines:
             # _debug.msg(f'processing list line: {line}')
+
+            if embedding:
+                if rx.EMBEDDED_END.match(line):
+                    embedding = False
+                current_lines.append(line)
+                continue
 
             is_loop_key = rx.LOOP_KEY.match(line)
             is_key_val = rx.KEY_VALUE.match(line)
             is_comment = rx.COMMENT_LINE.match(line)
+            is_embed_start = rx.EMBEDDED_START.match(line)
             if getting_keys and is_comment:
                 comments.append(is_comment.group("text").lstrip())
             elif nested>0 or is_comment:
@@ -211,6 +241,7 @@ def create_list_block_dict(lines):
                     getting_keys = False
                     for l in comments:
                         current_lines.append(l)
+                embedding = is_embed_start
                 current_lines.append(line)
 
             else:
@@ -230,7 +261,7 @@ def create_list_block_dict(lines):
                     trailing_comments.reverse()
                     current_lines = trailing_comments
                     key_idx = 0
-
+                embedding = rx.EMBEDDED_START.match(line)
                 key = keys[key_idx]
                 current_lines.append(format_key_value(key, line))
                 key_idx += 1
@@ -251,8 +282,15 @@ def create_list_block_dict(lines):
 
         block_list[0][mk["key_comments"]] = key_comments
     else:
+        embedding = False
         for line in lines:
             is_key_val, is_comment = rx.KEY_VALUE.match(line), rx.COMMENT_LINE.match(line)
+            if embedding or rx.EMBEDDED_START.match(line):
+                if rx.EMBEDDED_END.match(line):
+                    embedding = False
+                current_lines.append(line)
+                continue
+
             if not (is_key_val or is_comment):
                 raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
             key = is_key_val.group("key") if is_key_val else None

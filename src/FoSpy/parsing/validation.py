@@ -69,10 +69,21 @@ required_keys = {
 
     Annealing: {
         "program": AnnealProgram
+    },
+
+    EmbeddedFile: {
+        "file_name": str,
+        "extension": str,
+        "embedded" : list
     }
 }
 
 optional_keys = {
+    Synthesis: {
+        "cif": EmbeddedCIF,
+        "cifs": CIFList
+    },
+
     Experimenter: {
         "orcid" : str
     },

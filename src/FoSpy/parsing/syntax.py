@@ -18,6 +18,11 @@ SYNTAX = {
         "close" : "]"
     },
 
+    "embedded": {
+        "open": "{{{",
+        "close": "END FOS EMBED}}}"
+    },
+
     "key_value": {
         "delimiter": ":",
         "require_value": True,
@@ -31,6 +36,7 @@ SYNTAX = {
         "prefix": "!",
         "allow_leading_ws": True
     },
+
     "indent_size": 4
 }
 
