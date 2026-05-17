@@ -1,4 +1,4 @@
-from .. import inherit_docstring
+from .. import inherit_docstring, inherit_class_doc, attach_doc
 from ..parsing.syntax import meta_keys as mk
 from ..parsing.syntax import meta_defaults as md
 
@@ -22,7 +22,8 @@ class SubContainer:
     expected property. Otherwise they are assigned to a `SubContainer` at
     `SingleBlock.ext`. Also assigned to `SingleBlock._meta`.
 
-    Example Usage: ```
+    Example Usage:
+    ```
     class SingleBlock:
         ... 
         def __setattr__(self, name, value):
@@ -36,7 +37,7 @@ class SubContainer:
     def __iter__(self):
         return iter(self.__dict__)
     
-def calc_routine(func):
+def calc_routine(attach=True):
     """
     Decorator for `SingleBlock` or `ListBlock` methods that calculate values
     from existing attributes.
@@ -45,8 +46,14 @@ def calc_routine(func):
     to run at serialization, as in refreshing relevant calculated values before
     saving the file. See `SingleBlock.add_calc_routine()`
     """
-    func._is_calc_routine = True
-    return func
+    def decorator(func):
+        func._is_calc_routine = True
+        func.__doc__ = (func.__doc__ or "") + "\nThis function is decorated as a calc_routine"
+        if attach:
+            func = attach_doc(SingleBlock.add_calc_routine, label="Related")(func)
+        return func
+    return decorator
+    
 
 class SingleBlock:
     """
@@ -54,9 +61,12 @@ class SingleBlock:
 
     Subclasses are mapped to expected keys and validation routines in
     `FoSpy.parsing.validation`. Expected values are validated and assigned to
-    attributes. Unexpected values are assigned to attributes of `self.ext`.
+    public attributes. Unexpected values are assigned to attributes of
+    `self.ext` for safety, but can still be accessed as an attribute of the
+    SingleBlock obj if not overridden.
 
-    Some notable subclasses:```
+    Some notable subclasses:
+    ```
         FileBlock(SingleBlock)
         Synthesis(FileBlock)
         Reaction(SingleBlock)
@@ -64,9 +74,29 @@ class SingleBlock:
         TemplateBlock(SingleBlock)
         MaterialTempBlock(Material, TemplateBlock)
     ```
+    Private Attributes:
+        _meta:
+            `SubContainer` object containing meta data extracted from `blockDict`
+            during construction. See `FoSpy.parsing.syntax.meta_keys`
+
+        _calc_comments:
+            dict mapping attribute names to `{"comment_ID":"comment_text"}`
+            values. Calculated comments are for user information when reading a
+            FOS file. On serialization, they are formatted to be skipped by the
+            parser and attached to their respective attributes. See
+            `SingleBlock.add_calc_comment()` and
+            `SingleBlock.add_calc_routine()`.
+
+        _calc_routines:
+            List of `calc_routine()`-decorated methods to be run during
+            serialization to populate _calc_comments.
+
+        _key_order: 
+            Maintains order that attributes were read during construction to be
+            repeated during serialization
     """
     @classmethod
-    def subclass(cls, blockDict):
+    def subclass(cls, blockDict:dict):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
@@ -88,7 +118,9 @@ class SingleBlock:
 
         Returns:
             a dict mapping required keys to validation routines. Routines may be
-            a class constructor or a func taking one arg. Example:``` {
+            a class constructor or a func taking one arg. Example:
+            ``` 
+            {
                 "name": str,
                 "type": str,
                 "formula": ChemFormula, # class constructor
@@ -103,7 +135,13 @@ class SingleBlock:
         from ..parsing.validation import required_keys
         merged = {}
         for base in reversed(cls.__mro__):
-            merged.update(required_keys.get(base,{}))
+            base_reqs = required_keys.get(base,{})
+            for key, validator in base_reqs.items():
+                # allow subclasses to remove parent requirements.
+                if validator is False:
+                    merged.pop(key, None)
+                else:
+                    merged[key] = validator
         return merged
 
     @classmethod
@@ -125,6 +163,34 @@ class SingleBlock:
             merged.update(req)
             merged.update(opt)
         return merged
+    
+    @classmethod
+    def Template(cls,*args:str):
+        from . import TemplateBlock
+        from ..parsing.validation import required_keys
+        class SubTemplate(TemplateBlock, cls):
+            def __init__(self, template_name, blockDict):
+                super().__init__(template_name, blockDict)
+                self._full_class = cls
+
+        required_keys[SubTemplate] = {}
+        for key in args:
+            required_keys[SubTemplate][key] = False
+
+        SubTemplate.__name__ = f"{cls.__name__}Template"
+        SubTemplate.__qualname__ = f"{cls.__name__}.Template.{SubTemplate.__name__}"
+        SubTemplate.__module__ = cls.__module__
+
+        
+        return SubTemplate
+    
+    def make_template(self,template_name,*args:str):
+        serial = self.serialize()[0]
+        for key in args:
+            serial.pop(key,None)
+
+        return type(self).Template(*args)(template_name,serial)
+
 
 
     def __init__(self, blockDict:dict):
@@ -180,7 +246,7 @@ class SingleBlock:
 
         
     @inherit_docstring(object)
-    def __setattr__(self, name, value):
+    def __setattr__(self, name:str, value):
         """
         Assign an attribute with validation and controlled namespace behavior.
 
@@ -226,7 +292,7 @@ class SingleBlock:
         else:
             return setattr(self.ext, name, value)
         
-    def __getattr__(self, name):
+    def __getattr__(self, name:str):
         """
         Check both self and self.ext for attribute before returning.
         """
@@ -234,11 +300,37 @@ class SingleBlock:
             return getattr(self.ext, name)
         except AttributeError:
             raise AttributeError(
-                f"{type(self).__name__} object: '{self.name if hasattr(self, "name") else '<name unknown>'}' "
+                f"{type(self).__name__} object "
                 f"has no attribute {name!r}."
             )
         
     def serialize(self):
+        """
+        Return a recursively serialized `[dict]` representation of itself.
+
+        Fully serialized `SingleBlock`s are a single dict wrapped in a list that
+        can be passed to another constructor or emitted into lines for a FOS
+        file. Serialized values at any nest level are either dicts, lists, or
+        strings to allow full type-coersion when reconstructing or simplified
+        emission when writing files.
+
+        Serialized dict is deep copied to prevent object mutation.
+
+        Private attributes starting with "_" are either skipped or unpacked in
+        special cases:
+            _key_order:
+                attributes are added to the serialized dict in the order
+                they appear in this list.
+            
+            _calc_comments:
+                calculated comments are attached to their mapped attribute after
+                serialization to avoid mutation of object comments
+
+            _meta:
+                attributes of this container are given their own private `_key`s
+                mapped by `FoSpy.parsing.syntax.meta_keys` in the serialized
+                dict.
+        """
         from copy import deepcopy
         from ..parsing.format import format_calc_comment
 
@@ -265,10 +357,10 @@ class SingleBlock:
         for key in self._key_order:
             if key in all_attrs:
                 val = all_attrs.pop(key)
-                out[key] = try_serial(val) if key != "embedded" else val
+                out[key] = try_serial(val)
         
         for key, val in all_attrs.items():
-            out[key] = try_serial(val) if key != "embedded" else val
+            out[key] = try_serial(val)
 
         for attr, key in mk.items():
             val = getattr(self._meta,attr,md[key])
@@ -283,7 +375,30 @@ class SingleBlock:
         
         return [out]
     
-    def add_calc_comment(self, key, comment, calc_id):
+    def add_calc_comment(self, key:str, comment:str, calc_id:str):
+        """
+        Add a calculated comment to be injected during serialization.
+
+        WARNING: This function can leave outdated calculations in comments after
+        serialization. Recommended to use `add_calc_routine()` instead.
+        
+        Calculated comments are for user information and will be formatted to be
+        skipped by the parser when reading the file. This is useful for comments
+        that should be recalculated and refreshed during saving/serialization,
+        like weight percentages or summaries.
+
+        Args:
+            key:
+                attribute to attach the calculated comment to. Comments appear
+                above their attached attributes in FOS files.
+            comment:
+                comment text without comment formatting (like // or !)
+            calc_id:
+                unique identifier for the calculated comment. If it matches an
+                existing comment (like when refreshing a value), the comment is
+                overwritten
+
+        """
         calc_comments = self._calc_comments.get(key, {})
         self._calc_comments[key] = calc_comments
         self._calc_comments[key][calc_id]=comment
@@ -291,6 +406,15 @@ class SingleBlock:
 
 
     def _resolve_relative_path(self, path: str):
+        """
+        Resolves a relative object path string into an object or function.
+
+        Example:
+        ```
+            mySyn._resolve_relative_path("materials[1].ratio")
+            ## returns mySyn.materials[1].ratio
+        ```
+        """
         import re
 
         _index_re = re.compile(r"^([A-Za-z_]\w*)\[(\d+)\]$")
@@ -316,17 +440,88 @@ class SingleBlock:
 
         return obj
     
-    def add_calc_routine(self, path, **kwargs):
+    def add_calc_routine(self, path:str, **kwargs):
+        """
+        Appends a `calc_routine()`-decorated function to `self._calc_routines`
+        to be run at serialization.
+
+        Used to add calculated comments that should be refreshed during
+        serialization.
+
+        Args:
+            path:
+                a relative path string that can be resolved into a
+                `calc_routine()`-decorated function
+            kwargs:
+                optional key word arguments to be passed to the function at
+                path.
+
+        Raises:
+            TypeError: the attr or method at path is not registered as a
+            calc_routine
+
+        Example:
+        ```
+            mySyn.add_calc_routine("materials.add_weight_pcts", typ="reagent")
+            ## mySyn.materials.add_weight_pcts(typ="reagent") will be run before
+            ## serialization.
+        ```
+        """
+        from functools import wraps
+
         func = self._resolve_relative_path(path)
         if not getattr(func, "_is_calc_routine", False):
             raise TypeError(f"'{path}' is not a registered calc routine.")
 
+        @wraps(func)
         def wrapped():
+            __name__ = func.__name__
             return func(**kwargs)
 
         self._calc_routines.append(wrapped)
 
-    def list_calc_routines(self, recursive=False, prefix="", abbreviated=False):
+    def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
+        """
+        Lists all calc routines available to be added to `self._calc_routines`.
+
+        Non-abbreviated calc routine strings can be passed directly to
+        `self.add_calc_routine()`
+
+        Args:
+            recursive:
+                If True, recursively walks all attributes and appends results
+                from `self.attr.list_avail_routines()` to result. Otherwise only
+                identifies methods of `self`.
+
+            prefix: Used during recursion to build relative paths
+            abbreviated:
+                optionally abbreviate recursively repeated routines for similar
+                objects into one line. This line cannot be passed to
+                `self.add_calc_routine()`
+
+        Returns: list of strings
+
+        Example:
+        ```
+            mySyn.list_avail_routines()
+            ## returns []
+            mySyn.list_avail_routines(recursive=True)
+            ## returns [
+            ##     'reaction.add_nom_MW',
+            ##     'materials.add_weight_pcts',
+            ##     'materials[0].add_MW',
+            ##     'materials[1].add_MW',
+            ##     ... 6 total materials with the same calc_routine
+            ##     'materials[5].add_MW'
+            ## ]
+            mySyn.list_avail_routines(recursive=True, abbreviated=True)
+            ## returns [
+            ##     'reaction.add_nom_MW',
+            ##     'materials.add_weight_pcts',
+            ##     'materials[i].add_MW; i = [0, 1, 2, 3, 4, 5]'
+            ## ]
+        ```
+        """
         routines = []
 
         # Local routines
@@ -341,26 +536,61 @@ class SingleBlock:
                     continue
 
                 # Recurse into child blocks
-                if hasattr(val, "list_calc_routines"):
+                if hasattr(val, "list_avail_routines"):
                     child_prefix = f"{prefix}{attr}."
-                    routines.extend(val.list_calc_routines(True, child_prefix, abbreviated))
+                    routines.extend(val.list_avail_routines(True, child_prefix, abbreviated))
 
         return routines
     
     def add_all_calc_routines(self, recursive=False):
-        for path in self.list_calc_routines(recursive=recursive, abbreviated=False):
+        """
+        Adds all available calc_routines to `self._calc_routines` using
+        `self.list_avail_routines()` and `self.add_calc_routine()`.
+        
+        Optional recursion. See `SingleBlock.list_avail_routines()`
+        """
+        for path in self.list_avail_routines(recursive=recursive, abbreviated=False):
             self.add_calc_routine(path)
 
     def copy(self):
+        """
+        Returns a deep-copy of itself by serializing and reconstructing.
+        
+        _calc_comments are not preserved during copy, but _calc_routines are.
+        This prevents mutation of the comments when reconstructing.
+        """
         cls = type(self)
-        return cls.subclass(self.serialize())
+        c_cmts = self._calc_comments.copy()
+        self._calc_comments = {}
+
+        new_obj =  cls.subclass(self.serialize())
+        self._calc_comments = c_cmts
+
+        return new_obj
 
 
 
 
-
+@inherit_class_doc(SingleBlock)
 class FileBlock(SingleBlock):
+    """
+    Represents a set of blocks loaded from a file.
+
+    All public attributes of `FileBlock` objects are either `SingleBlock` or
+    `ListBlock` objects. Attributes without a header at the start of the file
+    are parsed into `{"metadata": blockDict}` before passing to `FileBlock`.
+    
+    Noteable Subclasses:
+    ```
+    Synthesis(FileBlock)
+    TemplateSet(FileBlock)
+    ```
+    """
+    @inherit_docstring(SingleBlock)
     def __init__(self, blockDict, _sourceFile=None):
+        """
+        Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
+        """
         self._sourceFile = _sourceFile
         super().__init__(blockDict)
 
@@ -369,10 +599,29 @@ class FileBlock(SingleBlock):
         blockDict = dict_from_file(filepath)
         return cls(blockDict, _sourceFile = filepath)
     
+    @inherit_docstring(SingleBlock)
     def serialize(self):
+        """
+        Parent `SingleBlock` serilization returns a dict wrapped in a list.
+        Serialized `FileBlock` objects are unwrapped directly to the
+        top-level dict.
+        """
         return super().serialize()[0]
     
-    def save(self, filepath=None):
+    def save(self, filepath:str=None):
+        """
+        Sends a serialized dict to be written to file.
+
+        Args:
+            filepath:
+                If specified, writes serialized dict to filepath. Defaults to `self._sourceFile`.
+
+        Raises:
+            ValueError:
+                If _sourceFile is not specified (if `FileBlock` was copied from
+                another object or constructed directly from a blockDict),
+                filepath must be specified.
+        """
         if filepath is None:
             if self._sourceFile is None:
                 raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
@@ -387,26 +636,104 @@ class FileBlock(SingleBlock):
 
 class ListBlock:
     """
-    A repeated‑entry block parsed from a FOS file.
+    Represents multiple similar blocks of key:value pairs parsed from a FOS File
 
-    `blockList` contains a list of dictionaries, each of which must be
-    processed into objects of the same class. ListBlock subclasses specify
-    which Class is used.
+    `ListBlock`s are used to group multiple `SingleBlock`s of the same subclass
+    together and define methods that modify or access information from multiple
+    `SingleBlock`s at once. `SingleBlocks` contained within a `ListBlock` can be
+    indexed and iterated over directly instead of calling `ListBlock._objs`
 
-    Parameters
-    ----------
-    blockDict : dict
-        List of dictionaries mapping field names to values.
-    cls : type
-        Class used to construct each item. Validation is delegated to `cls`.
+    Attributes:
+        _objs: List containing the stored `SingleBlock` objects.
+        _reqCls:
+            Specifies which `SingleBlock` subclass the objects in `_objs` must belong to.
+
+    Notable Subclasses:
+    ```
+    MaterialList(ListBlock) # Contains Material(SingleBlock) objects
+    TreamentList(ListBlock) # Contains Treatment(SingleBlock) objects
+    ```
     """
-    def __init__(self, blockList, cls):
+    _reqCls = None
+    def __init__(self, blockList:list):
+        """
+        Constructs a `ListBlock` from a list of serialized dictionaries.
+
+        Each dict in blockList is passed directly to the constructor of the
+        required `SingleBlock` class. To construct a `ListBlock` from a list of
+        previously-constructed `SingleBlock` objects, use
+        `ListBlock.fromBlocks()` instead.
+
+        Args:
+            blockList:
+                A list of serialized dictionaries. Each dictionary is passed to
+                the `SingleBlock` constructor specified by `cls`
+            cls:
+                The `SingleBlock` subclass enforced during construction. This is
+                usually passed in subclass definitions. 
+        """
         self._objs = []
-        self._reqCls = cls
         for blockDict in blockList:
-            self._objs.append(cls.subclass(blockDict))
+            self._objs.append(self._reqCls.subclass(blockDict))
+    
+    @classmethod
+    def fromBlocks(cls, blockList:list):
+        """
+        Constructs a `ListBlock` from a list of previously-constructed `SingleBlock` objects.
+
+        Args:
+            blockList:
+                A list of `SingleBlock` objects. All entries must match the
+                class defined in `ListBlock` subclass definition.
+
+        Raises:
+            TypeError: this function can only be called from a subclass that has
+            already defined the required `SingleBlock` subclass.
+
+        Example:
+        ```
+            # Entries already constructed as Material(SingleBlock) objects
+            matList = [zinc, antimony, barium]
+            # MaterialList(ListBlock) enforces only Material(SingleBlock) objects.
+            materials = MaterialList(matList) 
+        ```
+        """
+        try:
+            obj = cls([])
+        except TypeError as e:
+            raise TypeError(f"Please note: you must call fromBlocks from a subclass (such as MaterialList.fromBlocks()).\n{e}")
+        obj._objs = blockList.copy()
+        return obj
+    
+    @classmethod
+    def Simple(cls, reqCls=SingleBlock):
+        if not issubclass(reqCls, SingleBlock):
+            raise TypeError("reqCls must be a subclass of SingleBlock")
+        if cls._reqCls is not None:
+            raise TypeError("You cannot create a simple subclass of another ListBlock subclass.")
+        
+        class SimpleSub(cls):
+            _reqCls = reqCls
+
+        name = f"{reqCls.__name__}List"
+        qualname = f"{cls.__name__}.Simple.{name}"
+        module = cls.__module__
+
+        SimpleSub.__name__ = name
+        SimpleSub.__qualname__ = qualname
+        SimpleSub.__module__ = module
+
+        return SimpleSub
+
 
     def __setattr__(self, name, value):
+        """
+        Only private attributes starting with "_" can be set.
+        
+        Items in self._objs can be edited individually by indexing with self[i],
+        or self._objs can be replaced with a new list, which is re-validated and
+        coerced to the correct `SingleBlock` subclass specified by _reqCls
+        """
         if name == "_objs":
             if type(value) is not list:
                 raise TypeError(f"{type(self).__name__}._objs must be a list of objects.")
@@ -427,7 +754,10 @@ class ListBlock:
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
-    def append(self, obj):
+    def append(self, obj:SingleBlock):
+        """
+        Append a `SingleBlock` object of the correct class to `self._objs` and revalidate.
+        """
         objs = self._objs.copy()
         objs.append(obj)
         self._objs = objs
@@ -447,7 +777,43 @@ class ListBlock:
     def serialize(self):
         return [obj.serialize()[0] for obj in self]
     
-    def list_calc_routines(self, recursive=False, prefix="", abbreviated=False):
+    @inherit_docstring(SingleBlock, label="Related")
+    def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
+        """
+        Lists all methods decorated as calc routines.
+
+        Methods are resolved as path strings relative to self, including
+        indexing for recursively searched methods within self._objs. When
+        returned back to a parent `ListBlock` object's call, these strings
+        produce paths that can be resolved back into function calls relative to
+        the parent object. See `SingleBlock.list_avail_routines()`.
+
+        This method is usually only used in a recursive call from a
+        `SingleBlock` object where one of its attributes is a `ListBlock`.
+
+        Example:
+        ```
+        mySyn.materals.list_avail_routines(recursive=True)
+        ## returns [
+        ##     'add_weight_pcts',
+        ##     '[0].add_MW',
+        ##     '[1].add_MW',
+        ##     ... 6 total materials with the same calc_routine
+        ##     '[5].add_MW'
+        ## ]
+        
+        # Resursive call from `SingleBlock` mySyn object:
+        mySyn.list_avail_routines(recursive=True)
+        ## returns [
+        ##     'reaction.add_nom_MW',
+        ##     'materials.add_weight_pcts',
+        ##     'materials[0].add_MW',
+        ##     'materials[1].add_MW',
+        ##     ... 6 total materials with the same calc_routine
+        ##     'materials[5].add_MW'
+        ## ]
+        ```
+        """
         routines = []
 
         # Local routines on the ListBlock itself
@@ -471,8 +837,8 @@ class ListBlock:
                 idx_str = f"{idx_str}{idx_num if idx_num > 0 else ''}"
 
                 for i, obj in enumerate(self._objs):
-                    if hasattr(obj, "list_calc_routines"):
-                        rtns = obj.list_calc_routines(True,f"{prefix[:-1]}[{idx_str}].",abbreviated=True)
+                    if hasattr(obj, "list_avail_routines"):
+                        rtns = obj.list_avail_routines(True,f"{prefix[:-1]}[{idx_str}].",abbreviated=True)
                         for routine in rtns:
                             if routine not in obj_routines:
                                 obj_routines[routine] = []
@@ -481,9 +847,9 @@ class ListBlock:
                     routines.append(f"{routine}; {idx_str} = {i_list}")
             else:
                 for i, obj in enumerate(self._objs):
-                    if hasattr(obj, "list_calc_routines"):
+                    if hasattr(obj, "list_avail_routines"):
                         child_prefix = f"{prefix[:-1]}[{i}]."
-                        routines.extend(obj.list_calc_routines(
+                        routines.extend(obj.list_avail_routines(
                             recursive=True,
                             prefix=child_prefix,
                             abbreviated=False
@@ -492,10 +858,29 @@ class ListBlock:
         return routines
     
     def copy(self):
+        """Returns a deep copy by serializing and then reconstructing."""
         cls = type(self)
         return cls(self.serialize())
     
     def remove_any(self, **kwargs):
+        """
+        Remove any objects from self._objs with attributes matching `kwargs`
+        
+        Args:
+            **kwargs:
+                A single keyword argument can be passed. Any objects with
+                attr:value matching kw:arg are removed.
+
+        Raises:
+            TypeError: Exactly one keyword argument is required.
+
+        Example:
+        ```
+        mySyn.materials.remove_any(supplier="sigma")
+        ## removes any obj from mySyn.materials._objs where
+        ## obj.supplier == "sigma"
+        ```
+        """
         if len(kwargs) != 1:
             raise TypeError("Exactly one keyword argument is required")
         

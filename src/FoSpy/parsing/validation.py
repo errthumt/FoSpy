@@ -11,12 +11,12 @@ required_keys = {
     SingleBlock: {
         "ext" : SubContainer
     },
-    
+
     Synthesis: {
         "metadata" : MetaData,
         "reaction" : Reaction,
         "materials" : MaterialList,
-        "treatments" : TreatmentList
+        "treatments" : ListBlock.Simple(Treatment)
     },
 
     TemplateSet: {
@@ -35,7 +35,7 @@ required_keys = {
     MetaData: {
         "name": str,
         "date": str,
-        "experimenters": ExperimenterList
+        "experimenters": ListBlock.Simple(Experimenter)
     },
 
     Experimenter: {
@@ -72,7 +72,7 @@ required_keys = {
     },
 
     Annealing: {
-        "program": AnnealProgram
+        "program": ListBlock.Simple(AnnealSection)
     },
 
     EmbeddedFile: {
@@ -85,7 +85,7 @@ required_keys = {
 optional_keys = {
     Synthesis: {
         "cif": EmbeddedCIF,
-        "cifs": CIFList
+        "cifs": ListBlock.Simple(EmbeddedCIF)
     },
 
     Experimenter: {
@@ -94,11 +94,11 @@ optional_keys = {
 
     Material : {
         "purity" : validators.material.purity("Material"),
-        "treatments": TreatmentList
+        "treatments": ListBlock.Simple(Treatment)
     },
 
     Treatment: {
-        "program": AnnealProgram
+        "program": ListBlock.Simple(AnnealSection)
     },
 
     AnnealSection: {
@@ -107,7 +107,7 @@ optional_keys = {
 
     TemplateSet: {
         "materials": MatTempList,
-        "treatments": TreatTempList,
-        "experimenters": ExpTempList
+        "treatments": ListBlock.Simple(TreatmentTemplate),
+        "experimenters": ListBlock.Simple(ExpTemplate)
     }
 }

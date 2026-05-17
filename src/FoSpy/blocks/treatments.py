@@ -39,15 +39,3 @@ class AnnealSection(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
 
-class AnnealProgram(ListBlock):
-    def __init__(self, blockList):
-        # _debug.msg("Constructing annealing program")
-        super().__init__(blockList, AnnealSection)
-
-class TreatmentList(ListBlock):
-    def __init__(self, blockList, cls=Treatment):
-        super().__init__(blockList, cls)
-
-class TreatTempList(TreatmentList, TemplateList):
-    def __init__(self, blockList):
-        super().__init__(blockList, cls=TreatmentTemplate)
