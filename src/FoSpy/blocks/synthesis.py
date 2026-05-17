@@ -2,6 +2,9 @@
 from .blocks import FileBlock
 
 class Synthesis(FileBlock):
+    """
+    Represents a Synthesis loaded from a FOS file.
+    """
     def __init__(self, blockDict, _sourceFile=None):
         super().__init__(blockDict, _sourceFile)
 

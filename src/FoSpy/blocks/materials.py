@@ -1,30 +1,59 @@
 from . import (
     SingleBlock, ListBlock, 
     TemplateBlock, TemplateList,
-    calc_routine)
+    calc_routine, attach_doc,
+    inherit_class_doc, inherit_docstring)
 from .._debug import Debug
 _debug = Debug()
 _debug.on = True
 
+@inherit_class_doc(SingleBlock)
 class Material(SingleBlock):
+    """
+    Represents a material used in a synthesis
+    """
     def __init__(self, blockDict):
         super().__init__(blockDict)
 
-    @calc_routine
-    def example_calc(self):
-        _debug.msg(f"Running example calc routine for material: {self.name}")
-        return None
+    @calc_routine()
+    def add_MW(self):
+        """
+        Attach a comment to the formula with molecular weight.
+        """
+        _debug.msg(f"Adding molecular weight to Material: {self.name}")
+        mw = self.formula.formula_weight
+        self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")
 
+@inherit_class_doc(Material)
 class MaterialTemplate(Material, TemplateBlock):
+    """
+    Represents a material used frequently and attached to multiple syntheses.
+    """
     def __init__(self, blockDict):
         super().__init__(blockDict)
         self.ratio = 0
 
+@inherit_class_doc(ListBlock)
 class MaterialList(ListBlock):
-    def __init__(self, blockList, cls=Material):
-        super().__init__(blockList, cls)
-
+    """
+    Represents a list of materials used in a synthesis
+    """
+    _reqCls = Material
+    
     def calc_weight_pcts(self, typ=None):
+        """
+        Calculate weight percent for each material with matching type.
+
+        Args:
+            typ:
+                Only materials with type attribute matching typ are considered
+                in the total weight and given weight percents. This is useful
+                if, for instance, you want weight percents of your contributing
+                "reagents" without including "flux" or "solvent" materials.
+
+        Returns:
+            dict mapping material : weight_pct
+        """
         from decimal import Decimal
         
         weights = {}
@@ -41,14 +70,37 @@ class MaterialList(ListBlock):
             percents[mat] = pct
         return percents
     
-    @calc_routine
+    
+    @attach_doc(Material.add_MW)
+    @calc_routine(attach=False)
+    def add_all_MW(self):
+        """
+        Attach a molecular weight comment to all materials
+        """
+        for mat in self._objs:
+            mat.add_MW()
+
+    @calc_routine()
     def add_weight_pcts(self, typ=None):
+        """
+        Calculate weight percents and attach them as comments to each material's ratio.
+
+        Args:
+            typ:
+                Only materials with type attribute matching typ are considered
+                in the total weight and given weight percents. This is useful
+                if, for instance, you want weight percents of your contributing
+                "reagents" without including "flux" or "solvent" materials.
+        """
         for mat, pct in self.calc_weight_pcts(typ).items():
             label = typ.capitalize() if typ else "Total"
             comment = f"{label} weight percent: {pct:.2f}%"
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("ratio",comment, f"{label}_pct")
 
+@inherit_class_doc(MaterialList)
 class MatTempList(MaterialList, TemplateList):
-    def __init__(self, blockDict):
-        super().__init__(blockDict, MaterialTemplate)
+    """
+    Represents a list of materials frequently used and attached to multiple syntheses.
+    """
+    _reqCls = MaterialTemplate
