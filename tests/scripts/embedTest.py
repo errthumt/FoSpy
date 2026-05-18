@@ -2,6 +2,9 @@ from parseTest import readTest, WRITE_PATH
 from pprint import pp
 from FoSpy import Synthesis, FileBlock
 
+from FoSpy._debug import all_debugs_on
+all_debugs_on()
+
 if __name__ == "__main__":
     full_dict = readTest()
     mySyn = Synthesis(full_dict)

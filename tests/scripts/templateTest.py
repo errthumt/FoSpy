@@ -6,6 +6,9 @@ from parseTest import READ_PATH, WRITE_PATH
 TEMPLATE_PATH = r'tests\test_fos\template_test.fos'
 WRITE_TEMPLATE_PATH = r'tests\test_fos\template_write_test.fos'
 
+from FoSpy._debug import all_debugs_on
+all_debugs_on()
+
 def tempTest1():
     my_templates = TemplateSet.fromFile(TEMPLATE_PATH)
     my_synthesis = Synthesis.fromFile(READ_PATH)
