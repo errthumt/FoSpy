@@ -2,6 +2,9 @@ import re
 
 from .syntax import SYNTAX
 
+from .._debug import Debug
+_debug = Debug()
+
 def build_block_header_regex(spec):
     single = spec["single"]
     list_ = spec["list"]

@@ -2,9 +2,9 @@ from . import (
     SingleBlock, ListBlock, 
     TemplateBlock, TemplateList,
     calc_routine, inherit_class_doc, inherit_docstring)
+
 from .._debug import Debug
 _debug = Debug()
-_debug.on = True
 
 @inherit_class_doc(SingleBlock)
 class MetaData(SingleBlock):

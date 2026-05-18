@@ -3,9 +3,9 @@ from . import (
     TemplateBlock, TemplateList,
     calc_routine, attach_doc,
     inherit_class_doc, inherit_docstring)
+
 from .._debug import Debug
 _debug = Debug()
-_debug.on = True
 
 @inherit_class_doc(SingleBlock)
 class Material(SingleBlock):

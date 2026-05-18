@@ -49,32 +49,26 @@ nominal_mass_units: mg
     observations: smaller pieces improve homogenization
     ]
 
-    Arsenic
+    Zinc
     reagent
-    As
+    Zn
     Unk
-    1234-56-7
-    lump
-    0.9995
-    Ar (g)
-    6.0
-    // This is a comment on the treatments value for Arsenic
-    [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
-    ]
-
-    Copper
-    reagent
-    // ! Molecular Weight: 63.55 g/mol
-    Cu
-    Sigma-Aldrich
     1234-56-7
     powder
     0.995
     Ar (g)
-    13.0000
+    5.0
+    []
+
+    Antimony
+    special reagent
+    Sb
+    Unk
+    1234-56-7
+    powder
+    0.999
+    Ar (g)
+    6.0
     []
 
 // This is a comment on the treatments block

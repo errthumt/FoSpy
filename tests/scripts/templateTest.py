@@ -10,19 +10,17 @@ def tempTest1():
     my_templates = TemplateSet.fromFile(TEMPLATE_PATH)
     my_synthesis = Synthesis.fromFile(READ_PATH)
 
-    antimony = my_templates.materials.get_obj("Antimony, Glovebox")
-    antimony.ratio = "6.0"
+    antimony = my_templates.materials.get_any(template_name="Antimony, Glovebox")[0]
+    antimony = antimony.fill(type="special reagent",ratio="6.0")
 
     my_synthesis.materials.append(antimony)
+    arsenic = my_synthesis.materials.get_any(name="Arsenic")[0]
+    my_templates.materials.append(arsenic.make_template("Arsenic, Glovebox", "type"))
     my_synthesis.materials.remove_any(name="Arsenic")
 
     my_synthesis.save(WRITE_PATH)
-
-    zinc = my_synthesis.materials[1]
-
-    my_templates.materials.append(zinc, "Zinc powder, Glovebox")
-    my_templates.treatments.remove_any(type="anneal")
     my_templates.save(WRITE_TEMPLATE_PATH)
+
 
 def tempTest2():
     mySyn = Synthesis.fromFile(READ_PATH)
@@ -45,4 +43,4 @@ def tempTest2():
     mySyn.save(WRITE_PATH)
 
 if __name__  == "__main__":
-    tempTest2()
+    tempTest1()

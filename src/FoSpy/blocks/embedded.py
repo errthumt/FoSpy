@@ -1,6 +1,9 @@
 from .blocks import SingleBlock, ListBlock
 from .. import inherit_class_doc, inherit_docstring
 
+from .._debug import Debug
+_debug = Debug()
+
 @inherit_class_doc(SingleBlock)
 class EmbeddedFile(SingleBlock):
     """

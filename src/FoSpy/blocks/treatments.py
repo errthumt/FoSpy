@@ -2,10 +2,9 @@ from . import (
     SingleBlock, ListBlock, 
     TemplateBlock, TemplateList,
     calc_routine)
-from .._debug import Debug
 
+from .._debug import Debug
 _debug = Debug()
-_debug.on = True
 
 class Treatment(SingleBlock):
     # Maps type strings to subclass constructors.
@@ -25,10 +24,6 @@ class Treatment(SingleBlock):
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
-    
-class TreatmentTemplate(Treatment, TemplateBlock):
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
 
 class Annealing(Treatment):
     def __init__(self, blockDict):
