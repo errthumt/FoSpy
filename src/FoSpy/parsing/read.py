@@ -8,7 +8,6 @@ from .._debug import Debug
 _debug = Debug()
 
 def dict_from_file(filepath):
-    _debug.msg("Parsing Debug Mode is On")
     blocks = {}
     comments = {}
     current_block = "metadata"
