@@ -1,5 +1,8 @@
 import os
 
+from .._debug import Debug
+_debug = Debug()
+
 from . import syntax as snt
 from .syntax import meta_keys as mk
 from .format import *

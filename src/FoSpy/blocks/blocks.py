@@ -11,7 +11,6 @@ from ..parsing import (
 
 from .._debug import Debug
 _debug = Debug()
-_debug.on = True
 
 class SubContainer:
     """
@@ -157,11 +156,15 @@ class SingleBlock:
         """
         from ..parsing.validation import required_keys, optional_keys
         merged = {}
-        for base in reversed(cls.__mro__):
-            req = required_keys.get(base, {})
-            opt = optional_keys.get(base, {})
-            merged.update(req)
-            merged.update(opt)
+        for key_set in (required_keys, optional_keys):
+            for base in reversed(cls.__mro__):
+                base_reqs = key_set.get(base,{})
+                for key, validator in base_reqs.items():
+                    # allow subclasses to remove parent requirements.
+                    if validator is False:
+                        merged.pop(key, None)
+                    else:
+                        merged[key] = validator
         return merged
     
     @classmethod
@@ -169,8 +172,8 @@ class SingleBlock:
         from . import TemplateBlock
         from ..parsing.validation import required_keys
         class SubTemplate(TemplateBlock, cls):
-            def __init__(self, template_name, blockDict):
-                super().__init__(template_name, blockDict)
+            def __init__(self, blockDict):
+                super().__init__(blockDict)
                 self._full_class = cls
 
         required_keys[SubTemplate] = {}
@@ -188,9 +191,21 @@ class SingleBlock:
         serial = self.serialize()[0]
         for key in args:
             serial.pop(key,None)
+        serial["template_name"] = template_name
+        return type(self).Template(*args)(serial)
 
-        return type(self).Template(*args)(template_name,serial)
-
+    @classmethod
+    def Template_from_dict(cls, blockDict):
+        from ..parsing.format import format_field
+        template_keys = []
+        temp_dict = blockDict.copy()
+        for key, val in blockDict.items():
+            if val == format_field("template"):
+                template_keys.append(key)
+                temp_dict.pop(key, None)
+        
+        return cls.Template(*template_keys)
+        
 
 
     def __init__(self, blockDict:dict):
@@ -742,7 +757,10 @@ class ListBlock:
                 typ = self._reqCls
                 for obj in value:
                     if not isinstance(obj, typ):
-                        raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
+                        try:
+                            obj=typ(obj.serialize()[0])
+                        except:
+                            raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
             return super().__setattr__(name, value)
 
         elif name.startswith("_"):
@@ -893,3 +911,14 @@ class ListBlock:
                 self._objs.remove(obj)
                 removed += 1
         _debug.msg(f"Removed {removed} {self._reqCls.__name__} objects matching {key} = {val}.")
+    
+    def get_any(self, **kwargs):
+        if len(kwargs) != 1:
+            raise TypeError("Exactly one keyword argument is required")
+        
+        key, val = next(iter(kwargs.items()))
+        found = []
+        for obj in self._objs:
+            if getattr(obj, key, None) == val:
+                found.append(obj)
+        return found

@@ -1,5 +1,8 @@
 from .syntax import SYNTAX
 
+from .._debug import Debug
+_debug = Debug()
+
 def _indent(st:str, ind):
     return f"{' '*ind*SYNTAX["indent_size"]}{st}"
 
@@ -78,5 +81,8 @@ def format_loop_key(key: str, ind=0):
     else:
         # :key
         return _indent(f"{delim}{key}",ind)
+    
+def format_field(label:str):
+    return f"<!{label.upper()}-FIELD>"
 
 

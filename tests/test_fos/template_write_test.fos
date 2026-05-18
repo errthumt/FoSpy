@@ -16,29 +16,52 @@ description: A collection of select templates
 
     Antimony, Glovebox
     Antimony
-    reagent
+    <!TEMPLATE-FIELD>
     Sb
     Unk
     1234-56-7
     powder
     0.999
     Ar (g)
-    0
+    <!TEMPLATE-FIELD>
     []
 
-    Zinc powder, Glovebox
-    Zinc
-    reagent
-    Zn
+    Arsenic, Glovebox
+    Arsenic
+    // This template does not have type filled in.
+    <!TEMPLATE-FIELD>
+    As
     Unk
     1234-56-7
-    powder
-    0.995
+    lump
+    0.9995
     Ar (g)
-    0
-    []
+    <!TEMPLATE-FIELD>
+    // This is a comment on the treatments value for Arsenic
+    [
+    type: Grinding
+    repeats: 1
+    observations: ground into powder for weighing and homogenization
+    ]
 
-[Treatments]
+    Arsenic, Glovebox
+    Arsenic
+    <!TEMPLATE-FIELD>
+    As
+    Unk
+    1234-56-7
+    lump
+    0.9995
+    Ar (g)
+    6.0
+    // This is a comment on the treatments value for Arsenic
+    [
+    type: Grinding
+    repeats: 1
+    observations: ground into powder for weighing and homogenization
+    ]
+
+[[Treatments]]
 :template_name
 :type
 :repeats
@@ -47,5 +70,21 @@ description: A collection of select templates
     Basic Weighing, carbonized ampoule, glovebox
     weigh
     1
-    Weighed each reagent by stoichiometric amount into a carbonized ampoule under argon atmosphere
+    <!TEMPLATE-FIELD>
+
+    600 for 120hr
+    anneal
+    1
+    <!TEMPLATE-FIELD>
+    program: [[
+    :type
+    :time
+
+        ramp
+        10 hr
+        temp: 600 C
+
+        dwell
+        120 hr
+    ]]
 

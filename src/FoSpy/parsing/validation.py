@@ -106,8 +106,8 @@ optional_keys = {
     },
 
     TemplateSet: {
-        "materials": MatTempList,
-        "treatments": ListBlock.Simple(TreatmentTemplate),
-        "experimenters": ListBlock.Simple(ExpTemplate)
+        "materials": TemplateList.Simple(Material),
+        "treatments": TemplateList.Simple(Treatment),
+        "experimenters": TemplateList.Simple(Experimenter)
     }
 }

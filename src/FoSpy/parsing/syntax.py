@@ -2,6 +2,9 @@ line_comment = "//"
 key_delimiter = ":"
 indent = "    "
 
+from .._debug import Debug
+_debug = Debug()
+
 SYNTAX = {
     "block_header": {
         "single": {

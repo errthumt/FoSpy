@@ -1,9 +1,11 @@
 from .syntax import meta_keys as mk
 from .syntax import meta_defaults as md
 from .syntax import SYNTAX
-from . import _debug
 from . import regex as rx
-from .format import format_key_value, empty_nested
+from .format import format_key_value, empty_nested, format_field
+
+from .._debug import Debug
+_debug = Debug()
 
 def dict_from_file(filepath):
     _debug.msg("Parsing Debug Mode is On")
@@ -124,6 +126,9 @@ def create_single_block_dict(lines, _list_type="explicit"):
             else:
                 raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
             # _debug.msg(f"processed: key:'{key}', val:'{val}'")
+            if key.startswith("-"):
+                key = key[1:]
+                val = format_field("template")
             if key in out_dict:
                 raise ValueError(f"Duplicate key found: '{key}' Each key can only appear once within a block.")
             
@@ -140,6 +145,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 nested_key = key
                 if rx.EMBEDDED_START.match(line):
                     embedding = True
+                    _debug.msg("Starting embedding")
 
                 elif m.group("list"):
                     nested_type = "list"
@@ -231,7 +237,7 @@ def create_list_block_dict(lines):
                 key = is_loop_key.group("key")
                 if key in keys:
                     raise ValueError(f"Duplicate key found: '{key}'. Each key can only be specified once at the beginning of a looped list block.")
-                key_comments[key] = comments
+                key_comments[key.lstrip("-")] = comments
                 comments = []
                 keys.append(key)
                 # _debug.msg(f'added key: {key}')

@@ -1,5 +1,8 @@
 from . import FileBlock, ListBlock, SingleBlock, inherit_class_doc, inherit_docstring
 
+from .._debug import Debug
+_debug = Debug()
+
 @inherit_class_doc(FileBlock)
 class TemplateSet(FileBlock):
     """
@@ -11,46 +14,23 @@ class TemplateSet(FileBlock):
     def __init__(self, blockDict, _sourceFile=None):
         super().__init__(blockDict, _sourceFile)
 
+
 @inherit_class_doc(ListBlock)
 class TemplateList(ListBlock):
     """
     Represents a list of templates with the same subclass.
     """
     _reqCls = None
-    def _build_index(self):
-        self._index = {}
-        for obj in self._objs:
-            self._index[obj.template_name] = obj
-    def get_obj(self, template_name):
-        self._build_index()
-
-        temp_obj = self._index.get(template_name)
-        if not temp_obj:
-            raise KeyError(f"No template found with name '{template_name}'")
-        
-        parent_cls = next(
-            base for base in type(temp_obj).__bases__
-            if issubclass(base, SingleBlock)
-            and base not in (TemplateBlock, SingleBlock, ListBlock)
-        )
-
-        serial = temp_obj.serialize()[0]
-        serial.pop("template_name",None)
-        return parent_cls.subclass(serial)
-    
-    def append(self, obj:SingleBlock, template_name=""):
-        serial = obj.serialize()[0]
-        if template_name:
-            serial["template_name"] = template_name
-        elif not serial.get("template_name"):
-            raise ValueError("Cannot append object to a template list without an existing "
-                             "template_name or a new template_name passed as an argument.")
-        return super().append(self._reqCls.subclass(serial))
+    @classmethod
+    def Simple(cls, reqCls):
+        def FromDict(blockDict):
+            return ListBlock.Simple(reqCls.Template_from_dict(blockDict[0]))(blockDict)
+        return FromDict
+      
 
 class TemplateBlock(SingleBlock):
-    def __init__(self, template_name, blockDict):
+    def __init__(self, blockDict):
         self._full_class = None
-        blockDict["template_name"] = template_name
         super().__init__(blockDict)
     def fill(self,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
@@ -62,3 +42,16 @@ class TemplateBlock(SingleBlock):
             serial[kw] = arg
 
         return self._full_class(serial)
+    
+    def serialize(self):
+        from ..parsing.validation import required_keys
+        from ..parsing.format import format_field
+        required = required_keys.get(self._full_class, {})
+
+        serial = super().serialize()
+
+        for key in required:
+            if key not in serial[0]:
+                serial[0][key] = format_field("template")
+
+        return serial

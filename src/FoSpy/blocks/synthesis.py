@@ -1,6 +1,9 @@
 
 from .blocks import FileBlock
 
+from .._debug import Debug
+_debug = Debug()
+
 class Synthesis(FileBlock):
     """
     Represents a Synthesis loaded from a FOS file.
