@@ -21,111 +21,111 @@ nominal_mass_units: mg
 //This is a comment on the Materials block
 //This comment is so important it gets two lines
 [[Materials]]
-    :name
-    :type
-    :formula
-    //This is a comment on the supplier key in the Materials block
-    :supplier
-    :cas
-    :form
-    :purity
-    :env
-    :ratio
-    :treatments
+:name
+:type
+:formula
+//This is a comment on the supplier key in the Materials block
+:supplier
+:cas
+:form
+:purity
+:env
+:ratio
+:treatments
 
-        Barium
-        reagent
-        Ba
-        //This is a comment on the supplier value in the Materials block
-        Unk
-        1234-56-7
-        lump
-        0.999
-        Ar (g)
-        2.0
-        [
-            type: cutting
-            //This is a comment on the repeats value for the treatments of Barium
-            repeats: 1
-            observations: smaller pieces improve homogenization
-        ]
+    Barium
+    reagent
+    Ba
+    //This is a comment on the supplier value in the Materials block
+    Unk
+    1234-56-7
+    lump
+    0.999
+    Ar (g)
+    2.0
+    [
+        type: cutting
+        //This is a comment on the repeats value for the treatments of Barium
+        repeats: 1
+        observations: smaller pieces improve homogenization
+    ]
 
-        Zinc
-        reagent
-        Zn
-        Unk
-        1234-56-7
-        powder
-        0.995
-        Ar (g)
-        5.0
-        []
+    Zinc
+    reagent
+    Zn
+    Unk
+    1234-56-7
+    powder
+    0.995
+    Ar (g)
+    5.0
+    []
 
-        Arsenic
-        reagent
-        As
-        Unk
-        1234-56-7
-        lump
-        0.9995
-        Ar (g)
-        6.0
-        //This is a comment on the treatments value for Arsenic
-        [
-            type: Grinding
-            repeats: 1
-            observations: ground into powder for weighing and homogenization
-        ]
+    Arsenic
+    reagent
+    As
+    Unk
+    1234-56-7
+    lump
+    0.9995
+    Ar (g)
+    6.0
+    //This is a comment on the treatments value for Arsenic
+    [
+        type: Grinding
+        repeats: 1
+        observations: ground into powder for weighing and homogenization
+    ]
 
 // This is a comment on the treatments block
 [[Treatments]]
-    :type
-    :repeats
-    :observations
+:type
+:repeats
+:observations
 
-        weigh
-        1
-        Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
+    weigh
+    1
+    Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
 
-        seal
-        1
-        Evacuated ampoule and sealed with H2/O2 torch
+    seal
+    1
+    Evacuated ampoule and sealed with H2/O2 torch
 
-        anneal
-        1
-        Ba lumps reacted but not homogeneous. Small Ba reaction with silica
-        program: [[
-            type: ramp
-            //This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
-            temp: 600 C
-            time: 10 hr
-            //Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
+    anneal
+    1
+    Ba lumps reacted but not homogeneous. Small Ba reaction with silica
+    program: [[
+        type: ramp
+        //This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
+        temp: 600 C
+        time: 10 hr
+        //Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
 
 
-            //It actually links to the type of the next section of the program
-            type: dwell
-            time: 120hr
-        ]]
+        //It actually links to the type of the next section of the program
+        type: dwell
+        time: 120hr
+    ]]
 
-        grind
-        3
-        dark gray powder now
+    grind
+    3
+    dark gray powder now
 
-        anneal
-        1
-        dark gray powder when opening
-        program: [[
-            :type
-            //Nested looped key comment
-            :time
+    anneal
+    1
+    dark gray powder when opening
+    program: [[
+        :type
+        //Nested looped key comment
+        :time
 
-            ramp
-            temp: 600 C
-            10 hr
+        ramp
+        temp: 600 C
+        10 hr
 
-            dwell
-            120hr
-        ]]
+        dwell
+        120hr
+    ]]
 
 [CIFs]
 file_name: my_cif

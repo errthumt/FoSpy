@@ -19,12 +19,12 @@ class Debug:
             text_width = DEBUG_WIDTH - self.label_width
             print(f'{msg:<{text_width}}{self.label:>{self.label_width}}')
 
-    def pmsg(self,msg):
+    def pmsg(self,msg,**kwargs):
         if self.on:
             text_width = DEBUG_WIDTH - self.label_width
 
             buf = io.StringIO()
-            pprint(msg,stream=buf, width=text_width)
+            pprint(msg,stream=buf, width=text_width,**kwargs)
             txt = buf.getvalue()
             for line in txt.splitlines():
                 print(f'{line:<{text_width}}{self.label:>{self.label_width}}')
@@ -48,17 +48,20 @@ def debug_status():
     return results
 
 
-def all_debugs_on():
+def all_debugs_on(soundoff=True):
     for module, debug_obj in _find_debugs():
         if hasattr(debug_obj,"on"):
             debug_obj.on = True
-            debug_obj.msg("Turning Debug On")
+            if soundoff:
+                debug_obj.msg("Turning Debug On")
 
-def all_debugs_off():
+def all_debugs_off(soundoff=True):
+    all_debugs_on(soundoff=False)
     for module, debug_obj in _find_debugs():
         if hasattr(debug_obj,"on"):
-            debug_obj.on = False
-            debug_obj.msg("Turning Debug Off")           
+            if soundoff:
+                debug_obj.msg("Turning Debug Off")
+            debug_obj.on = False         
     
 
 if __name__ == "__main__":

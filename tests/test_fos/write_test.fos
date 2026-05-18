@@ -1,9 +1,9 @@
 name: TE001
 date: 03-11-2026
 experimenters: [
-name: Travis Errthum
-affiliation: Kovnir Group - Iowa State University
-orcid: 0009-0006-1937-5672
+    name: Travis Errthum
+    affiliation: Kovnir Group - Iowa State University
+    orcid: 0009-0006-1937-5672
 ]
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
@@ -14,7 +14,7 @@ internal_project_description: Unique Clathrate
 // like a calculated value. You can mark these comments with a ! character:
 nominal_formula: Ba2Zn5As6
 // This is a comment on the nominal_mass
-nominal_mass: 300.0
+nominal_mass: 250.0
 nominal_mass_units: mg
 
 // This is a comment on the Materials block
@@ -41,13 +41,12 @@ nominal_mass_units: mg
     lump
     0.999
     Ar (g)
-    // ! Reagent weight percent: 26.13%
     2.0
     [
-    type: cutting
-    // This is a comment on the repeats value for the treatments of Barium
-    repeats: 1
-    observations: smaller pieces improve homogenization
+        type: cutting
+        // This is a comment on the repeats value for the treatments of Barium
+        repeats: 1
+        observations: smaller pieces improve homogenization
     ]
 
     Zinc
@@ -58,26 +57,19 @@ nominal_mass_units: mg
     powder
     0.995
     Ar (g)
-    // ! Reagent weight percent: 31.10%
     5.0
     []
 
-    Arsenic
-    reagent
-    As
+    Antimony
+    special reagent
+    Sb
     Unk
     1234-56-7
-    lump
-    0.9995
+    powder
+    0.999
     Ar (g)
-    // ! Reagent weight percent: 42.77%
     6.0
-    // This is a comment on the treatments value for Arsenic
-    [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
-    ]
+    []
 
 // This is a comment on the treatments block
 [[Treatments]]
@@ -97,15 +89,15 @@ nominal_mass_units: mg
     1
     Ba lumps reacted but not homogeneous. Small Ba reaction with silica
     program: [[
-    type: ramp
-    // This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
-    temp: 600 C
-    time: 10 hr
+        type: ramp
+        // This is a comment on the ramp temperature for the program of the first annealing under the treatments block.
+        temp: 600 C
+        time: 10 hr
 
-    // Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
-    // It actually links to the type of the next section of the program
-    type: dwell
-    time: 120hr
+        // Comments always get linked to the next definition after them. So even though this comment looks like it is for the ramp section of the program,
+        // It actually links to the type of the next section of the program
+        type: dwell
+        time: 120hr
     ]]
 
     grind
@@ -116,16 +108,16 @@ nominal_mass_units: mg
     1
     dark gray powder when opening
     program: [[
-    :type
-    // Nested looped key comment
-    :time
+        :type
+        // Nested looped key comment
+        :time
 
-        ramp
-        10 hr
-        temp: 600 C
+            ramp
+            10 hr
+            temp: 600 C
 
-        dwell
-        120hr
+            dwell
+            120hr
     ]]
 
 [Cifs]

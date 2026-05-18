@@ -5,7 +5,7 @@ from parseTest import readTest, READ_PATH, WRITE_PATH, deep_diff
 from FoSpy.blocks.synthesis import Synthesis
 
 from FoSpy._debug import all_debugs_on
-all_debugs_on()
+all_debugs_on(soundoff=False)
 
 def constructTest():
     file_dict = readTest()

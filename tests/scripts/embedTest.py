@@ -3,7 +3,7 @@ from pprint import pp
 from FoSpy import Synthesis, FileBlock
 
 from FoSpy._debug import all_debugs_on
-all_debugs_on()
+all_debugs_on(soundoff=False)
 
 if __name__ == "__main__":
     full_dict = readTest()

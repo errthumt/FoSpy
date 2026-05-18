@@ -7,7 +7,7 @@ TEMPLATE_PATH = r'tests\test_fos\template_test.fos'
 WRITE_TEMPLATE_PATH = r'tests\test_fos\template_write_test.fos'
 
 from FoSpy._debug import all_debugs_on
-all_debugs_on()
+all_debugs_on(soundoff=False)
 
 def tempTest1():
     my_templates = TemplateSet.fromFile(TEMPLATE_PATH)

@@ -39,9 +39,9 @@ description: A collection of select templates
     <!TEMPLATE-FIELD>
     // This is a comment on the treatments value for Arsenic
     [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
+        type: Grinding
+        repeats: 1
+        observations: ground into powder for weighing and homogenization
     ]
 
     Arsenic, Glovebox
@@ -56,9 +56,9 @@ description: A collection of select templates
     6.0
     // This is a comment on the treatments value for Arsenic
     [
-    type: Grinding
-    repeats: 1
-    observations: ground into powder for weighing and homogenization
+        type: Grinding
+        repeats: 1
+        observations: ground into powder for weighing and homogenization
     ]
 
 [[Treatments]]
@@ -77,14 +77,14 @@ description: A collection of select templates
     1
     <!TEMPLATE-FIELD>
     program: [[
-    :type
-    :time
+        :type
+        :time
 
-        ramp
-        10 hr
-        temp: 600 C
+            ramp
+            10 hr
+            temp: 600 C
 
-        dwell
-        120 hr
+            dwell
+            120 hr
     ]]
 
