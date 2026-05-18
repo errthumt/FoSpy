@@ -1,6 +1,9 @@
 from pprint import pprint
 import sys
 import inspect
+import io
+
+DEBUG_WIDTH = 120
 
 class Debug:
     def __init__(self):
@@ -8,14 +11,23 @@ class Debug:
 
         frame = inspect.currentframe().f_back
         self.module_name = frame.f_globals.get("__name__", "<unknown>")
+        self.label = f"|(Debug message from {self.module_name})"
+        self.label_width = len(self.label)
 
     def msg(self,msg):
         if self.on:
-            print(msg, f"    |(Debug message from {self.module_name})")
+            text_width = DEBUG_WIDTH - self.label_width
+            print(f'{msg:<{text_width}}{self.label:>{self.label_width}}')
 
     def pmsg(self,msg):
         if self.on:
-            pprint(msg, f"    |(Debug message from {self.module_name})")
+            text_width = DEBUG_WIDTH - self.label_width
+
+            buf = io.StringIO()
+            pprint(msg,stream=buf, width=text_width)
+            txt = buf.getvalue()
+            for line in txt.splitlines():
+                print(f'{line:<{text_width}}{self.label:>{self.label_width}}')
 
 def _find_debugs():
     results = []
