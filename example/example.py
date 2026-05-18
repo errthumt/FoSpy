@@ -5,10 +5,8 @@ from FoSpy._debug import all_debugs_on
 all_debugs_on(False)
 
 """
-The beginning and end results of this file can be found in the same folder of the github
-[test](./)
-
-
+The beginning and end results of this file can be found in the same folder of
+the github. Click on the "example" folder in FoSpy / example / example.py
 """
 
 # load synthesis and templates from files
