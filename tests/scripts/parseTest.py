@@ -2,8 +2,8 @@ from FoSpy._debug import Debug
 _debug = Debug()
 _debug.on = True
 
-from FoSpy import parsing
-parsing._debug.on = True
+from FoSpy._debug import all_debugs_on
+all_debugs_on()
 
 from FoSpy.parsing import dict_from_file, write_dict_to_file
 from FoSpy.parsing import syntax as snt
