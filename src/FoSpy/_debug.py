@@ -15,9 +15,7 @@ class Debug:
         self.label_width = len(self.label)
 
     def msg(self,msg):
-        if self.on:
-            text_width = DEBUG_WIDTH - self.label_width
-            print(f'{msg:<{text_width}}{self.label:>{self.label_width}}')
+        self.pmsg(str(msg))
 
     def pmsg(self,msg,**kwargs):
         if self.on:

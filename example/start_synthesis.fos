@@ -1,10 +1,12 @@
 name: TE001
 date: 03-11-2026
+// This comment will remain attached to the experimenters when saving.
 experimenters: [
     name: Travis Errthum
     affiliation: Kovnir Group - Iowa State University
     orcid: 0009-0006-1937-5672
 ]
+// ! Comments starting with a ! do not get read from the file.
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
@@ -33,6 +35,8 @@ nominal_mass_units: mg
     lump
     0.999
     Ar (g)
+    // The comment below will be correctly re-calculated when saving
+    // ! Total weight percent: 200%
     2.0
     [
         type: cutting
@@ -40,6 +44,9 @@ nominal_mass_units: mg
         observations: smaller pieces improve homogenization
     ]
 
+    // These comments are attached to Zinc's name, so when I generate a template
+    // from Zinc, they will be duplicated on the saved template and the copper
+    // generated from the template.
     Zinc
     reagent
     Zn

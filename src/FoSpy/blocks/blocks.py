@@ -1,3 +1,5 @@
+import os
+
 from .. import inherit_docstring, inherit_class_doc, attach_doc
 from ..parsing.syntax import meta_keys as mk
 from ..parsing.syntax import meta_defaults as md
@@ -168,7 +170,7 @@ class SingleBlock:
         return merged
     
     @classmethod
-    def Template(cls,*args:str):
+    def TemplateClass(cls,*args:str):
         from . import TemplateBlock
         from ..parsing.validation import required_keys
         class SubTemplate(TemplateBlock, cls):
@@ -181,7 +183,7 @@ class SingleBlock:
             required_keys[SubTemplate][key] = False
 
         SubTemplate.__name__ = f"{cls.__name__}Template"
-        SubTemplate.__qualname__ = f"{cls.__name__}.Template.{SubTemplate.__name__}"
+        SubTemplate.__qualname__ = f"{cls.__name__}.Template"
         SubTemplate.__module__ = cls.__module__
 
         
@@ -192,15 +194,17 @@ class SingleBlock:
         for key in args:
             serial.pop(key,None)
         serial["template_name"] = template_name
-        return type(self).Template(*args)(serial)
+        return type(self).TemplateClass(*args)(serial)
 
     @classmethod
     def Template_from_dict(cls, blockDict):
         from ..parsing.format import format_field
         template_keys = []
+        if isinstance(blockDict, SingleBlock):
+            blockDict = blockDict.serialize()[0]
         temp_dict = blockDict.copy()
         for key in cls.build_req_validators():
-            if key != 'ext' and key not in blockDict:
+            if key != 'ext' and key not in temp_dict:
                 template_keys.append(key)
         for key, val in blockDict.items():
             if val == format_field("template"):
@@ -208,7 +212,7 @@ class SingleBlock:
                     template_keys.append(key)
                 temp_dict.pop(key, None)
         pass
-        return cls.Template(*template_keys)
+        return cls.TemplateClass(*template_keys)
         
 
 
@@ -240,6 +244,8 @@ class SingleBlock:
 
         """
         from ..parsing.validation import required_keys, optional_keys
+        if isinstance(blockDict,SingleBlock):
+            blockDict = blockDict.serialize()[0]
 
         blockDict = blockDict.copy()
 
@@ -404,6 +410,13 @@ class SingleBlock:
                 out[mk["comments"]][key].append(format_calc_comment(comment))
         
         return [out]
+    
+    def add_comment(self, key:str, comment):
+        if key not in self.serialize()[0]:
+            raise ValueError("You must attach a comment to an existing attribute.")
+        
+        self._meta.comments.setdefault(key,[])
+        self._meta.comments[key].append(str(comment))
     
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
@@ -644,8 +657,9 @@ class FileBlock(SingleBlock):
 
     @classmethod
     def fromFile(cls, filepath):
-        blockDict = dict_from_file(filepath)
-        return cls(blockDict, _sourceFile = filepath)
+        abspath = os.path.abspath(filepath)
+        blockDict = dict_from_file(abspath)
+        return cls(blockDict, _sourceFile = abspath)
     
     @inherit_docstring(SingleBlock)
     def serialize(self):
@@ -670,16 +684,27 @@ class FileBlock(SingleBlock):
                 another object or constructed directly from a blockDict),
                 filepath must be specified.
         """
-        if filepath is None:
-            if self._sourceFile is None:
-                raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
-            else:
-                filepath = self._sourceFile
-        
-        self._sourceFile = filepath
-        blockDict = self.serialize()
+        from warnings import warn
+        saving_as = filepath is not None
+        try:
+            if filepath is None:
+                if self._sourceFile is None:
+                    raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
+                else:
+                    filepath = self._sourceFile
+            
+            self._sourceFile = os.path.abspath(filepath)
+            blockDict = self.serialize()
 
-        write_dict_to_file(blockDict, filepath)
+            write_dict_to_file(blockDict, self._sourceFile)
+        except Exception as e:
+            if not saving_as:
+                warn(f"Could not save file: {e}", RuntimeWarning)
+                return False
+            else:
+                raise e
+        return True
+
 
 
 class ListBlock:

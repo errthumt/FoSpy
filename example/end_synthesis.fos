@@ -1,5 +1,6 @@
 name: TE002
 date: 05-17-2026
+// This comment will remain attached to the experimenters when saving.
 experimenters: [[
     name: Travis Errthum
     affiliation: Kovnir Group - Iowa State University
@@ -13,7 +14,8 @@ internal_project_ID: Arsenide 28+d clathrates
 internal_project_description: Unique Clathrate
 
 [Reaction]
-nominal_formula: Ba2Zn5Sb6
+nominal_formula: Ba8Cu13Zn11As28.5
+// I attached this comment in python
 nominal_mass: 250.0
 nominal_mass_units: mg
 
@@ -37,6 +39,8 @@ nominal_mass_units: mg
     lump
     0.999
     Ar (g)
+    // The comment below will be correctly re-calculated when saving
+    // ! Total weight percent: 22.99%
     8
     [
         type: cutting
@@ -44,6 +48,9 @@ nominal_mass_units: mg
         observations: smaller pieces improve homogenization
     ]
 
+    // These comments are attached to Zinc's name, so when I generate a template
+    // from Zinc, they will be duplicated on the saved template and the copper
+    // generated from the template.
     Zinc
     reagent
     Zn
@@ -52,9 +59,13 @@ nominal_mass_units: mg
     powder
     0.995
     Ar (g)
+    // ! Total weight percent: 15.05%
     11
     []
 
+    // These comments are attached to Zinc's name, so when I generate a template
+    // from Zinc, they will be duplicated on the saved template and the copper
+    // generated from the template.
     Copper
     reagent
     Cu
@@ -63,6 +74,7 @@ nominal_mass_units: mg
     powder
     0.995
     Ar (g)
+    // ! Total weight percent: 17.29%
     13
     []
 
@@ -74,6 +86,7 @@ nominal_mass_units: mg
     lump
     0.9995
     Ar (g)
+    // ! Total weight percent: 44.68%
     28.5
     [
         type: Grinding
