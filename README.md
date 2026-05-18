@@ -5,7 +5,7 @@ Running brainstorm for features and data structure: [brainstorm.md](./brainstorm
 
 Examples of what a FoS could look like: [example/start_synthesis.fos](./example/start_synthesis.fos)
 
-Examples of what a python script could do with FoS files and FoS Templates: [example/readme.md](./example/example.py)
+Examples of what a python script could do with FoS files and FoS Templates: [example/readme.md](./example/readme.md)
 
 There is a fully-packaged app as a proof-of-concept with a gui for opening and editing FOS files.
 * [Github](https://www.github.com/errthumt/CyFoS-alpha)
