@@ -3,7 +3,9 @@ A package for opening, editing, and saving Files of Synthesis (*.fos)
 
 Running brainstorm for features and data structure: [brainstorm.md](./brainstorm.md)
 
-Examples of what a FoS could look like: [tests/example_fos](./tests/example_fos/)
+Examples of what a FoS could look like: [example/start_synthesis.fos](./example/start_synthesis.fos)
+
+Examples of what a python script could do with FoS files and FoS Templates: [example/example.py](.example/example.py)
 
 There is a fully-packaged app as a proof-of-concept with a gui for opening and editing FOS files.
 * [Github](https://www.github.com/errthumt/CyFoS-alpha)
