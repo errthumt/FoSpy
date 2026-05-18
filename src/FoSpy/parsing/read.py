@@ -30,6 +30,7 @@ def dict_from_file(filepath):
                 continue
 
             if rx.EMBEDDED_START.match(txt):
+                _debug.msg(f"Starting Embedding on line: {txt}")
                 embedding = True
 
             block = blocks.get(current_block)
@@ -296,7 +297,7 @@ def create_list_block_dict(lines):
                 current_lines.append(line)
                 continue
 
-            if not (is_key_val or is_comment):
+            if not (is_key_val or is_comment or nested>0):
                 raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
             key = is_key_val.group("key") if is_key_val else None
             if nested > 0:
@@ -317,9 +318,9 @@ def create_list_block_dict(lines):
                 keys.append(key)
                 #_debug.pmsg(keys)
                 current_lines.append(line)
-
             nested += line.count(open_br)
             nested -= line.count(close_br)
+            _debug.msg(f"Current nested: {nested} | Current line: {line}")
             if nested<0:
                 raise ValueError("Mismatched brackets when trying to parse blocks.")
 

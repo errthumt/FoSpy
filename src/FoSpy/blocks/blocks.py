@@ -199,11 +199,15 @@ class SingleBlock:
         from ..parsing.format import format_field
         template_keys = []
         temp_dict = blockDict.copy()
+        for key in cls.build_req_validators():
+            if key != 'ext' and key not in blockDict:
+                template_keys.append(key)
         for key, val in blockDict.items():
             if val == format_field("template"):
-                template_keys.append(key)
+                if key not in template_keys:
+                    template_keys.append(key)
                 temp_dict.pop(key, None)
-        
+        pass
         return cls.Template(*template_keys)
         
 
@@ -301,8 +305,19 @@ class SingleBlock:
                         if len(value) > 1:
                             raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
                         value = value[0]
+                    elif isinstance(value,SingleBlock):
+                        value = value.serialize()[0]
+
+                elif issubclass(validator, ListBlock):
+                    try: 
+                        value = [block.serialize()[0] for block in value]
+                    except:
+                        if isinstance(value, ListBlock):
+                            value = value.serialize()       
+
                 if isinstance(value, validator):
                     return super().__setattr__(name, value)
+                
             return super().__setattr__(name, validator(value))
         else:
             return setattr(self.ext, name, value)
@@ -578,10 +593,28 @@ class SingleBlock:
         c_cmts = self._calc_comments.copy()
         self._calc_comments = {}
 
-        new_obj =  cls.subclass(self.serialize())
+        new_obj =  cls.subclass(self.serialize()[0])
         self._calc_comments = c_cmts
 
         return new_obj
+    
+    def set_key_order(self,*args):
+        new_order = []
+        for key in args:
+            new_order.append(key)
+        for key in self._key_order:
+            if key not in new_order:
+                new_order.append(key)
+        self._key_order = new_order
+
+    def default_key_order(self):
+        new_order = []
+        for key in self.build_validators():
+            new_order.append(key)
+        for key in self._key_order:
+            if key not in new_order:
+                new_order.append(key)
+        self._key_order = new_order
 
 
 
@@ -756,9 +789,12 @@ class ListBlock:
             elif hasattr(self, "_reqCls"):
                 typ = self._reqCls
                 for obj in value:
+                    serial = obj.serialize()[0]
                     if not isinstance(obj, typ):
                         try:
+                            
                             obj=typ(obj.serialize()[0])
+                            pass
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
             return super().__setattr__(name, value)
@@ -779,6 +815,11 @@ class ListBlock:
         objs = self._objs.copy()
         objs.append(obj)
         self._objs = objs
+    
+    def insert(self, idx, obj:SingleBlock):
+        objs = self._objs.copy()
+        objs.insert(idx,obj)
+        self._objs = objs
         
         
         
@@ -791,8 +832,20 @@ class ListBlock:
     
     def __iter__(self):
         return iter(self._objs)
+    
+    def set_list_type(self,typ="explicit"):
+        if typ not in ("explicit", "looped"):
+            raise ValueError("List type must be 'single' or 'looped'.")
+        for obj in self:
+            obj._meta.list_type = typ
         
     def serialize(self):
+        for obj in self:
+            if obj._meta.list_type == "explicit":
+                self.set_list_type("explicit")
+                break
+        test = [obj.serialize()[0] for obj in self]
+        pass
         return [obj.serialize()[0] for obj in self]
     
     @inherit_docstring(SingleBlock, label="Related")
@@ -922,3 +975,6 @@ class ListBlock:
             if getattr(obj, key, None) == val:
                 found.append(obj)
         return found
+    
+    def get_first(self, **kwargs):
+        return self.get_any(**kwargs)[0]

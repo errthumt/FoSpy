@@ -23,9 +23,9 @@ class TemplateList(ListBlock):
     _reqCls = None
     @classmethod
     def Simple(cls, reqCls):
-        def FromDict(blockDict):
-            return ListBlock.Simple(reqCls.Template_from_dict(blockDict[0]))(blockDict)
-        return FromDict
+        def FromList(blockList):
+            return ListBlock.Simple(reqCls.Template_from_dict(blockList[0]))(blockList)
+        return FromList
       
 
 class TemplateBlock(SingleBlock):
@@ -48,10 +48,13 @@ class TemplateBlock(SingleBlock):
         from ..parsing.format import format_field
         required = required_keys.get(self._full_class, {})
 
-        serial = super().serialize()
+        serial = super().serialize()[0]
 
+        out = {"template_name":serial.pop("template_name","")}
         for key in required:
-            if key not in serial[0]:
-                serial[0][key] = format_field("template")
+            out[key] = serial.pop(key, format_field("template"))
+        
+        for key in serial:
+            out[key] = serial[key]
 
-        return serial
+        return [out]

@@ -33,11 +33,26 @@ def block_list_to_lines(blocklist:list, indent=0):
             for key in loop_keys:
                 for comment in comments[key]:
                     key_comments[key].append(comment)
-
+        
+        template_keys = []
         for key in loop_keys:
             for comment in key_comments[key]:
                 lines.append(format_comment(comment,indent))
+
+            #scan for template fields
+
+            for block in blocklist:
+                val = block.get(key, None)
+                if val == format_field("template"):
+                    template_keys.append(key)
+                    key = f"-{key}"
             lines.append(format_loop_key(key,indent))
+
+        # all blocks in a list block must have the same template fields.
+        for temp_key in template_keys:
+            for block in blocklist:
+                block[temp_key] = format_field("template")
+
         lines.append("")
 
     for block in blocklist: 
@@ -60,7 +75,6 @@ def block_to_lines(block, indent=0, loop_keys=[]):
             if key_comments:
                 for comment in key_comments:
                     lines.append(format_comment(comment, indent))
-            
             for line in expand_lists(key, val, indent):
                 lines.append(line)
     elif typ == "looped":
@@ -88,6 +102,8 @@ def block_to_lines(block, indent=0, loop_keys=[]):
 
 def expand_lists(key, val, indent, looped=False):
     lines = []
+    key = f"-{key}" if val == format_field("template") else key
+
     if key == "embedded":
         lines.append(format_embed_start(key, indent, looped))
         for line in val:
@@ -120,7 +136,7 @@ def write_dict_to_file(blocks, filepath):
             if name in mk.values():
                 continue
             if name != "metadata":
-                comments = block_comments[name]
+                comments = block_comments.get(name,[])
                 for comment in comments:
                     f.write(f'{format_comment(comment)}\n')
 
