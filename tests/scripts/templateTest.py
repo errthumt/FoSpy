@@ -21,6 +21,11 @@ def tempTest1():
     my_templates.materials.append(arsenic.make_template("Arsenic, Glovebox", "type"))
     my_synthesis.materials.remove_any(name="Arsenic")
 
+    joe_template = my_templates.experimenters.get_any(name="Joseph Race")[0]
+    joe = joe_template.fill(affiliation="Graham's Dad")
+
+    my_synthesis.metadata.experimenters.append(joe)
+
     my_synthesis.save(WRITE_PATH)
     my_templates.save(WRITE_TEMPLATE_PATH)
 
@@ -47,3 +52,4 @@ def tempTest2():
 
 if __name__  == "__main__":
     tempTest1()
+    pass

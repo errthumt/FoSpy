@@ -1,17 +1,28 @@
 name: My Templates
 description: A collection of select templates
 
+[[Experimenters]]
+template_name: Travis
+name: Travis Errthum
+affiliation: Iowa State University Dept of Chemistry
+orcid: 0009-0006-1937-5672
+
+template_name: Joe
+name: Joseph Race
+-affiliation: <!TEMPLATE-FIELD>
+orcid: 0000-0002-8551-3627
+
 [[Materials]]
 :template_name
 :name
-:type
+:-type
 :formula
 :supplier
 :cas
 :form
 :purity
 :env
-:ratio
+:-ratio
 :treatments
 
     Antimony, Glovebox
@@ -53,7 +64,7 @@ description: A collection of select templates
     lump
     0.9995
     Ar (g)
-    6.0
+    <!TEMPLATE-FIELD>
     // This is a comment on the treatments value for Arsenic
     [
         type: Grinding
@@ -65,7 +76,7 @@ description: A collection of select templates
 :template_name
 :type
 :repeats
-:observations
+:-observations
 
     Basic Weighing, carbonized ampoule, glovebox
     weigh

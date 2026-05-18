@@ -2,74 +2,85 @@ name: My Templates
 description: A collection of select templates
 
 
+[[Experimenters]]
+template_name: Travis
+name: Travis Errthum
+affiliation: Iowa State University Dept of Chemistry
+orcid: 0009-0006-1937-5672
+
+template_name: Joe
+name: Joseph Race
+-affiliation: not quite sure.
+orcid: 0000-0002-8551-3627
+
 [[Materials]]
-    :template_name
-    :name
-    :-type
-    :formula
-    :supplier
-    :cas
-    :form
-    :purity
-    :env
-    :-ratio
-    :treatments
+:template_name
+:name
+:-type
+:formula
+:supplier
+:cas
+:form
+:purity
+:env
+:-ratio
+:treatments
 
-        Antimony, Glovebox
-        Antimony
-        idk
-        Sb
-        Unk
-        1234-56-7
-        powder
-        0.999
-        Ar (g)
-        idk
-        []
+    Antimony, Glovebox
+    Antimony
+    idk
+    Sb
+    Unk
+    1234-56-7
+    powder
+    0.999
+    Ar (g)
+    idk
+    []
 
-        Arsenic, Glovebox
-        Arsenic
-        // This template does not have type filled in.
-        <!TEMPLATE-FIELD>
-        As
-        Unk
-        1234-56-7
-        lump
-        0.9995
-        Ar (g)
-        6.0
-        // This is a comment on the treatments value for Arsenic
-        [
-        type: Grinding
-        repeats: 1
-        observations: ground into powder for weighing and homogenization
-        ]
+    Arsenic, Glovebox
+    Arsenic
+    // This template does not have type filled in.
+    <!TEMPLATE-FIELD>
+    As
+    Unk
+    1234-56-7
+    lump
+    0.9995
+    Ar (g)
+    6.0
+    // This is a comment on the treatments value for Arsenic
+    [
+    type: Grinding
+    repeats: 1
+    observations: ground into powder for weighing and homogenization
+    ]
 
 
 
 [[Treatments]]
-    :template_name
-    :type
-    :repeats
-    :-observations
+:template_name
+:type
+:repeats
+:-observations
 
-        Basic Weighing, carbonized ampoule, glovebox
-        weigh
-        1
-        template field
+    Basic Weighing, carbonized ampoule, glovebox
+    weigh
+    1
+    template field
 
-        600 for 120hr
-        anneal
-        1
-        template field
-        program: [[
-            :type
-            :time
+    600 for 120hr
+    anneal
+    1
+    template field
+    program: [[
+        :type
+        :time
 
-            ramp
-            temp: 600 C
-            10 hr
+        ramp
+        temp: 600 C
+        10 hr
 
-            dwell
-            120 hr
-        ]]
+        dwell
+        120 hr
+    ]]

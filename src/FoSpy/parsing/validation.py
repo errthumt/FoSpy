@@ -106,8 +106,10 @@ optional_keys = {
     },
 
     TemplateSet: {
+        "experimenters": TemplateList.Simple(Experimenter),
         "materials": TemplateList.Simple(Material),
+        "generic_materials": TemplateList.Simple(Material),
         "treatments": TemplateList.Simple(Treatment),
-        "experimenters": TemplateList.Simple(Experimenter)
+        "cifs": ListBlock.Simple(EmbeddedCIF)
     }
 }
