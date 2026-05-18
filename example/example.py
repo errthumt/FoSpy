@@ -108,4 +108,6 @@ my_synthesis.materials.set_list_type("looped")
 my_synthesis.save(r"example/end_synthesis.fos")
 my_templates.save(r"example/end_templates.fos")
 
+new_templates = TemplateSet.fromFile(r"example/end_templates.fos")
+
 pass # break point for debugging.

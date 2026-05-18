@@ -294,6 +294,8 @@ def create_list_block_dict(lines):
             if embedding or rx.EMBEDDED_START.match(line):
                 if rx.EMBEDDED_END.match(line):
                     embedding = False
+                elif rx.EMBEDDED_START.match(line):
+                    embedding = True
                 current_lines.append(line)
                 continue
 
