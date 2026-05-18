@@ -99,7 +99,7 @@ def expand_lists(key, val, indent, looped=False):
         else:
             bracket_num = 1 if len(val) == 1 else 2
             lines.append(format_nested_start(key,len(val)>1, looped,indent))
-            for line in block_list_to_lines(val, indent=indent):
+            for line in block_list_to_lines(val, indent=indent+1):
                 lines.append(line)
             lines.pop()
             lines.append(format_nested_end(len(val)>1,indent))

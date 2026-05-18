@@ -3,7 +3,7 @@ _debug = Debug()
 _debug.on = True
 
 from FoSpy._debug import all_debugs_on
-all_debugs_on()
+all_debugs_on(soundoff=False)
 
 from FoSpy.parsing import dict_from_file, write_dict_to_file
 from FoSpy.parsing import syntax as snt
@@ -35,7 +35,7 @@ def readTest(report=False):
 
             for idx, block in enumerate(blocks):
                 print(f'(subblock {idx})')
-                pprint(block,sort_dicts=False)
+                _debug.pmsg(block,sort_dicts=False)
 
     return file_dict
 
