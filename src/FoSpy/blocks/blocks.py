@@ -271,7 +271,11 @@ class SingleBlock:
         self._calc_routines = []
 
         for attr, key in mk.items():
-            setattr(self._meta, attr, blockDict.pop(key,md[key]))
+            try:
+                default = md[key].copy()
+            except:
+                default = md[key]
+            setattr(self._meta, attr, blockDict.pop(key,default))
 
         self._key_order = []
         self.ext = SubContainer()
@@ -410,7 +414,11 @@ class SingleBlock:
             out[key] = try_serial(val)
 
         for attr, key in mk.items():
-            val = getattr(self._meta,attr,md[key])
+            try:
+                default = md[key].copy()
+            except:
+                default = md[key]
+            val = getattr(self._meta,attr,default)
             out[key] = val
 
         out = deepcopy(out)
@@ -526,6 +534,8 @@ class SingleBlock:
         func = self._resolve_relative_path(path)
         if not getattr(func, "_is_calc_routine", False):
             raise TypeError(f"'{path}' is not a registered calc routine.")
+
+        self._meta.routine_paths.append(path)
 
         @wraps(func)
         def wrapped():

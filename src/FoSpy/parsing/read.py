@@ -90,7 +90,10 @@ def dict_from_file(filepath):
 
     for meta_key in mk.values():
         if meta_key not in blocks:
-            blocks[meta_key] = md[meta_key]
+            try:
+                blocks[meta_key] = md[meta_key].copy()
+            except:
+                blocks[meta_key] = md[meta_key]
 
     return blocks
 
