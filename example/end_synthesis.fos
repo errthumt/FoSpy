@@ -1,24 +1,28 @@
 name: TE002
+// This comment will stay attached to the date when saving
 date: 05-17-2026
-// This comment will remain attached to the experimenters when saving.
-experimenters: [[
-    name: Travis Errthum
-    affiliation: Kovnir Group - Iowa State University
-    orcid: 0009-0006-1937-5672
-
-    name: Joseph Race
-    affiliation: Graham's Dad
-    orcid: 0000-0002-8551-3627
-]]
 internal_project_ID: Arsenide 28+d clathrates
 internal_project_description: Unique Clathrate
 
+// Note that now there are two experimenters, so the
+// experimenters header has changed to double brackets
+[[Experimenters]]
+name: Travis Errthum
+affiliation: Kovnir Group - Iowa State University
+orcid: 0009-0006-1937-5672
+
+name: Joseph Race
+affiliation: Graham's Dad
+orcid: 0000-0002-8551-3627
+
+// Single brackets on a header mean there is only one group
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5
 // I attached this comment in python
 nominal_mass: 250.0
 nominal_mass_units: mg
 
+// Double brackets on a header mean there is multiple groups
 [[Materials]]
 :name
 :type
@@ -42,6 +46,8 @@ nominal_mass_units: mg
     // The comment below will be correctly re-calculated when saving
     // ! Total weight percent: 22.99%
     8
+    // Similar to headers, single brackets mean there is only one group,
+    // in this case for treatments of Barium
     [
         type: cutting
         repeats: 1
@@ -111,6 +117,7 @@ nominal_mass_units: mg
     anneal
     1
     None
+    // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
         time: 2 hr
@@ -123,6 +130,7 @@ nominal_mass_units: mg
     anneal
     1
     None
+    // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
         time: 10 hr

@@ -19,6 +19,7 @@ my_templates.save(r"example/end_templates.fos")
 
 # some shortcuts so I don't need to keep referencing my_synthesis
 my_meta = my_synthesis.metadata
+my_exps = my_synthesis.experimenters
 my_reaction = my_synthesis.reaction
 my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
@@ -35,13 +36,16 @@ my_meta.internal_project_ID = "Arsenide 28+d clathrates"
 my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 
 # attach a new comment to the nominal_mass
-my_reaction.add_comment("nominal_mass", "I attached this comment in python")
+my_reaction.add_comments("nominal_mass", "I attached this comment in python")
 
 # template file has a template for Joe, but it's missing an affiliation value.
 # So I fill in the affiliation and add it to the experimenters on my synthesis
 joe_template = exp_temps.get_first(template_name="Joe")
 joe = joe_template.fill(affiliation="Graham's Dad")
-my_meta.experimenters.append(joe)
+my_exps.append(joe)
+my_synthesis.add_comments("experimenters",
+                          "Note that now there are two experimenters, so the",
+                          "experimenters header has changed to double brackets")
 
 # python indexes are zero-based, so this changes the first material (Barium)'s
 # ratio to 8

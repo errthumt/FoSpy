@@ -14,6 +14,7 @@ required_keys = {
 
     Synthesis: {
         "metadata" : MetaData,
+        "experimenters": ListBlock.Simple(Experimenter),
         "reaction" : Reaction,
         "materials" : MaterialList,
         "treatments" : ListBlock.Simple(Treatment)
@@ -34,8 +35,7 @@ required_keys = {
 
     MetaData: {
         "name": str,
-        "date": str,
-        "experimenters": ListBlock.Simple(Experimenter)
+        "date": str
     },
 
     Experimenter: {
