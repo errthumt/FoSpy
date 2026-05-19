@@ -98,8 +98,7 @@ dwell1 = dwell_template.fill(time="12 hr")
 dwell2 = dwell_template.fill(time="72 hr")
 
 # Remove all treatments except the first two
-my_synthesis.treatments = my_treats[0:2]
-my_treats = my_synthesis.treatments
+my_treats.remove_idx(from_idx=2)
 
 # Using my anneal template to create two different annealing treatments with my
 # different program sections.

@@ -154,13 +154,8 @@ anneal2 = anneal_template.fill(repeats=1,
 ## Removing listed blocks by index
 This code will be cleaner in the future, but for now, I redefine the treatments in my synthesis as being only the first two of the original synthesis.
 ```python
-# This line wont work, because it unlinks the my_treats shortcut from my_synthesis.treatments
-# without actually changing the treatments list
-my_treats = my_treats[0:2]
-
-# These lines work because it re-aassigns the treatments to the synthesis directly, then remakes the shortcut.
-my_synthesis.treatments = my_synthesis.treatments[0:2]
-my_treats = my_synthesis.treatments
+# Remove all but the first two treatments.
+my_treats.remove_idx(from_idx=2, to_idx=None)
 
 # After removing the old treatments, I can add in the two new annealings that I made.
 for anneal in (anneal1, anneal2):
