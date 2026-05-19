@@ -14,6 +14,15 @@ from ..parsing import (
 from .._debug import Debug
 _debug = Debug()
 
+def unwrap_block(struct):
+    while isinstance(struct,list) and len(struct) == 1:
+        struct = struct[0]
+
+    if isinstance(struct,SingleBlock):
+        struct = struct.serialize()
+        struct = unwrap_block(struct)
+    return struct
+
 class SubContainer:
     """
     A simple container for storing hidden or unexpected attributes of a
@@ -190,7 +199,7 @@ class SingleBlock:
         return SubTemplate
     
     def make_template(self,template_name,*args:str):
-        serial = self.serialize()[0]
+        serial = self.serialize()
         for key in args:
             serial.pop(key,None)
         serial["template_name"] = template_name
@@ -201,7 +210,7 @@ class SingleBlock:
         from ..parsing.format import format_field
         template_keys = []
         if isinstance(blockDict, SingleBlock):
-            blockDict = blockDict.serialize()[0]
+            blockDict = blockDict.serialize()
         temp_dict = blockDict.copy()
         for key in cls.build_req_validators():
             if key != 'ext' and key not in temp_dict:
@@ -243,9 +252,11 @@ class SingleBlock:
                 present.
 
         """
-        from ..parsing.validation import required_keys, optional_keys
-        if isinstance(blockDict,SingleBlock):
-            blockDict = blockDict.serialize()[0]
+        blockDict = unwrap_block(blockDict)
+
+        if not isinstance(blockDict, dict):
+            raise TypeError("A SingleBlock must be constructed from either a dictionary or another SingleBlock. "
+                            "The passed source can optionally be wrapped in lists of length == 1.")
 
         blockDict = blockDict.copy()
 
@@ -409,10 +420,10 @@ class SingleBlock:
             for comment in comments.values():
                 out[mk["comments"]][key].append(format_calc_comment(comment))
         
-        return [out]
+        return out
     
     def add_comment(self, key:str, comment):
-        if key not in self.serialize()[0]:
+        if key not in self.serialize():
             raise ValueError("You must attach a comment to an existing attribute.")
         
         self._meta.comments.setdefault(key,[])
@@ -606,7 +617,7 @@ class SingleBlock:
         c_cmts = self._calc_comments.copy()
         self._calc_comments = {}
 
-        new_obj =  cls.subclass(self.serialize()[0])
+        new_obj =  cls.subclass(self.serialize())
         self._calc_comments = c_cmts
 
         return new_obj
@@ -660,15 +671,6 @@ class FileBlock(SingleBlock):
         abspath = os.path.abspath(filepath)
         blockDict = dict_from_file(abspath)
         return cls(blockDict, _sourceFile = abspath)
-    
-    @inherit_docstring(SingleBlock)
-    def serialize(self):
-        """
-        Parent `SingleBlock` serilization returns a dict wrapped in a list.
-        Serialized `FileBlock` objects are unwrapped directly to the
-        top-level dict.
-        """
-        return super().serialize()[0]
     
     def save(self, filepath:str=None):
         """
@@ -814,7 +816,7 @@ class ListBlock:
             elif hasattr(self, "_reqCls"):
                 typ = self._reqCls
                 for obj in value:
-                    serial = obj.serialize()[0]
+                    serial = obj.serialize()
                     if not isinstance(obj, typ):
                         try:
                             
@@ -869,9 +871,7 @@ class ListBlock:
             if obj._meta.list_type == "explicit":
                 self.set_list_type("explicit")
                 break
-        test = [obj.serialize()[0] for obj in self]
-        pass
-        return [obj.serialize()[0] for obj in self]
+        return [obj.serialize() for obj in self]
     
     @inherit_docstring(SingleBlock, label="Related")
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):

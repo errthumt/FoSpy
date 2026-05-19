@@ -19,7 +19,7 @@ class EmbeddedFile(SingleBlock):
         "embedded" key to the full list of embedded lines instead of a string.
         """
         serial = super().serialize()
-        serial[0]["embedded"] = self.embedded.copy()
+        serial["embedded"] = self.embedded.copy()
         return serial
 
 

@@ -113,7 +113,6 @@ def expand_lists(key, val, indent, looped=False):
         if len(val) == 0:
             lines.append(format_key_value(key, empty_nested(False), indent, looped))
         else:
-            bracket_num = 1 if len(val) == 1 else 2
             lines.append(format_nested_start(key,len(val)>1, looped,indent))
             for line in block_list_to_lines(val, indent=indent+1):
                 lines.append(line)
@@ -132,7 +131,9 @@ def write_dict_to_file(blocks, filepath):
     block_comments = blocks.pop(mk["comments"])
 
     with open(filepath, "w") as f:
-        for name, blocklist in blocks.items():
+        for name, block in blocks.items():
+            if isinstance(block,dict):
+                block = [block]
             if name in mk.values():
                 continue
             if name != "metadata":
@@ -140,7 +141,7 @@ def write_dict_to_file(blocks, filepath):
                 for comment in comments:
                     f.write(f'{format_comment(comment)}\n')
 
-                f.write(f'{format_block_header(name, "list" if len(blocklist)>1 else "single")}\n')           
+                f.write(f'{format_block_header(name, "list" if len(block)>1 else "single")}\n')           
             
-            for line in block_list_to_lines(blocklist):
+            for line in block_list_to_lines(block):
                 f.write(f'{line}\n')
