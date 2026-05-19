@@ -199,9 +199,11 @@ class SingleBlock:
         return SubTemplate
     
     def make_template(self,template_name,*args:str):
+        from ..parsing import format_field
+
         serial = self.serialize()
         for key in args:
-            serial.pop(key,None)
+            serial[key] = format_field("template")
         serial["template_name"] = template_name
         return type(self).TemplateClass(*args)(serial)
 
@@ -313,9 +315,10 @@ class SingleBlock:
                 a single dict entry. Error raised if a list of length > 1 is
                 passed for a `SingleBlock` attribute.
         """
+        from ..parsing.format import format_field
 
         validators = self.build_validators()
-        if name.startswith("_"):
+        if name.startswith("_") or value == format_field("template"):
             return super().__setattr__(name, value)
 
         if name in validators:

@@ -110,6 +110,8 @@ optional_keys = {
         "materials": TemplateList.Simple(Material),
         "generic_materials": TemplateList.Simple(Material),
         "treatments": TemplateList.Simple(Treatment),
+        "annealings": TemplateList.Simple(Annealing),
+        "anneal_sections": TemplateList.Simple(AnnealSection),
         "cifs": ListBlock.Simple(EmbeddedCIF)
     }
 }
