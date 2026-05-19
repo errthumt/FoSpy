@@ -67,6 +67,8 @@ def block_to_lines(block, indent=0, loop_keys=[]):
     typ = block.pop(mk["list_type"])
     comments = block.pop(mk["comments"])
     key_comments = block.pop(mk["key_comments"], None)
+    for remaining_key in mk.values():
+        block.pop(remaining_key, None)
     lines = []
 
     if typ == "explicit":

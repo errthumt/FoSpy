@@ -29,6 +29,7 @@ The nice thing about python is that if you set a variable equal to something, in
 ```python
 # some shortcuts so I don't need to keep referencing my_synthesis
 my_meta = my_synthesis.metadata
+my_exps = my_synthesis.experimenters
 my_reaction = my_synthesis.reaction
 my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
@@ -53,7 +54,7 @@ my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 Comments are attached to the information below them when being read from the file so that they can be preserved when saved. I can also add another comment that will be attached to the `nominal_mass` when saving the file.
 ```python
 # attach a new comment to the nominal_mass
-my_reaction.add_comment("nominal_mass", "I attached this comment in python")
+my_reaction.add_comments("nominal_mass", "I attached this comment in python")
 ```
 
 ## Filling in Templates
@@ -62,7 +63,12 @@ My template file contains a template for an experimenter named Joe, but it's pro
 joe_template = exp_temps.get_first(template_name="Joe")
 joe = joe_template.fill(affiliation="Graham's Dad")
 my_meta.experimenters.append(joe)
+my_synthesis.add_comments("experimenters",
+                          "Note that now there are two experimenters, so the",
+                          "experimenters header has changed to double brackets")
 ```
+
+I also add a comment about the change in FOS syntax now that the synthesis has more than one experimenter. Each comma-separated quote is a separate line, except the first one, `"experimenters"`, which specifies which heading to attach the comment to.
 
 ## Editing objects in listed blocks
 The materials block of my synthesis (`my_mats = my_synthesis.materials`) is a fancy list of `Material` objects. I can access an individual item in that list with an index in brackets (`my_mats[i]`).

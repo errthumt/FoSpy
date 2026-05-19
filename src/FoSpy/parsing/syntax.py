@@ -48,11 +48,13 @@ SYNTAX = {
 meta_keys = {
     "comments" : "_fos_comments",
     "key_comments" : "_fos_key_comments",
-    "list_type" : "_list_type"
+    "list_type" : "_list_type",
+    "routine_paths": "_routine_paths"
 }
 
 meta_defaults = {
     "_fos_comments" : [],
     "_fos_key_comments" : [],
-    "_list_type" : ""
+    "_list_type" : "",
+    "_routine_paths": []
 }

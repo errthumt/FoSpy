@@ -1,4 +1,4 @@
-from FoSpy import Synthesis, TemplateSet, ListBlock, EmbeddedCIF, TemplateList, Material
+from FoSpy import Synthesis, TemplateSet, ListBlock, EmbeddedCIF, TemplateList, Material, SubContainer
 from chemformula import ChemFormula
 
 from FoSpy._debug import all_debugs_on
@@ -101,9 +101,6 @@ ramp2 = ramp_template.fill(temp="650 C", time = "10 hr")
 dwell1 = dwell_template.fill(time="12 hr")
 dwell2 = dwell_template.fill(time="72 hr")
 
-# Remove all treatments except the first two
-my_treats.remove_idx(from_idx=2)
-
 # Using my anneal template to create two different annealing treatments with my
 # different program sections.
 anneal1 = anneal_template.fill(repeats=1,
@@ -112,6 +109,9 @@ anneal1 = anneal_template.fill(repeats=1,
 anneal2 = anneal_template.fill(repeats=1,
                                observations="None",
                                program=[ramp2, dwell2])
+
+# Remove all treatments except the first two
+my_treats.remove_idx(from_idx=2)
 
 # Adding both annealing treatments to my synthesis
 for anneal in (anneal1, anneal2):
@@ -129,13 +129,13 @@ cif_temps.insert(0,Ba2Zn5Sb6)
 # sample.
 my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
 
+# Every material gets a weight percent comment added above their ratio
+my_synthesis.add_calc_routine("materials.add_weight_pcts")
+
 # some reordering stuff to make the final printout more consistent.
 my_templates.default_key_order()
 my_templates.generic_materials.set_list_type("explicit")
 my_mats.set_list_type("looped")
-
-# Every material gets a weight percent comment added above their ratio
-my_synthesis.add_calc_routine("materials.add_weight_pcts")
 
 # save all my changes
 saved = [file.save() for file in (my_templates, my_synthesis)]
