@@ -36,7 +36,7 @@ class TemplateBlock(SingleBlock):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
 
-        serial = self.serialize()[0]
+        serial = self.serialize()
         serial.pop("template_name",None)
         for kw, arg in kwargs.items():
             serial[kw] = arg
@@ -48,7 +48,7 @@ class TemplateBlock(SingleBlock):
         from ..parsing.format import format_field
         required = required_keys.get(self._full_class, {})
 
-        serial = super().serialize()[0]
+        serial = super().serialize()
 
         out = {"template_name":serial.pop("template_name","")}
         for key in required:
@@ -57,4 +57,4 @@ class TemplateBlock(SingleBlock):
         for key in serial:
             out[key] = serial[key]
 
-        return [out]
+        return out

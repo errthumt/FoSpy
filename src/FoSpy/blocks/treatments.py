@@ -13,6 +13,8 @@ class Treatment(SingleBlock):
 
     @classmethod
     def subclass(cls, blockDict):
+        from . import unwrap_block
+        blockDict = unwrap_block(blockDict)
         t = blockDict.get("type")
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
