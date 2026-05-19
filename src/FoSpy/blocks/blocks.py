@@ -847,6 +847,22 @@ class ListBlock:
         objs = self._objs.copy()
         objs.insert(idx,obj)
         self._objs = objs
+
+    def remove_idx(self, from_idx:int=None, to_idx:int=None):
+        if from_idx is None and to_idx is None:
+            self._objs = []
+
+        objs = self._objs.copy()
+
+        if from_idx is None:
+            objs = objs[to_idx:]
+        elif to_idx is None:
+            objs = objs[:from_idx]
+        else:
+            objs = objs[:from_idx] + objs[to_idx:]
+
+        self._objs = objs
+
         
         
         
