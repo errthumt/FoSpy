@@ -422,12 +422,12 @@ class SingleBlock:
         
         return out
     
-    def add_comment(self, key:str, comment):
+    def add_comments(self, key:str, *comments):
         if key not in self.serialize():
-            raise ValueError("You must attach a comment to an existing attribute.")
-        
-        self._meta.comments.setdefault(key,[])
-        self._meta.comments[key].append(str(comment))
+            raise ValueError("You must attach comments to an existing attribute.")
+        for comment in comments:
+            self._meta.comments.setdefault(key,[])
+            self._meta.comments[key].append(str(comment))
     
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
