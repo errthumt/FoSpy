@@ -45,6 +45,30 @@ env: Ar (g)
 purity: 0.995
 treatments: []
 
+[Treatments]
+:template_name
+:type
+:-repeats
+:-observations
+:-program
+
+    Empty Anneal Template
+    anneal
+    <!TEMPLATE-FIELD>
+    <!TEMPLATE-FIELD>
+    // Here, the double brackets signal that there are multiple program sections.
+    <!TEMPLATE-FIELD>
+
+[[Anneal_sections]]
+template_name: Any ramp
+type: ramp
+-time: <!TEMPLATE-FIELD>
+-temp: <!TEMPLATE-FIELD>
+
+template_name: Any dwell
+type: dwell
+-time: <!TEMPLATE-FIELD>
+
 [[Cifs]]
 file_name: Ba2Zn5Sb6_ICSD
 extension: .cif

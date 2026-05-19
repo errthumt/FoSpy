@@ -30,6 +30,9 @@ class Treatment(SingleBlock):
 class Annealing(Treatment):
     def __init__(self, blockDict):
         super().__init__(blockDict)
+    @classmethod
+    def subclass(cls, blockDict):
+        return cls(blockDict)
 Treatment.dispatch["anneal"] = Annealing
 
 class AnnealSection(SingleBlock):

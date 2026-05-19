@@ -1,8 +1,17 @@
 from FoSpy import Synthesis, TemplateSet, ListBlock, EmbeddedCIF, TemplateList, Material, SubContainer
 from chemformula import ChemFormula
 
+# No debug messages by default, but they can be turned on like this.
 from FoSpy._debug import all_debugs_on
 all_debugs_on(soundoff=False)
+
+# change the width of your debug screen so that module labels print on one line.
+from FoSpy import _debug as db
+db.DEBUG_WIDTH = 120
+
+# Optional way to turn on/off one module's debug messages.
+from FoSpy.parsing.read import _debug as read_debug
+read_debug.on = True
 
 """
 The beginning and end results of this file can be found in the same folder of
@@ -88,12 +97,16 @@ my_mats.append(arsenic)
 
 # Building templates from the existing annealing program on my synthesis so that
 # I can replace it with a different program.
-anneal_template = my_treats[2].make_template("600/10hr, 120hr",
+anneal_template = my_treats[2].make_template("Empty Anneal Template",
                                              "repeats", "observations","program")
 ramp_template = my_treats[2].program[0].make_template("Any ramp",
                                                       "temp", "time")
 dwell_template = my_treats[2].program[1].make_template("Any dwell",
                                                        "time")
+
+# Save my new templates to my template file.
+my_templates.treatments = [anneal_template]
+my_templates.anneal_sections = [ramp_template, dwell_template]
 
 # Filling in my annealing templates
 ramp1 = ramp_template.fill(temp="550 C", time="2 hr")

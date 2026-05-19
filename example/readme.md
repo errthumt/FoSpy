@@ -2,7 +2,7 @@
 
 The files in this folder are examples of what a script-side editing session might look like for Synthesis and Template files using the FOS format.
 
-Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward writing scripts that automate generating synthesis files from many similar data inputs.
+Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward automating synthesis file generation for many syntheses at once.
 
 The full script can be found in [example.py](./example.py), but each snippet is pulled apart here and explained.
 
@@ -25,7 +25,7 @@ my_synthesis.save(r"example/end_synthesis.fos")
 my_templates.save(r"example/end_templates.fos")
 ```
 ## Object-Oriented Shortcuts
-The nice thing about python is that if you set a variable equal to something, in most cases, it just points at that thing instead of making a new variable. So any edits to `my_meta`, for example, will also be edits to `my_synthesis.metadata`.
+The nice thing about python is that in most cases, if you set a variable "equal" to something, in most cases, the new variable just points at that thing instead of copying it. So any edits to `my_meta`, for example, will also be edits to `my_synthesis.metadata`.
 ```python
 # some shortcuts so I don't need to keep referencing my_synthesis
 my_meta = my_synthesis.metadata
@@ -41,7 +41,7 @@ cif_temps = my_templates.cifs
 ```
 
 ## Changing MetaData
-Here I change some of the important metadata for my synthesis. Certain variables are automatically converted. For example, the `nominal_formula` is coded to be a `ChemFormula` object, so when I set that variable, it automatically converts the text into a true formula object and raises an error if it's not able to read it.
+Here I change some of the metadata and reaction information for my synthesis. Certain variables are automatically converted. For example, the `nominal_formula` is coded to be a `ChemFormula` object, so when I set that variable, it automatically converts the text into a true formula object and raises an error if it's not able to read it.
 ```python
 # change some metadata for my synthesis
 my_meta.name = "TE002"
@@ -51,14 +51,14 @@ my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 ```
 
 ## Adding Comments
-Comments are attached to the information below them when being read from the file so that they can be preserved when saved. I can also add another comment that will be attached to the `nominal_mass` when saving the file.
+In order to preserve comments when editing and re-saving FOS files, comments are attached to the line directly below them at read time. I can also add another comment that will be attached to the `nominal_mass` when saving the file.
 ```python
 # attach a new comment to the nominal_mass
 my_reaction.add_comments("nominal_mass", "I attached this comment in python")
 ```
 
 ## Filling in Templates
-My template file contains a template for an experimenter named Joe, but it's programmed to be missing an affiliation value. I can generate a new, complete experimenter by calling the `fill()` command on the template. Then I add that experimenter to my synthesis metadata.
+My template file contains a template for an experimenter named Joe, but it's configured in my templates file to be missing an "affiliation" value. I can generate a new, complete experimenter by calling the `fill()` command on the template. Then I add that experimenter to my synthesis metadata.
 ```python
 joe_template = exp_temps.get_first(template_name="Joe")
 joe = joe_template.fill(affiliation="Graham's Dad")
@@ -68,18 +68,16 @@ my_synthesis.add_comments("experimenters",
                           "experimenters header has changed to double brackets")
 ```
 
-I also add a comment about the change in FOS syntax now that the synthesis has more than one experimenter. Each comma-separated quote is a separate line, except the first one, `"experimenters"`, which specifies which heading to attach the comment to.
+I also added a comment about the change in FOS syntax now that the synthesis has more than one experimenter. When adding comments, each comma-separated quote is a separate line, except the first one, `"experimenters"`, which specifies which heading to attach the comment to.
 
 ## Editing objects in listed blocks
-The materials block of my synthesis (`my_mats = my_synthesis.materials`) is a fancy list of `Material` objects. I can access an individual item in that list with an index in brackets (`my_mats[i]`).
+The materials block of my synthesis (`my_mats = my_synthesis.materials`) is a fancy list of `Material` objects. I can access an individual item in that list with an index in brackets (`my_mats[i]`). Python indices are zero-based, so `my_mats[0]` refers to the first material in the list (in this case barium).
 ```python
-# python indexes are zero-based, so this changes the first material (Barium)'s
-# ratio to 8
 my_mats[0].ratio = 8
 ```
 
 ## Finding objects in listed blocks
-Listed blocks have two finding commands, `get_any()` and `get_first`. `get_any()` returns a list of objects that match the criteria you give. `get_first()` returns the first match. Objects returned by these functions point to the actual objects in the synthesis, not copies, so I can edit them after finding them and the edits go into the synthesis.
+Listed blocks have two finding commands, `get_any()` and `get_first()`. `get_any()` returns a list of objects that match the criteria you give. `get_first()` returns the first match. Objects returned by these functions point to the actual objects in the synthesis, not copies, so I can edit them after finding them and the edits are updated in the synthesis.
 ```python
 # I find zinc in my materials, change its ratio, and also generate a template
 # from it.
@@ -88,12 +86,14 @@ zinc.ratio = 11
 ```
 
 ## Generating templates from existing objects.
-Here, I have already identified a `Material` object called zinc. But I have lots of materials in my lab with many of the same properties as zinc. So I generate a generic "powder" template, and specify which fields I want to be empty in the template. This template cannot be converted back into `Material` objects unless all of the required fields are filled back in.
+Here, I have already identified a `Material` object called zinc. But I have lots of materials in my lab with many of the same properties as zinc. So I generate a generic "powder" template, and specify which fields I want to be empty in the template. This template cannot be converted back into a complete `Material` object unless all of the required fields are filled back in.
 ```python
 # The template name is "A generic metal powder, purity 0.995", and it has empty
 # fields for name, formula, cas, and ratio
 powder_template = zinc.make_template("A generic metal powder, purity 0.995",
                                       "name","formula","cas","ratio")
+
+# This is just a visual rearrangement. See the "Cleanup" heading below for more information.
 powder_template.default_key_order()
 
 # This saves my powder template to a new category of templates titled "Generic
@@ -131,10 +131,12 @@ my_mats.append(arsenic)
 
 ## Re-using templates
 When you fill in a template, it creates a copy with all the values filled in. So once I build a template of, say, a ramp section of an annealing profile, I can use that template to create several different ramp sections with different filled in values.
+
+
 ```python
 # Building templates from the existing annealing program on my synthesis so that
 # I can replace it with a different program.
-anneal_template = my_treats[2].make_template("600/10hr, 120hr",
+anneal_template = my_treats[2].make_template("Empty Anneal", # <- This is the name of the template
                                              "repeats", "observations","program")
 ramp_template = my_treats[2].program[0].make_template("Any ramp",
                                                       "temp", "time")
