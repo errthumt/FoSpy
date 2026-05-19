@@ -13,15 +13,21 @@ def dict_from_file(filepath):
     current_block = "metadata"
     current_type = "single"
     embedding = False
+    break_line = None
+    break_num = 0
     with open(filepath, "r", encoding="utf-8") as f:
         endComments = []
         for line in f:
+            break_num += 1
             if rx.EMBEDDED_END.match(line):
                 embedding = False
                 block.append(line)
                 continue
 
             if embedding:
+                if rx.EMBEDDED_START.match(line):
+                    break_line = line
+                    break
                 block.append(line)
                 continue
 
@@ -67,6 +73,11 @@ def dict_from_file(filepath):
             for l in [*endComments,txt]:
                 block.append(l.strip())
             endComments = []
+    if embedding:
+        raise SyntaxError("An embedded document was never closed before the end of the file or starting a new embed.\n"
+                          f"Current Line (line #{break_num}): {"<end of FOS file>\n" if not break_line else break_line}"
+                          "Ensure that there are spaces between '#', 'END FOS EMBED', and '}}}' when ending an "
+                          "embedded document.")
 
     for block, (typ, lines) in blocks.items():
         if typ == "single":
