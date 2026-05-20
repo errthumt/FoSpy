@@ -49,8 +49,9 @@ nominal_mass_units: mg
     ]
 
     // These comments are attached to Zinc's name, so when I generate a template
-    // from Zinc, they will be duplicated on the saved template and the copper
-    // generated from the template.
+    // from Zinc, they will be duplicated on the saved template.
+    // Any materials I make from the template will have these comments, too,
+    // Unless I clear the comments after making the material.
     Zinc
     reagent
     Zn

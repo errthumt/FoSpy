@@ -7,7 +7,7 @@ all_debugs_on(soundoff=False)
 
 # change the width of your debug screen so that module labels print on one line.
 from FoSpy import _debug as db
-db.DEBUG_WIDTH = 120
+db.DEBUG_WIDTH = 140
 
 # Optional way to turn on/off one module's debug messages.
 from FoSpy.parsing.read import _debug as read_debug
@@ -86,6 +86,7 @@ copper_info = {
 # Generate a new material, copper, from the template I made earlier and add it
 # to my synthesis materials
 copper = powder_template.fill(**copper_info)
+copper.clear_comments()
 my_mats.append(copper)
 
 # Here I'm using the arsenic template that was already in the template file to
@@ -99,6 +100,7 @@ my_mats.append(arsenic)
 # I can replace it with a different program.
 anneal_template = my_treats[2].make_template("Empty Anneal Template",
                                              "repeats", "observations","program")
+anneal_template.clear_comments()
 ramp_template = my_treats[2].program[0].make_template("Any ramp",
                                                       "temp", "time")
 dwell_template = my_treats[2].program[1].make_template("Any dwell",
@@ -150,7 +152,13 @@ my_templates.default_key_order()
 my_templates.generic_materials.set_list_type("explicit")
 my_mats.set_list_type("looped")
 
+
 # save all my changes
 saved = [file.save() for file in (my_templates, my_synthesis)]
+
+new_templates = TemplateSet.fromFile(r"example/end_templates.fos")
+new_synthesis = Synthesis.fromFile(r"example/end_synthesis.fos")
+
+print(my_templates == new_templates)
 
 pass # break point for debugging.

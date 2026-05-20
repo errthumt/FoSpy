@@ -55,8 +55,9 @@ nominal_mass_units: mg
     ]
 
     // These comments are attached to Zinc's name, so when I generate a template
-    // from Zinc, they will be duplicated on the saved template and the copper
-    // generated from the template.
+    // from Zinc, they will be duplicated on the saved template.
+    // Any materials I make from the template will have these comments, too,
+    // Unless I clear the comments after making the material.
     Zinc
     reagent
     Zn
@@ -69,9 +70,6 @@ nominal_mass_units: mg
     11
     []
 
-    // These comments are attached to Zinc's name, so when I generate a template
-    // from Zinc, they will be duplicated on the saved template and the copper
-    // generated from the template.
     Copper
     reagent
     Cu
@@ -117,7 +115,6 @@ nominal_mass_units: mg
     anneal
     1
     None
-    // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
         time: 2 hr
@@ -130,7 +127,6 @@ nominal_mass_units: mg
     anneal
     1
     None
-    // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
         time: 10 hr

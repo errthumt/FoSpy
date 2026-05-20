@@ -2,7 +2,7 @@ from .syntax import meta_keys as mk
 from .syntax import meta_defaults as md
 from .syntax import SYNTAX
 from . import regex as rx
-from .format import format_key_value, empty_nested, format_field
+from .format import format_key_value, empty_nested, format_field, format_comment
 
 from .._debug import Debug
 _debug = Debug()
@@ -211,16 +211,19 @@ def create_list_block_dict(lines):
     open_br = SYNTAX["nested"]["open"]
     close_br = SYNTAX["nested"]["close"]
 
-    for line in lines:
-        # _debug.msg(line)
-        pass
     block_list = []
     current_lines = []
     keys = []
 
     nested = 0
+    m = False
+    for l in lines:
+        if rx.COMMENT_LINE.match(l):
+            continue
+        m = rx.LOOP_KEY.match(l)
+        if m:
+            break
 
-    m = rx.LOOP_KEY.match(lines[0])
     if m: # loop_key mode
         getting_keys = True
         comments = []
@@ -260,7 +263,7 @@ def create_list_block_dict(lines):
                 if getting_keys:
                     getting_keys = False
                     for l in comments:
-                        current_lines.append(l)
+                        current_lines.append(format_comment(l))
                 embedding = is_embed_start
                 current_lines.append(line)
 
@@ -268,7 +271,7 @@ def create_list_block_dict(lines):
                 if getting_keys:
                     getting_keys = False
                     for l in comments:
-                        current_lines.append(l)
+                        current_lines.append(format_comment(l))
                 if key_idx == len(keys):
                     block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
                     trailing_comments = []

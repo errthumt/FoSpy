@@ -32,8 +32,9 @@ treatments: [
 [Generic_materials]
 template_name: A generic metal powder, purity 0.995
 // These comments are attached to Zinc's name, so when I generate a template
-// from Zinc, they will be duplicated on the saved template and the copper
-// generated from the template.
+// from Zinc, they will be duplicated on the saved template.
+// Any materials I make from the template will have these comments, too,
+// Unless I clear the comments after making the material.
 -name: <!TEMPLATE-FIELD>
 type: reagent
 -formula: <!TEMPLATE-FIELD>
@@ -46,18 +47,11 @@ purity: 0.995
 treatments: []
 
 [Treatments]
-:template_name
-:type
-:-repeats
-:-observations
-:-program
-
-    Empty Anneal Template
-    anneal
-    <!TEMPLATE-FIELD>
-    <!TEMPLATE-FIELD>
-    // Here, the double brackets signal that there are multiple program sections.
-    <!TEMPLATE-FIELD>
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-observations: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp

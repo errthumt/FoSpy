@@ -13,12 +13,12 @@ class EmbeddedFile(SingleBlock):
         super().__init__(blockDict)
 
     @inherit_docstring(SingleBlock)
-    def serialize(self):
+    def serialize(self,keepListType=False):
         """
         Performs the default `SingleBlock` serialization, but restores the
         "embedded" key to the full list of embedded lines instead of a string.
         """
-        serial = super().serialize()
+        serial = super().serialize(keepListType)
         serial["embedded"] = self.embedded.copy()
         return serial
 
