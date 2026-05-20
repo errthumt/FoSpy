@@ -28,6 +28,7 @@ class Treatment(SingleBlock):
         return None
 
 class Annealing(Treatment):
+    dispatch = {}
     def __init__(self, blockDict):
         super().__init__(blockDict)
     @classmethod
@@ -36,6 +37,21 @@ class Annealing(Treatment):
 Treatment.dispatch["anneal"] = Annealing
 
 class AnnealSection(SingleBlock):
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    dispatch = {}
+
+    @classmethod
+    def subclass(cls, blockDict):
+        from . import unwrap_block
+        blockDict = unwrap_block(blockDict)
+        t = blockDict.get("type")
+        subclass = cls.dispatch.get(t,cls)
+        return subclass(blockDict)
+    
+class Ramp(AnnealSection):
+    dispatch = {}
+AnnealSection.dispatch["ramp"] = Ramp
+
+class Dwell(AnnealSection):
+    dispatch = {}
+AnnealSection.dispatch["dwell"] = Dwell
 

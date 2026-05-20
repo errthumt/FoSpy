@@ -19,7 +19,7 @@ def unwrap_block(struct):
         struct = struct[0]
 
     if isinstance(struct,SingleBlock):
-        struct = struct.serialize()
+        struct = struct.serialize(keepListType=True)
         struct = unwrap_block(struct)
     return struct
 
@@ -105,6 +105,7 @@ class SingleBlock:
             Maintains order that attributes were read during construction to be
             repeated during serialization
     """
+    dispatch = {}
     @classmethod
     def subclass(cls, blockDict:dict):
         """
@@ -112,7 +113,7 @@ class SingleBlock:
         
         Overridden in some subclasses
         """
-        # Default: construct normally.
+        # k: construct normally.
         return cls(blockDict)
     
     @classmethod
@@ -167,8 +168,8 @@ class SingleBlock:
         """
         from ..parsing.validation import required_keys, optional_keys
         merged = {}
-        for key_set in (required_keys, optional_keys):
-            for base in reversed(cls.__mro__):
+        for base in reversed(cls.__mro__):
+            for key_set in (required_keys, optional_keys):
                 base_reqs = key_set.get(base,{})
                 for key, validator in base_reqs.items():
                     # allow subclasses to remove parent requirements.
@@ -180,16 +181,23 @@ class SingleBlock:
     
     @classmethod
     def TemplateClass(cls,*args:str):
-        from . import TemplateBlock
-        from ..parsing.validation import required_keys
+        from . import TemplateBlock, TemplateField
+        from ..parsing.validation import required_keys, optional_keys
         class SubTemplate(TemplateBlock, cls):
+            dispatch = {}
             def __init__(self, blockDict):
                 super().__init__(blockDict)
                 self._full_class = cls
+        for typ, sub in cls.dispatch.items():
+            SubTemplate.dispatch[typ] = sub.TemplateClass(*args)
 
         required_keys[SubTemplate] = {}
         for key in args:
-            required_keys[SubTemplate][key] = False
+            if key in cls.build_req_validators():
+                required_keys[SubTemplate][key] = TemplateField
+            else:
+                optional_keys[SubTemplate] = optional_keys.get(SubTemplate,{})
+                optional_keys[SubTemplate][key] = TemplateField
 
         SubTemplate.__name__ = f"{cls.__name__}Template"
         SubTemplate.__qualname__ = f"{cls.__name__}.Template"
@@ -201,7 +209,7 @@ class SingleBlock:
     def make_template(self,template_name,*args:str):
         from ..parsing import format_field
 
-        serial = self.serialize()
+        serial = self.serialize(keepListType=True)
         for key in args:
             serial[key] = format_field("template")
         serial["template_name"] = template_name
@@ -211,8 +219,7 @@ class SingleBlock:
     def Template_from_dict(cls, blockDict):
         from ..parsing.format import format_field
         template_keys = []
-        if isinstance(blockDict, SingleBlock):
-            blockDict = blockDict.serialize()
+        blockDict = unwrap_block(blockDict)
         temp_dict = blockDict.copy()
         for key in cls.build_req_validators():
             if key != 'ext' and key not in temp_dict:
@@ -274,10 +281,10 @@ class SingleBlock:
 
         for attr, key in mk.items():
             try:
-                default = md[key].copy()
+                k = md[key].copy()
             except:
-                default = md[key]
-            setattr(self._meta, attr, blockDict.pop(key,default))
+                k = md[key]
+            setattr(self._meta, attr, blockDict.pop(key,k))
 
         self._key_order = []
         self.ext = SubContainer()
@@ -316,9 +323,10 @@ class SingleBlock:
                 passed for a `SingleBlock` attribute.
         """
         from ..parsing.format import format_field
+        from .template import TemplateField, TemplateBlock
 
         validators = self.build_validators()
-        if name.startswith("_") or value == format_field("template"):
+        if name.startswith("_"):
             return super().__setattr__(name, value)
 
         if name in validators:
@@ -330,15 +338,19 @@ class SingleBlock:
                             raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
                         value = value[0]
                     elif isinstance(value,SingleBlock):
-                        value = value.serialize()[0]
+                        value = value.serialize(keepListType=True)
 
                 elif issubclass(validator, ListBlock):
                     try: 
-                        value = [block.serialize()[0] for block in value]
+                        value = [block.serialize(keepListType=True) for block in value]
                     except:
                         if isinstance(value, ListBlock):
-                            value = value.serialize()       
-
+                            value = value.serialize()
+                elif value == format_field("template") and not issubclass(validator, TemplateField):
+                    if isinstance(self,TemplateBlock):
+                        validator = TemplateField
+                    else:       
+                        raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
                 if isinstance(value, validator):
                     return super().__setattr__(name, value)
                 
@@ -357,8 +369,18 @@ class SingleBlock:
                 f"{type(self).__name__} object "
                 f"has no attribute {name!r}."
             )
+    
+    def __eq__(self, other):
+        from .._debug import deep_diff
+        try:
+            return len(deep_diff(self.serialize(), other.serialize()))>0
+        except:
+            return False
         
-    def serialize(self):
+    def __hash__(self):
+        return id(self)
+        
+    def serialize(self, keepListType=False):
         """
         Return a recursively serialized `[dict]` representation of itself.
 
@@ -418,10 +440,10 @@ class SingleBlock:
 
         for attr, key in mk.items():
             try:
-                default = md[key].copy()
+                k = md[key].copy()
             except:
-                default = md[key]
-            val = getattr(self._meta,attr,default)
+                k = md[key]
+            val = getattr(self._meta,attr,k)
             out[key] = val
 
         out = deepcopy(out)
@@ -429,8 +451,12 @@ class SingleBlock:
         # _debug.pmsg(self._calc_comments)
         for key, comments in self._calc_comments.items():
             for comment in comments.values():
+                out[mk["comments"]].setdefault(key,[])
                 out[mk["comments"]][key].append(format_calc_comment(comment))
         
+        if not keepListType:
+            out[mk["list_type"]] = "explicit"
+
         return out
     
     def add_comments(self, key:str, *comments):
@@ -630,7 +656,7 @@ class SingleBlock:
         c_cmts = self._calc_comments.copy()
         self._calc_comments = {}
 
-        new_obj =  cls.subclass(self.serialize())
+        new_obj =  cls.subclass(self.serialize(keepListType=True))
         self._calc_comments = c_cmts
 
         return new_obj
@@ -652,6 +678,9 @@ class SingleBlock:
             if key not in new_order:
                 new_order.append(key)
         self._key_order = new_order
+
+    def clear_comments(self):
+        self._meta.comments = {}
 
 
 
@@ -691,7 +720,7 @@ class FileBlock(SingleBlock):
 
         Args:
             filepath:
-                If specified, writes serialized dict to filepath. Defaults to `self._sourceFile`.
+                If specified, writes serialized dict to filepath. ks to `self._sourceFile`.
 
         Raises:
             ValueError:
@@ -829,11 +858,9 @@ class ListBlock:
             elif hasattr(self, "_reqCls"):
                 typ = self._reqCls
                 for obj in value:
-                    serial = obj.serialize()
                     if not isinstance(obj, typ):
                         try:
-                            
-                            obj=typ(obj.serialize()[0])
+                            obj=typ(obj.serialize(keepListType=True))
                             pass
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
@@ -874,11 +901,7 @@ class ListBlock:
         else:
             objs = objs[:from_idx] + objs[to_idx:]
 
-        self._objs = objs
-
-        
-        
-        
+        self._objs = objs   
 
     def __getitem__(self, idx):
         return self._objs[idx]
@@ -888,6 +911,16 @@ class ListBlock:
     
     def __iter__(self):
         return iter(self._objs)
+    
+    def __eq__(self, other):
+        from .._debug import deep_diff
+        try:
+            return len(deep_diff(self.serialize(), other.serialize()))>0
+        except:
+            return False
+        
+    def __hash__(self):
+        return id(self)
     
     def set_list_type(self,typ="explicit"):
         if typ not in ("explicit", "looped"):
@@ -900,7 +933,7 @@ class ListBlock:
             if obj._meta.list_type == "explicit":
                 self.set_list_type("explicit")
                 break
-        return [obj.serialize() for obj in self]
+        return [obj.serialize(keepListType=True if len(self)>1 else False) for obj in self]
     
     @inherit_docstring(SingleBlock, label="Related")
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
@@ -985,7 +1018,7 @@ class ListBlock:
     def copy(self):
         """Returns a deep copy by serializing and then reconstructing."""
         cls = type(self)
-        return cls(self.serialize())
+        return cls(self.serialize(keepListType=True))
     
     def remove_any(self, **kwargs):
         """
@@ -1015,8 +1048,11 @@ class ListBlock:
         removed = 0
         for obj in objs:
             if getattr(obj, key, None) == val:
-                self._objs.remove(obj)
-                removed += 1
+                for i, existing in enumerate(self._objs):
+                    if existing is obj:
+                        del self._objs[i]
+                        removed += 1
+                        break
         _debug.msg(f"Removed {removed} {self._reqCls.__name__} objects matching {key} = {val}.")
     
     def get_any(self, **kwargs):

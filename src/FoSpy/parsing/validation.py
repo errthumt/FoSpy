@@ -71,6 +71,10 @@ required_keys = {
         "time": str,
     },
 
+    Ramp: {
+        "temp": str
+    },
+
     Annealing: {
         "program": ListBlock.Simple(AnnealSection)
     },
@@ -102,7 +106,7 @@ optional_keys = {
     },
 
     AnnealSection: {
-        "temp": str
+        "time": str
     },
 
     TemplateSet: {

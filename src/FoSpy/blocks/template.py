@@ -3,6 +3,13 @@ from . import FileBlock, ListBlock, SingleBlock, inherit_class_doc, inherit_docs
 from .._debug import Debug
 _debug = Debug()
 
+class TemplateField:
+    def __init__(self, *args, **kwargs):
+        pass
+    def serialize(self,keepListType=None):
+        from .. import format_field
+        return format_field("template")
+
 @inherit_class_doc(FileBlock)
 class TemplateSet(FileBlock):
     """
@@ -36,19 +43,20 @@ class TemplateBlock(SingleBlock):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
 
-        serial = self.serialize()
+
+        serial = self.serialize(keepListType=True)
         serial.pop("template_name",None)
         for kw, arg in kwargs.items():
             serial[kw] = arg
 
         return self._full_class(serial)
     
-    def serialize(self):
+    def serialize(self,keepListType=False):
         from ..parsing.validation import required_keys
         from ..parsing.format import format_field
         required = self._full_class.build_req_validators()
         required.pop('ext',None)
-        serial = super().serialize()
+        serial = super().serialize(keepListType)
 
         out = {"template_name":serial.pop("template_name","")}
         for key in required:
