@@ -53,8 +53,8 @@ meta_keys = {
 }
 
 meta_defaults = {
-    "_fos_comments" : [],
-    "_fos_key_comments" : [],
+    "_fos_comments" : {},
+    "_fos_key_comments" : {},
     "_list_type" : "",
     "_routine_paths": []
 }

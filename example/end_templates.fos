@@ -51,7 +51,11 @@ template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
 -observations: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
+program: [
+    template_name: Empty AnnealSection
+    -type: <!TEMPLATE-FIELD>
+    -time: <!TEMPLATE-FIELD>
+]
 
 [[Anneal_sections]]
 template_name: Any ramp

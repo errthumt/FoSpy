@@ -15,7 +15,7 @@ class Treatment(SingleBlock):
     def subclass(cls, blockDict):
         from . import unwrap_block
         blockDict = unwrap_block(blockDict)
-        t = blockDict.get("type")
+        t = blockDict.get("type", None)
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
 
@@ -43,7 +43,7 @@ class AnnealSection(SingleBlock):
     def subclass(cls, blockDict):
         from . import unwrap_block
         blockDict = unwrap_block(blockDict)
-        t = blockDict.get("type")
+        t = blockDict.get("type",None)
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
     

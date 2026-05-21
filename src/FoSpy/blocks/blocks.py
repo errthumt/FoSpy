@@ -181,37 +181,66 @@ class SingleBlock:
     
     @classmethod
     def TemplateClass(cls,*args:str):
-        from . import TemplateBlock, TemplateField
+        from . import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
         class SubTemplate(TemplateBlock, cls):
             dispatch = {}
             def __init__(self, blockDict):
                 super().__init__(blockDict)
                 self._full_class = cls
-        for typ, sub in cls.dispatch.items():
-            SubTemplate.dispatch[typ] = sub.TemplateClass(*args)
 
         required_keys[SubTemplate] = {}
+        optional_keys[SubTemplate] = {}
+        required_validators = cls.build_req_validators()
+        all_validators = cls.build_validators()
         for key in args:
-            if key in cls.build_req_validators():
-                required_keys[SubTemplate][key] = TemplateField
+            req_val = required_validators.get(key,None)
+            val = all_validators.get(key,None) or req_val
+
+            if isinstance(val,type) and issubclass(val,SingleBlock):
+                all_fields = list(val.build_req_validators().keys())
+                field = val.TemplateClass(*all_fields)
+
+            elif isinstance(val,type) and issubclass(val, ListBlock):
+                field = TemplateList.Simple(val._reqCls)
             else:
-                optional_keys[SubTemplate] = optional_keys.get(SubTemplate,{})
-                optional_keys[SubTemplate][key] = TemplateField
+                field = TemplateField
+
+            if req_val:
+                required_keys[SubTemplate][key] = field
+            else:
+                optional_keys[SubTemplate][key] = field
+
+        finished_reqs = required_keys[SubTemplate]
+        finished_opts = optional_keys[SubTemplate]
+        for typ, sub in cls.dispatch.items():
+            dispatched_sub = sub.TemplateClass(*args)
+            SubTemplate.dispatch[typ] = dispatched_sub
+
+            required_keys[dispatched_sub] = finished_reqs
+            optional_keys[dispatched_sub] = finished_opts
 
         SubTemplate.__name__ = f"{cls.__name__}Template"
         SubTemplate.__qualname__ = f"{cls.__name__}.Template"
         SubTemplate.__module__ = cls.__module__
 
-        
+        _debug.pmsg(SubTemplate.dispatch)
+        for sub in SubTemplate.dispatch.values():
+            _debug.msg(sub)
+            _debug.pmsg(sub.build_validators())
         return SubTemplate
     
     def make_template(self,template_name,*args:str):
         from ..parsing import format_field
 
         serial = self.serialize(keepListType=True)
+        validators = type(self).build_validators()
         for key in args:
-            serial[key] = format_field("template")
+            val = validators.get(key, None)
+            if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
+                serial[key] = []
+            else:
+                serial[key] = format_field("template")
         serial["template_name"] = template_name
         return type(self).TemplateClass(*args)(serial)
 
@@ -232,7 +261,16 @@ class SingleBlock:
         pass
         return cls.TemplateClass(*template_keys)
         
+    @classmethod
+    def reflex(cls, **kwargs):
+        from .template import FlexTemplate
+        class Flex(FlexTemplate, cls):
+            _baseReq = cls
+        
+        kwargs.setdefault("template_name", f"Empty {cls.__name__}")
 
+        empty = Flex.subclass(kwargs)
+        return empty.serialize()
 
     def __init__(self, blockDict:dict):
         """Constructs a SingleBlock object from a dictionary
@@ -271,9 +309,19 @@ class SingleBlock:
 
         req = self.build_req_validators()
         req.pop("ext",None)
-        for key in req:
+        for key, validator in req.items():
             if key not in blockDict:
-                raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
+                from .template import TemplateBlock, TemplateList, TemplateField, FlexTemplate
+                if issubclass(validator, TemplateField):
+                    blockDict[key] = ""
+                elif issubclass(validator, FlexTemplate):
+                    blockDict[key] = {"template_name": f"Empty {self._baseReq.__name__} Template"}
+                elif issubclass(validator, TemplateBlock):
+                    blockDict[key] = validator.reflex()
+                elif issubclass(validator, TemplateList):
+                    blockDict[key] = []
+                else:
+                    raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -343,7 +391,7 @@ class SingleBlock:
                 elif issubclass(validator, ListBlock):
                     try: 
                         value = [block.serialize(keepListType=True) for block in value]
-                    except:
+                    except Exception as e:
                         if isinstance(value, ListBlock):
                             value = value.serialize()
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
@@ -373,8 +421,14 @@ class SingleBlock:
     def __eq__(self, other):
         from .._debug import deep_diff
         try:
-            return len(deep_diff(self.serialize(), other.serialize()))>0
-        except:
+            _debug.msg("Serializing Blocks to check equality:")
+            diffs = deep_diff(self.serialize(), other.serialize())
+            passed = len(diffs) == 0
+            if not passed:
+                _debug.pmsg(diffs)
+            return passed
+        except Exception as e:
+            _debug.msg(f"Equality failed by exception: {e}")
             return False
         
     def __hash__(self):
@@ -791,6 +845,10 @@ class ListBlock:
         """
         self._objs = []
         for blockDict in blockList:
+            _debug.msg("CONSTRUCTING LISTBLOCK")
+            _debug.msg(type(self))
+            _debug.msg("CONSTRUCTING LIST. _reqCls:")
+            _debug.msg(self._reqCls)
             self._objs.append(self._reqCls.subclass(blockDict))
     
     @classmethod
@@ -860,7 +918,7 @@ class ListBlock:
                 for obj in value:
                     if not isinstance(obj, typ):
                         try:
-                            obj=typ(obj.serialize(keepListType=True))
+                            obj=typ.subclass(obj.serialize())
                             pass
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
