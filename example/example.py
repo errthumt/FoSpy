@@ -51,7 +51,7 @@ my_reaction.add_comments("nominal_mass", "I attached this comment in python")
 # template file has a template for Joe, but it's missing an affiliation value.
 # So I fill in the affiliation and add it to the experimenters on my synthesis
 joe_template = exp_temps.get_first(template_name="Joe")
-joe = joe_template.fill(affiliation="Graham's Dad")
+joe = joe_template.fill(affiliation="Kovnir Group - Iowa State University")
 my_exps.append(joe)
 my_synthesis.add_comments("experimenters",
                           "Note that now there are two experimenters, so the",
@@ -61,7 +61,12 @@ my_synthesis.add_comments("experimenters",
 # experimenter type, so I can set travis's friend directly to the joe loaded
 # from his template.
 travis = my_synthesis.experimenters[0]
-travis.friend = joe
+travis.friend = joe.copy()
+travis.friend.affiliation = "Graham's Dad"
+
+joe.add_comments("name",
+                 "The details for Joe above are under travis's friend details",
+                 "whereas the Joe below is for the synthesis experimenter context")
 
 # python indexes are zero-based, so this changes the first material (Barium)'s
 # ratio to 8

@@ -334,7 +334,8 @@ def create_list_block_dict(lines):
                 current_lines = [*trailing_comments, line]
                 keys = []
             else:
-                keys.append(key)
+                if key is not None:
+                    keys.append(key)
                 #_debug.pmsg(keys)
                 current_lines.append(line)
             nested += line.count(open_br)

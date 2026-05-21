@@ -18,8 +18,10 @@ friend$experimenter: [
     orcid: 0000-0002-8551-3627
 ]
 
+// The details for Joe above are under travis's friend details
+// whereas the Joe below is for the synthesis experimenter context
 name: Joseph Race
-affiliation: Graham's Dad
+affiliation: Kovnir Group - Iowa State University
 orcid: 0000-0002-8551-3627
 
 // Single brackets on a header mean there is only one group
