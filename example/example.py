@@ -160,9 +160,11 @@ my_mats.set_list_type("looped")
 saved = [file.save() for file in (my_templates, my_synthesis)]
 
 
-# Check to see if the saved files keep all their information when reloaded.
+# Silence all debugs except the one used for checking equality.
 all_debugs_off(soundoff=False)
 db._debug.on = True
+
+# Check to see if the saved file matches the object.
 print(my_synthesis.matches_file())
 print(my_templates.matches_file())
 

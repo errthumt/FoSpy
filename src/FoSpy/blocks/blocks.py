@@ -224,10 +224,6 @@ class SingleBlock:
         SubTemplate.__qualname__ = f"{cls.__name__}.Template"
         SubTemplate.__module__ = cls.__module__
 
-        _debug.pmsg(SubTemplate.dispatch)
-        for sub in SubTemplate.dispatch.values():
-            _debug.msg(sub)
-            _debug.pmsg(sub.build_validators())
         return SubTemplate
     
     def make_template(self,template_name,*args:str):
@@ -421,14 +417,14 @@ class SingleBlock:
     def __eq__(self, other, suppress_routine_paths=False):
         from .._debug import deep_diff as dd, _debug as db
         try:
-            db.msg("Serializing Blocks to check equality:", module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
+            db.msg("Serializing Blocks to check equality:", module = "SingleBlock.__eq__()")
             diffs = dd(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths)
             passed = len(diffs) == 0
             if not passed:
-                db.pmsg(diffs,module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
+                db.pmsg(diffs,module = "SingleBlock.__eq__()")
             return passed
         except Exception as e:
-            db.msg(f"Equality failed by exception: {e}",module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
+            db.msg(f"Equality failed by exception: {e}",module = "SingleBlock.__eq__()")
             return False
         
     def __hash__(self):
@@ -851,10 +847,6 @@ class ListBlock:
         """
         self._objs = []
         for blockDict in blockList:
-            _debug.msg("CONSTRUCTING LISTBLOCK")
-            _debug.msg(type(self))
-            _debug.msg("CONSTRUCTING LIST. _reqCls:")
-            _debug.msg(self._reqCls)
             self._objs.append(self._reqCls.subclass(blockDict))
     
     @classmethod
@@ -979,7 +971,7 @@ class ListBlock:
     def __eq__(self, other):
         from .._debug import deep_diff
         try:
-            return len(deep_diff(self.serialize(), other.serialize()))>0
+            return len(deep_diff(self.serialize(), other.serialize()))==0
         except:
             return False
         
