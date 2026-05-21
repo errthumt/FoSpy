@@ -45,7 +45,6 @@ class TemplateList(ListBlock):
     def serialize(self):
         serial = super().serialize()
         if len(serial) == 0:
-            _debug.pmsg(self._reqCls)
             serial = [self._reqCls.reflex()]
         return serial
     

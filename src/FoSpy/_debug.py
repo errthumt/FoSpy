@@ -20,7 +20,7 @@ class Debug:
     def pmsg(self,msg,module=None,**kwargs):
         if self.on:
             if module:
-                label = f"|(Debug message from {module})"
+                label = f"|(Debug message from {module} via {self.module_name})"
                 label_width = len(label)
             else:
                 label = self.label
