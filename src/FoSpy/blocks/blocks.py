@@ -108,9 +108,8 @@ class SingleBlock:
             Maintains order that attributes were read during construction to be
             repeated during serialization
     """
-    #from ..parsing.validation import aliases as als
     dispatch = {}
-    aliases = {}
+    _aliases = None
     @classmethod
     def subclass(cls, blockDict:dict):
         """
@@ -300,6 +299,11 @@ class SingleBlock:
                 present.
 
         """
+        from ..parsing.validation import aliases as als
+        new_als = als.copy()
+        new_als.update(self._aliases or {})
+        self._aliases = new_als
+
         blockDict = unwrap_block(blockDict)
 
         if not isinstance(blockDict, dict):
@@ -386,7 +390,7 @@ class SingleBlock:
                 raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
             
             try:
-                val = self.aliases[alias]
+                val = self._aliases[alias]
             except KeyError:
                 raise ValueError(f"Unrecognized block alias: '{alias}'")
             
@@ -441,6 +445,11 @@ class SingleBlock:
                 f"has no attribute {name!r}."
             )
     
+    def add_block(self, block_name, type_alias, value=[]):
+        if hasattr(self,block_name):
+            raise ValueError(f"This object already has attribute: '{block_name}'.")
+        return setattr(self, f"{block_name}${type_alias}", value)
+
     def __eq__(self, other, suppress_routine_paths=False):
         from .._debug import deep_diff as dd, _debug as db
         try:
@@ -487,11 +496,20 @@ class SingleBlock:
         from copy import deepcopy
         from ..parsing.format import format_calc_comment
 
+        val_to_alias = {v:k for k,v in self._aliases.items()}
+
         all_attrs = {}
         out = {}
 
         for routine in self._calc_routines:
             routine()
+
+        def add_alias(key):
+            if key in self._key_overrides:
+                alias = val_to_alias[self._key_overrides[key]]
+                return f"{key}${alias}"
+            return key
+
 
         def try_serial(obj):
             serialize = getattr(obj, "serialize", None)
@@ -510,10 +528,10 @@ class SingleBlock:
         for key in self._key_order:
             if key in all_attrs:
                 val = all_attrs.pop(key)
-                out[key] = try_serial(val)
+                out[add_alias(key)] = try_serial(val)
         
         for key, val in all_attrs.items():
-            out[key] = try_serial(val)
+            out[add_alias(key)] = try_serial(val)
 
         for attr, key in mk.items():
             try:
@@ -528,8 +546,8 @@ class SingleBlock:
         # _debug.pmsg(self._calc_comments)
         for key, comments in self._calc_comments.items():
             for comment in comments.values():
-                out[mk["comments"]].setdefault(key,[])
-                out[mk["comments"]][key].append(format_calc_comment(comment))
+                out[mk["comments"]].setdefault(add_alias(key),[])
+                out[mk["comments"]][add_alias(key)].append(format_calc_comment(comment))
         
         if not keepListType:
             out[mk["list_type"]] = "explicit"

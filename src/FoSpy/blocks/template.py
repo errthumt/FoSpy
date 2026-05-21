@@ -19,6 +19,8 @@ class TemplateSet(FileBlock):
     `TemplateList`s. Each of these lists is one attribute of a `TemplateSet`.
     """
     def __init__(self, blockDict, _sourceFile=None):
+        from ..parsing.validation import TemplateLists
+        self._aliases = TemplateLists
         super().__init__(blockDict, _sourceFile)
 
 

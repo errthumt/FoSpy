@@ -29,7 +29,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic_materials]
+[Generic_materials$materials]
 template_name: A generic metal powder, purity 0.995
 // These comments are attached to Zinc's name, so when I generate a template
 // from Zinc, they will be duplicated on the saved template.

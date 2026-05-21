@@ -120,6 +120,8 @@ def expand_lists(key, val, indent, looped=False):
                 lines.append(line)
             lines.pop()
             lines.append(format_nested_end(len(val)>1,indent))
+    elif type(val) == dict:
+        return expand_lists(key, [val], indent, looped)
     else:
         lines.append(format_key_value(key, val, indent, looped))
 
@@ -132,7 +134,11 @@ def write_dict_to_file(blocks, filepath):
     blocks = blocks.copy()
     block_comments = blocks.pop(mk["comments"])
 
+    meta = [blocks.pop("metadata",{})]
+
     with open(filepath, "w") as f:
+        for line in block_list_to_lines(meta):
+            f.write(f'{line}\n')
         for name, block in blocks.items():
             if isinstance(block,dict):
                 block = [block]
