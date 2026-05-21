@@ -2,7 +2,7 @@ from FoSpy import Synthesis, TemplateSet, ListBlock, EmbeddedCIF, TemplateList, 
 from chemformula import ChemFormula
 
 # No debug messages by default, but they can be turned on like this.
-from FoSpy._debug import all_debugs_on
+from FoSpy._debug import all_debugs_on, all_debugs_off
 all_debugs_on(soundoff=False)
 
 # change the width of your debug screen so that module labels print on one line.
@@ -10,8 +10,8 @@ from FoSpy import _debug as db
 db.DEBUG_WIDTH = 140
 
 # Optional way to turn on/off one module's debug messages.
-from FoSpy.parsing.read import _debug as read_debug
-read_debug.on = True
+from FoSpy.blocks.blocks import _debug as block_debug
+block_debug.on = True
 
 """
 The beginning and end results of this file can be found in the same folder of
@@ -161,10 +161,9 @@ saved = [file.save() for file in (my_templates, my_synthesis)]
 
 
 # Check to see if the saved files keep all their information when reloaded.
-new_templates = TemplateSet.fromFile(r"example/end_templates.fos")
-new_synthesis = Synthesis.fromFile(r"example/end_synthesis.fos")
-
-print(my_templates == new_templates)
-print(my_synthesis == new_synthesis)
+all_debugs_off(soundoff=False)
+db._debug.on = True
+print(my_synthesis.matches_file())
+print(my_templates.matches_file())
 
 pass # break point for debugging.
