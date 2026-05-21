@@ -1,7 +1,8 @@
-from . import (
-    SingleBlock, ListBlock, 
-    TemplateBlock, TemplateList,
-    calc_routine)
+from .blocks import (
+    SingleBlock, ListBlock, calc_routine
+)
+
+from .template import TemplateBlock, TemplateList
 
 from .._debug import Debug
 _debug = Debug()
@@ -13,7 +14,7 @@ class Treatment(SingleBlock):
 
     @classmethod
     def subclass(cls, blockDict):
-        from . import unwrap_block
+        from .blocks import unwrap_block
         blockDict = unwrap_block(blockDict)
         t = blockDict.get("type", None)
         subclass = cls.dispatch.get(t,cls)
@@ -41,7 +42,7 @@ class AnnealSection(SingleBlock):
 
     @classmethod
     def subclass(cls, blockDict):
-        from . import unwrap_block
+        from .blocks import unwrap_block
         blockDict = unwrap_block(blockDict)
         t = blockDict.get("type",None)
         subclass = cls.dispatch.get(t,cls)

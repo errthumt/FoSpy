@@ -1,7 +1,10 @@
-from . import (
+from .blocks import (
     SingleBlock, ListBlock, 
-    TemplateBlock, TemplateList,
-    calc_routine, inherit_class_doc, inherit_docstring)
+    calc_routine, attach_doc,
+    inherit_class_doc,
+    inherit_docstring
+)  
+from .template import TemplateBlock, TemplateList
 
 from .._debug import Debug
 _debug = Debug()

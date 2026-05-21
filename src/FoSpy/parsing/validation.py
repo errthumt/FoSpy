@@ -1,11 +1,24 @@
 from .._debug import Debug
 _debug = Debug()
 
-from ..blocks import *
+from ..blocks.blocks import *
+from ..blocks.embedded import *
+from ..blocks.materials import *
+from ..blocks.metadata import *
+from ..blocks.synthesis import *
+from ..blocks.template import *
+from ..blocks.treatments import *
+
 from ..blocks.synthesis import Synthesis
 from . import validators
 
 from chemformula import ChemFormula
+
+aliases = {
+    "material": Material,
+    "treatment": Treatment,
+    "experimenter": Experimenter
+}
 
 required_keys = {
     SingleBlock: {

@@ -1,8 +1,11 @@
 import os
 
 from .. import inherit_docstring, inherit_class_doc, attach_doc
-from ..parsing.syntax import meta_keys as mk
-from ..parsing.syntax import meta_defaults as md
+from ..parsing.syntax import (
+    meta_keys as mk,
+    meta_defaults as md,
+)
+
 
 
 from ..parsing import (
@@ -105,7 +108,9 @@ class SingleBlock:
             Maintains order that attributes were read during construction to be
             repeated during serialization
     """
+    #from ..parsing.validation import aliases as als
     dispatch = {}
+    aliases = {}
     @classmethod
     def subclass(cls, blockDict:dict):
         """
@@ -181,7 +186,7 @@ class SingleBlock:
     
     @classmethod
     def TemplateClass(cls,*args:str):
-        from . import TemplateBlock, TemplateField, TemplateList
+        from .template import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
         class SubTemplate(TemplateBlock, cls):
             dispatch = {}
@@ -322,6 +327,7 @@ class SingleBlock:
         self._meta = SubContainer()
         self._calc_comments = {}
         self._calc_routines = []
+        self._key_overrides = {}
 
         for attr, key in mk.items():
             try:
@@ -372,6 +378,27 @@ class SingleBlock:
         validators = self.build_validators()
         if name.startswith("_"):
             return super().__setattr__(name, value)
+        
+        if "$" in name:
+            try:
+                name, alias = name.split("$")
+            except:
+                raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
+            
+            try:
+                val = self.aliases[alias]
+            except KeyError:
+                raise ValueError(f"Unrecognized block alias: '{alias}'")
+            
+            if name in validators and val != validators[name]:
+                raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
+                                 f"it cannot be overwritten to '{val.__name__}'.")
+            
+            from ..parsing.validation import optional_keys
+            validators[name] = val
+            self._key_overrides[name] = val
+            optional_keys.setdefault(type(self),{})
+            optional_keys[type(self)][name] = val
 
         if name in validators:
             validator = validators[name]
