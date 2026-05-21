@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "FoSpy"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Travis Errthum" },
 ]
@@ -19,7 +19,8 @@ license = "MIT"
 license-files = ["LICEN[CS]E*"]
 dependencies = [
     "pandas",
-    "chemformula"
+    "chemformula",
+    "cif2xrd"
 ]
 
 [project.urls]
