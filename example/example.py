@@ -57,6 +57,12 @@ my_synthesis.add_comments("experimenters",
                           "Note that now there are two experimenters, so the",
                           "experimenters header has changed to double brackets")
 
+# The FOS file already signaled that the unexpected "friend" tag is an
+# experimenter type, so I can set travis's friend directly to the joe loaded
+# from his template.
+travis = my_synthesis.experimenters[0]
+travis.friend = joe
+
 # python indexes are zero-based, so this changes the first material (Barium)'s
 # ratio to 8
 my_mats[0].ratio = 8
