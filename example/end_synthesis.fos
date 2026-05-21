@@ -10,10 +10,12 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+// the $experimenter tag allows me to specify that the "friend" key
+// is for experimenters, even if it's not set up beforehand.
 friend$experimenter: [
-    name: Joe
-    affiliation: friend
-    orcid: flower
+    name: Joseph Race
+    affiliation: Graham's Dad
+    orcid: 0000-0002-8551-3627
 ]
 
 name: Joseph Race
