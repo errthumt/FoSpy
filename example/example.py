@@ -106,6 +106,9 @@ ramp_template = my_treats[2].program[0].make_template("Any ramp",
 dwell_template = my_treats[2].program[1].make_template("Any dwell",
                                                        "time")
 
+from FoSpy import Treatment
+test = Treatment.reflex()
+
 # Save my new templates to my template file.
 my_templates.treatments = [anneal_template]
 my_templates.anneal_sections = [ramp_template, dwell_template]
@@ -156,9 +159,12 @@ my_mats.set_list_type("looped")
 # save all my changes
 saved = [file.save() for file in (my_templates, my_synthesis)]
 
+
+# Check to see if the saved files keep all their information when reloaded.
 new_templates = TemplateSet.fromFile(r"example/end_templates.fos")
 new_synthesis = Synthesis.fromFile(r"example/end_synthesis.fos")
 
 print(my_templates == new_templates)
+print(my_synthesis == new_synthesis)
 
 pass # break point for debugging.
