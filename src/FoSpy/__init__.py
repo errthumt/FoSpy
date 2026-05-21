@@ -46,5 +46,4 @@ def inherit_class_doc(parent):
     return decorator
 
 
-from FoSpy.blocks import *
-from FoSpy.parsing import *
+from .blocks.blocks import SingleBlock, FileBlock, ListBlock

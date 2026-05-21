@@ -1,4 +1,5 @@
-from FoSpy import Synthesis, TemplateSet, ListBlock, EmbeddedCIF, TemplateList, Material, SubContainer
+from FoSpy.blocks.synthesis import Synthesis
+from FoSpy.blocks.template import TemplateSet
 from chemformula import ChemFormula
 
 # No debug messages by default, but they can be turned on like this.
@@ -106,7 +107,7 @@ ramp_template = my_treats[2].program[0].make_template("Any ramp",
 dwell_template = my_treats[2].program[1].make_template("Any dwell",
                                                        "time")
 
-from FoSpy import Treatment
+from FoSpy.blocks.treatments import Treatment
 test = Treatment.reflex()
 
 # Save my new templates to my template file.

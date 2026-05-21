@@ -19,12 +19,13 @@ zinc = mySyn.materials[0]
 print(zinc.formula)
 """
 
-
-from .blocks import * 
+'''
+from .blocks import FileBlock, SingleBlock, ListBlock 
 from .embedded import *
 from .template import *
 from .synthesis import *   
 from .materials import *
 from .metadata import *
 from .treatments import *
+'''
 

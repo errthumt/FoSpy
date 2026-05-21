@@ -1,4 +1,4 @@
-from . import FileBlock, ListBlock, SingleBlock, inherit_class_doc, inherit_docstring
+from .blocks import FileBlock, ListBlock, SingleBlock, inherit_class_doc, inherit_docstring
 
 from .._debug import Debug
 _debug = Debug()
@@ -7,7 +7,7 @@ class TemplateField:
     def __init__(self, *args, **kwargs):
         pass
     def serialize(self,keepListType=None):
-        from .. import format_field
+        from ..parsing.format import format_field
         return format_field("template")
 
 @inherit_class_doc(FileBlock)
