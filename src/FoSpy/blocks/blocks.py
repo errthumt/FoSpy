@@ -418,17 +418,17 @@ class SingleBlock:
                 f"has no attribute {name!r}."
             )
     
-    def __eq__(self, other):
-        from .._debug import deep_diff
+    def __eq__(self, other, suppress_routine_paths=False):
+        from .._debug import deep_diff as dd, _debug as db
         try:
-            _debug.msg("Serializing Blocks to check equality:")
-            diffs = deep_diff(self.serialize(), other.serialize())
+            db.msg("Serializing Blocks to check equality:", module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
+            diffs = dd(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths)
             passed = len(diffs) == 0
             if not passed:
-                _debug.pmsg(diffs)
+                db.pmsg(diffs,module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
             return passed
         except Exception as e:
-            _debug.msg(f"Equality failed by exception: {e}")
+            db.msg(f"Equality failed by exception: {e}",module = "FoSpy.blocks.blocks.SingleBlock.__eq__()")
             return False
         
     def __hash__(self):
@@ -802,6 +802,12 @@ class FileBlock(SingleBlock):
             else:
                 raise e
         return True
+    
+    def matches_file(self):
+        reloaded = self.fromFile(self._sourceFile)
+
+        return self.__eq__(reloaded, suppress_routine_paths=True)
+        
 
 
 

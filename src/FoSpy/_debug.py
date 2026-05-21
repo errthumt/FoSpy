@@ -14,18 +14,27 @@ class Debug:
         self.label = f"|(Debug message from {self.module_name})"
         self.label_width = len(self.label)
 
-    def msg(self,msg):
-        self.pmsg(str(msg))
+    def msg(self,msg, module=None):
+        self.pmsg(str(msg), module=module)
 
-    def pmsg(self,msg,**kwargs):
+    def pmsg(self,msg,module=None,**kwargs):
         if self.on:
-            text_width = DEBUG_WIDTH - self.label_width
+            if module:
+                label = f"|(Debug message from {module})"
+                label_width = len(label)
+            else:
+                label = self.label
+                label_width = self.label_width
+
+            text_width = DEBUG_WIDTH - label_width
 
             buf = io.StringIO()
             pprint(msg,stream=buf, width=text_width,**kwargs)
             txt = buf.getvalue()
             for line in txt.splitlines():
-                print(f'{line:<{text_width}}{self.label:>{self.label_width}}')
+                print(f'{line:<{text_width}}{label:>{label_width}}')
+
+_debug = Debug()
 
 def _find_debugs():
     results = []
@@ -61,13 +70,15 @@ def all_debugs_off(soundoff=True):
                 debug_obj.msg("Turning Debug Off")
             debug_obj.on = False         
     
-def deep_diff(d1, d2, path=""):
+def deep_diff(d1, d2, path="", suppress_routine_paths=False):
     """
     Recursively diff two nested dict/list structures.
     Ignores:
       - calculated comments (strings starting with SYNTAX["calc_comment"]["prefix"])
       - whitespace-only differences in strings
       - empty _fos_comments entries
+    Optionally ignores:
+      - any differences under meta_keys["routine_paths"]
     """
     from .parsing.syntax import SYNTAX, meta_keys
     calc_prefix = SYNTAX["calc_comment"]["prefix"]
@@ -81,35 +92,27 @@ def deep_diff(d1, d2, path=""):
         return isinstance(x, str) and x.strip().startswith(calc_prefix)
 
     def normalize_ws(x):
-        """Normalize whitespace for comparison."""
         if isinstance(x, str):
-            return x.strip()        # remove leading/trailing whitespace
+            return x.strip()
         return x
 
     def is_ws_only_diff(a, b):
-        """True if a and b differ only by whitespace."""
         if not isinstance(a, str) or not isinstance(b, str):
             return False
         return a.strip() == b.strip()
 
     def is_empty_comment_list(path, d1, d2):
-        """
-        Suppress differences like:
-            /foo/_fos_comments/bar: missing in d1
-        when both sides are empty or missing.
-        """
         if meta_keys["comments"] not in path:
             return False
-
-        # Missing on one side
         if d1 is None or d2 is None:
             return True
-
-        # Both lists but empty
         if isinstance(d1, list) and isinstance(d2, list):
             return len(d1) == 0 and len(d2) == 0
-
         return False
+
+    def is_routine_path(p):
+        """True if this diff path belongs to any routine-path key."""
+        return any(rp in p for rp in meta_keys["routine_paths"])
 
     # -----------------------------
     # Case 1 — both dicts
@@ -119,18 +122,29 @@ def deep_diff(d1, d2, path=""):
         # keys only in d1
         for k in d1.keys() - d2.keys():
             p = f"{path}/{k}"
+            if suppress_routine_paths and is_routine_path(p):
+                continue
             if not is_empty_comment_list(p, d1.get(k), None):
                 diffs.append(f"{p}: missing in d2")
 
         # keys only in d2
         for k in d2.keys() - d1.keys():
             p = f"{path}/{k}"
+            if suppress_routine_paths and is_routine_path(p):
+                continue
             if not is_empty_comment_list(p, None, d2.get(k)):
                 diffs.append(f"{p}: missing in d1")
 
         # keys in both
         for k in d1.keys() & d2.keys():
-            diffs.extend(deep_diff(d1[k], d2[k], f"{path}/{k}"))
+            diffs.extend(
+                deep_diff(
+                    d1[k],
+                    d2[k],
+                    f"{path}/{k}",
+                    suppress_routine_paths=suppress_routine_paths
+                )
+            )
 
         return diffs
 
@@ -144,14 +158,22 @@ def deep_diff(d1, d2, path=""):
 
         # length mismatch
         if len(f1) != len(f2):
-            diffs.append(f"{path}: list length {len(f1)} != {len(f2)}")
+            if not (suppress_routine_paths and is_routine_path(path)):
+                diffs.append(f"{path}: list length {len(f1)} != {len(f2)}")
             min_len = min(len(f1), len(f2))
         else:
             min_len = len(f1)
 
         # compare element‑wise
         for i in range(min_len):
-            diffs.extend(deep_diff(f1[i], f2[i], f"{path}[{i}]"))
+            diffs.extend(
+                deep_diff(
+                    f1[i],
+                    f2[i],
+                    f"{path}[{i}]",
+                    suppress_routine_paths=suppress_routine_paths
+                )
+            )
 
         return diffs
 
@@ -160,7 +182,7 @@ def deep_diff(d1, d2, path=""):
     # -----------------------------
     if d1 != d2:
 
-        # Ignore calculated comments entirely
+        # Ignore calculated comments
         if is_calc_comment(d1) or is_calc_comment(d2):
             return diffs
 
@@ -172,11 +194,13 @@ def deep_diff(d1, d2, path=""):
         if normalize_ws(d1) == normalize_ws(d2):
             return diffs
 
+        # Suppress routine-path diffs if requested
+        if suppress_routine_paths and is_routine_path(path):
+            return diffs
+
         diffs.append(f"{path}: {d1!r} != {d2!r}")
 
     return diffs
-
-
 
 if __name__ == "__main__":
     from pprint import pp
