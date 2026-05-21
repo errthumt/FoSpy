@@ -9,6 +9,11 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+friend$experimenter: [
+    name: Joe
+    affiliation: friend
+    orcid: flower
+]
 
 // Single brackets on a header mean there is only one group
 [Reaction]

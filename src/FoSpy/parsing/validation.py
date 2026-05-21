@@ -14,10 +14,30 @@ from . import validators
 
 from chemformula import ChemFormula
 
+TreatmentList = ListBlock.Simple(Treatment)
+ExperimenterList = ListBlock.Simple(Experimenter)
+
+TemplateLists = {
+    "experimenters": TemplateList.Simple(Experimenter),
+    "materials": TemplateList.Simple(Material),
+    "treatments": TemplateList.Simple(Treatment),
+    "annealings": TemplateList.Simple(Annealing),
+    "anneal_sections": TemplateList.Simple(AnnealSection),
+    "cifs": ListBlock.Simple(EmbeddedCIF)
+}
+
 aliases = {
     "material": Material,
+    "materials": MaterialList,
     "treatment": Treatment,
-    "experimenter": Experimenter
+    "treatments": ListBlock.Simple(Treatment),
+    "experimenter": Experimenter,
+    "experimenters": ListBlock.Simple(Experimenter),
+    
+}
+
+template_aliases = {
+
 }
 
 required_keys = {
@@ -118,13 +138,5 @@ optional_keys = {
         "program": ListBlock.Simple(AnnealSection)
     },
 
-    TemplateSet: {
-        "experimenters": TemplateList.Simple(Experimenter),
-        "materials": TemplateList.Simple(Material),
-        "generic_materials": TemplateList.Simple(Material),
-        "treatments": TemplateList.Simple(Treatment),
-        "annealings": TemplateList.Simple(Annealing),
-        "anneal_sections": TemplateList.Simple(AnnealSection),
-        "cifs": ListBlock.Simple(EmbeddedCIF)
-    }
+    TemplateSet: TemplateLists
 }

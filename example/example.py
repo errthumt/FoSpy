@@ -74,7 +74,7 @@ powder_template.default_key_order()
 
 # This saves my powder template to a new category of templates titled "Generic
 # Materials"
-my_templates.generic_materials = [powder_template]
+my_templates.add_block("generic_materials","materials", [powder_template])
 
 # Setting up information that I want to fill into the powder template
 copper_info = {
@@ -152,7 +152,9 @@ my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
 my_synthesis.add_calc_routine("materials.add_weight_pcts")
 
 # some reordering stuff to make the final printout more consistent.
-my_templates.default_key_order()
+my_templates.set_key_order("experimenters","materials",
+                           "generic_materials","treatments",
+                           "anneal_sections", "cifs")
 my_templates.generic_materials.set_list_type("explicit")
 my_mats.set_list_type("looped")
 
