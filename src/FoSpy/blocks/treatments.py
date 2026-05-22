@@ -35,6 +35,18 @@ class Annealing(Treatment):
     @classmethod
     def subclass(cls, blockDict):
         return cls(blockDict)
+    
+    def show_plot(self, **kwargs):
+        from cif2xrd.furnace import Profile
+        import matplotlib.pyplot as plt
+
+        furnace = Profile(**kwargs)
+
+        for section in self:
+            if section.type == "ramp":
+
+
+
 Treatment.dispatch["anneal"] = Annealing
 
 class AnnealSection(SingleBlock):
