@@ -16,6 +16,7 @@ from chemformula import ChemFormula
 
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
+CifList = ListBlock.Simple(EmbeddedCIF)
 
 TemplateLists = {
     "experimenters": TemplateList.Simple(Experimenter),
@@ -23,21 +24,16 @@ TemplateLists = {
     "treatments": TemplateList.Simple(Treatment),
     "annealings": TemplateList.Simple(Annealing),
     "anneal_sections": TemplateList.Simple(AnnealSection),
-    "cifs": ListBlock.Simple(EmbeddedCIF)
+    "cifs": CifList
 }
 
 aliases = {
     "material": Material,
     "materials": MaterialList,
     "treatment": Treatment,
-    "treatments": ListBlock.Simple(Treatment),
+    "treatments": TreatmentList,
     "experimenter": Experimenter,
-    "experimenters": ListBlock.Simple(Experimenter),
-    
-}
-
-template_aliases = {
-
+    "experimenters": ExperimenterList,
 }
 
 required_keys = {
@@ -47,10 +43,10 @@ required_keys = {
 
     Synthesis: {
         "metadata" : MetaData,
-        "experimenters": ListBlock.Simple(Experimenter),
+        "experimenters": ExperimenterList,
         "reaction" : Reaction,
         "materials" : MaterialList,
-        "treatments" : ListBlock.Simple(Treatment)
+        "treatments" : TreatmentList
     },
 
     TemplateSet: {

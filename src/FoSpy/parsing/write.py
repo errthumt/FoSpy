@@ -9,8 +9,11 @@ from .format import *
 
 def block_list_to_lines(blocklist:list, indent=0):
     lines = []
-    intersect = set.intersection(*(set(d.keys()) for d in blocklist))
-    loop_keys = [k for k in blocklist[0] if k in intersect]
+    if len(blocklist)==0:
+        return [""]
+    else:
+        intersect = set.intersection(*(set(d.keys()) for d in blocklist))
+        loop_keys = [k for k in blocklist[0] if k in intersect]
 
     for meta_key in mk.values():
         if meta_key in loop_keys:

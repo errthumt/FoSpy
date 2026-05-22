@@ -31,8 +31,7 @@ nominal_formula: Ba8Cu13Zn11As28.5
 nominal_mass: 250.0
 nominal_mass_units: mg
 
-// Double brackets on a header mean there is multiple groups
-[[Materials]]
+[[Reagents$materials]]
 :name
 :type
 :formula
@@ -106,6 +105,8 @@ nominal_mass_units: mg
         repeats: 1
         observations: ground lumps into powder for weighing and homogenization
     ]
+
+[Materials]
 
 // This is a comment on the treatments block
 [[Treatments]]

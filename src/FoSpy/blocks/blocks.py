@@ -26,6 +26,26 @@ def unwrap_block(struct):
         struct = unwrap_block(struct)
     return struct
 
+class SimpleWrapper:
+    def __init__(self, value):
+        self._value = value
+
+    def __str__(self):
+        return str(self._value)
+
+    def __repr__(self):
+        return repr(self._value)
+
+    def __eq__(self, other):
+        return self._value == other
+    
+    def __call__(self):
+        return self._value
+
+    def __getattr__(self, name):
+        return getattr(self._value, name)
+
+
 class SubContainer:
     """
     A simple container for storing hidden or unexpected attributes of a
@@ -303,6 +323,7 @@ class SingleBlock:
         new_als = als.copy()
         new_als.update(self._aliases or {})
         self._aliases = new_als
+        self._reserved = ['ext']
 
         blockDict = unwrap_block(blockDict)
 
@@ -347,6 +368,38 @@ class SingleBlock:
             self._key_order.append(key)
             setattr(self, key, val)
 
+    def _assign_and_inject_comments(self, name, value, extended=False):
+        if name == 'ext':
+            return super().__setattr__('ext', value)
+        if not hasattr(value, "__dict__"):
+            value = SimpleWrapper(value)
+
+        if extended:
+            setattr(self.ext, name, value)
+        else:
+            super().__setattr__(name, value)
+        
+        attr_obj = getattr(self.ext if extended else self, name)
+
+        setattr(attr_obj, "_parent_block", self)
+
+        def _make_bound(attr_name):
+            def add_comments_to_parent(self_attr, *comments):
+                parent_comments = self_attr._parent_block._meta.comments
+                parent_comments.setdefault(attr_name,[])
+                for comment in comments:
+                    parent_comments[attr_name].append(str(comment))
+            
+            def clear_comments_from_parent(self_attr):
+                parent_comments = self_attr._parent_block._meta.comments
+                parent_comments[attr_name] = []
+
+            return (add_comments_to_parent, "add_comments"), (clear_comments_from_parent, "clear_comments")
+        attr_obj._reserved = ['ext'] if not hasattr(attr_obj,"_reserved") else attr_obj._reserved
+        for method, mthd_name in _make_bound(name):
+            attr_obj._reserved.append(mthd_name)
+            bound = method.__get__(attr_obj, type(attr_obj))
+            setattr(attr_obj, mthd_name, bound)
         
     @inherit_docstring(object)
     def __setattr__(self, name:str, value):
@@ -380,7 +433,7 @@ class SingleBlock:
         from .template import TemplateField, TemplateBlock
 
         validators = self.build_validators()
-        if name.startswith("_"):
+        if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
         
         if "$" in name:
@@ -397,12 +450,12 @@ class SingleBlock:
             if name in validators and val != validators[name]:
                 raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
                                  f"it cannot be overwritten to '{val.__name__}'.")
-            
-            from ..parsing.validation import optional_keys
-            validators[name] = val
-            self._key_overrides[name] = val
-            optional_keys.setdefault(type(self),{})
-            optional_keys[type(self)][name] = val
+            if name not in validators:
+                from ..parsing.validation import optional_keys
+                validators[name] = val
+                self._key_overrides[name] = val
+                optional_keys.setdefault(type(self),{})
+                optional_keys[type(self)][name] = val
 
         if name in validators:
             validator = validators[name]
@@ -427,11 +480,11 @@ class SingleBlock:
                     else:       
                         raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
                 if isinstance(value, validator):
-                    return super().__setattr__(name, value)
+                    return self._assign_and_inject_comments(name, value)
                 
-            return super().__setattr__(name, validator(value))
+            return self._assign_and_inject_comments(name, validator(value))
         else:
-            return setattr(self.ext, name, value)
+            return self._assign_and_inject_comments(name, value, extended=True)
         
     def __getattr__(self, name:str):
         """
@@ -466,7 +519,7 @@ class SingleBlock:
     def __hash__(self):
         return id(self)
         
-    def serialize(self, keepListType=False):
+    def serialize(self, keepListType=False, shallow=False):
         """
         Return a recursively serialized `[dict]` representation of itself.
 
@@ -513,7 +566,7 @@ class SingleBlock:
 
         def try_serial(obj):
             serialize = getattr(obj, "serialize", None)
-            if callable(serialize):
+            if callable(serialize) and not shallow:
                 return obj.serialize()
             return str(obj)
 
@@ -521,7 +574,7 @@ class SingleBlock:
             if attr == "ext" and val is not None:
                 for ext_attr, ext_val in val.__dict__.items():
                     all_attrs[ext_attr] = ext_val
-            elif not attr.startswith("_"):
+            elif not (attr.startswith("_") or attr in self._reserved):
                 all_attrs[attr] = val
 
         
@@ -553,13 +606,6 @@ class SingleBlock:
             out[mk["list_type"]] = "explicit"
 
         return out
-    
-    def add_comments(self, key:str, *comments):
-        if key not in self.serialize():
-            raise ValueError("You must attach comments to an existing attribute.")
-        for comment in comments:
-            self._meta.comments.setdefault(key,[])
-            self._meta.comments[key].append(str(comment))
     
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
@@ -756,7 +802,21 @@ class SingleBlock:
 
         return new_obj
     
-    def set_key_order(self,*args):
+    def _meta_to_front(self):
+        try:
+            meta_idx =self._key_order.index("metadata")
+            self._key_order.pop(meta_idx)
+        except:
+            pass
+        self._key_order.insert(0,"metadata")
+    
+    def keys_to_front(self,*args):
+        try:
+            meta_idx = args.index("metadata")
+            args.pop(meta_idx)
+        except:
+            pass
+        
         new_order = []
         for key in args:
             new_order.append(key)
@@ -764,18 +824,65 @@ class SingleBlock:
             if key not in new_order:
                 new_order.append(key)
         self._key_order = new_order
+        self._meta_to_front()
 
     def default_key_order(self):
         new_order = []
         for key in self.build_validators():
-            new_order.append(key)
+            if key != "ext":
+                new_order.append(key)
         for key in self._key_order:
             if key not in new_order:
                 new_order.append(key)
         self._key_order = new_order
+        self._meta_to_front()
+
+    def keys_to_end(self, *args):
+        for key in args:
+            try:
+                idx = self._key_order.index(key)
+                self._key_order.pop(idx)
+            except:
+                pass
+            self._key_order.append(key)
+        self._meta_to_front()
+        
+    def key_to_idx(self, key, idx):
+        self._meta_to_front()
+        try:
+            old_idx = self._key_order.index(key)
+            self._key_order.pop(old_idx)
+        except:
+            pass
+        self._key_order.insert(idx, key)
 
     def clear_comments(self):
         self._meta.comments = {}
+        
+    def rename_block(self, old, new):
+        validators = self.build_validators()
+        req = self.build_req_validators()
+        alias = None
+        if new not in validators:
+            val = validators[old]
+            val_to_alias = {v:k for k,v in self._aliases.items()}
+            try:
+                alias = val_to_alias[val]
+            except KeyError:
+                raise ValueError(f"Could not find alias for '{val.__name__}' for '{old}' property.")
+            new_alias = f"{new}${alias}"
+        if old in req:
+            raise ValueError(f"You cannot rename '{old}' to '{new}' without replacing it first. "
+                             f"'{old}' is a required property for this object. Try:\n"
+                             f"stored = obj.{old}\n"
+                             f"obj.{old} = new_value\n"
+                             f"{f'obj.{new} = stored' if not alias else f'obj.add_block(\'{new}\',\'{alias}\', stored)'}\n")
+        
+        setattr(self, new_alias, getattr(self, old))
+        delattr(self, old)
+        idx = self._key_order.index(old)
+        self._key_order[idx] = new_alias
+
 
 
 
@@ -839,7 +946,7 @@ class FileBlock(SingleBlock):
         except Exception as e:
             if not saving_as:
                 warn(f"Could not save file: {e}", RuntimeWarning)
-                return False
+                return e
             else:
                 raise e
         return True
@@ -967,7 +1074,7 @@ class ListBlock:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
             return super().__setattr__(name, value)
 
-        elif name.startswith("_"):
+        elif name.startswith("_") or name in self._reserved:
             return super().__setattr__(name,value)
         else:
             raise AttributeError(
