@@ -64,7 +64,7 @@ class MaterialList(ListBlock):
             if mat.type == typ or typ is None:
                 ratio = mat.ratio
                 mw = mat.formula.formula_weight
-                weights[mat] = ratio * Decimal(mw)
+                weights[mat] = ratio() * Decimal(mw)
 
         percents = {}
         total_weight = sum(weights.values())

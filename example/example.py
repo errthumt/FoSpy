@@ -34,6 +34,11 @@ my_reaction = my_synthesis.reaction
 my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
 
+my_synthesis.materials = []
+my_synthesis.materials.clear_comments()
+my_synthesis.add_block("reagents","materials", my_mats)
+my_mats = my_synthesis.reagents
+
 # more shortcuts
 exp_temps = my_templates.experimenters
 mat_temps = my_templates.materials
@@ -46,16 +51,15 @@ my_meta.internal_project_ID = "Arsenide 28+d clathrates"
 my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 
 # attach a new comment to the nominal_mass
-my_reaction.add_comments("nominal_mass", "I attached this comment in python")
+my_reaction.nominal_mass.add_comments("I attached this comment in python")
 
 # template file has a template for Joe, but it's missing an affiliation value.
 # So I fill in the affiliation and add it to the experimenters on my synthesis
 joe_template = exp_temps.get_first(template_name="Joe")
 joe = joe_template.fill(affiliation="Kovnir Group - Iowa State University")
 my_exps.append(joe)
-my_synthesis.add_comments("experimenters",
-                          "Note that now there are two experimenters, so the",
-                          "experimenters header has changed to double brackets")
+my_exps.add_comments("Note that now there are two experimenters, so the",
+                     "experimenters header has changed to double brackets")
 
 # The FOS file already signaled that the unexpected "friend" tag is an
 # experimenter type, so I can set travis's friend directly to the joe loaded
@@ -64,9 +68,8 @@ travis = my_synthesis.experimenters[0]
 travis.friend = joe.copy()
 travis.friend.affiliation = "Graham's Dad"
 
-joe.add_comments("name",
-                 "The details for Joe above are under travis's friend details",
-                 "whereas the Joe below is for the synthesis experimenter context")
+joe.name.add_comments("The details for Joe above are under travis's friend details",
+                      "whereas the Joe below is for the synthesis experimenter context")
 
 # python indexes are zero-based, so this changes the first material (Barium)'s
 # ratio to 8
@@ -117,10 +120,6 @@ ramp_template = my_treats[2].program[0].make_template("Any ramp",
                                                       "temp", "time")
 dwell_template = my_treats[2].program[1].make_template("Any dwell",
                                                        "time")
-
-from FoSpy.blocks.treatments import Treatment
-test = Treatment.reflex()
-
 # Save my new templates to my template file.
 my_templates.treatments = [anneal_template]
 my_templates.anneal_sections = [ramp_template, dwell_template]
@@ -160,19 +159,23 @@ cif_temps.insert(0,Ba2Zn5Sb6)
 my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
 
 # Every material gets a weight percent comment added above their ratio
-my_synthesis.add_calc_routine("materials.add_weight_pcts")
+my_synthesis.add_calc_routine("reagents.add_weight_pcts")
 
 # some reordering stuff to make the final printout more consistent.
-my_templates.set_key_order("experimenters","materials",
-                           "generic_materials","treatments",
-                           "anneal_sections", "cifs")
+my_templates.default_key_order()
+my_templates.key_to_idx("generic_materials", 3)
+my_templates.key_to_idx("anneal_sections", 6)
 my_templates.generic_materials.set_list_type("explicit")
+
+my_synthesis.default_key_order()
+my_synthesis.key_to_idx("reagents", 3)
 my_mats.set_list_type("looped")
 
-
 # save all my changes
-saved = [file.save() for file in (my_templates, my_synthesis)]
-
+saved = [file.save() for file in (my_synthesis, my_templates)]
+for status in saved:
+    if isinstance(status, Exception):
+        raise status
 
 # Silence all debugs except the one used for checking equality.
 all_debugs_off(soundoff=False)

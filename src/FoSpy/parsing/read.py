@@ -81,7 +81,11 @@ def dict_from_file(filepath):
 
     for block, (typ, lines) in blocks.items():
         if typ == "single":
-            blocks[block] = [create_single_block_dict(lines)]
+            blockDict = create_single_block_dict(lines)
+            if blockDict == {}:
+                blocks[block] = []
+            else:
+                blocks[block] = [blockDict]
         elif typ == "list":
             blocks[block] = create_list_block_dict(lines)
         else:
@@ -104,6 +108,8 @@ def create_single_block_dict(lines, _list_type="explicit"):
     for line in lines:
         _debug.msg(line)
     _debug.msg('-----') """
+    if len(lines)==0:
+        return {}
 
     open_br = SYNTAX["nested"]["open"]
     close_br = SYNTAX["nested"]["close"]
