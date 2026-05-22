@@ -127,8 +127,8 @@ nominal_mass_units: mg
     None
     program: [[
         type: ramp
-        time: 2 hr
         temp: 550 C
+        time: 2 hr
 
         type: dwell
         time: 12 hr
@@ -139,15 +139,15 @@ nominal_mass_units: mg
     None
     program: [[
         type: ramp
-        time: 10 hr
         temp: 650 C
+        time: 10 hr
 
         type: dwell
         time: 72 hr
     ]]
 
 [Cifs]
-file_name: PY618_Ba8-Cu12-Zn12-As29.8
+file_name: PY618_Ba8-Cu12-Zn12-As29,8
 extension: .cif
 embedded: {{{
 
