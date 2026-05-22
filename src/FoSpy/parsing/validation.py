@@ -118,8 +118,8 @@ required_keys = {
     },
 
     EmbeddedFile: {
-        "file_name": str,
-        "extension": str,
+        "file_name": validators.filenames.file_name,
+        "extension": validators.filenames.file_extension,
         "embedded" : list
     }
 }

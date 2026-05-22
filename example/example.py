@@ -8,11 +8,15 @@ all_debugs_on(soundoff=False)
 
 # change the width of your debug screen so that module labels print on one line.
 from FoSpy import _debug as db
-db.DEBUG_WIDTH = 140
+db.DEBUG_WIDTH = 150
 
 # Optional way to turn on/off one module's debug messages.
 from FoSpy.blocks.blocks import _debug as block_debug
 block_debug.on = True
+
+from FoSpy.parsing.validators.filenames import _debug as filename_debug
+all_debugs_off(soundoff=False)
+filename_debug.on = True
 
 """
 The beginning and end results of this file can be found in the same folder of

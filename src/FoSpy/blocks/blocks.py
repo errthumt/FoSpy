@@ -6,12 +6,14 @@ from ..parsing.syntax import (
     meta_defaults as md,
 )
 
-
-
 from ..parsing import (
     dict_from_file,
     write_dict_to_file
 )
+
+import tempfile
+import atexit
+from pathlib import Path
 
 
 from .._debug import Debug
@@ -45,6 +47,35 @@ class SimpleWrapper:
     def __getattr__(self, name):
         return getattr(self._value, name)
 
+class Block:
+    def find_fileblock(self):
+        blk = self
+        while blk is not None:
+            if isinstance(blk, FileBlock):
+                return blk
+            if hasattr(blk,"_parent_block"):
+                blk = blk._parent_block
+            else:
+                blk = None
+        raise LookupError("Could not find a FileBlock containing the current object")
+    
+    def find_tempdir(self):
+        fileblock = self.find_fileblock()
+        if hasattr(fileblock, "_tempdir"):
+            return fileblock._tempdir
+        else:
+            raise AttributeError("Could not find a temporary directory attached to this object's FileBlock")
+    
+    def find_temppath(self):
+        fileblock = self.find_fileblock()
+        if hasattr(fileblock, "_temppath"):
+            return fileblock._temppath
+        if hasattr(fileblock, "_temppdir"):
+            raise AttributeError("This object's FileBlock has a temporary directory but no path mapped to it. "
+                                 "Use obj.find_tempdir() instead")
+        raise AttributeError("Could not find a temporary directory object or path "
+                             "attached to this object's FileBlock.")
+        
 
 class SubContainer:
     """
@@ -88,7 +119,7 @@ def calc_routine(attach=True):
     return decorator
     
 
-class SingleBlock:
+class SingleBlock(Block):
     """
     Represents a single block of key:value pairs parsed from a FOS file.
 
@@ -319,13 +350,16 @@ class SingleBlock:
                 present.
 
         """
+
         from ..parsing.validation import aliases as als
         new_als = als.copy()
         new_als.update(self._aliases or {})
         self._aliases = new_als
         self._reserved = ['ext']
 
+        from copy import deepcopy
         blockDict = unwrap_block(blockDict)
+        self._sourceDict = blockDict.copy()
 
         if not isinstance(blockDict, dict):
             raise TypeError("A SingleBlock must be constructed from either a dictionary or another SingleBlock. "
@@ -432,6 +466,8 @@ class SingleBlock:
         from ..parsing.format import format_field
         from .template import TemplateField, TemplateBlock
 
+        from inspect import signature as sign
+
         validators = self.build_validators()
         if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
@@ -459,6 +495,12 @@ class SingleBlock:
 
         if name in validators:
             validator = validators[name]
+            try:
+                passingDict = True if "sourceDict" in sign(validator).parameters else False
+            except:
+                passingDict = False
+                
+
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
                     if isinstance(value, list):
@@ -482,10 +524,32 @@ class SingleBlock:
                 if isinstance(value, validator):
                     return self._assign_and_inject_comments(name, value)
                 
-            return self._assign_and_inject_comments(name, validator(value))
+            return self._assign_and_inject_comments(name,
+                                                    validator(value,sourceDict=self._sourceDict)
+                                                    if passingDict
+                                                    else validator(value))
         else:
             return self._assign_and_inject_comments(name, value, extended=True)
-        
+    
+    def add_comments(self, *comments):
+        """
+        Default Behavior. If a `SingleBlock` is stored in another `SingleBlock`,
+        this method will be overwritten by the parent's `__setattr__`
+        """
+        keys = list(self.build_req_validators().keys())
+
+        keys = [k for k in keys if k != "metadata"]
+        fallback = [k for k in self._key_order if k != "metadata"]
+        if not (keys or fallback):
+            raise ValueError("This object has not been correctly attached to a parent block "
+                             "and could not identify a required key to attach to.")
+
+        first = keys[0] if keys else fallback[0]
+
+        self._meta.comments.setdefault(first, [])
+        for comment in comments:
+            self._meta.comments[first].append(comment)
+
     def __getattr__(self, name:str):
         """
         Check both self and self.ext for attribute before returning.
@@ -908,7 +972,16 @@ class FileBlock(SingleBlock):
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
         """
         self._sourceFile = _sourceFile
+
+        self._tempdir = tempfile.TemporaryDirectory()
+        self._tempath = Path(self._tempdir.name)
+        atexit.register(self.cleanup)
+
         super().__init__(blockDict)
+    
+    def cleanup(self):
+        if self._tempdir is not None:
+            self._tempdir.cleanup()
 
     @classmethod
     def fromFile(cls, filepath):
@@ -959,7 +1032,7 @@ class FileBlock(SingleBlock):
 
 
 
-class ListBlock:
+class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
 
@@ -1069,7 +1142,7 @@ class ListBlock:
                     if not isinstance(obj, typ):
                         try:
                             obj=typ.subclass(obj.serialize())
-                            pass
+                            obj._parent_block = self
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
             return super().__setattr__(name, value)
