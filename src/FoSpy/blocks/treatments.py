@@ -28,22 +28,43 @@ class Treatment(SingleBlock):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
 
+
 class Annealing(Treatment):
     dispatch = {}
     def __init__(self, blockDict):
         super().__init__(blockDict)
+        self.build_profile()
+
     @classmethod
     def subclass(cls, blockDict):
         return cls(blockDict)
     
-    def show_plot(self, **kwargs):
-        from cif2xrd.furnace import Profile
+    def build_profile(self, **kwargs):
+        from cif2xrd.furnace import Profile #type: ignore
         import matplotlib.pyplot as plt
 
         furnace = Profile(**kwargs)
 
-        for section in self:
+        for section in self.program:
             if section.type == "ramp":
+                temp = int(section.temp.split(" ")[0])
+                furnace.ramp(temp, section.time)
+            elif section.type == "dwell":
+                furnace.dwell(section.time)
+            elif section.type == "quench":
+                furnace.quench(section.medium)
+
+        self._profile = furnace
+    
+    def update_profile(self, **kwargs):
+        return self._profile.update_params(**kwargs)
+
+    def show_plot(self, **kwargs):
+        return self._profile.plot()
+    
+    def interactive_plot(self, **kwargs):
+        return self._profile.interactive()
+
 
 
 
@@ -67,4 +88,8 @@ AnnealSection.dispatch["ramp"] = Ramp
 class Dwell(AnnealSection):
     dispatch = {}
 AnnealSection.dispatch["dwell"] = Dwell
+
+class Quench(AnnealSection):
+    dispatch = {}
+AnnealSection.dispatch["quench"] = Quench
 

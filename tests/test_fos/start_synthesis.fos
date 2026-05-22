@@ -109,6 +109,9 @@ nominal_mass_units: mg
 
         type: dwell
         time: 120hr
+
+        type: quench
+        medium: water
     ]]
 
     grind
