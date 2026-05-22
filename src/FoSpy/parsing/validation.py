@@ -17,6 +17,7 @@ from chemformula import ChemFormula
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
 CifList = ListBlock.Simple(EmbeddedCIF)
+AnnealProgram = ListBlock.Simple(AnnealSection)
 
 TemplateLists = {
     "experimenters": TemplateList.Simple(Experimenter),
@@ -96,16 +97,24 @@ required_keys = {
     },
 
     AnnealSection: {
-        "type": str,
-        "time": str
+        "type": str
     },
 
     Ramp: {
-        "temp": str
+        "temp": str,
+        "time":str,
+    },
+
+    Dwell: {
+        "time": str
+    },
+
+    Quench: {
+        "medium": str
     },
 
     Annealing: {
-        "program": ListBlock.Simple(AnnealSection)
+        "program": AnnealProgram
     },
 
     EmbeddedFile: {

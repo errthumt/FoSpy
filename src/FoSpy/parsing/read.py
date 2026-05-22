@@ -338,7 +338,7 @@ def create_list_block_dict(lines):
                 
                 trailing_comments.reverse()
                 current_lines = [*trailing_comments, line]
-                keys = []
+                keys = [key]
             else:
                 if key is not None:
                     keys.append(key)
