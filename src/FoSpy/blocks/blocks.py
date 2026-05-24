@@ -704,6 +704,11 @@ class SingleBlock(Block):
                 k = md[key]
             val = getattr(self._meta,attr,k)
             out[key] = val
+        
+        comments = {}
+        for key, comment_list in out[mk["comments"]].items():
+            comments[add_alias(key)] = comment_list
+        out[mk["comments"]] = comments
 
         out = deepcopy(out)
 
@@ -949,6 +954,11 @@ class SingleBlock(Block):
         self._meta_to_front()
 
     def keys_to_end(self, *args):
+        def remove_alias(key):
+            return key.split("$")[0] if "$" in key else key
+        for key in self.serialize(shallow=True):
+            if not key.startswith("_") and remove_alias(key) not in self._key_order:
+                self._key_order.append(remove_alias(key))
         for key in args:
             try:
                 idx = self._key_order.index(key)
@@ -988,10 +998,14 @@ class SingleBlock(Block):
         if "rename" in (old, new):
             raise ValueError("obj.rename property cannot be set or changed by obj.rename_block()")
 
-        _debug.msg(f"Registering '{old}':'{new}' into rename block")
-        if not hasattr(self,"rename"):
-            self.rename = {}
-        setattr(self.rename, old, new)
+        if old in self._key_overrides:
+            val = self._key_overrides.pop(old)
+            self._key_overrides[new] = val
+        else:
+            _debug.msg(f"Registering '{old}':'{new}' into rename block")
+            if not hasattr(self,"rename"):
+                self.rename = {}
+            setattr(self.rename, old, new)
         _debug.msg(f"Moving '{old}' over to '{new}'.")
         setattr(self,new,getattr(self, old))
         delattr(self,old)
@@ -1002,9 +1016,7 @@ class SingleBlock(Block):
         except:
             self._key_order.append(new)
 
-        if old in self._key_overrides:
-            val = self._key_overrides.pop(old)
-            self._key_overrides[new] = val
+
         '''
         if new not in validators:
             val = validators[old]
@@ -1031,6 +1043,14 @@ class SingleBlock(Block):
         if attr in self._rename_validators(required=True):
             raise AttributeError(f"Cannot delete property: '{attr}'. It is registered as a required property for this object.")
         return super().__delattr__(attr)
+    
+    def clear_all_comments(self):
+        self._meta.comments = {}
+        for attr, val in self.__dict__.items():
+            if attr.startswith("_") or attr in self._reserved:
+                continue
+            if hasattr(val, "clear_all_comments"):
+                val.clear_all_comments()
 
 
 
@@ -1113,6 +1133,7 @@ class FileBlock(SingleBlock):
         reloaded = self.fromFile(self._sourceFile)
 
         return self.__eq__(reloaded, suppress_routine_paths=True)
+    
         
 
 
@@ -1225,14 +1246,16 @@ class ListBlock(Block):
 
             elif hasattr(self, "_reqCls"):
                 typ = self._reqCls
+                new_list = []
                 for obj in value:
                     if not isinstance(obj, typ):
                         try:
-                            obj=typ.subclass(obj.serialize())
-                            obj._parent_block = self
+                            obj=typ.subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
-            return super().__setattr__(name, value)
+                    obj._parent_block = self
+                    new_list.append(obj)
+            return super().__setattr__(name, new_list)
 
         elif name.startswith("_") or name in self._reserved:
             return super().__setattr__(name,value)
@@ -1436,3 +1459,8 @@ class ListBlock(Block):
     
     def get_first(self, **kwargs):
         return self.get_any(**kwargs)[0]
+    
+    def clear_all_comments(self):
+        for obj in self._objs:
+            if hasattr(obj, "clear_all_comments"):
+                obj.clear_all_comments()

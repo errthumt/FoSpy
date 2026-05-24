@@ -1,11 +1,15 @@
 import os
+import textwrap
 
 from .._debug import Debug
+from .format import _indent
 _debug = Debug()
 
 from . import syntax as snt
 from .syntax import meta_keys as mk
 from .format import *
+
+CHAR_WIDTH = 80
 
 def block_list_to_lines(blocklist:list, indent=0):
     lines = []
@@ -115,7 +119,7 @@ def expand_lists(key, val, indent, looped=False):
         for line in val:
             lines.append(line.rstrip())
         lines.append(f'{SYNTAX["embedded"]["prefix"]*20} {SYNTAX["embedded"]["close"]}')
-    elif type(val) == list:
+    elif isinstance(val, list):
         if len(val) == 0:
             lines.append(format_key_value(key, empty_nested(False), indent, looped))
         else:
@@ -124,8 +128,19 @@ def expand_lists(key, val, indent, looped=False):
                 lines.append(line)
             lines.pop()
             lines.append(format_nested_end(len(val)>1,indent))
-    elif type(val) == dict:
+    elif isinstance(val, dict):
         return expand_lists(key, [val], indent, looped)
+    elif isinstance(val, str):
+        key_val = format_key_value(key, val, indent, looped)
+        key_val_width = len(key_val)
+        if key_val_width <= CHAR_WIDTH:
+            lines.append(key_val)
+        else:
+            indent_width = len(_indent("", indent))
+            lines.append(format_key_value(key, f"{empty_nested(False)[0]};;;", indent, looped))
+            for line in textwrap.wrap(val+empty_nested(False)[1:], width=CHAR_WIDTH-indent_width):
+                lines.append(_indent(line, indent))
+
     else:
         lines.append(format_key_value(key, val, indent, looped))
 

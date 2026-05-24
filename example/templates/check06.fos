@@ -1,154 +1,46 @@
-name: TE002
-// This comment will stay attached to the date when saving
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+name: Travis's Templates
+description: A collection of templates commonly appearing in Travis's syntheses
 
-// This new block has been added because I renamed a required block.
-[Rename]
-// Synthesis files are required to have a materials block, so
-// This line specifies that it has been renamed to reagents.
-materials: reagents
-
-// Note that now there are two experimenters, so the
-// experimenters header has changed to double brackets
 [[Experimenters]]
+template_name: Travis
 name: Travis Errthum
-affiliation: Kovnir Group - Iowa State University
+affiliation: Iowa State University Dept of Chemistry
 orcid: 0009-0006-1937-5672
-// the $experimenter tag allows me to specify that the "friend" key
-// is for experimenters, even if it's not set up beforehand.
-friend$experimenter: [
-    name: Joseph Race
-    affiliation: Graham's Dad
-    orcid: 0000-0002-8551-3627
-]
 
-// The details for Joe above are under travis's friend details
-// whereas the Joe below is for the synthesis experimenter context
+template_name: Joe
 name: Joseph Race
-affiliation: Kovnir Group - Iowa State University
+-affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-// Single brackets on a header mean there is only one group
-[Reaction]
-nominal_formula: Ba8Cu13Zn11As28.5
-// I attached this comment in python
-nominal_mass: 250.0
-nominal_mass_units: mg
+[Materials]
+template_name: Ground Arsenic, glovebox
+name: Arsenic
+-type: <!TEMPLATE-FIELD>
+formula: As
+supplier: Furukama
+cas: 7440-38-2
+form: lump
+env: Ar (g)
+-ratio: <!TEMPLATE-FIELD>
+purity: 0.9995
+treatments: [
+    type: Grinding
+    repeats: 1
+    observations: ground lumps into powder for weighing and homogenization
+]
 
-[[Reagents]]
-:name
-:type
-:formula
-:supplier
-:cas
-:form
-:purity
-:env
-:ratio
-:treatments
-
-    Barium
-    reagent
-    Ba
-    Thermofisher
-    7440-39-3
-    lump
-    0.999
-    Ar (g)
-    // The comment below will be correctly re-calculated when saving
-    // ! Total weight percent: 22.99%
-    8
-    // Similar to headers, single brackets mean there is only one group,
-    // in this case for treatments of Barium
-    [
-        type: cutting
-        repeats: 1
-        observations: smaller pieces improve homogenization
-    ]
-
-    // These comments are attached to Zinc's name, so when I generate a template
-    // from Zinc, they will be duplicated on the saved template.
-    // Any materials I make from the template will have these comments, too,
-    // Unless I clear the comments after making the material.
-    Zinc
-    reagent
-    Zn
-    Sigma Aldrich
-    7440-66-6
-    powder
-    0.995
-    Ar (g)
-    // ! Total weight percent: 15.05%
-    11
-    []
-
-    Copper
-    reagent
-    Cu
-    Sigma Aldrich
-    7440-50-8
-    powder
-    0.995
-    Ar (g)
-    // ! Total weight percent: 17.29%
-    13
-    []
-
-    Arsenic
-    reagent
-    As
-    Furukama
-    7440-38-2
-    lump
-    0.9995
-    Ar (g)
-    // ! Total weight percent: 44.68%
-    28.5
-    [
-        type: Grinding
-        repeats: 1
-        observations: ground lumps into powder for weighing and homogenization
-    ]
-
-// This is a comment on the treatments block
-[[Treatments]]
-:type
-:repeats
-:observations
-
-    weigh
-    1
-    Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid contact with ampoule during reaction
-
-    seal
-    1
-    Evacuated ampoule and sealed with H2/O2 torch
-
-    anneal
-    1
-    None
-    program: [[
-        type: ramp
-        temp: 550 C
-        time: 2 hr
-
-        type: dwell
-        time: 12 hr
-    ]]
-
-    anneal
-    1
-    None
-    program: [[
-        type: ramp
-        temp: 650 C
-        time: 10 hr
-
-        type: dwell
-        time: 72 hr
-    ]]
+[Generic$materials]
+template_name: A generic metal powder, purity 0.995
+-name: <!TEMPLATE-FIELD>
+type: reagent
+-formula: <!TEMPLATE-FIELD>
+supplier: Sigma Aldrich
+-cas: <!TEMPLATE-FIELD>
+form: powder
+env: Ar (g)
+-ratio: <!TEMPLATE-FIELD>
+purity: 0.995
+treatments: []
 
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8
