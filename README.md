@@ -3,7 +3,7 @@ A package for opening, editing, and saving Files of Synthesis (*.fos)
 
 Running brainstorm for features and data structure: [brainstorm.md](./brainstorm.md)
 
-Examples of what a FoS could look like: [example/start_synthesis.fos](./example/start_synthesis.fos)
+Examples of what a FoS could look like: [example/start_synthesis.fos](example/synthesis/start_synthesis.fos)
 
 Examples of what a python script could do with FoS files and FoS Templates: [example/readme.md](./example/readme.md)
 

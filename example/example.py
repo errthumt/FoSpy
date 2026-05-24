@@ -18,8 +18,8 @@ def main():
 
 
     # load synthesis and templates from files
-    my_synthesis = Synthesis.fromFile(r"example/start_synthesis.fos")
-    my_templates = TemplateSet.fromFile(r"example/start_templates.fos")
+    my_synthesis = Synthesis.fromFile(r"example/synthesis/start_synthesis.fos")
+    my_templates = TemplateSet.fromFile(r"example/templates/start_templates.fos")
 
     # save the files to new files so that they don't overwrite the old ones.
     my_synthesis.save(r"example/synthesis/check01.fos")

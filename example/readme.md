@@ -44,8 +44,8 @@ block_debug.on = True
 This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling `save()` without a filename will now just re-save them in the new location.
 ```python
 # load synthesis and templates from files
-my_synthesis = Synthesis.fromFile(r"example/start_synthesis.fos")
-my_templates = TemplateSet.fromFile(r"example/start_templates.fos")
+my_synthesis = Synthesis.fromFile(r"example/synthesis/start_synthesis.fos")
+my_templates = TemplateSet.fromFile(r"example/templates/start_templates.fos")
 
 # save the files to new files so that they don't overwrite the old ones.
 my_synthesis.save(r"example/synthesis/check01.fos")
