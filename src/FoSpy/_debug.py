@@ -2,6 +2,7 @@ from pprint import pprint
 import sys
 import inspect
 import io
+import textwrap
 
 DEBUG_WIDTH = 120
 
@@ -14,25 +15,40 @@ class Debug:
         self.label = f"|(Debug message from {self.module_name})"
         self.label_width = len(self.label)
 
+    def _get_text_width(self, module=None):
+        if module:
+            label = f"|(Debug message from {module} via {self.module_name})"
+            label_width = len(label)
+        else:
+            label = self.label
+            label_width = self.label_width
+
+        text_width = DEBUG_WIDTH - label_width
+        return text_width, label, label_width
+
+
     def msg(self,msg, module=None):
-        self.pmsg(str(msg), module=module)
+        if not self.on:
+            return
+        
+        text_width, label, label_width = self._get_text_width(module)
+
+        wrapped = textwrap.fill(str(msg), width=text_width)
+
+        for line in wrapped.splitlines():
+            print(f'{line:<{text_width}}{label:>{label_width}}')
 
     def pmsg(self,msg,module=None,**kwargs):
-        if self.on:
-            if module:
-                label = f"|(Debug message from {module} via {self.module_name})"
-                label_width = len(label)
-            else:
-                label = self.label
-                label_width = self.label_width
+        if not self.on:
+            return
+        
+        text_width, label, label_width = self._get_text_width(module)
 
-            text_width = DEBUG_WIDTH - label_width
-
-            buf = io.StringIO()
-            pprint(msg,stream=buf, width=text_width,**kwargs)
-            txt = buf.getvalue()
-            for line in txt.splitlines():
-                print(f'{line:<{text_width}}{label:>{label_width}}')
+        buf = io.StringIO()
+        pprint(msg,stream=buf, width=text_width,**kwargs)
+        txt = buf.getvalue()
+        for line in txt.splitlines():
+            print(f'{line:<{text_width}}{label:>{label_width}}')
 
 _debug = Debug()
 
