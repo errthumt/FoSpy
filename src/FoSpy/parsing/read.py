@@ -110,6 +110,11 @@ def create_single_block_dict(lines, _list_type="explicit"):
     _debug.msg('-----') """
     if len(lines)==0:
         return {}
+    
+    # Single string mode, process block as a multiline string instead of key: value pairs
+    if lines[0].strip() == ";;;":
+        return " ".join([l.strip() for l in lines[1:]]).strip()
+
 
     open_br = SYNTAX["nested"]["open"]
     close_br = SYNTAX["nested"]["close"]
@@ -197,7 +202,10 @@ def create_single_block_dict(lines, _list_type="explicit"):
                 stripped = line.rstrip(close_br)
                 if stripped:
                     nested_lines.append(stripped)
-                out_dict[nested_key] = [create_single_block_dict(nested_lines)] if nested_type == "single" else create_list_block_dict(nested_lines)
+                val = [create_single_block_dict(nested_lines)] if nested_type == "single" else create_list_block_dict(nested_lines)
+                if isinstance(val[0], str):
+                    val = val[0]
+                out_dict[nested_key] = val
                 nested_lines = []
                 nested_key = None
                 nested_type = None
@@ -206,6 +214,9 @@ def create_single_block_dict(lines, _list_type="explicit"):
     for meta_key in mk.values():
         if meta_key not in out_dict:
             out_dict[meta_key] = md[meta_key]
+    
+    if nested != 0:
+        raise ValueError("Mismatched brackets when trying to parse blocks.")
 
     return out_dict
 
@@ -351,5 +362,6 @@ def create_list_block_dict(lines):
                 raise ValueError("Mismatched brackets when trying to parse blocks.")
 
         block_list.append(create_single_block_dict(current_lines))
-
+    if nested != 0:
+        raise ValueError("Mismatched brackets when trying to parse blocks.")
     return block_list

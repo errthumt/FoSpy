@@ -17,7 +17,7 @@ from chemformula import ChemFormula
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
 CifList = ListBlock.Simple(EmbeddedCIF)
-AnnealProgram = ListBlock.Simple(AnnealSection)
+# AnnealProgram = ListBlock.Simple(AnnealSection)
 
 TemplateLists = {
     "experimenters": TemplateList.Simple(Experimenter),
