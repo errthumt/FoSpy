@@ -7,9 +7,6 @@ class EmbeddedFile(SingleBlock):
     """
     Represents an non-FOS file embedded as a block in a FOS file.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
-
     def _write_to_temp(self, encoding="utf-8"):
         self._temppath = self.find_temppath() / f"{self.file_name}{self.extension}"
         with open(self._temppath, "w", encoding=encoding) as f:
@@ -30,8 +27,6 @@ class EmbeddedCIF(EmbeddedFile):
     """
     Represents a CIF file embedded as a block in a FOS file.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
 
     def get_pattern(self,**kwargs):
         from cif2xrd.pattern import simPattern

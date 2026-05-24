@@ -12,8 +12,7 @@ class MetaData(SingleBlock):
     Any key:value pairs at the top of a FOS file will automatically be assigned
     to metadata
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    pass
 
 class TemplateMeta(SingleBlock):
     """
@@ -25,16 +24,13 @@ class TemplateMeta(SingleBlock):
     Any key:value pairs at the top of a FOS file will automatically be assigned
     to metadata
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    pass
 
 class Reaction(SingleBlock):
     """
     Represents information pertaining to the entire synthesis but not pertaining
     to FOS file metadata, such as nominal_mass or target_composition.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
 
     def get_nom_MW(self):
         """Returns the molecular weight of nominal_formula"""
@@ -53,13 +49,11 @@ class Experimenter(SingleBlock):
     """
     Represents an an experimenter who worked on a synthesis.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    pass
 
 class ExpTemplate(Experimenter, TemplateBlock):
     """
     Represents an experimenter who frequently performs syntheses and is
     attached to multiple FOS files.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    pass

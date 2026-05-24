@@ -10,9 +10,6 @@ class Material(SingleBlock):
     """
     Represents a material used in a synthesis
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
-
     @_calc_routine()
     def add_MW(self):
         """
@@ -26,9 +23,6 @@ class MaterialTemplate(Material, TemplateBlock):
     """
     Represents a material used frequently and attached to multiple syntheses.
     """
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
-        self.ratio = 0
 
 class MaterialList(ListBlock):
     """

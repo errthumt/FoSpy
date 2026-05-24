@@ -14,6 +14,6 @@ def rename_dict(nameDict, cls):
         if rename in vals:
             raise ValueError(error, f"'{rename}' is already a registered key.")
         
-    return SingleBlock(outDict)
+    return SingleBlock.dispatch_subclass(outDict)
     
     

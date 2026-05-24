@@ -13,16 +13,13 @@ class Treatment(SingleBlock):
     dispatch = {}
 
     @classmethod
-    def subclass(cls, blockDict):
+    def dispatch_subclass(cls, blockDict):
         from .blocks import _unwrap_block
         blockDict = _unwrap_block(blockDict)
         t = blockDict.get("type", None)
         subclass = cls.dispatch.get(t,cls)
-        return subclass(blockDict)
-
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
-    
+        return subclass(blockDict, _dispatched=True)
+ 
     @_calc_routine
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
@@ -30,13 +27,9 @@ class Treatment(SingleBlock):
 
 class Annealing(Treatment):
     dispatch = {}
-    def __init__(self, blockDict):
-        super().__init__(blockDict)
+    def __init__(self, blockDict, _dispatched=False):
+        super().__init__(blockDict, _dispatched=_dispatched)
         self.build_profile()
-
-    @classmethod
-    def subclass(cls, blockDict):
-        return cls(blockDict)
     
     def build_profile(self, **kwargs):
         from cif2xrd.furnace import Profile #type: ignore
@@ -71,12 +64,12 @@ class AnnealSection(SingleBlock):
     dispatch = {}
 
     @classmethod
-    def subclass(cls, blockDict):
+    def dispatch_subclass(cls, blockDict):
         from .blocks import _unwrap_block
         blockDict = _unwrap_block(blockDict)
         t = blockDict.get("type",None)
         subclass = cls.dispatch.get(t,cls)
-        return subclass(blockDict)
+        return subclass(blockDict,_dispatched=True)
     
 class Ramp(AnnealSection):
     dispatch = {}
