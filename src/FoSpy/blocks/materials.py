@@ -1,16 +1,11 @@
-from .blocks import (
-    SingleBlock, ListBlock, 
-    calc_routine, attach_doc,
-    inherit_class_doc,
-    inherit_docstring
-)  
+from .blocks import SingleBlock, ListBlock
+from ._blockUtils import _calc_routine
 from .template import TemplateBlock, TemplateList
 
 
 from .._debug import Debug
 _debug = Debug()
 
-@inherit_class_doc(SingleBlock)
 class Material(SingleBlock):
     """
     Represents a material used in a synthesis
@@ -18,7 +13,7 @@ class Material(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
 
-    @calc_routine()
+    @_calc_routine()
     def add_MW(self):
         """
         Attach a comment to the formula with molecular weight.
@@ -27,7 +22,6 @@ class Material(SingleBlock):
         mw = self.formula.formula_weight
         self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")
 
-@inherit_class_doc(Material)
 class MaterialTemplate(Material, TemplateBlock):
     """
     Represents a material used frequently and attached to multiple syntheses.
@@ -36,7 +30,6 @@ class MaterialTemplate(Material, TemplateBlock):
         super().__init__(blockDict)
         self.ratio = 0
 
-@inherit_class_doc(ListBlock)
 class MaterialList(ListBlock):
     """
     Represents a list of materials used in a synthesis
@@ -74,8 +67,8 @@ class MaterialList(ListBlock):
         return percents
     
     
-    @attach_doc(Material.add_MW)
-    @calc_routine(attach=False)
+     
+    @_calc_routine(attach=False)
     def add_all_MW(self):
         """
         Attach a molecular weight comment to all materials
@@ -83,7 +76,7 @@ class MaterialList(ListBlock):
         for mat in self._objs:
             mat.add_MW()
 
-    @calc_routine()
+    @_calc_routine()
     def add_weight_pcts(self, typ=None):
         """
         Calculate weight percents and attach them as comments to each material's ratio.
@@ -101,7 +94,6 @@ class MaterialList(ListBlock):
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("ratio",comment, f"{label}_pct")
 
-@inherit_class_doc(MaterialList)
 class MatTempList(MaterialList, TemplateList):
     """
     Represents a list of materials frequently used and attached to multiple syntheses.

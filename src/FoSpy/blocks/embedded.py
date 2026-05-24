@@ -1,10 +1,8 @@
-from .blocks import SingleBlock, ListBlock
-from .. import inherit_class_doc, inherit_docstring
+from .blocks import SingleBlock
 
 from .._debug import Debug
 _debug = Debug()
 
-@inherit_class_doc(SingleBlock)
 class EmbeddedFile(SingleBlock):
     """
     Represents an non-FOS file embedded as a block in a FOS file.
@@ -18,7 +16,7 @@ class EmbeddedFile(SingleBlock):
             for line in self.embedded:
                 f.write(line.rstrip("\r\n") + "\n")
 
-    @inherit_docstring(SingleBlock)
+     
     def serialize(self,keepListType=False):
         """
         Performs the default `SingleBlock` serialization, but restores the
@@ -28,8 +26,6 @@ class EmbeddedFile(SingleBlock):
         serial["embedded"] = self.embedded.copy()
         return serial
 
-
-@inherit_class_doc(EmbeddedFile)
 class EmbeddedCIF(EmbeddedFile):
     """
     Represents a CIF file embedded as a block in a FOS file.
@@ -54,8 +50,3 @@ class EmbeddedCIF(EmbeddedFile):
             return self._subprocess(_quick_pattern,args=(two_theta, intensity))
         
         return _quick_pattern(two_theta, intensity)
-
-
-
-
-
