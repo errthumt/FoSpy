@@ -56,16 +56,6 @@ program: [
     -type: <!TEMPLATE-FIELD>
 ]
 
-[[Anneal_sections]]
-template_name: Any ramp
-type: ramp
--temp: <!TEMPLATE-FIELD>
--time: <!TEMPLATE-FIELD>
-
-template_name: Any dwell
-type: dwell
--time: <!TEMPLATE-FIELD>
-
 [[Cifs]]
 file_name: Ba2Zn5Sb6_ICSD
 extension: .cif
@@ -13985,4 +13975,14 @@ _shelx_hkl_checksum   24951
 
 
 #################### END FOS EMBED }}}
+
+[[Anneal_sections]]
+template_name: Any ramp
+type: ramp
+-temp: <!TEMPLATE-FIELD>
+-time: <!TEMPLATE-FIELD>
+
+template_name: Any dwell
+type: dwell
+-time: <!TEMPLATE-FIELD>
 

@@ -125,6 +125,9 @@ required_keys = {
 }
 
 optional_keys = {
+    SingleBlock: {
+        "rename": validators.metadata.rename_dict
+    },
     Synthesis: {
         "cif": EmbeddedCIF,
         "cifs": ListBlock.Simple(EmbeddedCIF)
