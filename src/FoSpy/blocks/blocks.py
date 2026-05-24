@@ -1,6 +1,5 @@
 import os
 
-from .. import inherit_docstring, inherit_class_doc, attach_doc
 from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
@@ -11,6 +10,8 @@ from ..parsing import (
     write_dict_to_file
 )
 
+from ._blockUtils import _unwrap_block
+
 import tempfile
 import atexit
 from pathlib import Path
@@ -19,14 +20,7 @@ from pathlib import Path
 from .._debug import Debug
 _debug = Debug()
 
-def unwrap_block(struct):
-    while isinstance(struct,list) and len(struct) == 1:
-        struct = struct[0]
 
-    if isinstance(struct,SingleBlock):
-        struct = struct.serialize(keepListType=True)
-        struct = unwrap_block(struct)
-    return struct
 
 class SimpleWrapper:
     def __init__(self, value):
@@ -94,7 +88,6 @@ class Block:
         p = Process(target=target, args=args, kwargs=kwargs)
         p.start()
         
-
 class SubContainer:
     """
     A simple container for storing hidden or unexpected attributes of a
@@ -118,25 +111,7 @@ class SubContainer:
         pass
     def __iter__(self):
         return iter(self.__dict__)
-    
-def calc_routine(attach=True):
-    """
-    Decorator for `SingleBlock` or `ListBlock` methods that calculate values
-    from existing attributes.
-
-    `calc_routine` functions can be called at any time, but can also be queued
-    to run at serialization, as in refreshing relevant calculated values before
-    saving the file. See `SingleBlock.add_calc_routine()`
-    """
-    def decorator(func):
-        func._is_calc_routine = True
-        func.__doc__ = (func.__doc__ or "") + "\nThis function is decorated as a calc_routine"
-        if attach:
-            func = attach_doc(SingleBlock.add_calc_routine, label="Related")(func)
-        return func
-    return decorator
-    
-
+       
 class SingleBlock(Block):
     """
     Represents a single block of key:value pairs parsed from a FOS file.
@@ -318,7 +293,7 @@ class SingleBlock(Block):
     def Template_from_dict(cls, blockDict):
         from ..parsing.format import format_field
         template_keys = []
-        blockDict = unwrap_block(blockDict)
+        blockDict = _unwrap_block(blockDict)
         temp_dict = blockDict.copy()
         for key in cls.build_req_validators():
             if key != 'ext' and key not in temp_dict:
@@ -377,7 +352,7 @@ class SingleBlock(Block):
         self._reserved = ['ext']
 
         from copy import deepcopy
-        blockDict = unwrap_block(blockDict)
+        blockDict = _unwrap_block(blockDict)
         self._sourceDict = blockDict.copy()
 
         if not isinstance(blockDict, dict):
@@ -388,7 +363,7 @@ class SingleBlock(Block):
 
         rename = blockDict.pop("rename",None)
         if rename:
-            setattr(self, "rename", unwrap_block(rename))
+            setattr(self, "rename", _unwrap_block(rename))
 
         req = self._rename_validators(required=True)
         req.pop("ext",None)
@@ -467,7 +442,7 @@ class SingleBlock(Block):
             bound = method.__get__(attr_obj, type(attr_obj))
             setattr(attr_obj, mthd_name, bound)
         
-    @inherit_docstring(object)
+     
     def __setattr__(self, name:str, value):
         """
         Assign an attribute with validation and controlled namespace behavior.
@@ -1052,11 +1027,6 @@ class SingleBlock(Block):
             if hasattr(val, "clear_all_comments"):
                 val.clear_all_comments()
 
-
-
-
-
-@inherit_class_doc(SingleBlock)
 class FileBlock(SingleBlock):
     """
     Represents a set of blocks loaded from a file.
@@ -1071,7 +1041,7 @@ class FileBlock(SingleBlock):
     TemplateSet(FileBlock)
     ```
     """
-    @inherit_docstring(SingleBlock)
+     
     def __init__(self, blockDict, _sourceFile=None):
         """
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
@@ -1134,10 +1104,6 @@ class FileBlock(SingleBlock):
 
         return self.__eq__(reloaded, suppress_routine_paths=True)
     
-        
-
-
-
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
@@ -1326,7 +1292,7 @@ class ListBlock(Block):
                 break
         return [obj.serialize(keepListType=True if len(self)>1 else False) for obj in self]
     
-    @inherit_docstring(SingleBlock, label="Related")
+     
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
         """
         Lists all methods decorated as calc routines.

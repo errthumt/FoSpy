@@ -19,6 +19,3 @@ class Synthesis(FileBlock):
         # placeholder. modify for insertion at idx
         self.treatments.append(treat)
     
-
-
-        

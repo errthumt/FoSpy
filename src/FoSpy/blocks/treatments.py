@@ -1,7 +1,7 @@
 from .blocks import (
-    SingleBlock, ListBlock, calc_routine
+    SingleBlock, ListBlock
 )
-
+from ._blockUtils import _calc_routine
 from .template import TemplateBlock, TemplateList
 
 from .._debug import Debug
@@ -14,8 +14,8 @@ class Treatment(SingleBlock):
 
     @classmethod
     def subclass(cls, blockDict):
-        from .blocks import unwrap_block
-        blockDict = unwrap_block(blockDict)
+        from .blocks import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
         t = blockDict.get("type", None)
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
@@ -23,11 +23,10 @@ class Treatment(SingleBlock):
     def __init__(self, blockDict):
         super().__init__(blockDict)
     
-    @calc_routine
+    @_calc_routine
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
-
 
 class Annealing(Treatment):
     dispatch = {}
@@ -66,10 +65,6 @@ class Annealing(Treatment):
     def interactive_plot(self, **kwargs):
         self.update_profile(**kwargs)
         return self._profile.interactive()
-
-
-
-
 Treatment.dispatch["anneal"] = Annealing
 
 class AnnealSection(SingleBlock):
@@ -77,8 +72,8 @@ class AnnealSection(SingleBlock):
 
     @classmethod
     def subclass(cls, blockDict):
-        from .blocks import unwrap_block
-        blockDict = unwrap_block(blockDict)
+        from .blocks import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
         t = blockDict.get("type",None)
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict)
@@ -101,4 +96,3 @@ class AnnealProgram(ListBlock):
         super().append(obj)
         if hasattr(self, "_parent_block") and self._parent_block is not None:
             self._parent_block.build_profile()
-

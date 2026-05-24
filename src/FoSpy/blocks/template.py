@@ -1,4 +1,4 @@
-from .blocks import FileBlock, ListBlock, SingleBlock, inherit_class_doc, inherit_docstring
+from .blocks import FileBlock, ListBlock, SingleBlock
 
 from .._debug import Debug
 _debug = Debug()
@@ -10,7 +10,6 @@ class TemplateField:
         from ..parsing.format import format_field
         return format_field("template")
 
-@inherit_class_doc(FileBlock)
 class TemplateSet(FileBlock):
     """
     Represents a set of templates loaded from a FOS file.
@@ -23,8 +22,6 @@ class TemplateSet(FileBlock):
         self._aliases = TemplateLists
         super().__init__(blockDict, _sourceFile)
 
-
-@inherit_class_doc(ListBlock)
 class TemplateList(ListBlock):
     """
     Represents a list of templates with the same subclass.
@@ -49,9 +46,7 @@ class TemplateList(ListBlock):
         if len(serial) == 0:
             serial = [self._reqCls.reflex()]
         return serial
-    
-      
-
+         
 class TemplateBlock(SingleBlock):
     def __init__(self, blockDict):
         self._full_class = None
@@ -94,51 +89,14 @@ class TemplateBlock(SingleBlock):
 
         return out
 
-def _template_found(val):
-    if val == TemplateField().serialize():
-        return True
-    
-    if isinstance(val, list):
-        for d in val:
-            if _template_found(d):
-                return True
-        return False
-    
-    if isinstance(val, dict):
-        for key, v in val.items():
-            if key != "template_name" and _template_found(v):
-                return True
-        return False
-    
-    return False
-
-def _is_full_template(val):
-    if val == TemplateField().serialize():
-        return True
-    
-    if isinstance(val, list):
-        if len(val) != 1:
-            return False
-        if type(val[0]) is not dict:
-            return False
-        return _is_full_template(val[0])
-    
-    if isinstance(val, dict):
-        for key, v in val.items():
-            if key != "template_name" and not (key.startswith("_") or _is_full_template(v)):
-                return False
-        return True
-
-            
-
 class FlexTemplate(TemplateBlock):
     _baseReq = None #injected by TemplateList.Simple.Flex
     @classmethod
     def subclass(cls, blockDict):
         from ..parsing.format import format_field
-        from .blocks import unwrap_block
+        from ._blockUtils import _unwrap_block, _template_found, _is_full_template
         template_keys = []
-        blockDict = unwrap_block(blockDict)
+        blockDict = _unwrap_block(blockDict)
         temp_dict = blockDict.copy()
         required = cls.build_req_validators()
         all_validators = cls.build_validators()
@@ -156,7 +114,7 @@ class FlexTemplate(TemplateBlock):
                     if not isinstance(validator, type):
                         raise catch
                     if issubclass(validator, SingleBlock):
-                        temp_dict[key] = validator.reflex(**unwrap_block(val))
+                        temp_dict[key] = validator.reflex(**_unwrap_block(val))
                     elif issubclass(validator, ListBlock):
                         temp_dict[key] = TemplateList.Simple(validator._reqCls)(val)
                     else:
