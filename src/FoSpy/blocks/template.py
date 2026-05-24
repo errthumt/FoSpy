@@ -17,10 +17,10 @@ class TemplateSet(FileBlock):
     FOS files may contain multiple different types of templates grouped into
     `TemplateList`s. Each of these lists is one attribute of a `TemplateSet`.
     """
-    def __init__(self, blockDict, _sourceFile=None):
+    def __init__(self, blockDict, _sourceFile=None, _dispatched=False):
         from ..parsing.validation import TemplateLists
         self._aliases = TemplateLists
-        super().__init__(blockDict, _sourceFile)
+        super().__init__(blockDict, _sourceFile=_sourceFile, _dispatched=_dispatched)
 
 class TemplateList(ListBlock):
     """
@@ -48,9 +48,9 @@ class TemplateList(ListBlock):
         return serial
          
 class TemplateBlock(SingleBlock):
-    def __init__(self, blockDict):
+    def __init__(self, blockDict, _dispatched=False):
         self._full_class = None
-        super().__init__(blockDict)
+        super().__init__(blockDict, _dispatched=_dispatched)
 
     def fill(self,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
@@ -62,7 +62,7 @@ class TemplateBlock(SingleBlock):
         for kw, arg in kwargs.items():
             serial[kw] = arg
 
-        return self._full_class(serial)
+        return self._full_class.dispatch_subclass(serial)
     
     def serialize(self,keepListType=False, shallow=False):
         from ..parsing.validation import required_keys
@@ -92,8 +92,7 @@ class TemplateBlock(SingleBlock):
 class FlexTemplate(TemplateBlock):
     _baseReq = None #injected by TemplateList.Simple.Flex
     @classmethod
-    def subclass(cls, blockDict):
-        from ..parsing.format import format_field
+    def dispatch_subclass(cls, blockDict):
         from ._blockUtils import _unwrap_block, _template_found, _is_full_template
         template_keys = []
         blockDict = _unwrap_block(blockDict)
@@ -121,7 +120,7 @@ class FlexTemplate(TemplateBlock):
                         raise catch
                     
         pass
-        return cls._baseReq.TemplateClass(*template_keys).subclass(temp_dict)
+        return cls._baseReq.TemplateClass(*template_keys).dispatch_subclass(temp_dict)
     
     @classmethod
     def reflex(cls):

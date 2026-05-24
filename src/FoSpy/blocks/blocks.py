@@ -23,6 +23,12 @@ _debug = Debug()
 
 
 class SimpleWrapper:
+    """
+    Wrapper for attaching methods and attributes to simple data types that don't
+    support it. Most method or attribute calls are passed through to the wrapped
+    value, but some methods or private attributes are attached when setting a
+    `SimpleWrapper` as attribute for a `SingleBlock` or `ListBlock`.
+    """
     def __init__(self, value):
         self._value = value
 
@@ -51,6 +57,9 @@ class SimpleWrapper:
         return self._value.__setitem__(key, val)
 
 class Block:
+    """
+    The base class for any set of data found in a FOS file.
+    """
     def find_fileblock(self):
         blk = self
         while blk is not None:
@@ -95,7 +104,7 @@ class SubContainer:
     
     Values are only assigned directly to `SingleBlock` attributes if they are an
     expected property. Otherwise they are assigned to a `SubContainer` at
-    `SingleBlock.ext`. Also assigned to `SingleBlock._meta`.
+    `SingleBlock.ext`. Also used for `SingleBlock._meta`.
 
     Example Usage:
     ```
@@ -154,15 +163,74 @@ class SingleBlock(Block):
     """
     dispatch = {}
     _aliases = None
+   
     @classmethod
-    def subclass(cls, blockDict:dict):
+    def TemplateClass(cls,*args:str):
+        from .template import TemplateBlock, TemplateField, TemplateList
+        from ..parsing.validation import required_keys, optional_keys
+        class SubTemplate(TemplateBlock, cls):
+            dispatch = {}
+            def __init__(self, blockDict, _dispatched=False):
+                super().__init__(blockDict, _dispatched=_dispatched)
+                self._full_class = cls
+
+        required_keys[SubTemplate] = {}
+        optional_keys[SubTemplate] = {}
+        required_validators = cls.build_req_validators()
+        all_validators = cls.build_validators()
+        for key in args:
+            req_val = required_validators.get(key,None)
+            val = all_validators.get(key,None) or req_val
+
+            if isinstance(val,type) and issubclass(val,SingleBlock):
+                all_fields = list(val.build_req_validators().keys())
+                field = val.TemplateClass(*all_fields)
+
+            elif isinstance(val,type) and issubclass(val, ListBlock):
+                field = TemplateList.Simple(val._reqCls)
+            else:
+                field = TemplateField
+
+            if req_val:
+                required_keys[SubTemplate][key] = field
+            else:
+                optional_keys[SubTemplate][key] = field
+
+        finished_reqs = required_keys[SubTemplate]
+        finished_opts = optional_keys[SubTemplate]
+        for typ, sub in cls.dispatch.items():
+            dispatched_sub = sub.TemplateClass(*args)
+            SubTemplate.dispatch[typ] = dispatched_sub
+
+            required_keys[dispatched_sub] = finished_reqs
+            optional_keys[dispatched_sub] = finished_opts
+
+        SubTemplate.__name__ = f"{cls.__name__}Template"
+        SubTemplate.__qualname__ = f"{cls.__name__}.Template"
+        SubTemplate.__module__ = cls.__module__
+
+        return SubTemplate
+   
+    @classmethod
+    def reflex(cls, **kwargs):
+        from .template import FlexTemplate
+        class Flex(FlexTemplate, cls):
+            _baseReq = cls
+        
+        kwargs.setdefault("template_name", f"Empty {cls.__name__}")
+
+        empty = Flex.dispatch_subclass(kwargs)
+        return empty.serialize()
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict:dict, **kwargs):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
         Overridden in some subclasses
         """
         # k: construct normally.
-        return cls(blockDict)
+        return cls(blockDict,_dispatched=True, **kwargs)
     
     @classmethod
     def build_req_validators(cls):
@@ -228,96 +296,13 @@ class SingleBlock(Block):
 
         return merged
     
-    @classmethod
-    def TemplateClass(cls,*args:str):
-        from .template import TemplateBlock, TemplateField, TemplateList
-        from ..parsing.validation import required_keys, optional_keys
-        class SubTemplate(TemplateBlock, cls):
-            dispatch = {}
-            def __init__(self, blockDict):
-                super().__init__(blockDict)
-                self._full_class = cls
-
-        required_keys[SubTemplate] = {}
-        optional_keys[SubTemplate] = {}
-        required_validators = cls.build_req_validators()
-        all_validators = cls.build_validators()
-        for key in args:
-            req_val = required_validators.get(key,None)
-            val = all_validators.get(key,None) or req_val
-
-            if isinstance(val,type) and issubclass(val,SingleBlock):
-                all_fields = list(val.build_req_validators().keys())
-                field = val.TemplateClass(*all_fields)
-
-            elif isinstance(val,type) and issubclass(val, ListBlock):
-                field = TemplateList.Simple(val._reqCls)
-            else:
-                field = TemplateField
-
-            if req_val:
-                required_keys[SubTemplate][key] = field
-            else:
-                optional_keys[SubTemplate][key] = field
-
-        finished_reqs = required_keys[SubTemplate]
-        finished_opts = optional_keys[SubTemplate]
-        for typ, sub in cls.dispatch.items():
-            dispatched_sub = sub.TemplateClass(*args)
-            SubTemplate.dispatch[typ] = dispatched_sub
-
-            required_keys[dispatched_sub] = finished_reqs
-            optional_keys[dispatched_sub] = finished_opts
-
-        SubTemplate.__name__ = f"{cls.__name__}Template"
-        SubTemplate.__qualname__ = f"{cls.__name__}.Template"
-        SubTemplate.__module__ = cls.__module__
-
-        return SubTemplate
+    def _get_validators(self):
+        return self._rename_validators(self.build_validators())
     
-    def make_template(self,template_name,*args:str):
-        from ..parsing import format_field
+    def _get_req_validators(self):
+        return self._rename_validators(self.build_req_validators())
 
-        serial = self.serialize(keepListType=True)
-        validators = self._rename_validators()
-        for key in args:
-            val = validators.get(key, None)
-            if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
-                serial[key] = []
-            else:
-                serial[key] = format_field("template")
-        serial["template_name"] = template_name
-        return type(self).TemplateClass(*args)(serial)
-
-    @classmethod
-    def Template_from_dict(cls, blockDict):
-        from ..parsing.format import format_field
-        template_keys = []
-        blockDict = _unwrap_block(blockDict)
-        temp_dict = blockDict.copy()
-        for key in cls.build_req_validators():
-            if key != 'ext' and key not in temp_dict:
-                template_keys.append(key)
-        for key, val in blockDict.items():
-            if val == format_field("template"):
-                if key not in template_keys:
-                    template_keys.append(key)
-                temp_dict.pop(key, None)
-        pass
-        return cls.TemplateClass(*template_keys)
-        
-    @classmethod
-    def reflex(cls, **kwargs):
-        from .template import FlexTemplate
-        class Flex(FlexTemplate, cls):
-            _baseReq = cls
-        
-        kwargs.setdefault("template_name", f"Empty {cls.__name__}")
-
-        empty = Flex.subclass(kwargs)
-        return empty.serialize()
-
-    def __init__(self, blockDict:dict):
+    def __init__(self, blockDict:dict, _dispatched=False):
         """Constructs a SingleBlock object from a dictionary
 
         SingleBlocks are constructed recursively from an arbitrarily nested
@@ -345,6 +330,11 @@ class SingleBlock(Block):
 
         """
 
+        if not _dispatched:
+            from warnings import warn
+            warn(f"You should avoid directly constructing a {type(self).__name__} object. Use the dispatch_subclass() "
+                 "method instead to allow for subclass delegation when constructing.", stacklevel=2)
+
         from ..parsing.validation import aliases as als
         new_als = als.copy()
         new_als.update(self._aliases or {})
@@ -365,7 +355,7 @@ class SingleBlock(Block):
         if rename:
             setattr(self, "rename", _unwrap_block(rename))
 
-        req = self._rename_validators(required=True)
+        req = self._get_req_validators()
         req.pop("ext",None)
         for key, validator in req.items():
             if key not in blockDict:
@@ -399,9 +389,142 @@ class SingleBlock(Block):
         for key, val in blockDict.items():
             self._key_order.append(key)
             setattr(self, key, val)
+     
+    def __setattr__(self, name:str, value):
+        """
+        Assign an attribute with validation and controlled namespace behavior.
+
+        Contract:
+            `SingleBlock` enforces type correctness and validator execution for
+            all public attributes defined by its subclass.
+
+            Required types and validators are mapped by subclass in
+            `FoSpy.parsing.validation`
+
+        Rules:
+            1. Private attributes (`_`-prefixed) bypass validation.
+            2. Attributes with registered validators are processed through the
+            validator before assignment.
+            3. Attributes with required types are coerced by calling the type
+            constructor when necessary.
+                3a. If required type is a SingleBlock subclass and value is
+                wrapped as a list, list is unwrapped to the first entry
+            4. Unrecognized attribute names are redirected to `self.ext`.
+
+        Raises:
+            ValueError:
+                Required `SingleBlock`s can be coerced from a dict or a list with
+                a single dict entry. Error raised if a list of length > 1 is
+                passed for a `SingleBlock` attribute.
+        """
+        from ..parsing.format import format_field
+        from .template import TemplateField, TemplateBlock
+
+        from inspect import signature as sign
+
+        if name.startswith("_") or name in self._reserved:
+            return super().__setattr__(name, value)
+        
+        validators = self._get_validators()
+        
+        if "$" in name:
+            try:
+                name, alias = name.split("$")
+            except:
+                raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
+            
+            try:
+                val = self._aliases[alias]
+            except KeyError:
+                raise ValueError(f"Unrecognized block alias: '{alias}'")
+            
+            if name in validators and val != validators[name]:
+                raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
+                                 f"it cannot be overwritten to '{val.__name__}'.")
+            if name not in validators:
+                from ..parsing.validation import optional_keys
+                validators[name] = val
+                self._key_overrides[name] = val
+                optional_keys.setdefault(type(self),{})
+                optional_keys[type(self)][name] = val
+
+        if name in validators:
+            validator = validators[name]
+            val_kwargs = {}
+            for kw, arg in (("sourceDict", self._sourceDict),("cls", type(self))):
+                try:
+                    if kw in sign(validator).parameters:
+                        val_kwargs[kw] = arg
+                except:
+                    pass
+                
+
+            if isinstance(validator, type):
+                if issubclass(validator, SingleBlock):
+                    if not isinstance(value, validator):
+                        validator = validator.dispatch_subclass
+                        if isinstance(value, list):
+                            if len(value) > 1:
+                                raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
+                            value = value[0]
+                        elif isinstance(value,SingleBlock):
+                            value = value.serialize(keepListType=True)
+
+                elif issubclass(validator, ListBlock):
+                    try: 
+                        value = [block.serialize(keepListType=True) for block in value]
+                    except Exception as e:
+                        if isinstance(value, ListBlock):
+                            value = value.serialize()
+                elif value == format_field("template") and not issubclass(validator, TemplateField):
+                    if isinstance(self,TemplateBlock):
+                        validator = TemplateField
+                    else:       
+                        raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
+                if isinstance(validator, type) and isinstance(value, validator):
+                    return self._assign_and_inject_comments(name, value)
+
+
+
+
+            return self._assign_and_inject_comments(name,
+                                                    validator(value,**val_kwargs)
+                                                    if val_kwargs != {}
+                                                    else validator(value))
+        else:
+            return self._assign_and_inject_comments(name, value, extended=True)
+
+    def __getattr__(self, name:str):
+        """
+        Check both self and self.ext for attribute before returning.
+        """
+        try:
+            if name != 'ext':
+                return getattr(self.ext, name)
+            raise AttributeError()
+        except AttributeError:
+            raise AttributeError(
+                f"{type(self).__name__} object "
+                f"has no attribute {name!r}."
+            )
+
+    def __eq__(self, other, suppress_routine_paths=False):
+        from .._debug import deep_diff as dd, _debug as db
+        try:
+            db.msg("Serializing Blocks to check equality:", module = "SingleBlock.__eq__()")
+            diffs = dd(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths)
+            passed = len(diffs) == 0
+            if not passed:
+                db.pmsg(diffs,module = "SingleBlock.__eq__()")
+            return passed
+        except Exception as e:
+            db.msg(f"Equality failed by exception: {e}",module = "SingleBlock.__eq__()")
+            return False
+        
+    def __hash__(self):
+        return id(self)
     
-    def _rename_validators(self, required=False):
-        validators = self.build_req_validators() if required else self.build_validators()
+    def _rename_validators(self, validators:dict):
         if hasattr(self, "rename"):
             for name, rename in self.rename.serialize(shallow=True).items():
                 if name in validators and rename not in validators:
@@ -442,115 +565,13 @@ class SingleBlock(Block):
             bound = method.__get__(attr_obj, type(attr_obj))
             setattr(attr_obj, mthd_name, bound)
         
-     
-    def __setattr__(self, name:str, value):
-        """
-        Assign an attribute with validation and controlled namespace behavior.
-
-        Contract:
-            `SingleBlock` enforces type correctness and validator execution for
-            all public attributes defined by its subclass.
-
-            Required types and validators are mapped by subclass in
-            `FoSpy.parsing.validation`
-
-        Rules:
-            1. Private attributes (`_`-prefixed) bypass validation.
-            2. Attributes with registered validators are processed through the
-            validator before assignment.
-            3. Attributes with required types are coerced by calling the type
-            constructor when necessary.
-                3a. If required type is a SingleBlock subclass and value is
-                wrapped as a list, list is unwrapped to the first entry
-            4. Unrecognized attribute names are redirected to `self.ext`.
-
-        Raises:
-            ValueError:
-                Required `SingleBlock`s can be coerced from a dict or a list with
-                a single dict entry. Error raised if a list of length > 1 is
-                passed for a `SingleBlock` attribute.
-        """
-        from ..parsing.format import format_field
-        from .template import TemplateField, TemplateBlock
-
-        from inspect import signature as sign
-
-        if name.startswith("_") or name in self._reserved:
-            return super().__setattr__(name, value)
-        
-        validators = self._rename_validators()
-        
-        if "$" in name:
-            try:
-                name, alias = name.split("$")
-            except:
-                raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
-            
-            try:
-                val = self._aliases[alias]
-            except KeyError:
-                raise ValueError(f"Unrecognized block alias: '{alias}'")
-            
-            if name in validators and val != validators[name]:
-                raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
-                                 f"it cannot be overwritten to '{val.__name__}'.")
-            if name not in validators:
-                from ..parsing.validation import optional_keys
-                validators[name] = val
-                self._key_overrides[name] = val
-                optional_keys.setdefault(type(self),{})
-                optional_keys[type(self)][name] = val
-
-        if name in validators:
-            validator = validators[name]
-            val_kwargs = {}
-            for kw, arg in (("sourceDict", self._sourceDict),("cls", type(self))):
-                try:
-                    if kw in sign(validator).parameters:
-                        val_kwargs[kw] = arg
-                except:
-                    pass
-                
-
-            if isinstance(validator, type):
-                if issubclass(validator, SingleBlock):
-                    if isinstance(value, list):
-                        if len(value) > 1:
-                            raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
-                        value = value[0]
-                    elif isinstance(value,SingleBlock):
-                        value = value.serialize(keepListType=True)
-
-                elif issubclass(validator, ListBlock):
-                    try: 
-                        value = [block.serialize(keepListType=True) for block in value]
-                    except Exception as e:
-                        if isinstance(value, ListBlock):
-                            value = value.serialize()
-                elif value == format_field("template") and not issubclass(validator, TemplateField):
-                    if isinstance(self,TemplateBlock):
-                        validator = TemplateField
-                    else:       
-                        raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
-                if isinstance(value, validator):
-                    return self._assign_and_inject_comments(name, value)
-
-
-
-
-            return self._assign_and_inject_comments(name,
-                                                    validator(value,**val_kwargs)
-                                                    if val_kwargs != {}
-                                                    else validator(value))
-        else:
-            return self._assign_and_inject_comments(name, value, extended=True)
     
     def add_comments(self, *comments):
         """
         Default Behavior. If a `SingleBlock` is stored in another `SingleBlock`,
         this method will be overwritten by the parent's `__setattr__`
         """
-        keys = list(self._rename_validators(required=True).keys())
+        keys = list(self._get_req_validators())
 
         keys = [k for k in keys if k != "metadata"]
         fallback = [k for k in self._key_order if k != "metadata"]
@@ -563,41 +584,11 @@ class SingleBlock(Block):
         self._meta.comments.setdefault(first, [])
         for comment in comments:
             self._meta.comments[first].append(comment)
-
-    def __getattr__(self, name:str):
-        """
-        Check both self and self.ext for attribute before returning.
-        """
-        try:
-            if name != 'ext':
-                return getattr(self.ext, name)
-            raise AttributeError()
-        except AttributeError:
-            raise AttributeError(
-                f"{type(self).__name__} object "
-                f"has no attribute {name!r}."
-            )
     
     def add_block(self, block_name, type_alias, value=[]):
         if hasattr(self,block_name):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
-
-    def __eq__(self, other, suppress_routine_paths=False):
-        from .._debug import deep_diff as dd, _debug as db
-        try:
-            db.msg("Serializing Blocks to check equality:", module = "SingleBlock.__eq__()")
-            diffs = dd(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths)
-            passed = len(diffs) == 0
-            if not passed:
-                db.pmsg(diffs,module = "SingleBlock.__eq__()")
-            return passed
-        except Exception as e:
-            db.msg(f"Equality failed by exception: {e}",module = "SingleBlock.__eq__()")
-            return False
-        
-    def __hash__(self):
-        return id(self)
         
     def serialize(self, keepListType=False, shallow=False):
         """
@@ -726,7 +717,19 @@ class SingleBlock(Block):
         self._calc_comments[key] = calc_comments
         self._calc_comments[key][calc_id]=comment
 
+    def make_template(self,template_name,*args:str):
+        from ..parsing import format_field
 
+        serial = self.serialize(keepListType=True)
+        validators = self._get_validators()
+        for key in args:
+            val = validators.get(key, None)
+            if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
+                serial[key] = []
+            else:
+                serial[key] = format_field("template")
+        serial["template_name"] = template_name
+        return type(self).TemplateClass(*args).dispatch_subclass(serial)
 
     def _resolve_relative_path(self, path: str):
         """
@@ -888,7 +891,7 @@ class SingleBlock(Block):
         c_cmts = self._calc_comments.copy()
         self._calc_comments = {}
 
-        new_obj =  cls.subclass(self.serialize(keepListType=True))
+        new_obj =  cls.dispatch_subclass(self.serialize(keepListType=True))
         self._calc_comments = c_cmts
 
         return new_obj
@@ -919,7 +922,7 @@ class SingleBlock(Block):
 
     def default_key_order(self):
         new_order = []
-        for key in self._rename_validators():
+        for key in self._get_validators():
             if key != "ext" and key in self.serialize(shallow=True):
                 new_order.append(key)
         for key in self._key_order:
@@ -956,8 +959,8 @@ class SingleBlock(Block):
         self._meta.comments = {}
         
     def rename_block(self, old, new):
-        validators = self._rename_validators()
-        req = self._rename_validators(required=True)
+        validators = self._get_validators()
+        req = self._get_req_validators()
         if True in [name.startswith("_") for name in (old, new)]:
             raise ValueError(f"You cannot set private attributes (starting with '_') using obj.rename_block()")
         
@@ -1015,7 +1018,7 @@ class SingleBlock(Block):
         '''
 
     def __delattr__(self, attr):
-        if attr in self._rename_validators(required=True):
+        if attr in self._get_req_validators():
             raise AttributeError(f"Cannot delete property: '{attr}'. It is registered as a required property for this object.")
         return super().__delattr__(attr)
     
@@ -1042,7 +1045,7 @@ class FileBlock(SingleBlock):
     ```
     """
      
-    def __init__(self, blockDict, _sourceFile=None):
+    def __init__(self, blockDict, _sourceFile=None, _dispatched=False):
         """
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
         """
@@ -1052,7 +1055,7 @@ class FileBlock(SingleBlock):
         self._temppath = Path(self._tempdir.name)
         atexit.register(self.cleanup)
 
-        super().__init__(blockDict)
+        super().__init__(blockDict, _dispatched=_dispatched)
     
     def cleanup(self):
         if self._tempdir is not None:
@@ -1062,7 +1065,7 @@ class FileBlock(SingleBlock):
     def fromFile(cls, filepath):
         abspath = os.path.abspath(filepath)
         blockDict = dict_from_file(abspath)
-        return cls(blockDict, _sourceFile = abspath)
+        return cls.dispatch_subclass(blockDict, _sourceFile = abspath) 
     
     def save(self, filepath:str=None):
         """
@@ -1144,7 +1147,7 @@ class ListBlock(Block):
         """
         self._objs = []
         for blockDict in blockList:
-            obj = self._reqCls.subclass(blockDict)
+            obj = self._reqCls.dispatch_subclass(blockDict)
             obj._parent_block = self
             self._objs.append(obj)
     
@@ -1216,7 +1219,7 @@ class ListBlock(Block):
                 for obj in value:
                     if not isinstance(obj, typ):
                         try:
-                            obj=typ.subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
+                            obj=typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
                     obj._parent_block = self
@@ -1232,6 +1235,7 @@ class ListBlock(Block):
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
+
     def append(self, obj:SingleBlock):
         """
         Append a `SingleBlock` object of the correct class to `self._objs` and revalidate.
