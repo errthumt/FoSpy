@@ -9,6 +9,7 @@ from .format import *
 
 def block_list_to_lines(blocklist:list, indent=0):
     lines = []
+
     if len(blocklist)==0:
         return [""]
     else:
@@ -18,8 +19,8 @@ def block_list_to_lines(blocklist:list, indent=0):
     for meta_key in mk.values():
         if meta_key in loop_keys:
             loop_keys.remove(meta_key)
-
-    typ = blocklist[0][mk["list_type"]]
+    typ_key = mk["list_type"]
+    typ = blocklist[0][typ_key] if typ_key in blocklist[0] else "explicit"
     for block in blocklist[1:]:
         new_typ = block[mk["list_type"]]
         if new_typ != typ:
@@ -67,8 +68,8 @@ def block_list_to_lines(blocklist:list, indent=0):
 
 def block_to_lines(block, indent=0, loop_keys=[]):
     block = block.copy()
-    typ = block.pop(mk["list_type"])
-    comments = block.pop(mk["comments"])
+    typ = block.pop(mk["list_type"], "explicit")
+    comments = block.pop(mk["comments"], {})
     key_comments = block.pop(mk["key_comments"], None)
     for remaining_key in mk.values():
         block.pop(remaining_key, None)
@@ -76,7 +77,7 @@ def block_to_lines(block, indent=0, loop_keys=[]):
 
     if typ == "explicit":
         for key, val in block.items():
-            key_comments = comments.get(key)
+            key_comments = comments.get(key, [])
             if key_comments:
                 for comment in key_comments:
                     lines.append(format_comment(comment, indent))

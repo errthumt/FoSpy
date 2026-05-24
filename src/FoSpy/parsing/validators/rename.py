@@ -1,4 +1,5 @@
 def rename_dict(nameDict, cls):
+    from FoSpy.blocks.blocks import SingleBlock
     if not isinstance(nameDict, dict):
         raise TypeError("The rename value must be a dictionary of key:value string pairs.")
     vals = cls.build_validators()
@@ -13,6 +14,6 @@ def rename_dict(nameDict, cls):
         if rename in vals:
             raise ValueError(error, f"'{rename}' is already a registered key.")
         
-    return outDict
+    return SingleBlock(outDict)
     
     

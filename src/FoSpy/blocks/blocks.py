@@ -49,6 +49,12 @@ class SimpleWrapper:
 
     def __getattr__(self, name):
         return getattr(self._value, name)
+    
+    def __getitem__(self, key):
+        return self._value.__getitem__(key)
+    
+    def __setitem__(self, key, val):
+        return self._value.__setitem__(key, val)
 
 class Block:
     def find_fileblock(self):
@@ -422,7 +428,7 @@ class SingleBlock(Block):
     def _rename_validators(self, required=False):
         validators = self.build_req_validators() if required else self.build_validators()
         if hasattr(self, "rename"):
-            for name, rename in self.rename.items():
+            for name, rename in self.rename.serialize(shallow=True).items():
                 if name in validators and rename not in validators:
                     val = validators.pop(name)
                     validators[rename] = val
@@ -665,8 +671,14 @@ class SingleBlock(Block):
 
         def try_serial(obj):
             serialize = getattr(obj, "serialize", None)
+            if isinstance(obj, SimpleWrapper):
+                obj = obj()
             if callable(serialize) and not shallow:
                 return obj.serialize()
+            if isinstance(obj, list):
+                return [try_serial(item) for item in obj]
+            if isinstance(obj, dict):
+                return {k:try_serial(v) for k,v in obj.items()}
             return str(obj)
 
         for attr,val in self.__dict__.items():
@@ -961,7 +973,39 @@ class SingleBlock(Block):
     def rename_block(self, old, new):
         validators = self._rename_validators()
         req = self._rename_validators(required=True)
-        alias = None
+        if True in [name.startswith("_") for name in (old, new)]:
+            raise ValueError(f"You cannot set private attributes (starting with '_') using obj.rename_block()")
+        
+        if old in req and new in validators:
+            raise ValueError(f"You cannot rename '{old}' to '{new}'. '{old}' is a required property that "
+                                f"can only be renamed to an unregistered key; '{new}' is already registered "
+                                "as an expected property.")
+        
+        if hasattr(self, new):
+            raise ValueError(f"'{new}' is already a property for this object, you cannot overwrite it with "
+                             "obj.rename_block()")
+        
+        if "rename" in (old, new):
+            raise ValueError("obj.rename property cannot be set or changed by obj.rename_block()")
+
+        _debug.msg(f"Registering '{old}':'{new}' into rename block")
+        if not hasattr(self,"rename"):
+            self.rename = {}
+        setattr(self.rename, old, new)
+        _debug.msg(f"Moving '{old}' over to '{new}'.")
+        setattr(self,new,getattr(self, old))
+        delattr(self,old)
+            
+        try:
+            idx = self._key_order.index(old)
+            self._key_order[idx] = new
+        except:
+            self._key_order.append(new)
+
+        if old in self._key_overrides:
+            val = self._key_overrides.pop(old)
+            self._key_overrides[new] = val
+        '''
         if new not in validators:
             val = validators[old]
             val_to_alias = {v:k for k,v in self._aliases.items()}
@@ -981,6 +1025,12 @@ class SingleBlock(Block):
         delattr(self, old)
         idx = self._key_order.index(old)
         self._key_order[idx] = new_alias
+        '''
+
+    def __delattr__(self, attr):
+        if attr in self._rename_validators(required=True):
+            raise AttributeError(f"Cannot delete property: '{attr}'. It is registered as a required property for this object.")
+        return super().__delattr__(attr)
 
 
 
