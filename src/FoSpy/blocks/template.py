@@ -69,12 +69,12 @@ class TemplateBlock(SingleBlock):
 
         return self._full_class(serial)
     
-    def serialize(self,keepListType=False):
+    def serialize(self,keepListType=False, shallow=False):
         from ..parsing.validation import required_keys
         from ..parsing.format import format_field
         required = self._full_class.build_req_validators()
         required.pop('ext',None)
-        serial = super().serialize(keepListType)
+        serial = super().serialize(keepListType=keepListType, shallow=shallow)
 
         out = {"template_name":serial.pop("template_name","")}
         for key,validator in required.items():

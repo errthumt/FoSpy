@@ -32,6 +32,9 @@ class SimpleWrapper:
     def __init__(self, value):
         self._value = value
 
+    def __iter__(self):
+        return self._value.__iter__()
+    
     def __str__(self):
         return str(self._value)
 
@@ -75,6 +78,15 @@ class Block:
                                  "Use obj.find_tempdir() instead")
         raise AttributeError("Could not find a temporary directory object or path "
                              "attached to this object's FileBlock.")
+
+    def _subprocess(self, target, args=(), **kwargs):
+        from multiprocessing import Process
+
+        if kwargs is None:
+            kwargs={}
+
+        p = Process(target=target, args=args, kwargs=kwargs)
+        p.start()
         
 
 class SubContainer:
@@ -232,6 +244,7 @@ class SingleBlock(Block):
                         merged.pop(key, None)
                     else:
                         merged[key] = validator
+
         return merged
     
     @classmethod
@@ -285,7 +298,7 @@ class SingleBlock(Block):
         from ..parsing import format_field
 
         serial = self.serialize(keepListType=True)
-        validators = type(self).build_validators()
+        validators = self._rename_validators()
         for key in args:
             val = validators.get(key, None)
             if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
@@ -367,7 +380,11 @@ class SingleBlock(Block):
 
         blockDict = blockDict.copy()
 
-        req = self.build_req_validators()
+        rename = blockDict.pop("rename",None)
+        if rename:
+            setattr(self, "rename", unwrap_block(rename))
+
+        req = self._rename_validators(required=True)
         req.pop("ext",None)
         for key, validator in req.items():
             if key not in blockDict:
@@ -401,6 +418,15 @@ class SingleBlock(Block):
         for key, val in blockDict.items():
             self._key_order.append(key)
             setattr(self, key, val)
+    
+    def _rename_validators(self, required=False):
+        validators = self.build_req_validators() if required else self.build_validators()
+        if hasattr(self, "rename"):
+            for name, rename in self.rename.items():
+                if name in validators and rename not in validators:
+                    val = validators.pop(name)
+                    validators[rename] = val
+        return validators
 
     def _assign_and_inject_comments(self, name, value, extended=False):
         if name == 'ext':
@@ -468,9 +494,10 @@ class SingleBlock(Block):
 
         from inspect import signature as sign
 
-        validators = self.build_validators()
         if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
+        
+        validators = self._rename_validators()
         
         if "$" in name:
             try:
@@ -495,10 +522,13 @@ class SingleBlock(Block):
 
         if name in validators:
             validator = validators[name]
-            try:
-                passingDict = True if "sourceDict" in sign(validator).parameters else False
-            except:
-                passingDict = False
+            val_kwargs = {}
+            for kw, arg in (("sourceDict", self._sourceDict),("cls", type(self))):
+                try:
+                    if kw in sign(validator).parameters:
+                        val_kwargs[kw] = arg
+                except:
+                    pass
                 
 
             if isinstance(validator, type):
@@ -523,10 +553,13 @@ class SingleBlock(Block):
                         raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
                 if isinstance(value, validator):
                     return self._assign_and_inject_comments(name, value)
-                
+
+
+
+
             return self._assign_and_inject_comments(name,
-                                                    validator(value,sourceDict=self._sourceDict)
-                                                    if passingDict
+                                                    validator(value,**val_kwargs)
+                                                    if val_kwargs != {}
                                                     else validator(value))
         else:
             return self._assign_and_inject_comments(name, value, extended=True)
@@ -536,7 +569,7 @@ class SingleBlock(Block):
         Default Behavior. If a `SingleBlock` is stored in another `SingleBlock`,
         this method will be overwritten by the parent's `__setattr__`
         """
-        keys = list(self.build_req_validators().keys())
+        keys = list(self._rename_validators(required=True).keys())
 
         keys = [k for k in keys if k != "metadata"]
         fallback = [k for k in self._key_order if k != "metadata"]
@@ -555,7 +588,9 @@ class SingleBlock(Block):
         Check both self and self.ext for attribute before returning.
         """
         try:
-            return getattr(self.ext, name)
+            if name != 'ext':
+                return getattr(self.ext, name)
+            raise AttributeError()
         except AttributeError:
             raise AttributeError(
                 f"{type(self).__name__} object "
@@ -892,8 +927,8 @@ class SingleBlock(Block):
 
     def default_key_order(self):
         new_order = []
-        for key in self.build_validators():
-            if key != "ext":
+        for key in self._rename_validators():
+            if key != "ext" and key in self.serialize(shallow=True):
                 new_order.append(key)
         for key in self._key_order:
             if key not in new_order:
@@ -924,8 +959,8 @@ class SingleBlock(Block):
         self._meta.comments = {}
         
     def rename_block(self, old, new):
-        validators = self.build_validators()
-        req = self.build_req_validators()
+        validators = self._rename_validators()
+        req = self._rename_validators(required=True)
         alias = None
         if new not in validators:
             val = validators[old]
@@ -974,7 +1009,7 @@ class FileBlock(SingleBlock):
         self._sourceFile = _sourceFile
 
         self._tempdir = tempfile.TemporaryDirectory()
-        self._tempath = Path(self._tempdir.name)
+        self._temppath = Path(self._tempdir.name)
         atexit.register(self.cleanup)
 
         super().__init__(blockDict)
@@ -1072,7 +1107,9 @@ class ListBlock(Block):
         """
         self._objs = []
         for blockDict in blockList:
-            self._objs.append(self._reqCls.subclass(blockDict))
+            obj = self._reqCls.subclass(blockDict)
+            obj._parent_block = self
+            self._objs.append(obj)
     
     @classmethod
     def fromBlocks(cls, blockList:list):
