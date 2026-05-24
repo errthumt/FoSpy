@@ -99,7 +99,7 @@ my_synthesis.save("example/synthesis/check02.fos")
 ```
 
 ### Comments
-In the code above, I also attached a couple of comments to lines in the FOS file. Comments are printed above the line they are attached to. For example, `my_synthesis.rename.add_comments()` attaches comments above the `[Rename]` header in the FOS file. The other command, `my_synthesis.materials.add_comments()`, attaches the comment above the new `materials:reagents` line underneath the `[Rename]` heading.
+In the code above, I also attached a couple of comments to lines in the FOS file. Comments are printed above the line they are attached to. For example, `my_synthesis.rename.add_comments()` attaches comments above the `[Rename]` header in the FOS file. The other command, `my_synthesis.rename.materials.add_comments()`, attaches the comment above the new `materials:reagents` line underneath the `[Rename]` heading.
 
 ## (Checkpoint 3) Changing Simple Data
 Here I change some of the metadata and reaction information for my synthesis. Certain variables are automatically converted. For example, the `nominal_formula` is coded to be a `ChemFormula` object, so when I set that property equal to simple text, it automatically converts the text into a true formula object and raises an error if it's not able to read it.
@@ -139,7 +139,7 @@ my_synthesis.save("example/synthesis/check04.fos")
 ## (Checkpoint 5) Adding Unexpected Variable Types
 Sometimes, you may want to add a special block type (like `Material`, `Treatment`, or `Experimenter`), even if the FOS program isn't expecting it. You can do this using the `add_block` command. In this case, I want create a new property for my first experimenter to give him a friend. The unexpected friend property gets assigned as an `"experimenter"`, which eventually gets matched to the `Experimenter` data type in the code.
 
-After careful consideration, I decided it was more professional to refer to Joe as Travis's colleague. Note that because `friend` was already an unexpected property, renaming this does not add `friend: colleague` to the `rename` block in the resulting FOS, because it is simpler to just move the `"experimenter"` assignment over to the new `colleague` block.
+Then, perhaps after an awkward social encounter, I decide to refer to Joe as Travis's colleague instead of friend. Note that because `friend` was already an unexpected property, renaming this does not add `friend: colleague` to the `rename` block in the resulting FOS, because it is simpler to just move the `"experimenter"` assignment over to the new `colleague` block.
 
 ```python
 my_synthesis.clear_all_comments()
