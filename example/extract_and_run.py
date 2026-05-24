@@ -1,5 +1,4 @@
 import re
-import subprocess
 from pathlib import Path
 
 def extract_code_to_main(md_path, out_path):
@@ -32,6 +31,7 @@ def extract_code_to_main(md_path, out_path):
 
 
 if __name__ == "__main__":
+    # extract code from the readme and write it to example.py, then run example.py
     md_path = "example/readme.md"
     out_path = "example/example.py"
 
