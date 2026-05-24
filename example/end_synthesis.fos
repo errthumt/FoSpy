@@ -4,6 +4,12 @@ date: 05-17-2026
 internal_project_ID: Arsenide 28+d clathrates
 internal_project_description: Unique Clathrate
 
+// This new block has been added because I renamed a required block.
+[Rename]
+// Synthesis files are required to have a materials block, so
+// This line specifies that it has been renamed to reagents.
+materials: reagents
+
 // Note that now there are two experimenters, so the
 // experimenters header has changed to double brackets
 [[Experimenters]]
@@ -31,7 +37,7 @@ nominal_formula: Ba8Cu13Zn11As28.5
 nominal_mass: 250.0
 nominal_mass_units: mg
 
-[[Reagents$materials]]
+[[Reagents]]
 :name
 :type
 :formula
@@ -105,8 +111,6 @@ nominal_mass_units: mg
         repeats: 1
         observations: ground lumps into powder for weighing and homogenization
     ]
-
-[Materials]
 
 // This is a comment on the treatments block
 [[Treatments]]

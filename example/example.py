@@ -1,3 +1,8 @@
+"""
+The beginning and end results of this file can be found in the same folder of
+the github. Click on the "example" folder in FoSpy / example / example.py
+"""
+
 from FoSpy.blocks.synthesis import Synthesis
 from FoSpy.blocks.template import TemplateSet
 from chemformula import ChemFormula
@@ -18,11 +23,6 @@ from FoSpy.parsing.validators.filenames import _debug as filename_debug
 all_debugs_off(soundoff=False)
 filename_debug.on = True
 
-"""
-The beginning and end results of this file can be found in the same folder of
-the github. Click on the "example" folder in FoSpy / example / example.py
-"""
-
 # load synthesis and templates from files
 my_synthesis = Synthesis.fromFile(r"example/start_synthesis.fos")
 my_templates = TemplateSet.fromFile(r"example/start_templates.fos")
@@ -38,10 +38,11 @@ my_reaction = my_synthesis.reaction
 my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
 
-my_synthesis.materials = []
-my_synthesis.materials.clear_comments()
-my_synthesis.add_block("reagents","materials", my_mats)
+my_synthesis.rename_block("materials","reagents")
 my_mats = my_synthesis.reagents
+my_synthesis.rename.add_comments("This new block has been added because I renamed a required block.")
+my_synthesis.rename.materials.add_comments("Synthesis files are required to have a materials block, so",
+                                           "This line specifies that it has been renamed to reagents.")
 
 # more shortcuts
 exp_temps = my_templates.experimenters
@@ -172,7 +173,7 @@ my_templates.key_to_idx("anneal_sections", 6)
 my_templates.generic_materials.set_list_type("explicit")
 
 my_synthesis.default_key_order()
-my_synthesis.key_to_idx("reagents", 3)
+my_synthesis.key_to_idx("reagents", 4)
 my_mats.set_list_type("looped")
 
 # save all my changes

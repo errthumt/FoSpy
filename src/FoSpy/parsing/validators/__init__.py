@@ -1,1 +1,1 @@
-from . import reaction, units, material, filenames, metadata
+from . import reaction, rename, units, material, filenames
