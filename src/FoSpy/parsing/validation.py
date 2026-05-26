@@ -35,6 +35,7 @@ aliases = {
     "treatments": TreatmentList,
     "experimenter": Experimenter,
     "experimenters": ExperimenterList,
+    "embed": EmbeddedFile
 }
 
 required_keys = {
