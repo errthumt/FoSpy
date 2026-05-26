@@ -7,6 +7,8 @@ Examples of what a FoS could look like: [example/start_synthesis.fos](example/sy
 
 Examples of what a python script could do with FoS files and FoS Templates: [example/readme.md](./example/readme.md)
 
+[VSCode Grammar Extension for FOS Files](https://github.com/errthumt/fos-grammar)
+
 There is a fully-packaged app as a proof-of-concept with a gui for opening and editing FOS files.
 * [Github](https://www.github.com/errthumt/CyFoS-alpha)
 * [Installer download](https://github.com/errthumt/CyFoS-alpha/raw/refs/heads/main/installer/windows_release/CyFoS_Setup_1.2.5.exe)
