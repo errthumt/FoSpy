@@ -144,7 +144,10 @@ optional_keys = {
     },
 
     Treatment: {
-        "program": ListBlock.Simple(AnnealSection)
+        "program": ListBlock.Simple(AnnealSection),
+        "recovered_mass": validators.reaction.nominal_mass,
+        "start_time": str,
+        "end_time": str
     },
 
     TemplateSet: TemplateLists

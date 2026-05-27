@@ -75,6 +75,7 @@ nominal_mass_units: mg
     [;;;
     Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid
     contact with ampoule during reaction]
+    recovered_mass: 250.0
 
     seal
     1
@@ -97,6 +98,7 @@ nominal_mass_units: mg
     grind
     3
     dark gray powder now
+    recovered_mass: 200.0
 
 // This new block has been added because I renamed a required block.
 [Rename]
