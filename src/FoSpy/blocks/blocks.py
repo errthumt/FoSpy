@@ -56,6 +56,12 @@ class SimpleWrapper:
     def __setitem__(self, key, val):
         return self._value.__setitem__(key, val)
 
+    def __int__(self):
+        return int(self._value)
+    
+    def __float__(self):
+        return float(self._value)
+
 class Block:
     """
     The base class for any set of data found in a FOS file.
@@ -364,13 +370,14 @@ class SingleBlock(Block):
         for key, validator in req.items():
             if key not in blockDict:
                 from .template import TemplateBlock, TemplateList, TemplateField, FlexTemplate
-                if issubclass(validator, TemplateField):
+                is_type = isinstance(validator, type)
+                if is_type and issubclass(validator, TemplateField):
                     blockDict[key] = ""
-                elif issubclass(validator, FlexTemplate):
+                elif is_type and issubclass(validator, FlexTemplate):
                     blockDict[key] = {"template_name": f"Empty {self._baseReq.__name__} Template"}
-                elif issubclass(validator, TemplateBlock):
+                elif is_type and issubclass(validator, TemplateBlock):
                     blockDict[key] = validator.reflex()
-                elif issubclass(validator, TemplateList):
+                elif is_type and issubclass(validator, TemplateList):
                     blockDict[key] = []
                 else:
                     raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")

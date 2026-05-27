@@ -57,10 +57,13 @@ template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
 -time: <!TEMPLATE-FIELD>
+temp_units: C
+time_units: h
 
 template_name: Any dwell
 type: dwell
 -time: <!TEMPLATE-FIELD>
+time_units: h
 
 [[Cifs]]
 file_name: Ba2Zn5Sb6_ICSD

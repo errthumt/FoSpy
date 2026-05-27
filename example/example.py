@@ -10,7 +10,7 @@ def main():
 
     # Change the width of your debug screen so that module labels print on one line.
     from FoSpy import _debug as db
-    db.DEBUG_WIDTH = 150
+    db.DEBUG_WIDTH = 120
 
     # Optional way to turn on/off one module's debug messages.
     from FoSpy.blocks.blocks import _debug as block_debug
@@ -149,10 +149,10 @@ def main():
     my_templates.keys_to_end("cifs")
 
     # Filling in my annealing templates
-    ramp1 = ramp_template.fill(temp="550 C", time="2 hr")
-    ramp2 = ramp_template.fill(temp="650 C", time = "10 hr")
-    dwell1 = dwell_template.fill(time="12 hr")
-    dwell2 = dwell_template.fill(time="72 hr")
+    ramp1 = ramp_template.fill(temp="550", time="2")
+    ramp2 = ramp_template.fill(temp="650", time = "10")
+    dwell1 = dwell_template.fill(time="12")
+    dwell2 = dwell_template.fill(time="72")
 
     # Using my anneal template to create two different annealing treatments with my
     # different program sections.
@@ -196,6 +196,8 @@ def main():
 
     # Every material gets a weight percent comment added above their ratio
     my_synthesis.add_calc_routine("reagents.add_weight_pcts")
+    for anneal in my_synthesis.treatments.get_any(type="anneal"):
+        anneal.add_calc_routine("program.add_all_missing_parameters")
     my_synthesis.reagents[0].ratio.add_comments("Weight percents were calculated automatically when saving.")
 
 
