@@ -107,6 +107,7 @@ nominal_mass_units: mg
     [;;;
     Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid
     contact with ampoule during reaction]
+    recovered_mass: 250.0
 
     seal
     1
