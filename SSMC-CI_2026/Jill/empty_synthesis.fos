@@ -1,0 +1,5 @@
+template_name: Empty MetaDataTemplate
+-name: <!TEMPLATE-FIELD>
+-date: <!TEMPLATE-FIELD>
+
+[[Template_name]]

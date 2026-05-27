@@ -14,12 +14,12 @@ class EmbeddedFile(SingleBlock):
                 f.write(line.rstrip("\r\n") + "\n")
 
      
-    def serialize(self,keepListType=False):
+    def serialize(self,keepListType=False, clean=False):
         """
         Performs the default `SingleBlock` serialization, but restores the
         "embedded" key to the full list of embedded lines instead of a string.
         """
-        serial = super().serialize(keepListType)
+        serial = super().serialize(keepListType, clean=clean)
         serial["embedded"] = self.embedded.copy()
         return serial
 

@@ -22,7 +22,10 @@ CifList = ListBlock.Simple(EmbeddedCIF)
 class LabConditions(SingleBlock):
     pass
 
-EquipmentList = ListBlock.Simple(SingleBlock)
+class Equipment(SingleBlock):
+    pass
+
+EquipmentList = ListBlock.Simple(Equipment)
 
 
 
@@ -83,7 +86,7 @@ required_keys = {
 
     Reaction: {
         "nominal_formula": ChemFormula,
-        "nominal_mass" : validators.reaction.nominal_mass,
+        "nominal_mass" : validators.numbers.positive_decimal("Reaction/nominal_mass"),
         "nominal_mass_units": validators.units.mass_unit("Reaction/nominal_mass_units")
     },
 
@@ -108,13 +111,29 @@ required_keys = {
         "type": str
     },
 
-    Ramp: {
-        "temp": str,
-        "time":str,
+    RampNoRate: {
+        "temp": validators.numbers.positive_decimal("RampNoRate/temp") ,
+        "time": validators.numbers.positive_decimal("RampNoRate/time"),
+        "temp_units": validators.units.temp_units,
+        "time_units": validators.units.time_units
+    },
+
+    RampNoTime: {
+        "temp": validators.numbers.positive_decimal("RampNoTime/temp"),
+        "rate": validators.numbers.positive_decimal("RampNoTime/rate"),
+        "temp_units": validators.units.temp_units,
+        "rate_units": validators.units.rate_units
+    },
+
+    RampNoTemp: {
+        "time": validators.numbers.positive_decimal("RampNoTemp/time"),
+        "rate": validators.numbers.positive_decimal("RampNoTemp/rate"),
+        "time_units": validators.units.time_units,
+        "rate_units": validators.units.rate_units   
     },
 
     Dwell: {
-        "time": str
+        "time": validators.numbers.positive_decimal("Dwell/time")
     },
 
     Quench: {
@@ -154,7 +173,7 @@ optional_keys = {
 
     Treatment: {
         "program": ListBlock.Simple(AnnealSection),
-        "recovered_mass": validators.reaction.nominal_mass,
+        "recovered_mass": validators.numbers.positive_decimal("Treatment/recovered_mass"),
         "start_time": str,
         "end_time": str
     },
