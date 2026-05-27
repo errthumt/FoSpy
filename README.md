@@ -2,8 +2,8 @@
 A package for opening, editing, and saving Files of Synthesis (*.fos)
 
 <ins>**Try Making Your Own FOS File**</ins>
-* Check out the examples below
-* Download [the empty FOS File]
+* For more guidance, check out the examples below
+* Download [the empty FOS File](./empty_fos.txt)
 * Add details about your synthesis
   * Edit and save the file as a `.txt` file to skip security filters
 * Email your new file to [errthumt@iastate.edu](mailto:errthumt@iastate.edu)
