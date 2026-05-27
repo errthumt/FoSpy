@@ -17,7 +17,14 @@ from chemformula import ChemFormula
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
 CifList = ListBlock.Simple(EmbeddedCIF)
-# AnnealProgram = ListBlock.Simple(AnnealSection)
+
+# Placeholder classes
+class LabConditions(SingleBlock):
+    pass
+
+EquipmentList = ListBlock.Simple(SingleBlock)
+
+
 
 TemplateLists = {
     "experimenters": TemplateList.Simple(Experimenter),
@@ -131,7 +138,9 @@ optional_keys = {
     },
     Synthesis: {
         "cif": EmbeddedCIF,
-        "cifs": ListBlock.Simple(EmbeddedCIF)
+        "cifs": ListBlock.Simple(EmbeddedCIF),
+        "laboratory_conditions": LabConditions,
+        "equipment": EquipmentList
     },
 
     Experimenter: {
