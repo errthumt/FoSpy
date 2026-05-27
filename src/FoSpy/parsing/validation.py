@@ -133,7 +133,8 @@ required_keys = {
     },
 
     Dwell: {
-        "time": validators.numbers.positive_decimal("Dwell/time")
+        "time": validators.numbers.positive_decimal("Dwell/time"),
+        "time_units": validators.units.time_units
     },
 
     Quench: {

@@ -1,5 +1,6 @@
 name: TE001
-// This comment will stay attached to the date when saving (until comments are cleared)
+// This comment will stay attached to the date when saving (until comments are
+// cleared)
 date: 03-11-2026
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
@@ -94,11 +95,14 @@ nominal_mass_units: mg
     // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
-        temp: 600 C
-        time: 10 hr
+        temp: 600
+        time: 10
+        temp_units: C
+        time_units: h
 
         type: dwell
-        time: 120hr
+        time: 120
+        time_units: h
     ]]
 
     grind

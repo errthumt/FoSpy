@@ -109,7 +109,7 @@ def main():
         my_synthesis.treatments[0].program[0]
     ):
         block.default_key_order()
-
+    my_synthesis.add_calc_routine("treatments[0].program.add_all_missing_parameters")
     my_synthesis.save("SSMC-CI_2026/Jill/4_final.fos")
     pass
 

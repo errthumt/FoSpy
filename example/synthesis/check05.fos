@@ -101,11 +101,14 @@ nominal_mass_units: mg
     in between annealings.]
     program: [[
         type: ramp
-        temp: 600 C
-        time: 10 hr
+        temp: 600
+        time: 10
+        temp_units: C
+        time_units: h
 
         type: dwell
-        time: 120hr
+        time: 120
+        time_units: h
     ]]
 
     grind

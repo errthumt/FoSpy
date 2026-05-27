@@ -99,11 +99,14 @@ treatments: [
     None
     program: [[
         type: ramp
-        temp: 550 C
-        time: 2 hr
+        temp: 550
+        time: 2
+        temp_units: C
+        time_units: h
 
         type: dwell
-        time: 12 hr
+        time: 12
+        time_units: h
 
         type: quench
         medium: water
@@ -114,11 +117,14 @@ treatments: [
     None
     program: [[
         type: ramp
-        temp: 650 C
-        time: 10 hr
+        temp: 650
+        time: 10
+        temp_units: C
+        time_units: h
 
         type: dwell
-        time: 72 hr
+        time: 72
+        time_units: h
     ]]
 
 [Rename]

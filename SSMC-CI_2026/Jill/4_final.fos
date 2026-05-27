@@ -41,11 +41,11 @@ repeats: 1
 observations: I made a new material
 program: [
     type: ramp
-    temp: 777.0
-    time: 2.5900000000000003
-    temp_unit: C
-    rate: 5.0
-    rate_unit: C/min
+    // ! Time for ramp: 155.4 min
+    temp: 777
+    rate: 5
+    temp_units: C
+    rate_units: C/min
 ]
 gas_flow: [[
     flow: 10.0
@@ -66,7 +66,7 @@ final_mass_unit: g
 
 [Laboratory]
 temp: 22.0
-temp_unit: C
+temp_units: C
 humidity: 25.0
 humidity_unit: %
 
