@@ -39,7 +39,7 @@ class Annealing(Treatment):
 
         for section in self.program:
             if section.type == "ramp":
-                temp = int(section.temp.split(" ")[0])
+                temp = int(round(float(section.temp.split(" ")[0])))
                 furnace.ramp(temp, section.time)
             elif section.type == "dwell":
                 furnace.dwell(section.time)
@@ -69,11 +69,46 @@ class AnnealSection(SingleBlock):
         blockDict = _unwrap_block(blockDict)
         t = blockDict.get("type",None)
         subclass = cls.dispatch.get(t,cls)
-        return subclass(blockDict,_dispatched=True)
+        return subclass.dispatch_subclass(blockDict)
     
 class Ramp(AnnealSection):
     dispatch = {}
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        seeking = ["temp","time","rate"]
+        found = []
+        for key in blockDict:
+            if key in seeking:
+                found.append(key)
+            if len(found) == 2:
+                break
+        if len(found) != 2:
+            raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
+        
+        for key in seeking:
+            if key not in found:
+                subclass = cls.dispatch.get(key,None)
+                if subclass is None:
+                    raise ValueError(f"Ramp section missing required key '{key}' and no subclass found to handle this case.")
+                return subclass(blockDict, _dispatched=True)
+    def get_ramp_rate(self, units):
+        
+
+
 AnnealSection.dispatch["ramp"] = Ramp
+
+class RampNoTemp(Ramp):
+    pass
+AnnealSection.dispatch["temp"] = RampNoTemp
+
+class RampNoTime(Ramp):
+    pass
+AnnealSection.dispatch["time"] = RampNoTime
+
+class RampNoRate(Ramp):
+    pass
+AnnealSection.dispatch["rate"] = RampNoRate
 
 class Dwell(AnnealSection):
     dispatch = {}

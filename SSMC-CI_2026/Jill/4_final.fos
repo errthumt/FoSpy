@@ -1,0 +1,72 @@
+name: Sample 001
+date: 05-27-2026
+video_id: AUTO_GENERATED_VIDEO_ID
+process_name: Ammonolysis - AUTO
+
+[Experimenters]
+name: Jill
+affiliation: Drexel
+
+[Reaction]
+nominal_formula: H
+nominal_mass: 1
+nominal_mass_units: g
+duration: 20.0
+duration_unit: min
+duration_format: 20:00
+start_time: 14:00
+end_time: 15:00
+product_mass: 0.0987
+product_mass_unit: g
+product_color: blue
+product_structure: body-centered cubic
+
+[Materials]
+name: None
+type: precursor
+formula: H
+supplier: Unknown
+cas: Unknown
+form: Unknown
+env: Unknown
+ratio: 1.0
+color: None
+mass: 0.06
+mass_unit: g
+structure: None
+
+[Treatments]
+type: anneal
+repeats: 1
+observations: I made a new material
+program: [
+    type: ramp
+    temp: 777.0
+    time: 2.5900000000000003
+    temp_unit: C
+    rate: 5.0
+    rate_unit: C/min
+]
+gas_flow: [[
+    flow: 10.0
+    flow_unit: %
+
+    flow: 0.2
+    flow_unit: %
+
+    flow: 0.3
+    flow_unit: %
+]]
+
+[Equipment]
+initial_mass: 3.58
+initial_mass_unit: g
+final_mass: 3.58
+final_mass_unit: g
+
+[Laboratory]
+temp: 22.0
+temp_unit: C
+humidity: 25.0
+humidity_unit: %
+

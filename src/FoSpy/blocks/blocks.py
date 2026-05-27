@@ -168,12 +168,14 @@ class SingleBlock(Block):
     def TemplateClass(cls,*args:str):
         from .template import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
-        class SubTemplate(TemplateBlock, cls):
-            dispatch = {}
-            def __init__(self, blockDict, _dispatched=False):
-                super().__init__(blockDict, _dispatched=_dispatched)
-                self._full_class = cls
-
+        if issubclass(cls, TemplateBlock):
+            SubTemplate = cls
+        else:
+            class SubTemplate(TemplateBlock, cls):
+                dispatch = {}
+                def __init__(self, blockDict, _dispatched=False):
+                    super().__init__(blockDict, _dispatched=_dispatched)
+                    self._full_class = cls
         required_keys[SubTemplate] = {}
         optional_keys[SubTemplate] = {}
         required_validators = cls.build_req_validators()
@@ -212,7 +214,7 @@ class SingleBlock(Block):
         return SubTemplate
    
     @classmethod
-    def reflex(cls, **kwargs):
+    def reflex(cls, serialize=True, **kwargs):
         from .template import FlexTemplate
         class Flex(FlexTemplate, cls):
             _baseReq = cls
@@ -220,7 +222,9 @@ class SingleBlock(Block):
         kwargs.setdefault("template_name", f"Empty {cls.__name__}")
 
         empty = Flex.dispatch_subclass(kwargs)
-        return empty.serialize()
+        if serialize:
+            return empty.serialize()
+        return empty
 
     @classmethod
     def dispatch_subclass(cls, blockDict:dict, **kwargs):
@@ -590,7 +594,7 @@ class SingleBlock(Block):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
         
-    def serialize(self, keepListType=False, shallow=False):
+    def serialize(self, keepListType=False, shallow=False, clean=False):
         """
         Return a recursively serialized `[dict]` representation of itself.
 
@@ -619,6 +623,7 @@ class SingleBlock(Block):
         """
         from copy import deepcopy
         from ..parsing.format import format_calc_comment
+        from .template import TemplateBlock
 
         val_to_alias = {v:k for k,v in self._aliases.items()}
 
@@ -640,7 +645,7 @@ class SingleBlock(Block):
             if isinstance(obj, SimpleWrapper):
                 obj = obj()
             if callable(serialize) and not shallow:
-                return obj.serialize()
+                return obj.serialize(clean=clean)
             if isinstance(obj, list):
                 return [try_serial(item) for item in obj]
             if isinstance(obj, dict):
@@ -686,6 +691,15 @@ class SingleBlock(Block):
         
         if not keepListType:
             out[mk["list_type"]] = "explicit"
+
+        if "template_name" in out and not isinstance(self, TemplateBlock):
+            out.pop("template_name")
+
+        if clean:
+            scan = out.copy()
+            for key, val in scan.items():
+                if key.startswith("_") or val is None:
+                    out.pop(key)
 
         return out
     
@@ -1289,12 +1303,12 @@ class ListBlock(Block):
         for obj in self:
             obj._meta.list_type = typ
         
-    def serialize(self):
+    def serialize(self, clean=False):
         for obj in self:
             if obj._meta.list_type == "explicit":
                 self.set_list_type("explicit")
                 break
-        return [obj.serialize(keepListType=True if len(self)>1 else False) for obj in self]
+        return [obj.serialize(keepListType=True if len(self)>1 else False, clean=clean) for obj in self]
     
      
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
