@@ -1,6 +1,13 @@
 # FoSpy
 A package for opening, editing, and saving Files of Synthesis (*.fos)
 
+<ins>**Try Making Your Own FOS File**</ins>
+* Check out the examples below
+* Download [the empty FOS File]
+* Add details about your synthesis
+  * Edit and save the file as a `.txt` file to skip security filters
+* Email your new file to [errthumt@iastate.edu](mailto:errthumt@iastate.edu)
+
 Running brainstorm for features and data structure: [brainstorm.md](./brainstorm.md)
 
 Examples of what a FoS could look like: [example/start_synthesis.fos](example/synthesis/start_synthesis.fos)
