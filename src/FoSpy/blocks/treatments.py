@@ -52,11 +52,11 @@ class Annealing(Treatment):
         return self._profile.update_params(**kwargs)
 
     def show_plot(self, **kwargs):
-        self.build_profile(**kwargs)
+        self.update_profile(**kwargs)
         return self._profile.plot(show=True)
     
     def interactive_plot(self, **kwargs):
-        self.build_profile(**kwargs)
+        self.update_profile(**kwargs)
         return self._profile.interactive()
 
 Treatment.dispatch["anneal"] = Annealing
@@ -230,8 +230,8 @@ class AnnealProgram(ListBlock):
     _reqCls = AnnealSection
     def append(self, obj):
         super().append(obj)
-        '''if hasattr(self, "_parent_block") and self._parent_block is not None:
-            self._parent_block.build_profile()'''
+        if hasattr(self, "_parent_block") and self._parent_block is not None:
+            self._parent_block.build_profile()
     
     @_calc_routine()
     def add_all_missing_parameters(self):
