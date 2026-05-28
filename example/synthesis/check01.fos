@@ -27,6 +27,7 @@ obtained_amount: 200.0
 obtained_amount_unit: milligram
 observations: Black Powder
 characterizations: PXRD, EDS, Eyeballs
+structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 
 // Double brackets on a header mean there are multiple similar groups
 [[Materials]]

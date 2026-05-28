@@ -188,7 +188,8 @@ optional_keys = {
         "expected_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]),
         "obtained_amount": validators.numbers.positive_decimal("Product/obtained_amount", "obtained_amount", require_unit=True),
         "obtained_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]),
-        "characterizations": str
+        "characterizations": str,
+        "structure_comments": str
     },
 
     Material : {

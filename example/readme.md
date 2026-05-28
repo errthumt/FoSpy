@@ -110,6 +110,20 @@ my_meta.date = "05-17-2026"
 my_meta.internal_project_ID = "Arsenide 28+d clathrates"
 my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 
+my_synthesis.products = [{
+    "name": "Barium transition-metal arsenide (8-24-28.5)",
+    "formula": "Ba8Cu13Zn11As28.5",
+    "expected": True,
+    "obtained": True,
+    "expected_amount": "250.0",
+    "expected_amount_unit": "mg",
+    "obtained_amount": "150.0",
+    "obtained_amount_unit": "mg",
+    "observations": "Gray Powder",
+    "characterizations": "PXRD",
+    "structure_comments": "Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space group Cmcm"
+}]
+
 my_synthesis.save("example/synthesis/check03.fos")
 ```
 
