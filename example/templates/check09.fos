@@ -21,7 +21,8 @@ supplier: Furukama
 cas: 7440-38-2
 form: lump
 env: Ar (g)
--ratio: <!TEMPLATE-FIELD>
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
 purity: 0.9995
 treatments: [
     type: Grinding
@@ -38,7 +39,8 @@ supplier: Sigma Aldrich
 -cas: <!TEMPLATE-FIELD>
 form: powder
 env: Ar (g)
--ratio: <!TEMPLATE-FIELD>
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
 purity: 0.995
 treatments: []
 
@@ -51,19 +53,21 @@ program: [
     template_name: Empty AnnealSection
     -type: <!TEMPLATE-FIELD>
 ]
+start_temp: 25
+start_temp_unit: degree_Celsius
 
 [[Anneal_sections]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
 -time: <!TEMPLATE-FIELD>
-temp_units: C
-time_units: h
+temp_unit: degree_Celsius
+time_unit: hour
 
 template_name: Any dwell
 type: dwell
 -time: <!TEMPLATE-FIELD>
-time_units: h
+time_unit: hour
 
 [[Cifs]]
 file_name: Ba2Zn5Sb6_ICSD

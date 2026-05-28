@@ -23,7 +23,19 @@ orcid: 0000-0002-8551-3627
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5
 nominal_mass: 250.0
-nominal_mass_units: mg
+nominal_mass_unit: mg
+
+[Products]
+name: Barium Zinc Antimonide (2-5-6)
+formula: Ba2Zn5Sb6
+expected: True
+obtained: True
+expected_amount: 250.0
+expected_amount_unit: milligram
+obtained_amount: 200.0
+obtained_amount_unit: milligram
+observations: Black Powder
+characterizations: PXRD, EDS, Eyeballs
 
 [[Reagents]]
 name: Barium
@@ -34,7 +46,8 @@ cas: 7440-39-3
 form: lump
 purity: 0.999
 env: Ar (g)
-ratio: 8
+amount: 8
+amount_unit: mol ratio
 treatments: [
     type: cutting
     repeats: 1
@@ -49,7 +62,8 @@ cas: 7440-66-6
 form: powder
 purity: 0.995
 env: Ar (g)
-ratio: 11
+amount: 11
+amount_unit: mol ratio
 treatments: []
 
 name: Copper
@@ -59,7 +73,8 @@ supplier: Sigma Aldrich
 cas: 7440-50-8
 form: powder
 env: Ar (g)
-ratio: 13
+amount: 13
+amount_unit: mol ratio
 purity: 0.995
 treatments: []
 
@@ -70,7 +85,8 @@ supplier: Furukama
 cas: 7440-38-2
 form: lump
 env: Ar (g)
-ratio: 28.5
+amount: 28.5
+amount_unit: mol ratio
 purity: 0.9995
 treatments: [
     type: Grinding
@@ -99,16 +115,18 @@ treatments: [
     [;;;
     Opened under argon atmosphere and ground well before sealing in new ampoule
     in between annealings.]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         temp: 600
         time: 10
-        temp_units: C
-        time_units: h
+        temp_unit: degree_Celsius
+        time_unit: hour
 
         type: dwell
         time: 120
-        time_units: h
+        time_unit: hour
     ]]
 
     grind

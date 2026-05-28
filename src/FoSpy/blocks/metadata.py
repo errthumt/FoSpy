@@ -45,6 +45,9 @@ class Reaction(SingleBlock):
         _debug.msg(f"Calculated Nominal MW: {mw:.2f} for Reaction block.")
         self.add_calc_comment("nominal_formula",f"Nominal MW: {mw:.2f} g/mol","Nominal MW")
 
+class Product(SingleBlock):
+    pass
+
 class Experimenter(SingleBlock):
     """
     Represents an an experimenter who worked on a synthesis.

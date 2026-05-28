@@ -14,7 +14,8 @@
     "materials[0].cas": "7732-18-5",
     "materials[0].form": "liquid",
     "materials[0].env": "ambient",
-    "materials[0].ratio": "1.0",
+    "materials[0].amount": "500",
+    "materials[0].amount_unit": "mL",
     "treatments[0].gas_flow" : [
         {"name": "Argon"},
         {"name": "Hydrogen"},

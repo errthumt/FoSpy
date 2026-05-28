@@ -185,27 +185,27 @@ orcid: 0000-0002-8551-3627
 
 
 ## Editing Objects in Listed Blocks
-The materials block of my synthesis (`my_mats = my_synthesis.materials`) is a fancy list of `Material` objects. I can access an individual item in that list with an index in brackets (`my_mats[i]`). Python indices are zero-based, so `my_mats[0]` refers to the first material in the list (in this case barium).
+The materials block of my synthesis (`my_mats = my_synthesis.materials`) is a fancy list of `Material` objects. I can access an individual item in that list with an index in brackets (`my_mats[i]`). Python indices are zero-based, so `my_mats[0]` refers to the first material in the list (in this case barium). Since barium's `amount_unit` is specified as molar ratio, then changing the amount value changes the molar ratio.
 ```python
-# Changing Barium's ratio
-my_mats[0].ratio = 8
+# Changing Barium's molar ratio
+my_mats[0].amount = 8
 ```
 
 
 ## (Checkpoint 6) Creating Templates and Filling in Larger Templates
 In addition to loading templates writting to FOS files, you can also create templates from existing blocks by using `make_template()` and specifying which properties you want to leave empty in the template. Here, I use the zinc material loaded from my synthesis to create a generic template for any metal powder with the same purity.
 
-Then, I use the `add_block()` command we already used on our synthesis to add a separate block to store generic materials. This is to distinguish my new template from the other material templates in my file, which are only missing `ratio` and `type`.
+Then, I use the `add_block()` command we already used on our synthesis to add a separate block to store generic materials. This is to distinguish my new template from the other material templates in my file, which are only missing `amount` and `type`.
 ```python
 # I find zinc in my materials, change its ratio, and also generate a template
 # from it.
 zinc = my_mats.get_first(form="powder")
-zinc.ratio = 11
+zinc.amount = 11
 
 # The template name is "A generic metal powder, purity 0.995", and it has empty
 # fields for name, formula, cas, and ratio
 powder_template = zinc.make_template("A generic metal powder, purity 0.995",
-                                      "name","formula","cas","ratio")
+                                      "name","formula","cas","amount")
 powder_template.default_key_order()
 
 # This saves my powder template to a new category of templates titled "Generic$materials"
@@ -221,7 +221,7 @@ copper_info = {
     "name": "Copper",
     "formula": "Cu",
     "cas": "7440-50-8",
-    "ratio": 13
+    "amount": 13
 }
 
 # Generate a new material, copper, from the template I made earlier and add it
@@ -233,7 +233,7 @@ my_mats.append(copper)
 # Here I'm using the arsenic template that was already in the template file to
 # replace antimony.
 arsenic_template = mat_temps.get_first(formula=ChemFormula("As"))
-arsenic = arsenic_template.fill(type="reagent", ratio=28.5)
+arsenic = arsenic_template.fill(type="reagent", amount=28.5)
 my_mats.remove_any(cas="7440-36-0") # This removes the antimony from my synthesis
 my_mats.append(arsenic)
 
@@ -317,9 +317,9 @@ There is the capability to add "calculation_routines" to be executed when saving
 ```python
 # Every material gets a weight percent comment added above their ratio
 my_synthesis.add_calc_routine("reagents.add_weight_pcts")
-for anneal in my_synthesis.treatments.get_any(type="anneal"):
-    anneal.add_calc_routine("program.add_all_missing_parameters")
-my_synthesis.reagents[0].ratio.add_comments("Weight percents were calculated automatically when saving.")
+'''for anneal in my_synthesis.treatments.get_any(type="anneal"):
+    anneal.add_calc_routine("program.add_all_missing_parameters")'''
+my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
 ```
 
 ## (Checkpoint 10) Cleaning Up
@@ -336,9 +336,10 @@ my_templates.key_to_idx("anneal_sections", 5)
 my_templates.generic.set_list_type("explicit")
 
 my_synthesis.default_key_order()
-my_synthesis.key_to_idx("reagents", 4)
+my_synthesis.key_to_idx("reagents", 5)
 my_mats.set_list_type("looped")
 
+print(my_synthesis.treatments[2].program[0].get_rate("K", "h"))
 my_templates.save("example/templates/check10.fos")
 my_synthesis.save("example/synthesis/check10.fos")
 

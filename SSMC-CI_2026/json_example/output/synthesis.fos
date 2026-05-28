@@ -35,7 +35,8 @@ supplier: Philadelphia Water Works
 cas: 7732-18-5
 form: liquid
 env: ambient
-ratio: 1.0
+amount: 500
+amount_unit: mL
 color: Blue?
 mass: 0.06
 mass_unit: g

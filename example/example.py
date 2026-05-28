@@ -88,19 +88,19 @@ def main():
     my_synthesis.save("example/synthesis/check05.fos")
 
 
-    # Changing Barium's ratio
-    my_mats[0].ratio = 8
+    # Changing Barium's molar ratio
+    my_mats[0].amount = 8
 
 
     # I find zinc in my materials, change its ratio, and also generate a template
     # from it.
     zinc = my_mats.get_first(form="powder")
-    zinc.ratio = 11
+    zinc.amount = 11
 
     # The template name is "A generic metal powder, purity 0.995", and it has empty
     # fields for name, formula, cas, and ratio
     powder_template = zinc.make_template("A generic metal powder, purity 0.995",
-                                          "name","formula","cas","ratio")
+                                          "name","formula","cas","amount")
     powder_template.default_key_order()
 
     # This saves my powder template to a new category of templates titled "Generic$materials"
@@ -113,7 +113,7 @@ def main():
         "name": "Copper",
         "formula": "Cu",
         "cas": "7440-50-8",
-        "ratio": 13
+        "amount": 13
     }
 
     # Generate a new material, copper, from the template I made earlier and add it
@@ -125,7 +125,7 @@ def main():
     # Here I'm using the arsenic template that was already in the template file to
     # replace antimony.
     arsenic_template = mat_temps.get_first(formula=ChemFormula("As"))
-    arsenic = arsenic_template.fill(type="reagent", ratio=28.5)
+    arsenic = arsenic_template.fill(type="reagent", amount=28.5)
     my_mats.remove_any(cas="7440-36-0") # This removes the antimony from my synthesis
     my_mats.append(arsenic)
 
@@ -196,9 +196,9 @@ def main():
 
     # Every material gets a weight percent comment added above their ratio
     my_synthesis.add_calc_routine("reagents.add_weight_pcts")
-    for anneal in my_synthesis.treatments.get_any(type="anneal"):
-        anneal.add_calc_routine("program.add_all_missing_parameters")
-    my_synthesis.reagents[0].ratio.add_comments("Weight percents were calculated automatically when saving.")
+    '''for anneal in my_synthesis.treatments.get_any(type="anneal"):
+        anneal.add_calc_routine("program.add_all_missing_parameters")'''
+    my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
 
 
     # some reordering stuff to make the final printout more consistent.
@@ -208,9 +208,10 @@ def main():
     my_templates.generic.set_list_type("explicit")
 
     my_synthesis.default_key_order()
-    my_synthesis.key_to_idx("reagents", 4)
+    my_synthesis.key_to_idx("reagents", 5)
     my_mats.set_list_type("looped")
 
+    print(my_synthesis.treatments[2].program[0].get_rate("K", "h"))
     my_templates.save("example/templates/check10.fos")
     my_synthesis.save("example/synthesis/check10.fos")
 
