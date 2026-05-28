@@ -85,15 +85,15 @@ def build_property_dict(data, key_map, current={}):
     if isinstance(key_map, str):
         if isinstance(data, (dict, list)):
             warn(f"Structure mismatch: dict or list values can be mapped to string keys, "
-                 f"but you may have intended to use a nested mapping for: key_map={key_map}, data={data}.")
+                 f"but you may have intended to use a nested mapping for: key_map={key_map}, data={data}.", stacklevel=4)
         if key_map in property_dict:
-            warn(f"Key '{key_map}' was already mapped. Overwriting the existing value.")
+            warn(f"Key '{key_map}' was already mapped. Overwriting the existing value.", stacklevel=4)
         property_dict[key_map] = data
         return property_dict
     if isinstance(key_map, dict):
         if not isinstance(data, dict):
             warn(f"Structure mismatch: cannot map a non-dictionary to a dictionary. Skipping the mapping: "
-                 f"key_map={key_map}, data={data}.")
+                 f"key_map={key_map}, data={data}.", stacklevel=4)
             return property_dict
         for key, value in data.items():
             map_value = key_map.get(key, None)
@@ -101,10 +101,10 @@ def build_property_dict(data, key_map, current={}):
     elif isinstance(key_map, list):
         if not isinstance(data, list):
             warn(f"Structure mismatch: cannot map a list to a non-list. Skipping the mapping: "
-                 f"key_map={key_map}, data={data}.")
+                 f"key_map={key_map}, data={data}.", stacklevel=4)
             return property_dict
         elif len(data) != len(key_map):
-            warn(f"List length mismatch: expected {len(key_map)}, got {len(data)}. Keys will be mapped up to the length of the shorter list.")
+            warn(f"List length mismatch: expected {len(key_map)}, got {len(data)}. Keys will be mapped up to the length of the shorter list.", stacklevel=4)
         
         for key, value in zip(key_map, data):
             property_dict = build_property_dict(value, key_map=key_map, current=property_dict)
@@ -112,9 +112,9 @@ def build_property_dict(data, key_map, current={}):
     
     else:
         if key_map is None:
-            warn(f"Skipped: No key mapped for:\n{data}")
+            warn(f"Skipped: No key mapped for:\n{data}", stacklevel=4)
         else:
-            warn(f"Invalid key_map type: {type(key_map).__name__}. Expected str, dict, or list. Skipping this mapping.")
+            warn(f"Invalid key_map type: {type(key_map).__name__}. Expected str, dict, or list. Skipping this mapping.", stacklevel=4)
     
     return property_dict
 
