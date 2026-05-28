@@ -103,11 +103,14 @@ nominal_mass_units: mg
     // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
-        temp: 600 C
-        time: 10 hr
+        temp: 600
+        temp_units: C
+        time: 10
+        time_units: h
 
         type: dwell
-        time: 120hr
+        time: 120
+        time_units: h
     ]]
 
     grind
