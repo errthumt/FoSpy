@@ -49,9 +49,9 @@ class MaterialList(ListBlock):
         weights = {}
         for mat in self._objs:
             if mat.type == typ or typ is None:
-                ratio = mat.ratio
+                amount = mat.amount
                 mw = mat.formula.formula_weight
-                weights[mat] = ratio() * Decimal(mw)
+                weights[mat] = amount() * Decimal(mw)
 
         percents = {}
         total_weight = sum(weights.values())
@@ -73,7 +73,7 @@ class MaterialList(ListBlock):
     @_calc_routine()
     def add_weight_pcts(self, typ=None):
         """
-        Calculate weight percents and attach them as comments to each material's ratio.
+        Calculate weight percents and attach them as comments to each material's amount.
 
         Args:
             typ:
@@ -86,7 +86,7 @@ class MaterialList(ListBlock):
             label = typ.capitalize() if typ else "Total"
             comment = f"{label} weight percent: {pct:.2f}%"
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
-            mat.add_calc_comment("ratio",comment, f"{label}_pct")
+            mat.add_calc_comment("amount",comment, f"{label}_pct")
 
 class MatTempList(MaterialList, TemplateList):
     """

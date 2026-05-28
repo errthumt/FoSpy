@@ -22,7 +22,8 @@ cas: 7440-38-2
 form: lump
 purity: 0.9995
 env: Ar (g)
--ratio: <!TEMPLATE-FIELD>
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
 treatments: [
     type: Grinding
     repeats: 1

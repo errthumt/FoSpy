@@ -5,7 +5,7 @@
   "Date of Experiment (Expt_date)": "metadata.date",
   "Temperature (Lab_temp)": {
     "value": "laboratory.temp",
-    "unit": "laboratory.temp_units"
+    "unit": "laboratory.temp_unit"
   },
   "Humidity (Lab_humidity)": {
     "value": "laboratory.humidity",
@@ -24,7 +24,7 @@
   "Precursor structure (Struc_prec)": "materials[0].structure",
   "Reaction temperature (Max_temp_C)": {
     "value": "treatments[0].program[0].temp",
-    "unit": "treatments[0].program[0].temp_units"
+    "unit": "treatments[0].program[0].temp_unit"
   },
   "Reaction time (Time_max_temp)": {
     "value": "reaction.duration",
@@ -33,7 +33,7 @@
   },
   "Heating Rate (Heat_rate)": {
     "value": "treatments[0].program[0].rate",
-    "unit": "treatments[0].program[0].rate_units"
+    "unit": "treatments[0].program[0].rate_unit"
   },
   "Argon flow rate (%) (Ar_perc)": {
     "value": "treatments[0].gas_flow[0].flow",

@@ -1,7 +1,5 @@
 from FoSpy.json.utils import map_data_from_json, fill_properties
 from FoSpy.blocks.synthesis import Synthesis
-from FoSpy.blocks.blocks import ListBlock, SingleBlock
-from FoSpy.parsing import validation
 import json
 
 def main():

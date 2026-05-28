@@ -14,7 +14,19 @@ orcid: 0009-0006-1937-5672
 [Reaction]
 nominal_formula: Ba2Zn5Sb6
 nominal_mass: 250.0
-nominal_mass_units: mg
+nominal_mass_unit: mg
+
+[Products]
+name: Barium Zinc Antimonide (2-5-6)
+formula: Ba2Zn5Sb6
+expected: True
+obtained: True
+expected_amount: 250.0
+expected_amount_unit: milligram
+obtained_amount: 200.0
+obtained_amount_unit: milligram
+observations: Black Powder
+characterizations: PXRD, EDS, Eyeballs
 
 // Double brackets on a header mean there are multiple similar groups
 [[Materials]]
@@ -26,7 +38,8 @@ nominal_mass_units: mg
 :form
 :purity
 :env
-:ratio
+:amount
+:amount_unit
 :treatments
 
     Barium
@@ -39,6 +52,7 @@ nominal_mass_units: mg
     Ar (g)
     // The comment below will be correctly re-calculated using a calc_routine
     2.0
+    mol ratio
     // Similar to headers, single brackets mean there is only one group,
     // in this case for treatments of Barium
     [
@@ -56,6 +70,7 @@ nominal_mass_units: mg
     0.995
     Ar (g)
     5.0
+    mol ratio
     []
 
     Antimony
@@ -67,6 +82,7 @@ nominal_mass_units: mg
     0.999
     Ar (g)
     6.0
+    mol ratio
     []
 
 // This is a comment on the treatments block
@@ -92,17 +108,19 @@ nominal_mass_units: mg
     [;;;
     Opened under argon atmosphere and ground well before sealing in new ampoule
     in between annealings.]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     // Here, the double brackets signal that there are multiple program sections.
     program: [[
         type: ramp
         temp: 600
         time: 10
-        temp_units: C
-        time_units: h
+        temp_unit: degree_Celsius
+        time_unit: hour
 
         type: dwell
         time: 120
-        time_units: h
+        time_unit: hour
     ]]
 
     grind

@@ -16,6 +16,7 @@ from chemformula import ChemFormula
 
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
+ProductList = ListBlock.Simple(Product)
 CifList = ListBlock.Simple(EmbeddedCIF)
 
 # Placeholder classes
@@ -60,6 +61,7 @@ required_keys = {
         "metadata" : MetaData,
         "experimenters": ExperimenterList,
         "reaction" : Reaction,
+        "products": ProductList,
         "materials" : MaterialList,
         "treatments" : TreatmentList
     },
@@ -89,8 +91,16 @@ required_keys = {
 
     Reaction: {
         "nominal_formula": ChemFormula,
-        "nominal_mass" : validators.numbers.positive_decimal("Reaction/nominal_mass"),
-        "nominal_mass_units": validators.units.mass_unit("Reaction/nominal_mass_units")
+        "nominal_mass" : validators.numbers.positive_decimal("Reaction/nominal_mass", "nominal_mass"),
+        "nominal_mass_unit": validators.units.mass_unit("Reaction/nominal_mass_units")
+    },
+
+    Product: {
+        "name": str,
+        "expected" : bool,
+        "obtained" : bool,
+        "formula": ChemFormula,
+        "observations": str
     },
 
     Material: {
@@ -101,7 +111,8 @@ required_keys = {
         "cas": str,
         "form": str,
         "env": str,
-        "ratio": validators.material.ratio
+        "amount": validators.numbers.positive_decimal("Material/amount", "amount"),
+        "amount_unit": str
     },
 
     Treatment: {
@@ -115,29 +126,29 @@ required_keys = {
     },
 
     RampNoRate: {
-        "temp": validators.numbers.positive_decimal("RampNoRate/temp") ,
-        "time": validators.numbers.positive_decimal("RampNoRate/time"),
-        "temp_units": validators.units.temp_units,
-        "time_units": validators.units.time_units
+        "temp": validators.numbers.positive_decimal("RampNoRate/temp", "temp", True) ,
+        "time": validators.numbers.positive_decimal("RampNoRate/time", "time", True),
+        "temp_unit": validators.units.FOSTempUnit,
+        "time_unit": validators.units.FOSUnit.enforce_dims("[time]")
     },
 
     RampNoTime: {
-        "temp": validators.numbers.positive_decimal("RampNoTime/temp"),
-        "rate": validators.numbers.positive_decimal("RampNoTime/rate"),
-        "temp_units": validators.units.temp_units,
-        "rate_units": validators.units.rate_units
+        "temp": validators.numbers.positive_decimal("RampNoTime/temp", "temp", True),
+        "rate": validators.numbers.positive_decimal("RampNoTime/rate", "rate", True),
+        "temp_unit": validators.units.FOSTempUnit,
+        "rate_unit": validators.units.temp_rate_unit 
     },
 
     RampNoTemp: {
-        "time": validators.numbers.positive_decimal("RampNoTemp/time"),
-        "rate": validators.numbers.positive_decimal("RampNoTemp/rate"),
-        "time_units": validators.units.time_units,
-        "rate_units": validators.units.rate_units   
+        "time": validators.numbers.positive_decimal("RampNoTemp/time", "time", True),
+        "rate": validators.numbers.positive_decimal("RampNoTemp/rate", "rate", True),
+        "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
+        "rate_unit": validators.units.temp_rate_unit  
     },
 
     Dwell: {
-        "time": validators.numbers.positive_decimal("Dwell/time"),
-        "time_units": validators.units.time_units
+        "time": validators.numbers.positive_decimal("Dwell/time", "time", True),
+        "time_unit": validators.units.FOSUnit.enforce_dims("[time]")
     },
 
     Quench: {
@@ -145,7 +156,9 @@ required_keys = {
     },
 
     Annealing: {
-        "program": AnnealProgram
+        "program": AnnealProgram,
+        "start_temp": validators.numbers.positive_decimal("Annealing/start_temp", "start_temp", True),
+        "start_temp_unit": validators.units.FOSTempUnit
     },
 
     EmbeddedFile: {
@@ -170,14 +183,22 @@ optional_keys = {
         "orcid" : str
     },
 
+    Product: {
+        "expected_amount": validators.numbers.positive_decimal("Product/expected_amount", "expected_amount", require_unit=True),
+        "expected_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]),
+        "obtained_amount": validators.numbers.positive_decimal("Product/obtained_amount", "obtained_amount", require_unit=True),
+        "obtained_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]),
+        "characterizations": str
+    },
+
     Material : {
-        "purity" : validators.material.purity("Material"),
+        "purity" : validators.numbers.decimal_range("Material/purity","purity", 0, 1),
         "treatments": ListBlock.Simple(Treatment)
     },
 
     Treatment: {
         "program": ListBlock.Simple(AnnealSection),
-        "recovered_mass": validators.numbers.positive_decimal("Treatment/recovered_mass"),
+        "recovered_mass": validators.numbers.positive_decimal("Treatment/recovered_mass", "recovered_mass"),
         "start_time": str,
         "end_time": str
     },

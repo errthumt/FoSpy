@@ -21,7 +21,8 @@ supplier: Furukama
 cas: 7440-38-2
 form: lump
 env: Ar (g)
--ratio: <!TEMPLATE-FIELD>
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
 purity: 0.9995
 treatments: [
     type: Grinding
@@ -38,7 +39,8 @@ supplier: Sigma Aldrich
 -cas: <!TEMPLATE-FIELD>
 form: powder
 env: Ar (g)
--ratio: <!TEMPLATE-FIELD>
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
 purity: 0.995
 treatments: []
 

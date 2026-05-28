@@ -39,10 +39,10 @@ class Annealing(Treatment):
 
         for section in self.program:
             if section.type == "ramp":
-                temp = section.get_temp("C")
-                furnace.ramp(temp, f"{section.get_time('h')} h")
+                temp = section.get_temp("C").magnitude
+                furnace.ramp(temp, f"{section.get_time('h').magnitude} h")
             elif section.type == "dwell":
-                furnace.dwell(f"{section.get_time('h')} h")
+                furnace.dwell(f"{section.get_time('h').magnitude} h")
             elif section.type == "quench":
                 furnace.quench(section.medium)
 
@@ -52,11 +52,11 @@ class Annealing(Treatment):
         return self._profile.update_params(**kwargs)
 
     def show_plot(self, **kwargs):
-        self.update_profile(**kwargs)
+        self.build_profile(**kwargs)
         return self._profile.plot(show=True)
     
     def interactive_plot(self, **kwargs):
-        self.update_profile(**kwargs)
+        self.build_profile(**kwargs)
         return self._profile.interactive()
 
 Treatment.dispatch["anneal"] = Annealing
@@ -77,6 +77,15 @@ class AnnealSection(SingleBlock):
     @_calc_routine()
     def add_missing_parameter(self):
         return
+    
+    def get_time(self, time_units="h"):
+        from ..parsing.validators.units import FOSQuantity, FOSUnit
+        if not hasattr(self, "time"):
+            raise ValueError("This Anneal section does not have a 'time' attribute.")
+        
+        time = FOSQuantity(float(self.time.magnitude), self.time.units)
+        value = time.to(FOSUnit(time_units))
+        return value
     
 class Ramp(AnnealSection):
     dispatch = {}
@@ -107,34 +116,20 @@ class Ramp(AnnealSection):
                 return subclass(blockDict, _dispatched=True)
             
     def get_rate(self, temp_units="C", time_units="h"):
-        from ..parsing.validators.units import convert_temp, convert_time
+        from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
         if not hasattr(self, "rate"):
             raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
-        
-        current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
-        value = self.rate()
-        value = convert_temp(value, current_temp, temp_units)
-        value = convert_time(value, time_units, current_time)
+        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,"[time]")}")
+        rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
+        value = rate.to(new_unit)
         return value
     
     def get_temp(self, temp_units="C"):
-        from ..parsing.validators.units import convert_temp
+        from ..parsing.validators.units import FOSTempUnit, FOSQuantity
         if not hasattr(self, "temp"):
             raise ValueError("Ramp section does not have a 'temp' attribute. Conisder reclassifying this section as a RampNoTemp section.")
-        
-        current_temp = self.temp_units
-        value = self.temp()
-        value = convert_temp(value, current_temp, temp_units)
-        return value
-    
-    def get_time(self, time_units="h"):
-        from ..parsing.validators.units import convert_time
-        if not hasattr(self, "time"):
-            raise ValueError("Ramp section does not have a 'time' attribute. Conisder reclassifying this section as a RampNoTime section.")
-        
-        current_time = self.time_units
-        value = self.time()
-        value = convert_time(value, current_time, time_units)
+        temp = FOSQuantity(float(self.temp.magnitude),self.temp.units)
+        value = temp.to(FOSTempUnit(temp_units))
         return value
     
 
@@ -188,9 +183,22 @@ Ramp.dispatch["time"] = RampNoTime
 class RampNoRate(Ramp):
     dispatch = {}
     def get_rate(self, temp_units="C", time_units="h"):
-        temp = self.get_temp(temp_units)
+        from ..parsing.validators.units import FOSQuantity, temp_rate_unit, FOSTempUnit
+        try:
+            ramp_set = self._parent_block.get_any(type="ramp")
+            self_idx = ramp_set.index(self)
+            if self_idx == 0:
+                last_temp = self._parent_block._parent_block.start_temp
+            else:
+                last_temp = ramp_set[self_idx-1].get_temp(temp_units)
+        except:
+            last_temp = FOSQuantity(25,FOSTempUnit("C"))
+
+        last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
+
+        delta_temp = self.get_temp(temp_units)-last_temp
         time = self.get_time(time_units)
-        rate = temp / time
+        rate = delta_temp / time
         return rate
     
     @classmethod
@@ -199,21 +207,12 @@ class RampNoRate(Ramp):
     
     @_calc_routine()
     def add_missing_parameter(self):
-        temp_unit = self.temp_units
-        time_unit = self.time_units
-        rate = self.get_rate(temp_unit, time_unit)
-        self.add_calc_comment("temp", f"Rate for ramp: {rate} {temp_unit}/{time_unit}", "missing rate")
+        rate = self.get_rate()
+        self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")
 Ramp.dispatch["rate"] = RampNoRate
 
 class Dwell(AnnealSection):
     dispatch = {}
-    def get_time(self, time_units="h"):
-        from ..parsing.validators.units import convert_time
-        current_time = self.time_units
-        value = self.time
-        value = convert_time(value, current_time, time_units)
-        return value
-    
     @classmethod
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
@@ -231,8 +230,8 @@ class AnnealProgram(ListBlock):
     _reqCls = AnnealSection
     def append(self, obj):
         super().append(obj)
-        if hasattr(self, "_parent_block") and self._parent_block is not None:
-            self._parent_block.build_profile()
+        '''if hasattr(self, "_parent_block") and self._parent_block is not None:
+            self._parent_block.build_profile()'''
     
     @_calc_routine()
     def add_all_missing_parameters(self):
