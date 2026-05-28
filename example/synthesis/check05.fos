@@ -30,16 +30,19 @@ nominal_mass: 250.0
 nominal_mass_unit: mg
 
 [Products]
-name: Barium Zinc Antimonide (2-5-6)
-formula: Ba2Zn5Sb6
+name: Barium transition-metal arsenide (8-24-28.5)
+formula: Ba8Cu13Zn11As28.5
 expected: True
 obtained: True
 expected_amount: 250.0
 expected_amount_unit: milligram
-obtained_amount: 200.0
+obtained_amount: 150.0
 obtained_amount_unit: milligram
-observations: Black Powder
-characterizations: PXRD, EDS, Eyeballs
+observations: Gray Powder
+characterizations: PXRD
+structure_comments: [;;;
+Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space
+group Cmcm]
 
 [[Reagents]]
 :name
