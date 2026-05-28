@@ -710,6 +710,17 @@ class SingleBlock(Block):
 
         return out
     
+    def to_json(self, filepath=None, clean=True, indent=4, **kwargs):
+        import json
+        serial = self.serialize(clean=clean)
+
+        if filepath is None:
+            return json.dumps(serial)
+        
+        with open(filepath, "w") as f:
+            json.dump(serial, f, indent=indent, **kwargs)
+
+    
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
         Add a calculated comment to be injected during serialization.
@@ -941,7 +952,7 @@ class SingleBlock(Block):
         self._key_order = new_order
         self._meta_to_front()
 
-    def default_key_order(self):
+    def default_key_order(self, deep=False):
         new_order = []
         for key in self._get_validators():
             if key != "ext" and key in self.serialize(shallow=True):
@@ -951,6 +962,11 @@ class SingleBlock(Block):
                 new_order.append(key)
         self._key_order = new_order
         self._meta_to_front()
+
+        if deep:
+            for name, obj in self.__dict__.items():
+                if not name.startswith("_") and hasattr(obj, "default_key_order"):
+                    obj.default_key_order(deep=True)
 
     def keys_to_end(self, *args):
         def remove_alias(key):
@@ -1066,7 +1082,7 @@ class FileBlock(SingleBlock):
     ```
     """
      
-    def __init__(self, blockDict, _sourceFile=None, _dispatched=False):
+    def __init__(self, blockDict, _sourceFile=None, _dispatched=True):
         """
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
         """
@@ -1455,3 +1471,8 @@ class ListBlock(Block):
         for obj in self._objs:
             if hasattr(obj, "clear_all_comments"):
                 obj.clear_all_comments()
+
+    def default_key_order(self, deep=False):
+        for obj in self._objs:
+            if hasattr(obj, "default_key_order"):
+                obj.default_key_order(deep=deep)

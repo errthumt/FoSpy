@@ -1,0 +1,23 @@
+{
+    "experimenters[0].name": "Jill",
+    "experimenters[0].affiliation": "Drexel",
+    "reaction.nominal_formula": "H2O",
+    "reaction.nominal_mass": 1.0,
+    "reaction.nominal_mass_units": "g",
+    "treatments[0].type": "anneal",
+    "treatments[0].repeats": "1",
+    "treatments[0].observations": "I made a new material",
+    "treatments[0].program[0].type": "ramp",
+    "materials[0].type": "precursor",
+    "materials[0].formula": "H2O",
+    "materials[0].supplier": "Philadelphia Water Works",
+    "materials[0].cas": "7732-18-5",
+    "materials[0].form": "liquid",
+    "materials[0].env": "ambient",
+    "materials[0].ratio": "1.0",
+    "treatments[0].gas_flow" : [
+        {"name": "Argon"},
+        {"name": "Hydrogen"},
+        {"name": "Ammonia"}
+    ]
+}

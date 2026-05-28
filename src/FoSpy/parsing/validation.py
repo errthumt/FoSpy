@@ -25,8 +25,11 @@ class LabConditions(SingleBlock):
 class Equipment(SingleBlock):
     pass
 
-EquipmentList = ListBlock.Simple(Equipment)
+class GasFlow(SingleBlock):
+    pass
 
+EquipmentList = ListBlock.Simple(Equipment)
+FlowList = ListBlock.Simple(GasFlow)
 
 
 TemplateLists = {
@@ -177,6 +180,10 @@ optional_keys = {
         "recovered_mass": validators.numbers.positive_decimal("Treatment/recovered_mass"),
         "start_time": str,
         "end_time": str
+    },
+
+    Annealing: {
+        "gas_flow": FlowList
     },
 
     TemplateSet: TemplateLists

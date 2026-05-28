@@ -93,9 +93,6 @@ def main():
         template_dict = fill_field(template_dict, key, value)
     save_json("SSMC-CI_2026/Jill/3_filled_remainder.json")
 
-    ramp_time = template_dict["treatments"][0]["program"][0]["temp"]/template_dict["treatments"][0]["program"][0]["rate"]
-    ramp_time /= 60.0
-    template_dict["treatments"][0]["program"][0]["time"] = ramp_time
 
     my_synthesis = Synthesis.reflex(serialize=False, **template_dict)
     my_synthesis = my_synthesis.fill()

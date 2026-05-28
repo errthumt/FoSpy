@@ -1,0 +1,74 @@
+{
+  "Video ID": "AUTO_GENERATED_VIDEO_ID",
+  "Process Name": "Ammonolysis - AUTO",
+  "Sample Name (Sample_no)": "Sample 001",
+  "Date of Experiment (Expt_date)": "05-27-2026",
+  "Temperature (Lab_temp)": {
+    "value": 22.0,
+    "unit": "C"
+  },
+  "Humidity (Lab_humidity)": {
+    "value": 25.0,
+    "unit": "%"
+  },
+  "Initial mass of bubbler (Mass_bub_pre)": {
+    "value": 3.58,
+    "unit": "g"
+  },
+  "Precursor name (Chem_prec)": "Generic Precursor",
+  "Precursor color (Color_prec)": "Blue?",
+  "Precursor mass (Mass_prec)": {
+    "value": 0.06,
+    "unit": "g"
+  },
+  "Precursor structure (Struc_prec)": "crystal",
+  "Reaction temperature (Max_temp_C)": {
+    "value": 777.0,
+    "unit": "C"
+  },
+  "Reaction time (Time_max_temp)": {
+    "value": 20.0,
+    "unit": "min",
+    "display_value": "20:00"
+  },
+  "Heating Rate (Heat_rate)": {
+    "value": 5.0,
+    "unit": "C/min"
+  },
+  "Argon flow rate (%) (Ar_perc)": {
+    "value": 10.0,
+    "unit": "%"
+  },
+  "Hydrogen flow rate (%) (H2_perc)": {
+    "value": 0.2,
+    "unit": "%"
+  },
+  "Ammonia flow rate(%) (NH3_perc)": {
+    "value": 0.3,
+    "unit": "%"
+  },
+  "Reaction start time (Start_time)": "14:00",
+  "Reaction End time (End_time)": "15:00",
+  "Final mass of bubbler (Mass_bub_post)": {
+    "value": 3.58,
+    "unit": "g"
+  },
+  "Mass of product (Mass_prod)": {
+    "value": 0.0987,
+    "unit": "g"
+  },
+  "Color of product (Color_prod)": "green",
+  "Structure of product (Struc_prod)": "body-centered cubic",
+  "_audit": {
+    "compiler_version": "v3_integrated_normalization",
+    "source_compiler_file": "/content/drive/MyDrive/NLP LAB/ELN/new_relabelled_data_run/measurement_compiler_outputs/compiled_experiment_summary.json",
+    "missing_fields": [],
+    "normalization_notes": [
+      "Time_max_temp: time_normalized_from_2000_to_display_20:00",
+      "Ar_perc: selected_full_or_best_available_panel; adopted_best_panel_value",
+      "N2_perc: selected_full_or_best_available_panel; adopted_best_panel_value",
+      "NH3_perc: selected_full_or_best_available_panel; adopted_best_panel_value",
+      "H2_perc: selected_full_or_best_available_panel; adopted_best_panel_value"
+    ]
+  }
+}
