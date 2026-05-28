@@ -37,6 +37,7 @@ def main():
     # Save finalized json and fos files.
     my_synthesis.to_json(SYNTHESIS_ORDERED_PATH)
     my_synthesis.save(SYNTHESIS_FOS_PATH)
+    pass
 
 
 if __name__ == "__main__":
