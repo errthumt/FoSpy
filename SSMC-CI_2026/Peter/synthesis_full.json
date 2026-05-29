@@ -7,7 +7,8 @@
         "_fos_comments": {
             "name": [],
             "date": [
-                "This comment will stay attached to the date when saving (until comments are cleared)"
+                "This comment will stay attached to the date when saving (until comments are",
+                "cleared)"
             ],
             "internal_project_ID": [],
             "internal_project_description": []
@@ -34,16 +35,47 @@
     "reaction": {
         "nominal_formula": "Ba2Zn5Sb6",
         "nominal_mass": "250.0",
-        "nominal_mass_units": "mg",
+        "nominal_mass_unit": "mg",
         "_fos_comments": {
             "nominal_formula": [],
             "nominal_mass": [],
-            "nominal_mass_units": []
+            "nominal_mass_unit": []
         },
         "_fos_key_comments": {},
         "_list_type": "explicit",
         "_routine_paths": []
     },
+    "products": [
+        {
+            "name": "Barium Zinc Antimonide (2-5-6)",
+            "formula": "Ba2Zn5Sb6",
+            "expected": "True",
+            "obtained": "True",
+            "expected_amount": "250.0",
+            "expected_amount_unit": "milligram",
+            "obtained_amount": "200.0",
+            "obtained_amount_unit": "milligram",
+            "observations": "Black Powder",
+            "characterizations": "PXRD, EDS, Eyeballs",
+            "structure_comments": "Unique clathrate with novel polyhedra. Space group Pnma",
+            "_fos_comments": {
+                "name": [],
+                "formula": [],
+                "expected": [],
+                "obtained": [],
+                "expected_amount": [],
+                "expected_amount_unit": [],
+                "obtained_amount": [],
+                "obtained_amount_unit": [],
+                "observations": [],
+                "characterizations": [],
+                "structure_comments": []
+            },
+            "_fos_key_comments": {},
+            "_list_type": "explicit",
+            "_routine_paths": []
+        }
+    ],
     "materials": [
         {
             "name": "Barium",
@@ -54,7 +86,8 @@
             "form": "lump",
             "purity": "0.999",
             "env": "Ar (g)",
-            "ratio": "2.0",
+            "amount": "2.0",
+            "amount_unit": "mol ratio",
             "treatments": [
                 {
                     "type": "cutting",
@@ -79,10 +112,11 @@
                 "form": [],
                 "purity": [],
                 "env": [],
-                "ratio": [
+                "amount": [
                     "The comment below will be correctly re-calculated using a calc_routine",
                     "! Total weight percent: 20.62%"
                 ],
+                "amount_unit": [],
                 "treatments": [
                     "Similar to headers, single brackets mean there is only one group,",
                     "in this case for treatments of Barium"
@@ -97,7 +131,8 @@
                 "form": [],
                 "purity": [],
                 "env": [],
-                "ratio": [],
+                "amount": [],
+                "amount_unit": [],
                 "treatments": []
             },
             "_list_type": "looped",
@@ -112,7 +147,8 @@
             "form": "powder",
             "purity": "0.995",
             "env": "Ar (g)",
-            "ratio": "5.0",
+            "amount": "5.0",
+            "amount_unit": "mol ratio",
             "treatments": [],
             "_fos_comments": {
                 "name": [],
@@ -123,9 +159,10 @@
                 "form": [],
                 "purity": [],
                 "env": [],
-                "ratio": [
+                "amount": [
                     "! Total weight percent: 24.54%"
                 ],
+                "amount_unit": [],
                 "treatments": []
             },
             "_fos_key_comments": {},
@@ -141,7 +178,8 @@
             "form": "powder",
             "purity": "0.999",
             "env": "Ar (g)",
-            "ratio": "6.0",
+            "amount": "6.0",
+            "amount_unit": "mol ratio",
             "treatments": [],
             "_fos_comments": {
                 "name": [],
@@ -152,9 +190,10 @@
                 "form": [],
                 "purity": [],
                 "env": [],
-                "ratio": [
+                "amount": [
                     "! Total weight percent: 54.84%"
                 ],
+                "amount_unit": [],
                 "treatments": []
             },
             "_fos_key_comments": {},
@@ -201,15 +240,21 @@
             "type": "anneal",
             "repeats": "2",
             "observations": "Opened under argon atmosphere and ground well before sealing in new ampoule in between annealings.",
+            "start_temp": "25",
+            "start_temp_unit": "degree_Celsius",
             "program": [
                 {
                     "type": "ramp",
-                    "temp": "600 C",
-                    "time": "10 hr",
+                    "temp": "600",
+                    "time": "10",
+                    "temp_unit": "degree_Celsius",
+                    "time_unit": "hour",
                     "_fos_comments": {
                         "type": [],
                         "temp": [],
-                        "time": []
+                        "time": [],
+                        "temp_unit": [],
+                        "time_unit": []
                     },
                     "_fos_key_comments": {},
                     "_list_type": "explicit",
@@ -217,10 +262,12 @@
                 },
                 {
                     "type": "dwell",
-                    "time": "120hr",
+                    "time": "120",
+                    "time_unit": "hour",
                     "_fos_comments": {
                         "type": [],
-                        "time": []
+                        "time": [],
+                        "time_unit": []
                     },
                     "_fos_key_comments": {},
                     "_list_type": "explicit",
@@ -231,6 +278,8 @@
                 "type": [],
                 "repeats": [],
                 "observations": [],
+                "start_temp": [],
+                "start_temp_unit": [],
                 "program": [
                     "Here, the double brackets signal that there are multiple program sections."
                 ]
@@ -380,6 +429,7 @@
         "reaction": [
             "Single brackets on a header mean there is only one group"
         ],
+        "products": [],
         "materials": [
             "Double brackets on a header mean there are multiple similar groups"
         ],
