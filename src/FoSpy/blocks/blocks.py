@@ -20,7 +20,7 @@ from pathlib import Path
 from .._debug import Debug
 _debug = Debug()
 
-
+import json
 
 class SimpleWrapper:
     """
@@ -1101,16 +1101,34 @@ class FileBlock(SingleBlock):
     @classmethod
     def fromFile(cls, filepath):
         abspath = os.path.abspath(filepath)
-        blockDict = dict_from_file(abspath)
+        pathstr = str(abspath)
+        try:
+            ext = pathstr.lower().split(".")[-1]
+        except IndexError:
+            raise ValueError(f"Could not determine extension for filepath: {pathstr}")
+
+        ext_map = {
+            "fos": dict_from_file,
+            "json": lambda fp: json.load(open(fp, "r"))
+        }
+
+        if ext not in ext_map:
+            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
+        
+        blockDict = ext_map[ext](abspath)
         return cls.dispatch_subclass(blockDict, _sourceFile = abspath) 
     
-    def save(self, filepath:str=None):
+    def save(self, filepath:str=None, json_indent=4, **kwargs):
         """
         Sends a serialized dict to be written to file.
 
         Args:
             filepath:
                 If specified, writes serialized dict to filepath. ks to `self._sourceFile`.
+            json_indent:
+                Indent to use for json.dump when saving as json
+            **kwargs:
+                Optional kwargs to pass to saving routine (unique to each file extension)
 
         Raises:
             ValueError:
@@ -1121,19 +1139,37 @@ class FileBlock(SingleBlock):
         from warnings import warn
         saving_as = filepath is not None
         try:
-            if filepath is None:
+            if not saving_as:
                 if self._sourceFile is None:
                     raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
                 else:
                     filepath = self._sourceFile
-            
-            self._sourceFile = os.path.abspath(filepath)
-            blockDict = self.serialize()
 
-            write_dict_to_file(blockDict, self._sourceFile)
+            self._sourceFile = os.path.abspath(filepath)
+            pathstr = str(self._sourceFile)
+            try:
+                ext = pathstr.lower().split(".")[-1]
+            except IndexError:
+                raise ValueError(f"Could not determine extension for filepath: {pathstr}")
+
+            ext_map = {
+                "fos": write_dict_to_file,
+                "json": lambda blockDict, fp, **kwargs: json.dump(blockDict, open(fp, "w"), indent=json_indent, **kwargs)
+            }
+
+            ext = str(filepath).lower().split(".")[-1]
+
+            if ext not in ext_map:
+                raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
+            
+            blockDict = self.serialize(clean=ext!="fos")
+
+            ext_map[ext](blockDict, self._sourceFile, **kwargs)
+
         except Exception as e:
             if not saving_as:
-                warn(f"Could not save file: {e}", RuntimeWarning)
+                warn(f"Could not save file. Disconnected from source file for safety. Exception: {e}", RuntimeWarning)
+                self._sourceFile = None
                 return e
             else:
                 raise e
@@ -1183,6 +1219,8 @@ class ListBlock(Block):
                 usually passed in subclass definitions. 
         """
         self._objs = []
+        if not isinstance(blockList, list):
+            blockList = [blockList]
         for blockDict in blockList:
             obj = self._reqCls.dispatch_subclass(blockDict)
             obj._parent_block = self

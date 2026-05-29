@@ -21,6 +21,9 @@ def main():
     my_synthesis = Synthesis.fromFile(r"example/synthesis/start_synthesis.fos")
     my_templates = TemplateSet.fromFile(r"example/templates/start_templates.fos")
 
+    # save the synthesis to a json for comparison
+    my_synthesis.save(r"example/synthesis/start_synthesis.json")
+
     # save the files to new files so that they don't overwrite the old ones.
     my_synthesis.save(r"example/synthesis/check01.fos")
     my_templates.save(r"example/templates/check01.fos")
@@ -118,7 +121,7 @@ def main():
     powder_template.default_key_order()
 
     # This saves my powder template to a new category of templates titled "Generic$materials"
-    my_templates.add_block("generic","materials", [powder_template])
+    my_templates.add_block("generic","materials", powder_template)
     my_templates.keys_to_end("cifs")
 
 
@@ -225,7 +228,6 @@ def main():
     my_synthesis.key_to_idx("reagents", 5)
     my_mats.set_list_type("looped")
 
-    print(my_synthesis.treatments[2].program[0].get_rate("K", "h"))
     my_templates.save("example/templates/check10.fos")
     my_synthesis.save("example/synthesis/check10.fos")
 

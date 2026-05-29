@@ -15,8 +15,23 @@
     "reaction": {
         "nominal_formula": "Ba2Zn5Sb6",
         "nominal_mass": "250.0",
-        "nominal_mass_units": "mg"
+        "nominal_mass_unit": "mg"
     },
+    "products": [
+        {
+            "name": "Barium Zinc Antimonide (2-5-6)",
+            "formula": "Ba2Zn5Sb6",
+            "expected": "True",
+            "obtained": "True",
+            "expected_amount": "250.0",
+            "expected_amount_unit": "milligram",
+            "obtained_amount": "200.0",
+            "obtained_amount_unit": "milligram",
+            "observations": "Black Powder",
+            "characterizations": "PXRD, EDS, Eyeballs",
+            "structure_comments": "Unique clathrate with novel polyhedra. Space group Pnma"
+        }
+    ],
     "materials": [
         {
             "name": "Barium",
@@ -27,7 +42,8 @@
             "form": "lump",
             "purity": "0.999",
             "env": "Ar (g)",
-            "ratio": "2.0",
+            "amount": "2.0",
+            "amount_unit": "mol ratio",
             "treatments": [
                 {
                     "type": "cutting",
@@ -45,7 +61,8 @@
             "form": "powder",
             "purity": "0.995",
             "env": "Ar (g)",
-            "ratio": "5.0",
+            "amount": "5.0",
+            "amount_unit": "mol ratio",
             "treatments": []
         },
         {
@@ -57,7 +74,8 @@
             "form": "powder",
             "purity": "0.999",
             "env": "Ar (g)",
-            "ratio": "6.0",
+            "amount": "6.0",
+            "amount_unit": "mol ratio",
             "treatments": []
         }
     ],
@@ -77,15 +95,20 @@
             "type": "anneal",
             "repeats": "2",
             "observations": "Opened under argon atmosphere and ground well before sealing in new ampoule in between annealings.",
+            "start_temp": "25",
+            "start_temp_unit": "degree_Celsius",
             "program": [
                 {
                     "type": "ramp",
-                    "temp": "600 C",
-                    "time": "10 hr"
+                    "temp": "600",
+                    "time": "10",
+                    "temp_unit": "degree_Celsius",
+                    "time_unit": "hour"
                 },
                 {
                     "type": "dwell",
-                    "time": "120hr"
+                    "time": "120",
+                    "time_unit": "hour"
                 }
             ]
         },

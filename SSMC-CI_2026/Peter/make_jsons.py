@@ -4,15 +4,11 @@ from FoSpy.blocks.synthesis import Synthesis
 mysyn = Synthesis.fromFile("example/synthesis/start_synthesis.fos")
 mysyn.add_calc_routine("materials.add_weight_pcts")
 
-
-cleanDict = mysyn.serialize(clean=True)
 fullDict = mysyn.serialize(clean=False)
 
-with open("SSMC-CI_2026/Peter/synthesis_dict_clean.json", "w") as f:
-    import json
-    json.dump(cleanDict, f, indent=4)
+mysyn.save("SSMC-CI_2026/Peter/synthesis_clean.json")
 
-with open("SSMC-CI_2026/Peter/synthesis_dict_full.json", "w") as f:
+with open("SSMC-CI_2026/Peter/synthesis_full.json", "w") as f:
     import json
     json.dump(fullDict, f, indent=4)
 
