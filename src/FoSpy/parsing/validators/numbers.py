@@ -40,3 +40,17 @@ def decimal_range(label, value_key, lower=0, upper=1, include_lower=False, inclu
         return unit_func
     return func
 
+def any_decimal(label, value_key, require_unit=False):
+    def func(val, sourceDict):
+        try:
+            value = Decimal(val)
+        except:
+            raise ValueError(f"Unable to convert value: '{val}' into a decimal for '{label}'")
+        return value
+    
+    if require_unit:
+        def unit_func(val, cls, sourceDict):
+            return attach_unit(func(val), value_key, cls, sourceDict)
+        return unit_func
+    return func
+
