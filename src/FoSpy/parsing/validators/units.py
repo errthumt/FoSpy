@@ -1,4 +1,4 @@
-from pint import UnitRegistry, Quantity, Unit
+from pint import Quantity, Unit
 
 class FOSUnit(Unit):
     def __init__(self, unitlike, allow_dims=[]):
@@ -36,43 +36,6 @@ class FOSQuantity(Quantity):
     def serialize(self, **kwargs):
         return str(self.magnitude)
 
-allowed_units = {
-    "mass" : [
-        "g",
-        "grams",
-        "mg",
-        "milligrams",
-        "ug",
-        "micrograms",
-        "kg",
-        "kilograms"
-    ],
-    "molar" : [
-        "molar ratio",
-        "mol ratio",
-        "mole ratio",
-        "moles",
-        "mols",
-        "mol"
-    ],
-    "volume": [
-        "mL",
-        "uL",
-        "L",
-
-    ],
-    "time" : [
-        "s",
-        "min",
-        "h"
-    ],
-    "temp" : [
-        "K",
-        "C",
-        "F"
-    ]
-}
-
 def attach_unit(value, value_key, cls, sourceDict):
     unit_key = f"{value_key}_unit"
     if unit_key not in sourceDict:
@@ -86,11 +49,6 @@ def attach_unit(value, value_key, cls, sourceDict):
     unit = unit_validator(unit)
 
     return FOSQuantity(value, unit)
-
-    
-
-
-
 
 def mass_unit(key:str):
     def func(unit:str):

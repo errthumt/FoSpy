@@ -91,8 +91,8 @@ required_keys = {
 
     Reaction: {
         "nominal_formula": ChemFormula,
-        "nominal_mass" : validators.numbers.positive_decimal("Reaction/nominal_mass", "nominal_mass"),
-        "nominal_mass_unit": validators.units.mass_unit("Reaction/nominal_mass_units")
+        "nominal_amount" : validators.numbers.positive_decimal("Reaction/nominal_amount", "nominal_amount"),
+        "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
     },
 
     Product: {
@@ -177,8 +177,8 @@ optional_keys = {
     },
 
     Treatment: {
-        "program": ListBlock.Simple(AnnealSection),
-        "recovered_mass": validators.numbers.positive_decimal("Treatment/recovered_mass", "recovered_mass"),
+        "recovered_amount": validators.numbers.positive_decimal("Treatment/recovered_amount", "recovered_amount", True),
+        "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,
         "end_time": str
     },
@@ -190,7 +190,7 @@ optional_keys = {
     Ramp: {
         "temp": validators.numbers.positive_decimal("RampNoRate/temp", "temp", True) ,
         "time": validators.numbers.positive_decimal("RampNoRate/time", "time", True),
-        "rate": validators.numbers.positive_decimal("RampNoTemp/rate", "rate", True),
+        "rate": validators.numbers.any_decimal("RampNoTemp/rate", "rate", True),
         "temp_unit": validators.units.FOSTempUnit,
         "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
         "rate_unit": validators.units.temp_rate_unit
