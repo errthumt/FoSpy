@@ -74,7 +74,7 @@ special_prop2: 6.022
 ### Optional properties
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| gas_flow | `FlowList` | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock) |
+| gas_flow | `FlowList` | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) |
 
 ---
 
@@ -99,7 +99,7 @@ special_prop2: 6.022
 | extension | `validators.filenames.file_extension` | File extension |
 | embedded | `list` | A list of raw lines read directly from the FOS file which can be unpacked to a temporary file during runtime for reading as the original filetype. |
 
-### Method Subclasses
+### `EmbeddedFile` Method Subclasses
 These subclasses don't have any additional required properties but will either be given additional requirements in the future or have specialized methods.
 * `EmbeddedCIF`
 
@@ -238,7 +238,7 @@ If all three are provided, the last one found during reading will be discarded a
 |---------|-----------------------------|-------------|
 | rename | `validators.rename.rename_dict` | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [API script example](../../example/readme.md) for usage.|
 
-### Method Subclasses
+### SingleBlock Method Subclasses
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 * `GasFlow`: For specifying gas flow rates during an annealing treatment (to be expanded).
 * `LabConditions`: For specifying laboratory conditions during the synthesis (to be expanded).
@@ -263,10 +263,10 @@ These subclasses don't currently have any additional required properties but wil
 ### Optional properties
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| cif | `EmbeddedCIF` | [A single embedded CIF file](#embeddedfile) |
-| cifs | `ListBlock.Simple(EmbeddedCIF)` | A [simple list](#listblock-and-simple-lists) of [`EmbeddedCIF` objects](#embeddedfile) |
-| laboratory_conditions | `LabConditions` | [General Laboratory Conditions](#singleblock) |
-| equipment | `EquipmentList` | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock) |
+| cif | `EmbeddedCIF` | [A single embedded CIF file](#embeddedfile-method-subclasses) |
+| cifs | `ListBlock.Simple(EmbeddedCIF)` | A [simple list](#listblock-and-simple-lists) of [`EmbeddedCIF` objects](#embeddedfile-method-subclasses) |
+| laboratory_conditions | `LabConditions` | [General Laboratory Conditions](#singleblock-method-subclasses) |
+| equipment | `EquipmentList` | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
 
 ---
 
