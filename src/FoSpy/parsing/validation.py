@@ -125,27 +125,6 @@ required_keys = {
         "type": str
     },
 
-    RampNoRate: {
-        "temp": validators.numbers.positive_decimal("RampNoRate/temp", "temp", True) ,
-        "time": validators.numbers.positive_decimal("RampNoRate/time", "time", True),
-        "temp_unit": validators.units.FOSTempUnit,
-        "time_unit": validators.units.FOSUnit.enforce_dims("[time]")
-    },
-
-    RampNoTime: {
-        "temp": validators.numbers.positive_decimal("RampNoTime/temp", "temp", True),
-        "rate": validators.numbers.positive_decimal("RampNoTime/rate", "rate", True),
-        "temp_unit": validators.units.FOSTempUnit,
-        "rate_unit": validators.units.temp_rate_unit 
-    },
-
-    RampNoTemp: {
-        "time": validators.numbers.positive_decimal("RampNoTemp/time", "time", True),
-        "rate": validators.numbers.positive_decimal("RampNoTemp/rate", "rate", True),
-        "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
-        "rate_unit": validators.units.temp_rate_unit  
-    },
-
     Dwell: {
         "time": validators.numbers.positive_decimal("Dwell/time", "time", True),
         "time_unit": validators.units.FOSUnit.enforce_dims("[time]")
@@ -206,6 +185,15 @@ optional_keys = {
 
     Annealing: {
         "gas_flow": FlowList
+    },
+
+    Ramp: {
+        "temp": validators.numbers.positive_decimal("RampNoRate/temp", "temp", True) ,
+        "time": validators.numbers.positive_decimal("RampNoRate/time", "time", True),
+        "rate": validators.numbers.positive_decimal("RampNoTemp/rate", "rate", True),
+        "temp_unit": validators.units.FOSTempUnit,
+        "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
+        "rate_unit": validators.units.temp_rate_unit
     },
 
     TemplateSet: TemplateLists
