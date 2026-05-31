@@ -32,6 +32,12 @@ class Annealing(Treatment):
         self.build_profile()
     
     def build_profile(self, **kwargs):
+        from .template import TemplateBlock
+        if isinstance(self, TemplateBlock):
+            from warnings import warn
+            warn("Cannot build profile for a template annealing block. Skipping profile build.")
+            return None
+        
         from cif2xrd.furnace import Profile #type: ignore
         import matplotlib.pyplot as plt
 
