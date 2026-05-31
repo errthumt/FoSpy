@@ -26,8 +26,8 @@ orcid: 0000-0002-8551-3627
 
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5
-nominal_mass: 250.0
-nominal_mass_unit: mg
+nominal_amount: 250.0
+nominal_amount_unit: milligram
 
 [Products]
 name: Barium transition-metal arsenide (8-24-28.5)

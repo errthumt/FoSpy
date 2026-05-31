@@ -13,8 +13,8 @@ orcid: 0009-0006-1937-5672
 // Single brackets on a header mean there is only one group
 [Reaction]
 nominal_formula: Ba2Zn5Sb6
-nominal_mass: 250.0
-nominal_mass_unit: mg
+nominal_amount: 250.0
+nominal_amount_unit: milligram
 
 [Products]
 name: Barium Zinc Antimonide (2-5-6)
