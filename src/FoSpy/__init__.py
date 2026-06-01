@@ -45,5 +45,3 @@ def inherit_class_doc(parent):
         return cls
     return decorator
 
-
-from .blocks.blocks import SingleBlock, FileBlock, ListBlock

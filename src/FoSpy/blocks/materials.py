@@ -88,8 +88,3 @@ class MaterialList(ListBlock):
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("amount",comment, f"{label}_pct")
 
-class MatTempList(MaterialList, TemplateList):
-    """
-    Represents a list of materials frequently used and attached to multiple syntheses.
-    """
-    _reqCls = MaterialTemplate
