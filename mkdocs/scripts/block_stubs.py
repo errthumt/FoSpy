@@ -5,6 +5,7 @@ import textwrap
 # -----------------------------
 # CONFIGURATION
 # -----------------------------
+SYMBOL_LIST_NAME = "__block_classes__"
 SOURCE_DIR = Path("src/FoSpy/blocks")
 DOCS_DIR = Path("mkdocs/docs")
 BLOCKS_DIR_NAME = "blocks"
@@ -13,20 +14,25 @@ PACKAGE_ROOT = "FoSpy.blocks"
 # -----------------------------
 
 
-def get_all_symbols(py_file: Path) -> list[str]:
-    """Parse __all__ from a module and return a list of symbol names."""
+def get_all_symbols(py_file: Path, list_name: str = SYMBOL_LIST_NAME) -> list[str]:
+    """
+    Parse a custom symbol list (e.g. __doc_classes__) from a module
+    and return a list of symbol names.
+    """
     tree = ast.parse(py_file.read_text(encoding="utf-8"))
     symbols: list[str] = []
 
     for node in tree.body:
         if isinstance(node, ast.Assign):
-            # Look for __all__ = [...]
+            # Look for list_name = [...]
             targets = [t.id for t in node.targets if isinstance(t, ast.Name)]
-            if "__all__" in targets and isinstance(node.value, (ast.List, ast.Tuple)):
+            if list_name in targets and isinstance(node.value, (ast.List, ast.Tuple)):
                 for elt in node.value.elts:
                     if isinstance(elt, ast.Constant) and isinstance(elt.value, str):
                         symbols.append(elt.value)
+
     return symbols
+
 
 
 def main():

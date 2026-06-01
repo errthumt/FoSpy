@@ -1,5 +1,6 @@
 nav:
 - Home: index.md
+- API Example: examples/API_example.md
 - Expected Properties: expected/index.md
 - Block Modules:
   - blocks/blocks.md
@@ -28,7 +29,7 @@ nav:
   - json:
       utils: full/json/utils.md
   - parsing:
-    - format: full/parsing/format.md
+    - format_fos: full/parsing/format_fos.md
     - read: full/parsing/read.md
     - regex: full/parsing/regex.md
     - syntax: full/parsing/syntax.md
