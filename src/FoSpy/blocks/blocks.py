@@ -543,7 +543,7 @@ class SingleBlock(Block):
                 - If a template field is found when constructing a non-template
                   subclass.
         """
-        from ..parsing.format import format_field
+        from ..parsing.format_fos import format_field
         from .template import TemplateField, TemplateBlock
 
         from inspect import signature as sign
@@ -821,7 +821,7 @@ class SingleBlock(Block):
             attribute or methods attached after construction.
         """
         from copy import deepcopy
-        from ..parsing.format import format_calc_comment
+        from ..parsing.format_fos import format_calc_comment
         from .template import TemplateBlock
 
         val_to_alias = {v:k for k,v in self._aliases.items()}
@@ -973,7 +973,7 @@ class SingleBlock(Block):
             *args: properties to clear and replace with template types.
         """
 
-        from ..parsing import format_field
+        from ..parsing.format_fos import format_field
 
         serial = self.serialize(keepListType=True)
         validators = self.get_validators()
