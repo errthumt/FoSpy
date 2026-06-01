@@ -21,7 +21,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      -name: Install FoSpy
+       run: |
+         pip install .
+
+      - name: Install build dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python
 
