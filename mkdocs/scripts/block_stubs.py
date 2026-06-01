@@ -6,7 +6,9 @@ import textwrap
 # CONFIGURATION
 # -----------------------------
 SOURCE_DIR = Path("src/FoSpy/blocks")
-OUTPUT_DIR = Path("mkdocs/docs/Block_Modules")
+DOCS_DIR = Path("mkdocs/docs")
+BLOCKS_DIR_NAME = "blocks"
+OUTPUT_DIR = DOCS_DIR / BLOCKS_DIR_NAME
 PACKAGE_ROOT = "FoSpy.blocks"
 # -----------------------------
 
@@ -31,7 +33,7 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     py_files = SOURCE_DIR.glob("*.py")
-
+    paths = []
     for py_file in py_files:
         # Skip private modules and __init__.py
         if py_file.name.startswith("_") or py_file.name == "__init__.py":
@@ -80,8 +82,11 @@ def main():
                 f.write(f"### `{sym}`\n")
                 f.write(f"::: {PACKAGE_ROOT}.{module_name}.{sym}\n")
 
+        paths.append(f"{BLOCKS_DIR_NAME}/{module_name}.md")
+
     print("Markdown stubs generated.")
+    return paths
 
 
 if __name__ == "__main__":
-    main()
+    print(main())

@@ -13,20 +13,5 @@ plugins:
 extra_css:
   - stylesheets/extra.css
 
-nav:
-  - Home: index.md
-  - Expected Properties: expected/index.md
-  - Block Modules:
-    - blocks/index.md
-    - blocks/blocks.md
-    - blocks/data.md
-    - blocks/embedded.md
-    - blocks/files.md
-    - blocks/materials.md
-    - blocks/metadata.md
-    - blocks/synthesis.md
-    - blocks/template.md
-    - blocks/treatments.md
-  - Full Documentation:
-    - Master Doc: full/master.md
+INHERIT: ./nav.yml
     
