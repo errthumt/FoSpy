@@ -24,11 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python
-        
-      - name: navigate to mkdocs directory
-        run: |
-          cd mkdocs
 
       - name: Deploy to GitHub Pages
+        working-directory: mkdocs
         run: |
           mkdocs gh-deploy --force
