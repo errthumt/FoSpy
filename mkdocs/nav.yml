@@ -1,0 +1,44 @@
+nav:
+- Home: index.md
+- Expected Properties: expected/index.md
+- Block Modules:
+  - blocks/blocks.md
+  - blocks/data.md
+  - blocks/embedded.md
+  - blocks/files.md
+  - blocks/materials.md
+  - blocks/metadata.md
+  - blocks/synthesis.md
+  - blocks/template.md
+  - blocks/treatments.md
+- Full Documentation:
+  - core: full/core.md
+  - _debug: full/_debug.md
+  - blocks:
+    - blocks: full/blocks/blocks.md
+    - data: full/blocks/data.md
+    - embedded: full/blocks/embedded.md
+    - files: full/blocks/files.md
+    - materials: full/blocks/materials.md
+    - metadata: full/blocks/metadata.md
+    - synthesis: full/blocks/synthesis.md
+    - template: full/blocks/template.md
+    - treatments: full/blocks/treatments.md
+    - _blockUtils: full/blocks/_blockUtils.md
+  - json:
+      utils: full/json/utils.md
+  - parsing:
+    - format: full/parsing/format.md
+    - read: full/parsing/read.md
+    - regex: full/parsing/regex.md
+    - syntax: full/parsing/syntax.md
+    - validation: full/parsing/validation.md
+    - write: full/parsing/write.md
+    - validators:
+      - filenames: full/parsing/validators/filenames.md
+      - material: full/parsing/validators/material.md
+      - numbers: full/parsing/validators/numbers.md
+      - rename: full/parsing/validators/rename.md
+      - units: full/parsing/validators/units.md
+  - plotting:
+      EmbeddedCIF: full/plotting/EmbeddedCIF.md
