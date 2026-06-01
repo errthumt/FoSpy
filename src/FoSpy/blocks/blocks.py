@@ -1,26 +1,77 @@
-import os
 
 from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
 )
 
-from ..parsing import (
-    dict_from_file,
-    write_dict_to_file
-)
 
 from ._blockUtils import _unwrap_block
-
-import tempfile
-import atexit
-from pathlib import Path
-
 
 from .._debug import Debug
 _debug = Debug()
 
+__all__ = [
+    "Block",
+    "ListBlock",
+    "SimpleWrapper",
+    "SingleBlock",
+    "SubContainer"
+]
 
+
+def _add_comments_to_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `add_comments(self_attr, *comments)`. Mutates the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis.materials.add_comments("A comment on the materials header")
+        my_synthesis._meta.comments
+        # returns: 
+        #       {"materials":
+        #           [
+        #               "an older comment", 
+        #               "A comment on the materials header"
+        #           ]
+        #       }
+        ```
+        
+    Args:
+        *comments (str):
+            Comments to attach to the assigned attribute name in
+            the parent block's metadata. Comments are printed above
+            their attached attribute when saving in the FOS format.
+    """
+    def func(self_attr, *comments):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments.setdefault(attr_name,[])
+        for comment in comments:
+            parent_comments[attr_name].append(str(comment))
+    return func
+
+
+def _clear_comments_from_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `clear_comments(self_attr)`. Clears the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis._meta.comments["materials"]
+        # returns ["This comment was read from a FOS file"]
+
+        my_synthesis.materials.clear_comments()
+        my_synthesis._meta.comments["materials"]
+        # now returns []
+        ```
+    """
+    def func(self_attr):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments[attr_name] = []
+    return func
 
 class SimpleWrapper:
     """
@@ -56,11 +107,24 @@ class SimpleWrapper:
     def __setitem__(self, key, val):
         return self._value.__setitem__(key, val)
 
+    def __int__(self):
+        return int(self._value)
+    
+    def __float__(self):
+        return float(self._value)
+
 class Block:
     """
     The base class for any set of data found in a FOS file.
     """
     def find_fileblock(self):
+        """
+        Walks upward through `_parent_block` attributes until a
+        [`FileBlock`][FoSpy.blocks.files.FileBlock] instance is found and
+        returns that instance.
+        """
+        from .files import FileBlock
+
         blk = self
         while blk is not None:
             if isinstance(blk, FileBlock):
@@ -72,6 +136,12 @@ class Block:
         raise LookupError("Could not find a FileBlock containing the current object")
     
     def find_tempdir(self):
+        """
+        Finds the temporary directory created by the
+        [`FileBlock`][FoSpy.blocks.files.FileBlock] instance containing this
+        block as one of its attributes. Returns a `tempfile.TemporaryDirectory`
+        object.
+        """
         fileblock = self.find_fileblock()
         if hasattr(fileblock, "_tempdir"):
             return fileblock._tempdir
@@ -79,6 +149,10 @@ class Block:
             raise AttributeError("Could not find a temporary directory attached to this object's FileBlock")
     
     def find_temppath(self):
+        """
+        Similar to [`find_tempdir`][FoSpy.blocks.blocks.Block.find_tempdir] but
+        returns the corresponding `pathlib.Path` object instead.
+        """
         fileblock = self.find_fileblock()
         if hasattr(fileblock, "_temppath"):
             return fileblock._temppath
@@ -126,54 +200,45 @@ class SingleBlock(Block):
     Represents a single block of key:value pairs parsed from a FOS file.
 
     Subclasses are mapped to expected keys and validation routines in
-    `FoSpy.parsing.validation`. Expected values are validated and assigned to
+    [`..parsing.validation`][FoSpy.parsing.validation]. Expected values are validated and assigned to
     public attributes. Unexpected values are assigned to attributes of
     `self.ext` for safety, but can still be accessed as an attribute of the
-    SingleBlock obj if not overridden.
+    SingleBlock object if not overwritten
 
-    Some notable subclasses:
-    ```
-        FileBlock(SingleBlock)
-        Synthesis(FileBlock)
-        Reaction(SingleBlock)
-        Material(SingleBlock)
-        TemplateBlock(SingleBlock)
-        MaterialTempBlock(Material, TemplateBlock)
-    ```
-    Private Attributes:
-        _meta:
-            `SubContainer` object containing meta data extracted from `blockDict`
-            during construction. See `FoSpy.parsing.syntax.meta_keys`
-
-        _calc_comments:
-            dict mapping attribute names to `{"comment_ID":"comment_text"}`
-            values. Calculated comments are for user information when reading a
-            FOS file. On serialization, they are formatted to be skipped by the
-            parser and attached to their respective attributes. See
-            `SingleBlock.add_calc_comment()` and
-            `SingleBlock.add_calc_routine()`.
-
-        _calc_routines:
-            List of `calc_routine()`-decorated methods to be run during
-            serialization to populate _calc_comments.
-
-        _key_order: 
-            Maintains order that attributes were read during construction to be
-            repeated during serialization
+    **Some notable subclasses:**
+    [`FileBlock(SingleBlock)`][FoSpy.blocks.files.FileBlock]
+    [`Synthesis(FileBlock)`][FoSpy.blocks.synthesis.Synthesis]
+    [`Reaction(SingleBlock)`][FoSpy.blocks.metadata.Reaction]
+    [`Material(SingleBlock)`][FoSpy.blocks.materials.Material]
+    [`TemplateBlock(SingleBlock)`][FoSpy.blocks.template.TemplateBlock]
     """
     dispatch = {}
     _aliases = None
    
     @classmethod
     def TemplateClass(cls,*args:str):
+        """
+        Generates a hybridized subclass of the current block class and
+        [`TemplateBlock`][FoSpy.blocks.template.TemplateBlock]. Template
+        subclasses override original expected validators with either a
+        [`TemplateField`][FoSpy.blocks.template.TemplateField],
+        [`TemplateBlock`][FoSpy.blocks.template.TemplateBlock], or
+        [`TemplateList`][FoSpy.blocks.template.TemplateList] depending on the
+        type of the original validator.
+
+        Args:
+            *args: A list of properties to override as template types.
+        """
         from .template import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
-        class SubTemplate(TemplateBlock, cls):
-            dispatch = {}
-            def __init__(self, blockDict, _dispatched=False):
-                super().__init__(blockDict, _dispatched=_dispatched)
-                self._full_class = cls
-
+        if issubclass(cls, TemplateBlock):
+            SubTemplate = cls
+        else:
+            class SubTemplate(TemplateBlock, cls):
+                dispatch = {}
+                def __init__(self, blockDict, _dispatched=False):
+                    super().__init__(blockDict, _dispatched=_dispatched)
+                    self._full_class = cls
         required_keys[SubTemplate] = {}
         optional_keys[SubTemplate] = {}
         required_validators = cls.build_req_validators()
@@ -212,22 +277,42 @@ class SingleBlock(Block):
         return SubTemplate
    
     @classmethod
-    def reflex(cls, **kwargs):
+    def reflex(cls, serialize=True, **kwargs:any):
+        """
+        Flexibly generates a template for the current class where any required
+        properties missing from `kwargs` are automatically converted to template
+        types (See
+        [`FlexTemplate`][FoSpy.blocks.template.FlexTemplate]).
+        Returns an instance of the flexible template constructed from `kwargs`,
+        or a serial dictionary of that instance.
+        
+        Args:
+            serialize (bool):
+                Whether to return the serialized dictionary of the reflexed
+                template, or the object itself.
+            **kwargs (str): Known properties to pass to the template constructor.
+        """
         from .template import FlexTemplate
         class Flex(FlexTemplate, cls):
             _baseReq = cls
         
-        kwargs.setdefault("template_name", f"Empty {cls.__name__}")
+        kwargs.setdefault("template_name", f"Reflexed {cls.__name__}")
 
         empty = Flex.dispatch_subclass(kwargs)
-        return empty.serialize()
+        if serialize:
+            return empty.serialize()
+        return empty
 
     @classmethod
-    def dispatch_subclass(cls, blockDict:dict, **kwargs):
+    def dispatch_subclass(cls, blockDict:dict, **kwargs:any):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
-        Overridden in some subclasses
+        Overridden in some subclasses, usually to assign subclass based on the
+        value of one or more properties.
+
+        Default behavior passes `blockDict` and `**kwargs` to `__init__`
+        constructor.
         """
         # k: construct normally.
         return cls(blockDict,_dispatched=True, **kwargs)
@@ -240,8 +325,8 @@ class SingleBlock(Block):
         Walks all parent classes and builds a map of all keys that are required
         during `__init__`, and their respective validation routines. Subclasses
         are mapped to expected keys and validations in
-        `FoSpy.parsing.validation`. Subclass validations override parent classes
-        when applicable.
+        [`parsing.validation`][FoSpy.parsing.validation]. Subclass validations
+        override parent classes when applicable.
 
         Returns:
             a dict mapping required keys to validation routines. Routines may be
@@ -276,11 +361,14 @@ class SingleBlock(Block):
         """
         Builds expected keys and validators mapped to subclass.
 
-        Walks all parent classes and builds a map of all keys that are allowed
+        Walks all parent classes and builds a map of all keys that are expected
         (required or optional), and their respective validation routines.
         Subclasses are mapped to keys and validations in
-        `FoSpy.parsing.validation`. Subclass validations override parent classes
-        when applicable. See `SingleBlock.build_req_validators()`
+        [`parsing.validation`][FoSpy.parsing.validation]. Subclass validations
+        override parent classes when applicable.
+
+        See
+        [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators]
         """
         from ..parsing.validation import required_keys, optional_keys
         merged = {}
@@ -296,14 +384,34 @@ class SingleBlock(Block):
 
         return merged
     
-    def _get_validators(self):
+    def get_validators(self):
+        """
+        Similar to class method: 
+        [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators],
+        but uses
+        [`_rename_validators`][FoSpy.blocks.blocks.SingleBlock._rename_validators]
+        to align any renamed properties with their original validators.
+        """
         return self._rename_validators(self.build_validators())
     
-    def _get_req_validators(self):
+    def get_req_validators(self):
+        """
+        Similar to class method:
+        [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators],
+        but uses
+        [`_rename_validators`][FoSpy.blocks.blocks.SingleBlock._rename_validators]
+        to align any renamed properties with their original validators.
+        """
         return self._rename_validators(self.build_req_validators())
 
     def __init__(self, blockDict:dict, _dispatched=False):
-        """Constructs a SingleBlock object from a dictionary
+        """
+        Constructs a SingleBlock object from a dictionary.
+
+        Avoid using this constructor for unfamiliar block classes, it may bypass
+        subclass delegation. Use
+        [`dispatch_subclass`][FoSpy.blocks.blocks.SingleBlock.dispatch_subclass]
+        instead.
 
         SingleBlocks are constructed recursively from an arbitrarily nested
         dictionary. All keys identified by `SingleBlock.build_req_validators()`
@@ -322,11 +430,21 @@ class SingleBlock(Block):
                 but validation routines will fail if objects are not the correct
                 type. Best practice is to serialize all nested objects into
                 lists, dicts, and strings to allow full type coersion.
+            _dispatched:
+                Flag passed by
+                [`dispatch_subclass`][FoSpy.blocks.blocks.SingleBlock.dispatch_subclass]
+                to signal that the safer construction method was used. Warning
+                issued for False
+
 
         Raises:
             ValueError:
                 A key required by `SingleBlock.build_req_validators()` is not
                 present.
+            TypeError:
+                The value passed as `blockDict` was not able to be unwrapped
+                into a dict, either by serialization of a passed `Block` object
+                or by list index.
 
         """
 
@@ -341,7 +459,6 @@ class SingleBlock(Block):
         self._aliases = new_als
         self._reserved = ['ext']
 
-        from copy import deepcopy
         blockDict = _unwrap_block(blockDict)
         self._sourceDict = blockDict.copy()
 
@@ -355,18 +472,19 @@ class SingleBlock(Block):
         if rename:
             setattr(self, "rename", _unwrap_block(rename))
 
-        req = self._get_req_validators()
+        req = self.get_req_validators()
         req.pop("ext",None)
         for key, validator in req.items():
             if key not in blockDict:
                 from .template import TemplateBlock, TemplateList, TemplateField, FlexTemplate
-                if issubclass(validator, TemplateField):
+                is_type = isinstance(validator, type)
+                if is_type and issubclass(validator, TemplateField):
                     blockDict[key] = ""
-                elif issubclass(validator, FlexTemplate):
+                elif is_type and issubclass(validator, FlexTemplate):
                     blockDict[key] = {"template_name": f"Empty {self._baseReq.__name__} Template"}
-                elif issubclass(validator, TemplateBlock):
+                elif is_type and issubclass(validator, TemplateBlock):
                     blockDict[key] = validator.reflex()
-                elif issubclass(validator, TemplateList):
+                elif is_type and issubclass(validator, TemplateList):
                     blockDict[key] = []
                 else:
                     raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
@@ -396,10 +514,14 @@ class SingleBlock(Block):
 
         Contract:
             `SingleBlock` enforces type correctness and validator execution for
-            all public attributes defined by its subclass.
+            all public attributes defined for its subclass.
 
             Required types and validators are mapped by subclass in
-            `FoSpy.parsing.validation`
+            [`parsing.validation`][FoSpy.parsing.validation]
+
+            Comment-mutating methods are attached to every object assigned to an
+            attribute. (See
+            [`add_comments`][FoSpy.blocks.blocks._add_comments_to_parent])
 
         Rules:
             1. Private attributes (`_`-prefixed) bypass validation.
@@ -407,15 +529,19 @@ class SingleBlock(Block):
             validator before assignment.
             3. Attributes with required types are coerced by calling the type
             constructor when necessary.
-                3a. If required type is a SingleBlock subclass and value is
-                wrapped as a list, list is unwrapped to the first entry
-            4. Unrecognized attribute names are redirected to `self.ext`.
+            4. Unrecognized attributes can be assigned to a validator mapped to
+            an alias in [`parsing.validation`][FoSpy.parsing.validation], using
+            the syntax `name="name$alias"`.
+            5. Unrecognized attribute names are redirected as attributes of
+            `self.ext`.
 
         Raises:
             ValueError:
-                Required `SingleBlock`s can be coerced from a dict or a list with
-                a single dict entry. Error raised if a list of length > 1 is
-                passed for a `SingleBlock` attribute.
+                - If a required `SingleBlock` is passed as a list with length > 1.
+                - If a block alias cannot be parsed from a key containing `$`.
+                - If a block alias is unrecognized.
+                - If a template field is found when constructing a non-template
+                  subclass.
         """
         from ..parsing.format import format_field
         from .template import TemplateField, TemplateBlock
@@ -425,7 +551,7 @@ class SingleBlock(Block):
         if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
         
-        validators = self._get_validators()
+        validators = self.get_validators()
         
         if "$" in name:
             try:
@@ -482,21 +608,24 @@ class SingleBlock(Block):
                     else:       
                         raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
                 if isinstance(validator, type) and isinstance(value, validator):
-                    return self._assign_and_inject_comments(name, value)
+                    return self._assign_and_inject(name, value)
 
 
 
 
-            return self._assign_and_inject_comments(name,
+            return self._assign_and_inject(name,
                                                     validator(value,**val_kwargs)
                                                     if val_kwargs != {}
                                                     else validator(value))
         else:
-            return self._assign_and_inject_comments(name, value, extended=True)
+            return self._assign_and_inject(name, value, extended=True)
 
     def __getattr__(self, name:str):
         """
-        Check both self and self.ext for attribute before returning.
+        Check both `self` and `self.ext` for attribute before returning. A
+        matching attribute of `self` will be returned first, but if `self` has
+        no matching attribute, a matching attribute of `self.ext` can be
+        returned instead.
         """
         try:
             if name != 'ext':
@@ -509,6 +638,19 @@ class SingleBlock(Block):
             )
 
     def __eq__(self, other, suppress_routine_paths=False):
+        """
+        Check equality of two `SingleBlock` objects by checking a deep
+        difference of their
+        [serialized][FoSpy.blocks.blocks.SingleBlock.serialize] dictionaries.
+
+        Args:
+            suppress_routine_paths:
+                Optional flag to still return true if the only differences found
+                are in [calculation
+                routine][FoSpy.blocks.blocks.SingleBlock.add_calc_routine]
+                metadata. Calculation routines are for user information only and
+                may not be relevant for equality.
+        """
         from .._debug import deep_diff as dd, _debug as db
         try:
             db.msg("Serializing Blocks to check equality:", module = "SingleBlock.__eq__()")
@@ -525,6 +667,18 @@ class SingleBlock(Block):
         return id(self)
     
     def _rename_validators(self, validators:dict):
+        """
+        Realigns any [renamed][FoSpy.blocks.blocks.SingleBlock.rename_block]
+        attributes with their expected validator.
+
+        Args:
+            validators:
+                A dictionary mapping attribute names to validators, returned by
+                either
+                [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators]
+                or
+                [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators]
+        """
         if hasattr(self, "rename"):
             for name, rename in self.rename.serialize(shallow=True).items():
                 if name in validators and rename not in validators:
@@ -532,7 +686,18 @@ class SingleBlock(Block):
                     validators[rename] = val
         return validators
 
-    def _assign_and_inject_comments(self, name, value, extended=False):
+    def _assign_and_inject(self, name, value, extended=False):
+        """
+        Attaches attributes and methods to any value before assigning it as an
+        attribute of `self` or `self.ext`.
+
+        Attributes Attached to Object:
+            `_parent_block`: refers to `self`
+
+        Methods Attached to Object:
+            [`add_comments_to_parent`][FoSpy.blocks.blocks._add_comments_to_parent]
+            [`clear_comments_from_parent`][FoSpy.blocks.blocks._clear_comments_from_parent]
+        """
         if name == 'ext':
             return super().__setattr__('ext', value)
         if not hasattr(value, "__dict__"):
@@ -547,31 +712,23 @@ class SingleBlock(Block):
 
         setattr(attr_obj, "_parent_block", self)
 
-        def _make_bound(attr_name):
-            def add_comments_to_parent(self_attr, *comments):
-                parent_comments = self_attr._parent_block._meta.comments
-                parent_comments.setdefault(attr_name,[])
-                for comment in comments:
-                    parent_comments[attr_name].append(str(comment))
-            
-            def clear_comments_from_parent(self_attr):
-                parent_comments = self_attr._parent_block._meta.comments
-                parent_comments[attr_name] = []
-
-            return (add_comments_to_parent, "add_comments"), (clear_comments_from_parent, "clear_comments")
+        methods = ((_add_comments_to_parent(name), "add_comments"),
+                (_clear_comments_from_parent(name), "clear_comments"))
+        
         attr_obj._reserved = ['ext'] if not hasattr(attr_obj,"_reserved") else attr_obj._reserved
-        for method, mthd_name in _make_bound(name):
-            attr_obj._reserved.append(mthd_name)
+        for method, method_name in methods:
+            attr_obj._reserved.append(method_name)
             bound = method.__get__(attr_obj, type(attr_obj))
-            setattr(attr_obj, mthd_name, bound)
+            setattr(attr_obj, method_name, bound)
         
     
     def add_comments(self, *comments):
         """
-        Default Behavior. If a `SingleBlock` is stored in another `SingleBlock`,
-        this method will be overwritten by the parent's `__setattr__`
+        Default Behavior. If a `SingleBlock` is stored as an attribute of
+        another `SingleBlock`, this method will be overwritten by the parent's
+        `__setattr__`.
         """
-        keys = list(self._get_req_validators())
+        keys = list(self.get_req_validators())
 
         keys = [k for k in keys if k != "metadata"]
         fallback = [k for k in self._key_order if k != "metadata"]
@@ -585,40 +742,87 @@ class SingleBlock(Block):
         for comment in comments:
             self._meta.comments[first].append(comment)
     
-    def add_block(self, block_name, type_alias, value=[]):
+    def add_block(self, block_name:str, type_alias:str, value=[]):
+        """
+        Adds an unexpected attribute with a validator mapped by `type_alias`.
+        Unexpected attributes not requiring a validator can be set directly
+        without using this method.
+
+        Args:
+            block_name: new unexpected attribute name
+            type_alias:
+                Alias mapped to the desired validator in
+                [`parsing.validation.aliases`][FoSpy.parsing.validation.aliases].
+                For more information on how aliases are used, see
+                [`__setattr__`][FoSpy.blocks.blocks.SingleBlock.__setattr__].
+        """
         if hasattr(self,block_name):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
         
-    def serialize(self, keepListType=False, shallow=False):
+    def serialize(self, keepListType=False, shallow=False, clean=False):
         """
-        Return a recursively serialized `[dict]` representation of itself.
+        Return a recursively serialized `dict` representation of `self`.
 
-        Fully serialized `SingleBlock`s are a single dict wrapped in a list that
-        can be passed to another constructor or emitted into lines for a FOS
-        file. Serialized values at any nest level are either dicts, lists, or
-        strings to allow full type-coersion when reconstructing or simplified
-        emission when writing files.
+        Fully serialized `SingleBlock`s are a single dict that can be passed to
+        another constructor or emitted into lines for a FOS file. Serialized
+        values at any nest level are either dicts, lists, or strings to allow
+        full type-coersion when reconstructing or simplified emission when
+        writing files.
 
         Serialized dict is deep copied to prevent object mutation.
 
+        Args:
+            keepListType:
+                When True, maintains its current FOS printing mode (looped keys
+                or explicit key:value lines), instead of explicit default
+
+            shallow:
+                When True, no recursive serialization occurs. Recommended when
+                serialization is used only to inspect top-level keys.
+
+            clean:
+                When True, no FOS format read/write metadata is included in the
+                serial. Recommended for sending output to other formats like
+                JSON.
+
         Private attributes starting with "_" are either skipped or unpacked in
         special cases:
-            _key_order:
-                attributes are added to the serialized dict in the order
-                they appear in this list.
-            
-            _calc_comments:
-                calculated comments are attached to their mapped attribute after
-                serialization to avoid mutation of object comments
 
-            _meta:
-                attributes of this container are given their own private `_key`s
-                mapped by `FoSpy.parsing.syntax.meta_keys` in the serialized
-                dict.
+        * `_key_order`:
+            attributes are added to the serialized dict in the order they
+            appear in this list.
+
+        * `_calc_comments`:
+            calculated comments are attached to their mapped attribute after
+            serialization to avoid mutation of object comments
+
+        * `_calc_routines`:
+            A list of functions scheduled to be called right before
+            serialization to update _calc_comments. Scheduling calc routines
+            ensures that their calculated values are up-to-date.
+
+        * `_meta`:
+            attributes of this container are given their own private `_key`s
+            mapped by `FoSpy.parsing.syntax.meta_keys` in the serialized
+            dict.
+
+        * `_key_overrides`:
+            per-instance override mapping that tracks which unexpected
+            attributes require $alias suffixes.
+
+        * `_aliases`:
+            maps attribute names to alias tags used to emit $alias suffixed
+            keys.
+
+        * `_reserved`:
+            attribute names in reserved are non-private attributes which
+            should *not* be serialized. This usually applies to the `ext`
+            attribute or methods attached after construction.
         """
         from copy import deepcopy
         from ..parsing.format import format_calc_comment
+        from .template import TemplateBlock
 
         val_to_alias = {v:k for k,v in self._aliases.items()}
 
@@ -640,7 +844,7 @@ class SingleBlock(Block):
             if isinstance(obj, SimpleWrapper):
                 obj = obj()
             if callable(serialize) and not shallow:
-                return obj.serialize()
+                return obj.serialize(clean=clean)
             if isinstance(obj, list):
                 return [try_serial(item) for item in obj]
             if isinstance(obj, dict):
@@ -687,7 +891,47 @@ class SingleBlock(Block):
         if not keepListType:
             out[mk["list_type"]] = "explicit"
 
+        if "template_name" in out and not isinstance(self, TemplateBlock):
+            out.pop("template_name")
+
+        if clean:
+            scan = out.copy()
+            for key, val in scan.items():
+                if key.startswith("_") or val is None:
+                    out.pop(key)
+
         return out
+    
+    def to_json(self, filepath=None, clean=True, indent=4, **kwargs):
+        """
+        [Serializes][FoSpy.blocks.blocks.SingleBlock.serialize] and either
+        returns as a JSON-formatted string or saves to a JSON file.
+
+        Args:
+            filepath:
+                JSON file save destination. If `None`, returns JSON-formatted
+                string instead.
+
+            clean:
+                When True, no FOS format read/write metadata is included in the
+                serial. FOS metadata has no impact on JSON format but may be
+                useful to view in JSON for troubleshooting.
+
+            indent:
+                `indent` value passed to `json.dump` for file saving.
+
+            **kwargs:
+                other arguments passed to `json.dump` for file saving.
+        """
+        import json
+        serial = self.serialize(clean=clean)
+
+        if filepath is None:
+            return json.dumps(serial)
+        
+        with open(filepath, "w") as f:
+            json.dump(serial, f, indent=indent, **kwargs)
+
     
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
@@ -704,9 +948,9 @@ class SingleBlock(Block):
         Args:
             key:
                 attribute to attach the calculated comment to. Comments appear
-                above their attached attributes in FOS files.
+                above their attached attributes in FOS format.
             comment:
-                comment text without comment formatting (like // or !)
+                comment text without comment formatting (don't include // or !)
             calc_id:
                 unique identifier for the calculated comment. If it matches an
                 existing comment (like when refreshing a value), the comment is
@@ -717,11 +961,22 @@ class SingleBlock(Block):
         self._calc_comments[key] = calc_comments
         self._calc_comments[key][calc_id]=comment
 
-    def make_template(self,template_name,*args:str):
+    def make_template(self,template_name:str,*args:str):
+        """
+        Returns a copy of `self` as a template of its original subclass, with
+        specified fields replaced with template types. See
+        [`TemplateClass`][FoSpy.blocks.blocks.SingleBlock.TemplateClass] for
+        more information on template generation.
+
+        Args:
+            template_name: All templates require an identifying name.
+            *args: properties to clear and replace with template types.
+        """
+
         from ..parsing import format_field
 
         serial = self.serialize(keepListType=True)
-        validators = self._get_validators()
+        validators = self.get_validators()
         for key in args:
             val = validators.get(key, None)
             if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
@@ -768,8 +1023,10 @@ class SingleBlock(Block):
     
     def add_calc_routine(self, path:str, **kwargs):
         """
-        Appends a `calc_routine()`-decorated function to `self._calc_routines`
-        to be run at serialization.
+        Appends a
+        [`_calc_routine()`][FoSpy.blocks._blockUtils._calc_routine]-decorated
+        function to `self._calc_routines` to be run at
+        [serialization][FoSpy.blocks.blocks.SingleBlock.serialize].
 
         Used to add calculated comments that should be refreshed during
         serialization.
@@ -777,7 +1034,7 @@ class SingleBlock(Block):
         Args:
             path:
                 a relative path string that can be resolved into a
-                `calc_routine()`-decorated function
+                `_calc_routine()`-decorated function
             kwargs:
                 optional key word arguments to be passed to the function at
                 path.
@@ -789,8 +1046,8 @@ class SingleBlock(Block):
         Example:
         ```
             mySyn.add_calc_routine("materials.add_weight_pcts", typ="reagent")
-            ## mySyn.materials.add_weight_pcts(typ="reagent") will be run before
-            ## serialization.
+            ## mySyn.materials.add_weight_pcts(typ="reagent") is now scheduled
+            ## to run at serialization
         ```
         """
         from functools import wraps
@@ -827,7 +1084,8 @@ class SingleBlock(Block):
                 objects into one line. This line cannot be passed to
                 `self.add_calc_routine()`
 
-        Returns: list of strings
+        Returns:
+            list of strings
 
         Example:
         ```
@@ -873,16 +1131,20 @@ class SingleBlock(Block):
     def add_all_calc_routines(self, recursive=False):
         """
         Adds all available calc_routines to `self._calc_routines` using
-        `self.list_avail_routines()` and `self.add_calc_routine()`.
+        [`list_avail_routines()`][FoSpy.blocks.blocks.SingleBlock.list_avail_routines]
+        and
+        [`add_calc_routine()`][FoSpy.blocks.blocks.SingleBlock.add_calc_routine].
         
-        Optional recursion. See `SingleBlock.list_avail_routines()`
+        Args:
+            recursive:
+                Optional recursion. See `SingleBlock.list_avail_routines()`
         """
         for path in self.list_avail_routines(recursive=recursive, abbreviated=False):
             self.add_calc_routine(path)
 
     def copy(self):
         """
-        Returns a deep-copy of itself by serializing and reconstructing.
+        Returns a deep-copy of `self` by serializing and reconstructing.
         
         _calc_comments are not preserved during copy, but _calc_routines are.
         This prevents mutation of the comments when reconstructing.
@@ -897,6 +1159,11 @@ class SingleBlock(Block):
         return new_obj
     
     def _meta_to_front(self):
+        """
+        Moves metadata to the front of `_key_order`. Metadata will always be
+        serialized first, but being elsewhere in the order leads to unexpected
+        results when moving other keys to desired indices.
+        """
         try:
             meta_idx =self._key_order.index("metadata")
             self._key_order.pop(meta_idx)
@@ -905,6 +1172,10 @@ class SingleBlock(Block):
         self._key_order.insert(0,"metadata")
     
     def keys_to_front(self,*args):
+        """
+        Move any attribute names in `*args` to the front of _key_order to be
+        serialized first. Order within `*args` is maintained in result.
+        """
         try:
             meta_idx = args.index("metadata")
             args.pop(meta_idx)
@@ -920,9 +1191,18 @@ class SingleBlock(Block):
         self._key_order = new_order
         self._meta_to_front()
 
-    def default_key_order(self):
+    def default_key_order(self, deep=False):
+        """
+        Rearrange attribute order to the default order assigned by
+        [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators]
+
+        Args:
+            deep:
+                When true, recursively calls `default_key_order` on any other
+                `SingleBlock` objects stored in attributes.
+        """
         new_order = []
-        for key in self._get_validators():
+        for key in self.get_validators():
             if key != "ext" and key in self.serialize(shallow=True):
                 new_order.append(key)
         for key in self._key_order:
@@ -931,7 +1211,16 @@ class SingleBlock(Block):
         self._key_order = new_order
         self._meta_to_front()
 
+        if deep:
+            for name, obj in self.__dict__.items():
+                if not name.startswith("_") and hasattr(obj, "default_key_order"):
+                    obj.default_key_order(deep=True)
+
     def keys_to_end(self, *args):
+        """
+        Move any attribute names in `*args` to the end of _key_order to be
+        serialized last. Order within `*args` is maintained in result.
+        """
         def remove_alias(key):
             return key.split("$")[0] if "$" in key else key
         for key in self.serialize(shallow=True):
@@ -946,7 +1235,16 @@ class SingleBlock(Block):
             self._key_order.append(key)
         self._meta_to_front()
         
-    def key_to_idx(self, key, idx):
+    def key_to_idx(self, key:str, idx:int):
+        """
+        Move any attribute name to a specific index in `_key_order` for
+        serialization order. The invisible `"metadata"` key is always refreshed
+        to the front of the list, so indices are effectively 1-based.
+
+        Args:
+            key: name of attribute to reorder
+            idx: new index in _key_order
+        """
         self._meta_to_front()
         try:
             old_idx = self._key_order.index(key)
@@ -956,11 +1254,14 @@ class SingleBlock(Block):
         self._key_order.insert(idx, key)
 
     def clear_comments(self):
+        """
+        Clear comments attached to top-level attributes only.
+        """
         self._meta.comments = {}
         
     def rename_block(self, old, new):
-        validators = self._get_validators()
-        req = self._get_req_validators()
+        validators = self.get_validators()
+        req = self.get_req_validators()
         if True in [name.startswith("_") for name in (old, new)]:
             raise ValueError(f"You cannot set private attributes (starting with '_') using obj.rename_block()")
         
@@ -994,31 +1295,8 @@ class SingleBlock(Block):
         except:
             self._key_order.append(new)
 
-
-        '''
-        if new not in validators:
-            val = validators[old]
-            val_to_alias = {v:k for k,v in self._aliases.items()}
-            try:
-                alias = val_to_alias[val]
-            except KeyError:
-                raise ValueError(f"Could not find alias for '{val.__name__}' for '{old}' property.")
-            new_alias = f"{new}${alias}"
-        if old in req:
-            raise ValueError(f"You cannot rename '{old}' to '{new}' without replacing it first. "
-                             f"'{old}' is a required property for this object. Try:\n"
-                             f"stored = obj.{old}\n"
-                             f"obj.{old} = new_value\n"
-                             f"{f'obj.{new} = stored' if not alias else f'obj.add_block(\'{new}\',\'{alias}\', stored)'}\n")
-        
-        setattr(self, new_alias, getattr(self, old))
-        delattr(self, old)
-        idx = self._key_order.index(old)
-        self._key_order[idx] = new_alias
-        '''
-
     def __delattr__(self, attr):
-        if attr in self._get_req_validators():
+        if attr in self.get_req_validators():
             raise AttributeError(f"Cannot delete property: '{attr}'. It is registered as a required property for this object.")
         return super().__delattr__(attr)
     
@@ -1030,83 +1308,6 @@ class SingleBlock(Block):
             if hasattr(val, "clear_all_comments"):
                 val.clear_all_comments()
 
-class FileBlock(SingleBlock):
-    """
-    Represents a set of blocks loaded from a file.
-
-    All public attributes of `FileBlock` objects are either `SingleBlock` or
-    `ListBlock` objects. Attributes without a header at the start of the file
-    are parsed into `{"metadata": blockDict}` before passing to `FileBlock`.
-    
-    Noteable Subclasses:
-    ```
-    Synthesis(FileBlock)
-    TemplateSet(FileBlock)
-    ```
-    """
-     
-    def __init__(self, blockDict, _sourceFile=None, _dispatched=False):
-        """
-        Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
-        """
-        self._sourceFile = _sourceFile
-
-        self._tempdir = tempfile.TemporaryDirectory()
-        self._temppath = Path(self._tempdir.name)
-        atexit.register(self.cleanup)
-
-        super().__init__(blockDict, _dispatched=_dispatched)
-    
-    def cleanup(self):
-        if self._tempdir is not None:
-            self._tempdir.cleanup()
-
-    @classmethod
-    def fromFile(cls, filepath):
-        abspath = os.path.abspath(filepath)
-        blockDict = dict_from_file(abspath)
-        return cls.dispatch_subclass(blockDict, _sourceFile = abspath) 
-    
-    def save(self, filepath:str=None):
-        """
-        Sends a serialized dict to be written to file.
-
-        Args:
-            filepath:
-                If specified, writes serialized dict to filepath. ks to `self._sourceFile`.
-
-        Raises:
-            ValueError:
-                If _sourceFile is not specified (if `FileBlock` was copied from
-                another object or constructed directly from a blockDict),
-                filepath must be specified.
-        """
-        from warnings import warn
-        saving_as = filepath is not None
-        try:
-            if filepath is None:
-                if self._sourceFile is None:
-                    raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
-                else:
-                    filepath = self._sourceFile
-            
-            self._sourceFile = os.path.abspath(filepath)
-            blockDict = self.serialize()
-
-            write_dict_to_file(blockDict, self._sourceFile)
-        except Exception as e:
-            if not saving_as:
-                warn(f"Could not save file: {e}", RuntimeWarning)
-                return e
-            else:
-                raise e
-        return True
-    
-    def matches_file(self):
-        reloaded = self.fromFile(self._sourceFile)
-
-        return self.__eq__(reloaded, suppress_routine_paths=True)
-    
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
@@ -1146,6 +1347,8 @@ class ListBlock(Block):
                 usually passed in subclass definitions. 
         """
         self._objs = []
+        if not isinstance(blockList, list):
+            blockList = [blockList]
         for blockDict in blockList:
             obj = self._reqCls.dispatch_subclass(blockDict)
             obj._parent_block = self
@@ -1289,12 +1492,12 @@ class ListBlock(Block):
         for obj in self:
             obj._meta.list_type = typ
         
-    def serialize(self):
+    def serialize(self, clean=False):
         for obj in self:
             if obj._meta.list_type == "explicit":
                 self.set_list_type("explicit")
                 break
-        return [obj.serialize(keepListType=True if len(self)>1 else False) for obj in self]
+        return [obj.serialize(keepListType=True if len(self)>1 else False, clean=clean) for obj in self]
     
      
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
@@ -1434,3 +1637,8 @@ class ListBlock(Block):
         for obj in self._objs:
             if hasattr(obj, "clear_all_comments"):
                 obj.clear_all_comments()
+
+    def default_key_order(self, deep=False):
+        for obj in self._objs:
+            if hasattr(obj, "default_key_order"):
+                obj.default_key_order(deep=deep)

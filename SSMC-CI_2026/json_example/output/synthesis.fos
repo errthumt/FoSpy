@@ -1,0 +1,79 @@
+name: Sample 001
+date: 05-27-2026
+video_id: AUTO_GENERATED_VIDEO_ID
+process_name: Ammonolysis - AUTO
+
+[Experimenters]
+name: Jill
+affiliation: Drexel
+
+[Laboratory]
+temp: 22.0
+temp_units: C
+humidity: 25.0
+humidity_unit: %
+
+[Reaction]
+nominal_formula: H2O
+nominal_mass: 1
+nominal_mass_units: g
+duration: 20.0
+duration_unit: min
+duration_format: 20:00
+start_time: 14:00
+end_time: 15:00
+product_mass: 0.0987
+product_mass_unit: g
+product_color: green
+product_structure: body-centered cubic
+
+[Materials]
+name: Generic Precursor
+type: precursor
+formula: H2O
+supplier: Philadelphia Water Works
+cas: 7732-18-5
+form: liquid
+env: ambient
+amount: 500
+amount_unit: mL
+color: Blue?
+mass: 0.06
+mass_unit: g
+structure: crystal
+
+[Treatments]
+type: anneal
+repeats: 1
+observations: I made a new material
+program: [
+    type: ramp
+    temp: 777
+    rate: 5
+    temp_units: C
+    rate_units: C/min
+]
+gas_flow: [[
+    :name
+    :flow
+    :flow_unit
+
+        Argon
+        10.0
+        %
+
+        Hydrogen
+        0.2
+        %
+
+        Ammonia
+        0.3
+        %
+]]
+
+[Equipment]
+initial_mass: 3.58
+initial_mass_unit: g
+final_mass: 3.58
+final_mass_unit: g
+

@@ -1,0 +1,112 @@
+{
+    "template_name": "Empty Synthesis",
+    "metadata": {
+        "template_name": "Empty MetaDataTemplate",
+        "name": "Sample 001",
+        "date": "05-27-2026",
+        "_fos_comments": {},
+        "_fos_key_comments": {},
+        "_list_type": "explicit",
+        "_routine_paths": [],
+        "video_id": "AUTO_GENERATED_VIDEO_ID",
+        "process_name": "Ammonolysis - AUTO"
+    },
+    "experimenters": [
+        {
+            "template_name": "Empty Experimenter",
+            "name": "<!TEMPLATE-FIELD>",
+            "affiliation": "<!TEMPLATE-FIELD>",
+            "_fos_comments": {},
+            "_fos_key_comments": {},
+            "_list_type": "explicit",
+            "_routine_paths": []
+        }
+    ],
+    "reaction": {
+        "template_name": "Empty ReactionTemplate",
+        "nominal_formula": "<!TEMPLATE-FIELD>",
+        "nominal_mass": "<!TEMPLATE-FIELD>",
+        "nominal_mass_units": "<!TEMPLATE-FIELD>",
+        "_fos_comments": {},
+        "_fos_key_comments": {},
+        "_list_type": "explicit",
+        "_routine_paths": [],
+        "duration": 20.0,
+        "duration_unit": "min",
+        "duration_format": "20:00",
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "product_mass": 0.0987,
+        "product_mass_unit": "g",
+        "product_color": "blue",
+        "product_structure": "body-centered cubic"
+    },
+    "materials": [
+        {
+            "name": null,
+            "type": "precursor",
+            "formula": "H",
+            "supplier": "Unknown",
+            "cas": "Unknown",
+            "form": "Unknown",
+            "env": "Unknown",
+            "ratio": "1.0",
+            "color": null,
+            "mass": 0.06,
+            "mass_unit": "g",
+            "structure": null
+        }
+    ],
+    "treatments": [
+        {
+            "template_name": "Empty Treatment",
+            "type": "<!TEMPLATE-FIELD>",
+            "repeats": "<!TEMPLATE-FIELD>",
+            "observations": "<!TEMPLATE-FIELD>",
+            "_fos_comments": {},
+            "_fos_key_comments": {},
+            "_list_type": "explicit",
+            "_routine_paths": [],
+            "program": [
+                {
+                    "temp": 777.0,
+                    "temp_units": "C",
+                    "rate": 5.0,
+                    "rate_units": "C/min"
+                }
+            ],
+            "gas_flow": [
+                {
+                    "flow": 10.0,
+                    "flow_unit": "%"
+                },
+                {
+                    "flow": 0.2,
+                    "flow_unit": "%"
+                },
+                {
+                    "flow": 0.3,
+                    "flow_unit": "%"
+                }
+            ]
+        }
+    ],
+    "_fos_comments": {},
+    "_fos_key_comments": {},
+    "_list_type": "explicit",
+    "_routine_paths": [],
+    "laboratory": {
+        "temp": 22.0,
+        "temp_units": "C",
+        "humidity": 25.0,
+        "humidity_unit": "%"
+    },
+    "equipment": [
+        {
+            "initial_mass": 3.58,
+            "initial_mass_unit": "g",
+            "final_mass": 3.58,
+            "final_mass_unit": "g"
+        }
+    ]
+}

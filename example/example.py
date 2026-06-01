@@ -10,7 +10,7 @@ def main():
 
     # Change the width of your debug screen so that module labels print on one line.
     from FoSpy import _debug as db
-    db.DEBUG_WIDTH = 150
+    db.DEBUG_WIDTH = 120
 
     # Optional way to turn on/off one module's debug messages.
     from FoSpy.blocks.blocks import _debug as block_debug
@@ -20,6 +20,9 @@ def main():
     # load synthesis and templates from files
     my_synthesis = Synthesis.fromFile(r"example/synthesis/start_synthesis.fos")
     my_templates = TemplateSet.fromFile(r"example/templates/start_templates.fos")
+
+    # save the synthesis to a json for comparison
+    my_synthesis.save(r"example/synthesis/start_synthesis.json")
 
     # save the files to new files so that they don't overwrite the old ones.
     my_synthesis.save(r"example/synthesis/check01.fos")
@@ -52,6 +55,20 @@ def main():
     my_meta.date = "05-17-2026"
     my_meta.internal_project_ID = "Arsenide 28+d clathrates"
     my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
+
+    my_synthesis.products = [{
+        "name": "Barium transition-metal arsenide (8-24-28.5)",
+        "formula": "Ba8Cu13Zn11As28.5",
+        "expected": True,
+        "obtained": True,
+        "expected_amount": "250.0",
+        "expected_amount_unit": "mg",
+        "obtained_amount": "150.0",
+        "obtained_amount_unit": "mg",
+        "observations": "Gray Powder",
+        "characterizations": "PXRD",
+        "structure_comments": "Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space group Cmcm"
+    }]
 
     my_synthesis.save("example/synthesis/check03.fos")
 
@@ -88,23 +105,23 @@ def main():
     my_synthesis.save("example/synthesis/check05.fos")
 
 
-    # Changing Barium's ratio
-    my_mats[0].ratio = 8
+    # Changing Barium's molar ratio
+    my_mats[0].amount = 8
 
 
     # I find zinc in my materials, change its ratio, and also generate a template
     # from it.
     zinc = my_mats.get_first(form="powder")
-    zinc.ratio = 11
+    zinc.amount = 11
 
     # The template name is "A generic metal powder, purity 0.995", and it has empty
     # fields for name, formula, cas, and ratio
     powder_template = zinc.make_template("A generic metal powder, purity 0.995",
-                                          "name","formula","cas","ratio")
+                                          "name","formula","cas","amount")
     powder_template.default_key_order()
 
     # This saves my powder template to a new category of templates titled "Generic$materials"
-    my_templates.add_block("generic","materials", [powder_template])
+    my_templates.add_block("generic","materials", powder_template)
     my_templates.keys_to_end("cifs")
 
 
@@ -113,7 +130,7 @@ def main():
         "name": "Copper",
         "formula": "Cu",
         "cas": "7440-50-8",
-        "ratio": 13
+        "amount": 13
     }
 
     # Generate a new material, copper, from the template I made earlier and add it
@@ -125,7 +142,7 @@ def main():
     # Here I'm using the arsenic template that was already in the template file to
     # replace antimony.
     arsenic_template = mat_temps.get_first(formula=ChemFormula("As"))
-    arsenic = arsenic_template.fill(type="reagent", ratio=28.5)
+    arsenic = arsenic_template.fill(type="reagent", amount=28.5)
     my_mats.remove_any(cas="7440-36-0") # This removes the antimony from my synthesis
     my_mats.append(arsenic)
 
@@ -149,10 +166,10 @@ def main():
     my_templates.keys_to_end("cifs")
 
     # Filling in my annealing templates
-    ramp1 = ramp_template.fill(temp="550 C", time="2 hr")
-    ramp2 = ramp_template.fill(temp="650 C", time = "10 hr")
-    dwell1 = dwell_template.fill(time="12 hr")
-    dwell2 = dwell_template.fill(time="72 hr")
+    ramp1 = ramp_template.fill(temp="550", time="2")
+    ramp2 = ramp_template.fill(temp="650", time = "10")
+    dwell1 = dwell_template.fill(time="12")
+    dwell2 = dwell_template.fill(time="72")
 
     # Using my anneal template to create two different annealing treatments with my
     # different program sections.
@@ -196,7 +213,9 @@ def main():
 
     # Every material gets a weight percent comment added above their ratio
     my_synthesis.add_calc_routine("reagents.add_weight_pcts")
-    my_synthesis.reagents[0].ratio.add_comments("Weight percents were calculated automatically when saving.")
+    '''for anneal in my_synthesis.treatments.get_any(type="anneal"):
+        anneal.add_calc_routine("program.add_all_missing_parameters")'''
+    my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
 
 
     # some reordering stuff to make the final printout more consistent.
@@ -206,7 +225,7 @@ def main():
     my_templates.generic.set_list_type("explicit")
 
     my_synthesis.default_key_order()
-    my_synthesis.key_to_idx("reagents", 4)
+    my_synthesis.key_to_idx("reagents", 5)
     my_mats.set_list_type("looped")
 
     my_templates.save("example/templates/check10.fos")
