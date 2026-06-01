@@ -22,8 +22,8 @@ jobs:
           python-version: '3.x'
 
       - name: Install FoSpy
-       run: |
-         pip install .
+        run: |
+          pip install .
 
       - name: Install build dependencies
         run: |
