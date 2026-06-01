@@ -1,4 +1,6 @@
-from .blocks import FileBlock, ListBlock, SingleBlock
+from .files import FileBlock
+
+from .blocks import ListBlock, SingleBlock
 
 from .._debug import Debug
 _debug = Debug()

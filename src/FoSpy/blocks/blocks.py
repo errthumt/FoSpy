@@ -1,26 +1,19 @@
-import os
+
+from .files import FileBlock
 
 from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
 )
 
-from ..parsing import (
-    dict_from_file,
-    write_dict_to_file
-)
 
 from ._blockUtils import _unwrap_block
 
-import tempfile
-import atexit
-from pathlib import Path
 
 
 from .._debug import Debug
 _debug = Debug()
 
-import json
 
 class SimpleWrapper:
     """
@@ -67,6 +60,11 @@ class Block:
     The base class for any set of data found in a FOS file.
     """
     def find_fileblock(self):
+        """
+        Walks upward through `_parent_block` attributes until a
+        [`FileBlock`][FoSpy.blocks.files.FileBlock] instance is found and
+        returns that instance.
+        """
         blk = self
         while blk is not None:
             if isinstance(blk, FileBlock):
@@ -78,6 +76,12 @@ class Block:
         raise LookupError("Could not find a FileBlock containing the current object")
     
     def find_tempdir(self):
+        """
+        Finds the temporary directory created by the
+        [`FileBlock`][FoSpy.blocks.files.FileBlock] instance containing this
+        block as one of its attributes. Returns a `tempfile.TemporaryDirectory`
+        object.
+        """
         fileblock = self.find_fileblock()
         if hasattr(fileblock, "_tempdir"):
             return fileblock._tempdir
@@ -85,6 +89,10 @@ class Block:
             raise AttributeError("Could not find a temporary directory attached to this object's FileBlock")
     
     def find_temppath(self):
+        """
+        Similar to [`find_tempdir`][FoSpy.blocks.blocks.Block.find_tempdir] but
+        returns the corresponding `pathlib.Path` object instead.
+        """
         fileblock = self.find_fileblock()
         if hasattr(fileblock, "_temppath"):
             return fileblock._temppath
@@ -132,46 +140,35 @@ class SingleBlock(Block):
     Represents a single block of key:value pairs parsed from a FOS file.
 
     Subclasses are mapped to expected keys and validation routines in
-    `FoSpy.parsing.validation`. Expected values are validated and assigned to
+    [`..parsing.validation`][FoSpy.parsing.validation]. Expected values are validated and assigned to
     public attributes. Unexpected values are assigned to attributes of
     `self.ext` for safety, but can still be accessed as an attribute of the
-    SingleBlock obj if not overridden.
+    SingleBlock object if not overwritten
 
-    Some notable subclasses:
-    ```
-        FileBlock(SingleBlock)
-        Synthesis(FileBlock)
-        Reaction(SingleBlock)
-        Material(SingleBlock)
-        TemplateBlock(SingleBlock)
-        MaterialTempBlock(Material, TemplateBlock)
-    ```
-    Private Attributes:
-        _meta:
-            `SubContainer` object containing meta data extracted from `blockDict`
-            during construction. See `FoSpy.parsing.syntax.meta_keys`
-
-        _calc_comments:
-            dict mapping attribute names to `{"comment_ID":"comment_text"}`
-            values. Calculated comments are for user information when reading a
-            FOS file. On serialization, they are formatted to be skipped by the
-            parser and attached to their respective attributes. See
-            `SingleBlock.add_calc_comment()` and
-            `SingleBlock.add_calc_routine()`.
-
-        _calc_routines:
-            List of `calc_routine()`-decorated methods to be run during
-            serialization to populate _calc_comments.
-
-        _key_order: 
-            Maintains order that attributes were read during construction to be
-            repeated during serialization
+    **Some notable subclasses:**
+    [`FileBlock(SingleBlock)`][FoSpy.blocks.files.FileBlock]
+    [`Synthesis(FileBlock)`][FoSpy.blocks.synthesis.Synthesis]
+    [`Reaction(SingleBlock)`][FoSpy.blocks.metadata.Reaction]
+    [`Material(SingleBlock)`][FoSpy.blocks.materials.Material]
+    [`TemplateBlock(SingleBlock)`][FoSpy.blocks.template.TemplateBlock]
     """
     dispatch = {}
     _aliases = None
    
     @classmethod
     def TemplateClass(cls,*args:str):
+        """
+        Generates a hybridized subclass of the current block class and
+        [`TemplateBlock`][FoSpy.blocks.template.TemplateBlock]. Template
+        subclasses override original expected validators with either a
+        [`TemplateField`][FoSpy.blocks.template.TemplateField],
+        [`TemplateBlock`][FoSpy.blocks.template.TemplateBlock], or
+        [`TemplateList`][FoSpy.blocks.template.TemplateList] depending on the
+        type of the original validator.
+
+        Args:
+            *args: A list of properties to override as template types.
+        """
         from .template import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
         if issubclass(cls, TemplateBlock):
@@ -221,11 +218,25 @@ class SingleBlock(Block):
    
     @classmethod
     def reflex(cls, serialize=True, **kwargs):
+        """
+        Flexibly generates a template for the current class where any required
+        properties missing from `kwargs` are automatically converted to template
+        types (See
+        [`FlexTemplate`][FoSpy.blocks.template.FlexTemplate]).
+        Returns an instance of the flexible template constructed from `kwargs`,
+        or a serial dictionary of that instance.
+        
+        Args:
+            serialize (bool):
+                Whether to return the serialized dictionary of the reflexed
+                template, or the object itself.
+            **kwargs: Known properties to pass to the template constructor.
+        """
         from .template import FlexTemplate
         class Flex(FlexTemplate, cls):
             _baseReq = cls
         
-        kwargs.setdefault("template_name", f"Empty {cls.__name__}")
+        kwargs.setdefault("template_name", f"Reflexed {cls.__name__}")
 
         empty = Flex.dispatch_subclass(kwargs)
         if serialize:
@@ -237,7 +248,11 @@ class SingleBlock(Block):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
-        Overridden in some subclasses
+        Overridden in some subclasses, usually to assign subclass based on the
+        value of one or more properties.
+
+        Default behavior passes `blockDict` and `**kwargs` to `__init__`
+        constructor.
         """
         # k: construct normally.
         return cls(blockDict,_dispatched=True, **kwargs)
@@ -250,8 +265,8 @@ class SingleBlock(Block):
         Walks all parent classes and builds a map of all keys that are required
         during `__init__`, and their respective validation routines. Subclasses
         are mapped to expected keys and validations in
-        `FoSpy.parsing.validation`. Subclass validations override parent classes
-        when applicable.
+        [`parsing.validation`][FoSpy.parsing.validation]. Subclass validations
+        override parent classes when applicable.
 
         Returns:
             a dict mapping required keys to validation routines. Routines may be
@@ -286,7 +301,7 @@ class SingleBlock(Block):
         """
         Builds expected keys and validators mapped to subclass.
 
-        Walks all parent classes and builds a map of all keys that are allowed
+        Walks all parent classes and builds a map of all keys that are expected
         (required or optional), and their respective validation routines.
         Subclasses are mapped to keys and validations in
         `FoSpy.parsing.validation`. Subclass validations override parent classes
@@ -351,7 +366,6 @@ class SingleBlock(Block):
         self._aliases = new_als
         self._reserved = ['ext']
 
-        from copy import deepcopy
         blockDict = _unwrap_block(blockDict)
         self._sourceDict = blockDict.copy()
 
@@ -1067,119 +1081,6 @@ class SingleBlock(Block):
             if hasattr(val, "clear_all_comments"):
                 val.clear_all_comments()
 
-class FileBlock(SingleBlock):
-    """
-    Represents a set of blocks loaded from a file.
-
-    All public attributes of `FileBlock` objects are either `SingleBlock` or
-    `ListBlock` objects. Attributes without a header at the start of the file
-    are parsed into `{"metadata": blockDict}` before passing to `FileBlock`.
-    
-    Noteable Subclasses:
-    ```
-    Synthesis(FileBlock)
-    TemplateSet(FileBlock)
-    ```
-    """
-     
-    def __init__(self, blockDict, _sourceFile=None, _dispatched=True):
-        """
-        Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
-        """
-        self._sourceFile = _sourceFile
-
-        self._tempdir = tempfile.TemporaryDirectory()
-        self._temppath = Path(self._tempdir.name)
-        atexit.register(self.cleanup)
-
-        super().__init__(blockDict, _dispatched=_dispatched)
-    
-    def cleanup(self):
-        if self._tempdir is not None:
-            self._tempdir.cleanup()
-
-    @classmethod
-    def fromFile(cls, filepath):
-        abspath = os.path.abspath(filepath)
-        pathstr = str(abspath)
-        try:
-            ext = pathstr.lower().split(".")[-1]
-        except IndexError:
-            raise ValueError(f"Could not determine extension for filepath: {pathstr}")
-
-        ext_map = {
-            "fos": dict_from_file,
-            "json": lambda fp: json.load(open(fp, "r"))
-        }
-
-        if ext not in ext_map:
-            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
-        
-        blockDict = ext_map[ext](abspath)
-        return cls.dispatch_subclass(blockDict, _sourceFile = abspath) 
-    
-    def save(self, filepath:str=None, json_indent=4, **kwargs):
-        """
-        Sends a serialized dict to be written to file.
-
-        Args:
-            filepath:
-                If specified, writes serialized dict to filepath. ks to `self._sourceFile`.
-            json_indent:
-                Indent to use for json.dump when saving as json
-            **kwargs:
-                Optional kwargs to pass to saving routine (unique to each file extension)
-
-        Raises:
-            ValueError:
-                If _sourceFile is not specified (if `FileBlock` was copied from
-                another object or constructed directly from a blockDict),
-                filepath must be specified.
-        """
-        from warnings import warn
-        saving_as = filepath is not None
-        try:
-            if not saving_as:
-                if self._sourceFile is None:
-                    raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
-                else:
-                    filepath = self._sourceFile
-
-            self._sourceFile = os.path.abspath(filepath)
-            pathstr = str(self._sourceFile)
-            try:
-                ext = pathstr.lower().split(".")[-1]
-            except IndexError:
-                raise ValueError(f"Could not determine extension for filepath: {pathstr}")
-
-            ext_map = {
-                "fos": write_dict_to_file,
-                "json": lambda blockDict, fp, **kwargs: json.dump(blockDict, open(fp, "w"), indent=json_indent, **kwargs)
-            }
-
-            ext = str(filepath).lower().split(".")[-1]
-
-            if ext not in ext_map:
-                raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
-            
-            blockDict = self.serialize(clean=ext!="fos")
-
-            ext_map[ext](blockDict, self._sourceFile, **kwargs)
-
-        except Exception as e:
-            if not saving_as:
-                warn(f"Could not save file. Disconnected from source file for safety. Exception: {e}", RuntimeWarning)
-                self._sourceFile = None
-                return e
-            else:
-                raise e
-        return True
-    
-    def matches_file(self):
-        reloaded = self.fromFile(self._sourceFile)
-
-        return self.__eq__(reloaded, suppress_routine_paths=True)
-    
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
