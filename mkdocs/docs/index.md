@@ -1,17 +1,9 @@
-# Welcome to MkDocs
+# Welcome to FoSpy
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+An API for reading, editing, and writing in the File of Synthesis (FOS) format.
 
-## Commands
+Standards for what is required or expected for the FOS format are maintained with this API. For complete guidelines on what is required, start with the [expected properties](expected/index.md) page.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+The bulk of API editing actions are done by editing attributes and calling methods of `Block` subclasses. A focused documentation of all `Block` subclasses and their public methods can be found [here](./blocks/index.md).
 
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+Full documentation of all modules and submodules can be found [here](./full).
