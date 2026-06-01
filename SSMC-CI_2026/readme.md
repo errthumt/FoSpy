@@ -1,5 +1,5 @@
 # UW-Madison Solid State and Materials Chemistry Collaboration Incubator 2026
-I was fortunate enough to attend the SSMC-CI in May 2026, where I connected with new collaborators and gave other researchers their first looks at the proposed "File of Synthesis" format.
+I was fortunate enough to attend the [SSMC-CI at UW-Madison](https://ssmcci.chem.wisc.edu/about/) in May 2026, where I connected with new collaborators and gave other researchers their first looks at the proposed "File of Synthesis" format.
 
 The SSMC-CI event is focused on ingesting applicants' individual proposed projects and connecting them with collaborators that might contribute to a larger-scoped project centering on material science and information technology. With the guidance of SSMC-CI organizers, we laid down the groundwork for a collaboration focused on filling in the gap of "negative data" missing from published results used to train machine learning models.
 

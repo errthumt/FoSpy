@@ -8,7 +8,7 @@ be imported from, [review the sourcecode on the
 github.](https://github.com/errthumt/FoSpy/tree/main/src/FoSpy)
 
 
-::: FoSpy.parsing.format
+::: FoSpy.parsing.format_fos
     options:
         members: true
         show_if_no_docstring: true
