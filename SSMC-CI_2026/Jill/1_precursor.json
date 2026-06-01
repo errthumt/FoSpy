@@ -1,0 +1,61 @@
+{
+    "template_name": "Empty Synthesis",
+    "metadata": {
+        "template_name": "Empty MetaDataTemplate",
+        "name": "<!TEMPLATE-FIELD>",
+        "date": "<!TEMPLATE-FIELD>",
+        "_fos_comments": {},
+        "_fos_key_comments": {},
+        "_list_type": "explicit",
+        "_routine_paths": []
+    },
+    "experimenters": [
+        {
+            "template_name": "Empty Experimenter",
+            "name": "<!TEMPLATE-FIELD>",
+            "affiliation": "<!TEMPLATE-FIELD>",
+            "_fos_comments": {},
+            "_fos_key_comments": {},
+            "_list_type": "explicit",
+            "_routine_paths": []
+        }
+    ],
+    "reaction": {
+        "template_name": "Empty ReactionTemplate",
+        "nominal_formula": "<!TEMPLATE-FIELD>",
+        "nominal_mass": "<!TEMPLATE-FIELD>",
+        "nominal_mass_units": "<!TEMPLATE-FIELD>",
+        "_fos_comments": {},
+        "_fos_key_comments": {},
+        "_list_type": "explicit",
+        "_routine_paths": []
+    },
+    "materials": [
+        {
+            "name": "Unknown Precursor",
+            "type": "precursor",
+            "formula": "H",
+            "supplier": "Unknown",
+            "cas": "Unknown",
+            "form": "Unknown",
+            "env": "Unknown",
+            "ratio": "1.0"
+        }
+    ],
+    "treatments": [
+        {
+            "template_name": "Empty Treatment",
+            "type": "<!TEMPLATE-FIELD>",
+            "repeats": "<!TEMPLATE-FIELD>",
+            "observations": "<!TEMPLATE-FIELD>",
+            "_fos_comments": {},
+            "_fos_key_comments": {},
+            "_list_type": "explicit",
+            "_routine_paths": []
+        }
+    ],
+    "_fos_comments": {},
+    "_fos_key_comments": {},
+    "_list_type": "explicit",
+    "_routine_paths": []
+}

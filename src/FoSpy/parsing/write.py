@@ -26,7 +26,7 @@ def block_list_to_lines(blocklist:list, indent=0):
     typ_key = mk["list_type"]
     typ = blocklist[0][typ_key] if typ_key in blocklist[0] else "explicit"
     for block in blocklist[1:]:
-        new_typ = block[mk["list_type"]]
+        new_typ = block.get(mk["list_type"], "explicit")
         if new_typ != typ:
             raise ValueError(f"All blocks in a multi-block section must have the same {mk["list_type"]}, either 'explicit' or 'looped'.")
         

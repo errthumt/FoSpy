@@ -1,5 +1,5 @@
 
-from .blocks import FileBlock
+from .files import FileBlock
 
 from .._debug import Debug
 _debug = Debug()

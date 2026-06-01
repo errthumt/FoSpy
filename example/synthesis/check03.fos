@@ -13,8 +13,23 @@ rename: [
 
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5
-nominal_mass: 250.0
-nominal_mass_units: mg
+nominal_amount: 250.0
+nominal_amount_unit: milligram
+
+[Products]
+name: Barium transition-metal arsenide (8-24-28.5)
+formula: Ba8Cu13Zn11As28.5
+expected: True
+obtained: True
+expected_amount: 250.0
+expected_amount_unit: milligram
+obtained_amount: 150.0
+obtained_amount_unit: milligram
+observations: Gray Powder
+characterizations: PXRD
+structure_comments: [;;;
+Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space
+group Cmcm]
 
 [[Reagents]]
 :name
@@ -25,7 +40,8 @@ nominal_mass_units: mg
 :form
 :purity
 :env
-:ratio
+:amount
+:amount_unit
 :treatments
 
     Barium
@@ -37,6 +53,7 @@ nominal_mass_units: mg
     0.999
     Ar (g)
     2.0
+    mol ratio
     [
         type: cutting
         repeats: 1
@@ -52,6 +69,7 @@ nominal_mass_units: mg
     0.995
     Ar (g)
     5.0
+    mol ratio
     []
 
     Antimony
@@ -63,6 +81,7 @@ nominal_mass_units: mg
     0.999
     Ar (g)
     6.0
+    mol ratio
     []
 
 [[Treatments]]
@@ -86,13 +105,18 @@ nominal_mass_units: mg
     [;;;
     Opened under argon atmosphere and ground well before sealing in new ampoule
     in between annealings.]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
-        temp: 600 C
-        time: 10 hr
+        temp: 600
+        time: 10
+        temp_unit: degree_Celsius
+        time_unit: hour
 
         type: dwell
-        time: 120hr
+        time: 120
+        time_unit: hour
     ]]
 
     grind

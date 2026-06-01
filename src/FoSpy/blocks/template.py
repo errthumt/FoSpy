@@ -1,4 +1,6 @@
-from .blocks import FileBlock, ListBlock, SingleBlock
+from .files import FileBlock
+
+from .blocks import ListBlock, SingleBlock
 
 from .._debug import Debug
 _debug = Debug()
@@ -6,7 +8,7 @@ _debug = Debug()
 class TemplateField:
     def __init__(self, *args, **kwargs):
         pass
-    def serialize(self,keepListType=None):
+    def serialize(self,keepListType=None, clean=False):
         from ..parsing.format import format_field
         return format_field("template")
 
@@ -41,8 +43,8 @@ class TemplateList(ListBlock):
 
         return FlexList
     
-    def serialize(self):
-        serial = super().serialize()
+    def serialize(self, **kwargs):
+        serial = super().serialize(**kwargs)
         if len(serial) == 0:
             serial = [self._reqCls.reflex()]
         return serial
@@ -52,7 +54,7 @@ class TemplateBlock(SingleBlock):
         self._full_class = None
         super().__init__(blockDict, _dispatched=_dispatched)
 
-    def fill(self,**kwargs):
+    def fill(self,incomplete=False,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
 
@@ -62,14 +64,16 @@ class TemplateBlock(SingleBlock):
         for kw, arg in kwargs.items():
             serial[kw] = arg
 
+        if incomplete:
+            return self._full_class.reflex(serialize=False,**serial)
         return self._full_class.dispatch_subclass(serial)
     
-    def serialize(self,keepListType=False, shallow=False):
+    def serialize(self,keepListType=False, shallow=False, clean=False):
         from ..parsing.validation import required_keys
         from ..parsing.format import format_field
         required = self._full_class.build_req_validators()
         required.pop('ext',None)
-        serial = super().serialize(keepListType=keepListType, shallow=shallow)
+        serial = super().serialize(keepListType=keepListType, shallow=shallow, clean=clean)
 
         out = {"template_name":serial.pop("template_name","")}
         for key,validator in required.items():

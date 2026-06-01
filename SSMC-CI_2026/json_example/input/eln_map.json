@@ -1,0 +1,62 @@
+{
+  "Video ID": "metadata.video_id",
+  "Process Name": "metadata.process_name",
+  "Sample Name (Sample_no)": "metadata.name",
+  "Date of Experiment (Expt_date)": "metadata.date",
+  "Temperature (Lab_temp)": {
+    "value": "laboratory.temp",
+    "unit": "laboratory.temp_unit"
+  },
+  "Humidity (Lab_humidity)": {
+    "value": "laboratory.humidity",
+    "unit": "laboratory.humidity_unit"
+  },
+  "Initial mass of bubbler (Mass_bub_pre)": {
+    "value": "equipment[0].initial_mass",
+    "unit": "equipment[0].initial_mass_unit"
+  },
+  "Precursor name (Chem_prec)": "materials[0].name",
+  "Precursor color (Color_prec)": "materials[0].color",
+  "Precursor mass (Mass_prec)": {
+    "value": "materials[0].mass",
+    "unit": "materials[0].mass_unit"
+  },
+  "Precursor structure (Struc_prec)": "materials[0].structure",
+  "Reaction temperature (Max_temp_C)": {
+    "value": "treatments[0].program[0].temp",
+    "unit": "treatments[0].program[0].temp_unit"
+  },
+  "Reaction time (Time_max_temp)": {
+    "value": "reaction.duration",
+    "unit": "reaction.duration_unit",
+    "display_value": "reaction.duration_format"
+  },
+  "Heating Rate (Heat_rate)": {
+    "value": "treatments[0].program[0].rate",
+    "unit": "treatments[0].program[0].rate_unit"
+  },
+  "Argon flow rate (%) (Ar_perc)": {
+    "value": "treatments[0].gas_flow[0].flow",
+    "unit": "treatments[0].gas_flow[0].flow_unit"
+  },
+  "Hydrogen flow rate (%) (H2_perc)": {
+    "value": "treatments[0].gas_flow[1].flow",
+    "unit": "treatments[0].gas_flow[1].flow_unit"
+  },
+  "Ammonia flow rate(%) (NH3_perc)": {
+    "value": "treatments[0].gas_flow[2].flow",
+    "unit": "treatments[0].gas_flow[2].flow_unit"
+  },
+  "Reaction start time (Start_time)": "reaction.start_time",
+  "Reaction End time (End_time)": "reaction.end_time",
+  "Final mass of bubbler (Mass_bub_post)": {
+    "value": "equipment[0].final_mass",
+    "unit": "equipment[0].final_mass_unit"
+  },
+  "Mass of product (Mass_prod)": {
+    "value": "reaction.product_mass",
+    "unit": "reaction.product_mass_unit"
+  },
+  "Color of product (Color_prod)": "reaction.product_color",
+  "Structure of product (Struc_prod)": "reaction.product_structure"
+}

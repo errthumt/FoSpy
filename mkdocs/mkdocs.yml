@@ -1,0 +1,17 @@
+site_name: FoSpy Documentation
+
+theme: readthedocs
+
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          heading_level: 4
+
+extra_css:
+  - stylesheets/extra.css
+
+INHERIT: ./nav.yml
+    
