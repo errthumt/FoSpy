@@ -9,7 +9,7 @@ class TemplateField:
     def __init__(self, *args, **kwargs):
         pass
     def serialize(self,keepListType=None, clean=False):
-        from ..parsing.format import format_field
+        from ..parsing.format_fos import format_field
         return format_field("template")
 
 class TemplateSet(FileBlock):
@@ -70,7 +70,7 @@ class TemplateBlock(SingleBlock):
     
     def serialize(self,keepListType=False, shallow=False, clean=False):
         from ..parsing.validation import required_keys
-        from ..parsing.format import format_field
+        from ..parsing.format_fos import format_field
         required = self._full_class.build_req_validators()
         required.pop('ext',None)
         serial = super().serialize(keepListType=keepListType, shallow=shallow, clean=clean)

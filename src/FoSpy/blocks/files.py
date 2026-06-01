@@ -1,5 +1,6 @@
 from .blocks import SingleBlock
-from FoSpy.parsing import dict_from_file, write_dict_to_file
+from ..parsing.read import dict_from_file
+from ..parsing.write import write_dict_to_file
 
 
 import atexit

@@ -1,18 +1,53 @@
 from .._debug import Debug
 _debug = Debug()
 
-from ..blocks.blocks import *
-from ..blocks.embedded import *
-from ..blocks.materials import *
-from ..blocks.metadata import *
-from ..blocks.synthesis import *
-from ..blocks.template import *
-from ..blocks.treatments import *
+from ..blocks.blocks import (
+    ListBlock,
+    SingleBlock,
+    SubContainer,
+)
 
-from ..blocks.synthesis import Synthesis
+from ..blocks.embedded import (
+    EmbeddedCIF,
+    EmbeddedFile,
+)
+
+from ..blocks.materials import (
+    Material,
+    MaterialList,
+    TemplateBlock,
+    TemplateList,
+)
+
+from ..blocks.metadata import (
+    Experimenter,
+    MetaData,
+    Product,
+    Reaction,
+    TemplateMeta,
+)
+
+from ..blocks.synthesis import (
+    Synthesis,
+)
+
+from ..blocks.template import (
+    TemplateSet,
+)
+
+from ..blocks.treatments import (
+    AnnealProgram,
+    AnnealSection,
+    Annealing,
+    Dwell,
+    Quench,
+    Ramp,
+    Treatment,
+)
+
 from . import validators
+import chemformula
 
-from chemformula import ChemFormula
 
 TreatmentList = ListBlock.Simple(Treatment)
 ExperimenterList = ListBlock.Simple(Experimenter)
@@ -112,7 +147,7 @@ def default_required():
         },
 
         Reaction: {
-            "nominal_formula": ChemFormula,
+            "nominal_formula": chemformula.ChemFormula,
             "nominal_amount" : validators.numbers.positive_decimal("Reaction/nominal_amount", "nominal_amount"),
             "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
         },
@@ -121,14 +156,14 @@ def default_required():
             "name": str,
             "expected" : bool,
             "obtained" : bool,
-            "formula": ChemFormula,
+            "formula": chemformula.ChemFormula,
             "observations": str
         },
 
         Material: {
             "name": str,
             "type": str,
-            "formula": ChemFormula,
+            "formula": chemformula.ChemFormula,
             "supplier": str,
             "cas": str,
             "form": str,

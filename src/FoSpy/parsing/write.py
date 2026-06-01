@@ -2,12 +2,12 @@ import os
 import textwrap
 
 from .._debug import Debug
-from .format import _indent
+from .format_fos import _indent
 _debug = Debug()
 
 from . import syntax as snt
 from .syntax import meta_keys as mk
-from .format import *
+from .format_fos import *
 
 CHAR_WIDTH = 80
 

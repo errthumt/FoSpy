@@ -2,7 +2,7 @@ from .syntax import meta_keys as mk
 from .syntax import meta_defaults as md
 from .syntax import SYNTAX
 from . import regex as rx
-from .format import format_key_value, empty_nested, format_field, format_comment
+from .format_fos import format_key_value, empty_nested, format_field, format_comment
 
 from .._debug import Debug
 _debug = Debug()
