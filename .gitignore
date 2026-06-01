@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 dist_venv/
+mkdocs/site/
 
 # C extensions
 *.so
