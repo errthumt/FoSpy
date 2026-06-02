@@ -53,8 +53,8 @@ def main():
     # 1. Run stub generators
     block_paths = block_stubs.main()      # list[str]
     full_tree = full_stubs.main()
-    
-    block_paths.insert(0, "blocks/index.md")
+
+    block_tree = {".": block_paths}
 
     # 2. Load nav header
     with NAV_HEADER_PATH.open("r", encoding="utf-8") as f:
@@ -62,7 +62,7 @@ def main():
 
     # 3. Build Block Modules section
     block_section = {
-        "Block Modules": block_paths
+        "Block Modules": build_full_nav(block_tree)
     }
 
     # 4. Build Full Documentation section

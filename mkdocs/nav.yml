@@ -8,19 +8,22 @@ nav:
 - Property Documentation:
   - Expected Properties: expected/index.md
 - Block Modules:
-  - blocks/blocks.md
-  - blocks/data.md
-  - blocks/embedded.md
-  - blocks/files.md
-  - blocks/materials.md
-  - blocks/metadata.md
-  - blocks/synthesis.md
-  - blocks/template.md
-  - blocks/treatments.md
+  - What is a Block?: blocks/index.md
+  - blocks: blocks/blocks.md
+  - data: blocks/data.md
+  - embedded: blocks/embedded.md
+  - files: blocks/files.md
+  - materials: blocks/materials.md
+  - metadata: blocks/metadata.md
+  - synthesis: blocks/synthesis.md
+  - template: blocks/template.md
+  - treatments: blocks/treatments.md
 - Full Documentation:
-  - core: full/core.md
+  - Full Docs Home: full/index.md
   - _debug: full/_debug.md
+  - core: full/core.md
   - blocks:
+    - _blockUtils: full/blocks/_blockUtils.md
     - blocks: full/blocks/blocks.md
     - data: full/blocks/data.md
     - embedded: full/blocks/embedded.md
@@ -30,7 +33,6 @@ nav:
     - synthesis: full/blocks/synthesis.md
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
-    - _blockUtils: full/blocks/_blockUtils.md
   - json:
       utils: full/json/utils.md
   - parsing:

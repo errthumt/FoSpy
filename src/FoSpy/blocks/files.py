@@ -9,6 +9,10 @@ import os
 import tempfile
 from pathlib import Path
 
+__block_classes__ = [
+    "FileBlock"
+]
+
 
 class FileBlock(SingleBlock):
     """

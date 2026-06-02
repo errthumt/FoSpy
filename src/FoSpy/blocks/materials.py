@@ -6,6 +6,12 @@ from .template import TemplateBlock, TemplateList
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "Material",
+    "MaterialList"
+]
+
+
 class Material(SingleBlock):
     """
     Represents a material used in a synthesis
@@ -18,11 +24,6 @@ class Material(SingleBlock):
         _debug.msg(f"Adding molecular weight to Material: {self.name}")
         mw = self.formula.formula_weight
         self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")
-
-class MaterialTemplate(Material, TemplateBlock):
-    """
-    Represents a material used frequently and attached to multiple syntheses.
-    """
 
 class MaterialList(ListBlock):
     """

@@ -5,6 +5,14 @@ from .template import TemplateBlock
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "MetaData",
+    "TemplateMeta",
+    "Reaction",
+    "Product",
+    "Experimenter"
+]
+
 class MetaData(SingleBlock):
     """
     Represents metadata for a synthesis.
@@ -54,9 +62,3 @@ class Experimenter(SingleBlock):
     """
     pass
 
-class ExpTemplate(Experimenter, TemplateBlock):
-    """
-    Represents an experimenter who frequently performs syntheses and is
-    attached to multiple FOS files.
-    """
-    pass

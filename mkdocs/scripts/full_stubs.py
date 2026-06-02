@@ -35,6 +35,17 @@ def ensure_folder(tree: dict, parts: list[str]) -> dict:
         current = current[part]
     return current
 
+def sort_tree(tree: dict) -> dict:
+    """
+    Recursively sort a nested dictionary by keys.
+    """
+    sorted_tree = {}
+    for key in sorted(tree.keys()):
+        if isinstance(tree[key], dict):
+            sorted_tree[key] = sort_tree(tree[key])
+        else:
+            sorted_tree[key] = tree[key]
+    return sorted_tree
 
 def main():
     paths: dict[str, dict] = {".": {}}
@@ -83,6 +94,11 @@ def main():
             f.write("        heading_level: 2\n")
             f.write("        show_source: true\n")
             f.write("        separate_signature: true\n")
+
+    paths = sort_tree(paths)
+    root = {"Full Docs Home": "full/index.md"}
+    root.update(paths["."])
+    paths["."] = root
 
     return paths
 
