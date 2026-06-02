@@ -20,7 +20,7 @@ license-files = ["LICEN[CS]E*"]
 dependencies = [
     "pandas",
     "chemformula",
-    "cif2xrd",
+    "cif2xrd >= 1.0.3",
     "pint"
 ]
 
