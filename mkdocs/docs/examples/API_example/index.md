@@ -368,6 +368,7 @@ There are features being developed that allow generating useful figures from the
 
 ### Simulating Powder Patterns
 ```python
+# optional: figure
 my_synthesis.cifs[0].quick_pattern(subprocess=True)
 ```
 
@@ -376,6 +377,7 @@ Simulates powder diffraction data for the embedded CIF
 
 ### Annealing Diagrams
 ```python
+# optional: figure
 my_synthesis.treatments.get_first(type="anneal").show_plot()
 ```
 

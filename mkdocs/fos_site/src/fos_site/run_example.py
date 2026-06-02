@@ -5,12 +5,29 @@ API_MD_PATH = Path("mkdocs/docs/examples/API_example/index.md")
 API_SCRIPT_PATH = Path("mkdocs/build_scripts/API_example.py")
 FULL_MD_PATH = Path("mkdocs/docs/examples/API_example/full.md")
 
-def extract_code_to_main(md_path, out_path, out_md_path):
+import re
+
+def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
     text = Path(md_path).read_text()
 
     pattern = re.compile(r"```python\s+(.*?)```", re.DOTALL | re.IGNORECASE)
     blocks = pattern.findall(text)
     combined = "\n\n".join(blocks).rstrip()
+
+    if not figures:
+        lines = combined.splitlines()
+        modified_lines = []
+        for line in lines:
+            try:
+                if modified_lines[-1].strip().startswith("# optional: figure"):
+                    modified_lines.append("# " + line)
+                else:
+                    modified_lines.append(line)
+            except IndexError:
+                modified_lines.append(line)
+
+        combined = "\n".join(modified_lines)
+
     indented = "\n".join("    " + line if line.strip() else "" for line in combined.splitlines())
 
     final_script = (
@@ -34,12 +51,11 @@ def extract_code_to_main(md_path, out_path, out_md_path):
     out_md_path.write_text(md_script)
     return out_path
 
-
-def extract_and_run():
+def extract_and_run(figures=True):
     from ._utils import ch2repo
     ch2repo()
 
-    extract_code_to_main(API_MD_PATH, API_SCRIPT_PATH, FULL_MD_PATH)
+    extract_code_to_main(API_MD_PATH, API_SCRIPT_PATH, FULL_MD_PATH, figures=figures)
 
     import os
     os.chdir(API_SCRIPT_PATH.parent)

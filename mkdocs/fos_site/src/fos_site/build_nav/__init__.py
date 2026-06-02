@@ -5,8 +5,8 @@ NAV_HEADER_PATH = Path("mkdocs/nav_header.yml")
 NAV_OUTPUT_PATH = Path("mkdocs/nav.yml")
 
 
-def main():
-    from stubs import block_stubs, full_stubs
+def generate_yml():
+    from ..stubs import block_stubs, full_stubs
     from .helpers import build_full_nav
     from .._utils import ch2repo
     ch2repo()
@@ -23,12 +23,12 @@ def main():
 
     # 3. Build Block Modules section
     block_section = {
-        "Block Modules": helpers(block_tree)
+        "Block Modules": build_full_nav(block_tree)
     }
 
     # 4. Build Full Documentation section
     full_section = {
-        "Full Documentation": helpers(full_tree)
+        "Full Documentation": build_full_nav(full_tree)
     }
 
     # 5. Combine everything
