@@ -1,10 +1,3 @@
-import yaml
-from pathlib import Path
-
-NAV_HEADER_PATH = Path("mkdocs/nav_header.yml")
-NAV_OUTPUT_PATH = Path("mkdocs/nav.yml")
-
-
 def build_full_nav(tree: dict) -> list:
     """
     Convert nested dict structure from full_stubs into MkDocs nav list.
@@ -40,40 +33,3 @@ def build_full_nav(tree: dict) -> list:
             nav_list.append({key: subnav})
 
     return nav_list
-
-
-
-def main():
-    from stubs import block_stubs, full_stubs
-    import os
-    os.chdir(Path(__file__).parent.parent.parent)
-
-    # 1. Run stub generators
-    block_paths = block_stubs.main()      # list[str]
-    full_tree = full_stubs.main()
-
-    block_tree = {".": block_paths}
-
-    # 2. Load nav header
-    with NAV_HEADER_PATH.open("r", encoding="utf-8") as f:
-        nav_header = yaml.safe_load(f)
-
-    # 3. Build Block Modules section
-    block_section = {
-        "Block Modules": build_full_nav(block_tree)
-    }
-
-    # 4. Build Full Documentation section
-    full_section = {
-        "Full Documentation": build_full_nav(full_tree)
-    }
-
-    # 5. Combine everything
-    nav = nav_header + [block_section, full_section]
-
-    # 6. Write mkdocs/nav.yml
-    with NAV_OUTPUT_PATH.open("w", encoding="utf-8") as f:
-        yaml.dump({"nav": nav}, f, sort_keys=False)
-
-    print("mkdocs/nav.yml generated.")
-

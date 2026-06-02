@@ -5,7 +5,7 @@ MD_PATH = Path("mkdocs/docs/expected/index.md")
 OUT_PATH = MD_PATH
 TEMPLATE_PATH = Path("mkdocs/build_scripts/class_template.md")
 
-def main():
+def update_tables_report_diffs():
     from .._utils import ch2repo
     ch2repo()
 

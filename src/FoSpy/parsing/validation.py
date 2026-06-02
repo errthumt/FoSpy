@@ -113,9 +113,6 @@ def default_required():
     constructors, or custom validator functions.
     """
     return {
-        TestBlock: {
-            "test_key": str
-        },
         SingleBlock: {
                 "ext" : SubContainer
         },
@@ -126,8 +123,7 @@ def default_required():
             "reaction" : Reaction,
             "products": ProductList,
             "materials" : MaterialList,
-            "treatments" : TreatmentList,
-            "test": TestBlock
+            "treatments" : TreatmentList
         },
 
         TemplateSet: {
@@ -256,8 +252,7 @@ def default_optional():
 
         Material : {
             "purity" : validators.numbers.decimal_range("Material/purity","purity", 0, 1),
-            "treatments": ListBlock.Simple(Treatment),
-            "test": TestBlock
+            "treatments": ListBlock.Simple(Treatment)
         },
 
         Treatment: {
