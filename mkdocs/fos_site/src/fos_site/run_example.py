@@ -1,8 +1,9 @@
 import re
 from pathlib import Path
 
-BASE = Path(__file__).resolve().parent # mkdocs/scripts/
-DOCS = BASE.parent / "docs" / "examples" / "API_example"
+API_MD_PATH = Path("mkdocs/docs/examples/API_example.md")
+API_SCRIPT_PATH = Path("mkdocs/build_scripts/API_example.py")
+FULL_MD_PATH = Path("mkdocs/docs/examples/API_example/full.md")
 
 def extract_code_to_main(md_path, out_path, out_md_path):
     text = Path(md_path).read_text()
@@ -35,20 +36,21 @@ def extract_code_to_main(md_path, out_path, out_md_path):
 
 
 def main():
-    md_path = DOCS / "index.md"
-    out_path = BASE / "API_example.py"
-    out_md_path = DOCS / "full.md"
+    from ._utils import ch2repo
+    ch2repo()
 
-    extract_code_to_main(md_path, out_path, out_md_path)
+    extract_code_to_main(API_MD_PATH, API_SCRIPT_PATH, FULL_MD_PATH)
 
     import os
-    os.chdir(DOCS.parent)
+    os.chdir(API_SCRIPT_PATH.parent)
 
-    # Import dynamically
     import API_example as example
+
+    ch2repo()
+    os.chdir(API_MD_PATH.parent)
     example.main()
+
+    ch2repo()
 
     print("Example Code Finished!")
 
-if __name__ == "__main__":
-    main()

@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fos_site"
+version = "0.0.1"
+authors = [
+  { name="Travis Errthum" },
+]
+description = "Internal build modules for building the FoSpy mkdocs site."
+readme = "readme.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = []
