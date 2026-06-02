@@ -1,5 +1,9 @@
 # nav header to be included at the top of nav bar before auto-generated
 # navigation in nav.yml
 - Home: index.md
-- API Example: examples/API_example.md
-- Expected Properties: expected/index.md
+- API Example: 
+  - API Walkthrough: examples/API_example/index.md
+  - Synthesis Files: examples/synthesis/index.md
+  - Template Files: examples/templates/index.md
+- Property Documentation:
+  - Expected Properties: expected/index.md

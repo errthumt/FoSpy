@@ -1,0 +1,252 @@
+# An Example Synthesis in FOS Format
+Below is the full text of what a FOS might look like. This is a great place to start when learning the syntax or what is required for each file. The FOS below is also the staring point for the [API Session Example](./API_example/)
+
+```fos
+name: TE001
+// This comment will stay attached to the date when saving (until comments are
+// cleared)
+date: 03-11-2026
+// ! Comments starting with a ! do not get read from the file.
+// The keys below are not expected by FoSpy, but were added for my own purposes.
+internal_project_ID: Ba2-TM5-Pn6
+internal_project_description: Unique Clathrate
+
+[Experimenters]
+name: Travis Errthum
+affiliation: Kovnir Group - Iowa State University
+orcid: 0009-0006-1937-5672
+
+// Single brackets on a header mean there is only one group
+[Reaction]
+nominal_formula: Ba2Zn5Sb6
+nominal_amount: 250.0
+nominal_amount_unit: mg
+
+[Products]
+name: Barium Zinc Antimonide (2-5-6)
+formula: Ba2Zn5Sb6
+expected: true
+obtained: true
+expected_amount: 250.0
+expected_amount_unit: mg
+obtained_amount: 200.0
+obtained_amount_unit: mg
+observations: Black Powder
+characterizations: PXRD, EDS, Eyeballs
+// Below is the syntax for a multiline string value.
+structure_comments: [;;;
+    Unique clathrate with novel polyhedra.
+    Space group Pnma]
+
+// Double brackets on a header mean there are multiple similar groups
+[[Materials]]
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:purity
+:env
+:amount
+:amount_unit
+:treatments
+
+    Barium
+    reagent
+    Ba
+    Thermofisher
+    7440-39-3
+    lump
+    0.999
+    Ar (g)
+    // The comment below will be correctly re-calculated when saving using a calc_routine
+    // ! Total weight percent: 200%
+    2.0
+    mol ratio
+    // Similar to headers, single brackets mean there is only one group,
+    // in this case for treatments of Barium
+    [
+        type: cutting
+        repeats: 1
+        observations: smaller pieces improve homogenization
+    ]
+
+    Zinc
+    reagent
+    Zn
+    Sigma Aldrich
+    7440-66-6
+    powder
+    0.995
+    Ar (g)
+    5.0
+    mol ratio
+    []
+
+    Antimony
+    reagent
+    Sb
+    Chem Stores?
+    7440-36-0
+    powder
+    0.999
+    Ar (g)
+    6.0
+    mol ratio
+    []
+
+    
+
+// This is a comment on the treatments block
+[[Treatments]]
+:type
+:repeats
+:observations
+
+    weigh
+    1
+    [;;;
+    Weighed stoichiometrically to carbonized ampoule.
+    Barium added last to avoid contact with ampoule 
+    during reaction]
+    recovered_mass: 250.0
+
+    seal
+    1
+    Evacuated ampoule and sealed with H2/O2 torch
+
+    anneal
+    2
+    Opened under argon atmosphere and ground well before sealing in new ampoule in between annealings.
+    start_temp: 25
+    start_temp_unit: C
+    // Here, the double brackets signal that there are multiple program sections.
+    program: [[
+        type: ramp
+        temp: 600
+        time: 10
+        temp_unit: C
+        time_unit: h
+
+
+        type: dwell
+        time: 120
+        time_unit: h
+    ]]
+
+    grind
+    3
+    dark gray powder now
+    recovered_mass: 200.0
+
+[CIFs]
+file_name: Ba2Zn5Sb6_ICSD
+extension: .cif
+embedded: {{{
+
+#(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_71031-ICSD
+_database_code_ICSD 71031
+_audit_creation_date 2023-08-01
+_chemical_name_common 'Barium zinc antimonide (2/5/6)'
+_chemical_formula_structural 'Ba2 Zn5 Sb6'
+_chemical_formula_sum 'Ba2 Sb6 Zn5'
+_exptl_crystal_density_diffrn 6.13
+_diffrn_ambient_temperature 100.
+_citation_title
+;
+New trick for an old dog: from prediction to properties of  hidden clathrates 
+\(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
+;
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Journal of the American Chemical Society' 2023 145 4638 4646 JACSAT
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Yox, Philip'
+primary 'Cerasoli, Frank'
+primary 'Sarkar, Arka'
+primary 'Kyveryga, Victoria'
+primary 'Viswanathan, Gayatri'
+primary 'Donadio, Davide'
+primary 'Kovnir, Kirill'
+_cell_length_a 11.4154(5)
+_cell_length_b 10.0135(4)
+_cell_length_c 12.6172(5)
+_cell_angle_alpha 90
+_cell_angle_beta 90
+_cell_angle_gamma 90
+_cell_volume 1442.24
+_cell_formula_units_Z 4
+_space_group_name_H-M_alt 'P m n a'
+_space_group_IT_number 53
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 'x+1/2, y, -z+1/2'
+2 'x+1/2, -y, z+1/2'
+3 '-x, y, z'
+4 '-x, -y, -z'
+5 '-x+1/2, -y, z+1/2'
+6 '-x+1/2, y, -z+1/2'
+7 'x, -y, -z'
+8 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Ba0+ 0
+Sb0+ 0
+Zn0+ 0
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_occupancy
+Ba1 Ba0+ 4 h 0.5 0.23891(4) 0.64640(3) 0.00367(9) 1
+Ba2 Ba0+ 4 g 0.75 0.71608(4) 0.75 0.00794(10) 1
+Sb1 Sb0+ 4 f 0.32061(4) 0.5 0.5 0.00275(10) 1
+Sb2 Sb0+ 4 h 0.5 0.86799(4) 0.61427(3) 0.00219(10) 1
+Sb3 Sb0+ 4 h 0.5 0.73181(4) 0.93973(3) 0.00287(10) 1
+Sb4 Sb0+ 8 i 0.19164(3) 0.10079(3) 0.65092(2) 0.00228(8) 1
+Sb5 Sb0+ 4 h 0.5 0.50694(4) 0.80966(3) 0.00258(10) 1
+Zn1 Zn0+ 4 h 0.5 0.94723(7) 0.81658(6) 0.00330(16) 1
+Zn2 Zn0+ 4 e 0.33104(7) 0. 0.5 0.00356(16) 1
+Zn3 Zn0+ 4 h 0.5 0.60202(7) 0.61084(6) 0.00339(16) 1
+Zn4 Zn0+ 8 i 0.15880(5) 0.65041(5) 0.41232(4) 0.00452(13) 1
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_type_symbol
+_atom_site_aniso_U_11
+_atom_site_aniso_U_22
+_atom_site_aniso_U_33
+_atom_site_aniso_U_12
+_atom_site_aniso_U_13
+_atom_site_aniso_U_23
+Ba1 Ba0+ 0.0056(2) 0.00269(19) 0.00270(18) 0. 0. -0.00066(15)
+Ba2 Ba0+ 0.0031(2) 0.0110(2) 0.0097(2) 0. -0.00029(16) 0.
+Sb1 Sb0+ 0.0025(2) 0.0026(2) 0.0031(2) 0. 0. 0.00002(17)
+Sb2 Sb0+ 0.0037(2) 0.0013(2) 0.0015(2) 0. 0. -0.00028(17)
+Sb3 Sb0+ 0.0053(2) 0.0017(2) 0.0016(2) 0. 0. -0.00002(17)
+Sb4 Sb0+ 0.00259(16) 0.00227(16) 0.00198(14) 0.00013(12) 0.00028(12)
+-0.00016(12)
+Sb5 Sb0+ 0.0043(2) 0.0014(2) 0.0020(2) 0. 0. 0.00017(17)
+Zn1 Zn0+ 0.0041(4) 0.0027(4) 0.0032(4) 0. 0. 0.0000(3)
+Zn2 Zn0+ 0.0034(4) 0.0039(4) 0.0034(4) 0. 0. -0.0007(3)
+Zn3 Zn0+ 0.0043(4) 0.0023(4) 0.0036(4) 0. 0. 0.0006(3)
+Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
+#End of TTdata_71031-ICSD
+#################### END FOS EMBED }}}
+```
