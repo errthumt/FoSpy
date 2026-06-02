@@ -36,6 +36,8 @@ def get_all_symbols(py_file: Path, list_name: str = SYMBOL_LIST_NAME) -> list[st
 
 
 def main():
+    from .._utils import ch2repo
+    ch2repo()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     py_files = SOURCE_DIR.glob("*.py")
@@ -108,6 +110,3 @@ def main():
 
     return out
 
-
-if __name__ == "__main__":
-    print(main())

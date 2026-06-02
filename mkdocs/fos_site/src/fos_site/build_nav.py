@@ -1,9 +1,6 @@
 import yaml
 from pathlib import Path
 
-import block_stubs
-import full_stubs
-
 NAV_HEADER_PATH = Path("mkdocs/nav_header.yml")
 NAV_OUTPUT_PATH = Path("mkdocs/nav.yml")
 
@@ -47,6 +44,7 @@ def build_full_nav(tree: dict) -> list:
 
 
 def main():
+    from stubs import block_stubs, full_stubs
     import os
     os.chdir(Path(__file__).parent.parent.parent)
 
@@ -79,6 +77,3 @@ def main():
 
     print("mkdocs/nav.yml generated.")
 
-
-if __name__ == "__main__":
-    main()

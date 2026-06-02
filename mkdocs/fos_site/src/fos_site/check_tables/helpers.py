@@ -1,18 +1,19 @@
 from pathlib import Path
+
 from markdown_it import MarkdownIt
 from mdformat.renderer import MDRenderer
-import mdformat
 
-import pkgutil
+import FoSpy
+
+
 import importlib
 import inspect
-import FoSpy  # your package root
+import pkgutil
 
+import mdformat
 
-MD_PATH = Path("mkdocs/docs/expected/index.md")
-#OUT_PATH = Path("mkdocs/scripts/required_tables/index_with_links.md")
-OUT_PATH = MD_PATH
-TEMPLATE_PATH = Path("mkdocs/scripts/required_tables/class_template.md")
+from FoSpy.parsing.validation import optional_keys, required_keys
+
 
 def find_class_module_path(class_name: str) -> str | None:
     """
@@ -42,7 +43,6 @@ def find_class_module_path(class_name: str) -> str | None:
     return None
 
 
-
 def parse_markdown(md_text: str, tables=False):
     """Parse markdown into markdown-it-py tokens."""
     if tables:
@@ -51,10 +51,12 @@ def parse_markdown(md_text: str, tables=False):
         md = MarkdownIt("commonmark")
     return md.parse(md_text)
 
-def get_template_tokens():
+
+def get_template_tokens(md_path:Path):
     """Load the class documentation template and parse it into tokens."""
-    template_text = TEMPLATE_PATH.read_text(encoding="utf-8")
+    template_text = md_path.read_text(encoding="utf-8")
     return parse_markdown(template_text)
+
 
 def get_paragraph_tokens(para_text, tok):
     para_open = tok.__class__(
@@ -123,6 +125,7 @@ def get_paragraph_tokens(para_text, tok):
         hidden=False,
     )
     return para_open, inline_token, para_close
+
 
 def pop_before(strings, comparison):
     """
@@ -217,21 +220,21 @@ def get_heading_tokens(heading_text, tok):
     return heading_open, heading_inline, heading_close
 
 
-def add_class_doc_links(tokens, diffs={}):
+def add_class_doc_links(tokens, diffs={}, temp_path=None):
     """
     Insert a `[Class Documentation][FoSpy.blocks.<ClassName>]`
     link immediately after each class heading of the form:
 
         ## `ClassName`
     """
-    missing_classes = diffs.get("missing_classes", [])
-    missing_required = diffs.get("missing_required", {})
-    missing_optional = diffs.get("missing_optional", {})
+    missing_classes = diffs.get("missing_classes", []).copy()
+    missing_required = diffs.get("missing_required", {}).copy()
+    missing_optional = diffs.get("missing_optional", {}).copy()
 
     new_tokens = []
     i = 0
     tables_start = False
-    template_tokens = get_template_tokens()
+    template_tokens = get_template_tokens(temp_path)
     while i < len(tokens):
         tok = tokens[i]
         if tok.type == "heading_open" and tok.tag == "h1":
@@ -273,18 +276,18 @@ def add_class_doc_links(tokens, diffs={}):
                 pre_text = "!table_check:Placeholder for missing class."
                 req_text = f"!table_check: Missing required properties: {missing_required.get(heading, [])}"
                 opt_text = f"!table_check: Missing optional properties: {missing_optional.get(heading, [])}"
-                new_tokens.extend([*get_heading_tokens(f"`{heading}`", tok), 
+                new_tokens.extend([*get_heading_tokens(f"`{heading}`", tok),
                                    *get_paragraph_tokens(pre_text, tok),
                                    *get_paragraph_tokens(req_text, tok),
                                    *get_paragraph_tokens(opt_text, tok),
                                    *template_tokens])
-            
+
             new_tokens.append(tok)
             if "Class Documentation" not in tokens[i+4].content:
                 # Build the link text
                 link_text = f"[Class Documentation][{find_class_module_path(class_name) or 'UnknownClass'}]"
 
-                
+
                 # Insert a paragraph_open, inline, paragraph_close sequence
                 new_tokens.extend([
                     tokens[i+1],
@@ -304,6 +307,7 @@ def add_class_doc_links(tokens, diffs={}):
         i += 1
 
     return new_tokens
+
 
 def extract_property_tables(tokens):
     """
@@ -370,25 +374,21 @@ def extract_property_tables(tokens):
 
     return tables
 
-def process_markdown(md_path: Path, diffs={}):
+
+def process_markdown(md_path: Path, diffs={}, temp_path:Path=None):
     """Load markdown file, modify tokens, and return new markdown."""
     md_text = md_path.read_text(encoding="utf-8")
     tokens = parse_markdown(md_text)
 
     # Add class documentation links
-    modified_tokens = add_class_doc_links(tokens, diffs=diffs)
+    modified_tokens = add_class_doc_links(tokens, diffs=diffs, temp_path=temp_path)
 
     renderer = MDRenderer()
     md_text = renderer.render(modified_tokens,{},{})
 
     # Convert tokens back to markdown
-    new_markdown = mdformat.text(md_text) 
+    new_markdown = mdformat.text(md_text)
     return new_markdown
-
-from FoSpy.parsing.validation import required_keys, optional_keys
-
-
-from FoSpy.parsing.validation import required_keys, optional_keys
 
 
 def diff_property_tables(extracted_tables):
@@ -480,6 +480,7 @@ def diff_property_tables(extracted_tables):
 
     return diff
 
+
 def get_table_diffs(md_path: Path):
     md_text = md_path.read_text(encoding="utf-8")
     tokens = parse_markdown(md_text, tables=True)
@@ -490,18 +491,3 @@ def get_table_diffs(md_path: Path):
 
     diffs = diff_property_tables(extracted_tables)
     return diffs
-
-def main():
-    diffs = get_table_diffs(MD_PATH)
-    missing = diffs["missing_classes"].copy()
-    # Process and write output
-    new_md = process_markdown(MD_PATH, diffs=diffs)
-    
-    OUT_PATH.write_text(new_md, encoding="utf-8")
-
-    print(f"Updated markdown written to {OUT_PATH}")
-    return diffs
-
-if __name__ == "__main__":
-    from pprint import pp
-    pp(main())
