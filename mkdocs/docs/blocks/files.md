@@ -1,4 +1,10 @@
-# Files
+# `FoSpy.blocks.files`
+
+This site only contains documentation for the
+[`Block`][FoSpy.blocks.blocks.Block] subclasses defined in this
+module, not the entire module API. For a complete reference of
+all functions, classes, and variables, see the [full API
+documentation](../full/index.md).
 
 ## Methods attached to any object
 When [assigning an object as an
@@ -20,6 +26,8 @@ their own comment metadata.
 
 ## Block Types in this Module
 
-::: FoSpy.blocks.files
+---
+### `FileBlock`
+::: FoSpy.blocks.files.FileBlock
     options:
-        members: true
+        show_if_no_docstring: true

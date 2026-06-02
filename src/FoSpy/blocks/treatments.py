@@ -7,6 +7,19 @@ from .template import TemplateBlock, TemplateList
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "Treatment",
+    "Annealing",
+    "AnnealSection",
+    "Ramp",
+    "RampNoTemp",
+    "RampNoTime",
+    "RampNoRate",
+    "Dwell",
+    "Quench",
+    "AnnealProgram"
+]
+
 class Treatment(SingleBlock):
     # Maps type strings to subclass constructors.
     # Populated after each subclass definition.

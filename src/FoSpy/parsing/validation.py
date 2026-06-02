@@ -64,6 +64,9 @@ class Equipment(SingleBlock):
 class GasFlow(SingleBlock):
     pass
 
+class TestBlock(SingleBlock):
+    pass
+
 EquipmentList = ListBlock.Simple(Equipment)
 FlowList = ListBlock.Simple(GasFlow)
 
@@ -110,6 +113,9 @@ def default_required():
     constructors, or custom validator functions.
     """
     return {
+        TestBlock: {
+            "test_key": str
+        },
         SingleBlock: {
                 "ext" : SubContainer
         },
@@ -120,7 +126,8 @@ def default_required():
             "reaction" : Reaction,
             "products": ProductList,
             "materials" : MaterialList,
-            "treatments" : TreatmentList
+            "treatments" : TreatmentList,
+            "test": TestBlock
         },
 
         TemplateSet: {
@@ -249,7 +256,8 @@ def default_optional():
 
         Material : {
             "purity" : validators.numbers.decimal_range("Material/purity","purity", 0, 1),
-            "treatments": ListBlock.Simple(Treatment)
+            "treatments": ListBlock.Simple(Treatment),
+            "test": TestBlock
         },
 
         Treatment: {

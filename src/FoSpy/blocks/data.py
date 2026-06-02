@@ -1,5 +1,9 @@
 from .blocks import SingleBlock
 
+__block_classes__ = [
+    "TraceData",
+    "CSVdata"
+]
 
 class TraceData(SingleBlock):
     pass

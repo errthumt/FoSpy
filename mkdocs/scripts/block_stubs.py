@@ -39,7 +39,7 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     py_files = SOURCE_DIR.glob("*.py")
-    paths = []
+    paths = {}
     for py_file in py_files:
         # Skip private modules and __init__.py
         if py_file.name.startswith("_") or py_file.name == "__init__.py":
@@ -50,9 +50,16 @@ def main():
 
         md_path = OUTPUT_DIR / f"{module_name}.md"
         with md_path.open("w", encoding="utf-8") as f:
-            f.write(f"# {module_name.capitalize()}\n\n")
+            f.write(f"# `FoSpy.blocks.{module_name}`\n\n")
 
             attach_pre = """
+
+                This site only contains documentation for the
+                [`Block`][FoSpy.blocks.blocks.Block] subclasses defined in this
+                module, not the entire module API. For a complete reference of
+                all functions, classes, and variables, see the [full API
+                documentation](../full/index.md).
+
                 ## Methods attached to any object
                 When [assigning an object as an
                 attribute][FoSpy.blocks.blocks.SingleBlock.__setattr__],
@@ -87,11 +94,19 @@ def main():
                 f.write("---\n")
                 f.write(f"### `{sym}`\n")
                 f.write(f"::: {PACKAGE_ROOT}.{module_name}.{sym}\n")
+                f.write("    options:\n")
+                f.write("        show_if_no_docstring: true\n")
 
-        paths.append(f"{BLOCKS_DIR_NAME}/{module_name}.md")
+        paths[module_name] = f"{BLOCKS_DIR_NAME}/{module_name}.md"
 
     print("Markdown stubs generated.")
-    return paths
+
+    out = {"What is a Block?": "blocks/index.md"}
+
+    for k, v in sorted(paths.items()):
+        out[k] = v
+
+    return out
 
 
 if __name__ == "__main__":

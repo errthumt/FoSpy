@@ -10,7 +10,7 @@ from ._blockUtils import _unwrap_block
 from .._debug import Debug
 _debug = Debug()
 
-__all__ = [
+__block_classes__ = [
     "Block",
     "ListBlock",
     "SimpleWrapper",

@@ -4,6 +4,10 @@ from .files import FileBlock
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "Synthesis",
+]
+
 class Synthesis(FileBlock):
     """
     Represents a Synthesis loaded from a FOS file.

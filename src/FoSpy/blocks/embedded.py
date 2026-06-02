@@ -3,6 +3,11 @@ from .blocks import SingleBlock
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "EmbeddedCIF",
+    "EmbeddedFile",
+]
+
 class EmbeddedFile(SingleBlock):
     """
     Represents an non-FOS file embedded as a block in a FOS file.

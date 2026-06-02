@@ -5,6 +5,13 @@ from .blocks import ListBlock, SingleBlock
 from .._debug import Debug
 _debug = Debug()
 
+__block_classes__ = [
+    "TemplateSet",
+    "TemplateList",
+    "TemplateBlock",
+    "FlexTemplate",
+]
+
 class TemplateField:
     def __init__(self, *args, **kwargs):
         pass

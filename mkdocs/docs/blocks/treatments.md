@@ -1,4 +1,10 @@
-# Treatments
+# `FoSpy.blocks.treatments`
+
+This site only contains documentation for the
+[`Block`][FoSpy.blocks.blocks.Block] subclasses defined in this
+module, not the entire module API. For a complete reference of
+all functions, classes, and variables, see the [full API
+documentation](../full/index.md).
 
 ## Methods attached to any object
 When [assigning an object as an
@@ -20,6 +26,53 @@ their own comment metadata.
 
 ## Block Types in this Module
 
-::: FoSpy.blocks.treatments
+---
+### `Treatment`
+::: FoSpy.blocks.treatments.Treatment
     options:
-        members: true
+        show_if_no_docstring: true
+---
+### `Annealing`
+::: FoSpy.blocks.treatments.Annealing
+    options:
+        show_if_no_docstring: true
+---
+### `AnnealSection`
+::: FoSpy.blocks.treatments.AnnealSection
+    options:
+        show_if_no_docstring: true
+---
+### `Ramp`
+::: FoSpy.blocks.treatments.Ramp
+    options:
+        show_if_no_docstring: true
+---
+### `RampNoTemp`
+::: FoSpy.blocks.treatments.RampNoTemp
+    options:
+        show_if_no_docstring: true
+---
+### `RampNoTime`
+::: FoSpy.blocks.treatments.RampNoTime
+    options:
+        show_if_no_docstring: true
+---
+### `RampNoRate`
+::: FoSpy.blocks.treatments.RampNoRate
+    options:
+        show_if_no_docstring: true
+---
+### `Dwell`
+::: FoSpy.blocks.treatments.Dwell
+    options:
+        show_if_no_docstring: true
+---
+### `Quench`
+::: FoSpy.blocks.treatments.Quench
+    options:
+        show_if_no_docstring: true
+---
+### `AnnealProgram`
+::: FoSpy.blocks.treatments.AnnealProgram
+    options:
+        show_if_no_docstring: true
