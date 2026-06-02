@@ -52,7 +52,9 @@ def main():
 
     # 1. Run stub generators
     block_paths = block_stubs.main()      # list[str]
-    full_tree = full_stubs.main()         # nested dict
+    full_tree = full_stubs.main()
+    
+    block_paths.insert(0, "blocks/index.md")
 
     # 2. Load nav header
     with NAV_HEADER_PATH.open("r", encoding="utf-8") as f:

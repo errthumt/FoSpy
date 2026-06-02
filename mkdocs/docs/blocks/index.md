@@ -24,4 +24,4 @@ There are two primary types of `Block` types: [`SingleBlock`][FoSpy.blocks.block
 
 When a `SingleBlock` is constructed from a dictionary, each key in the dictionary is set as one of its attributes. [Some attribute names have specific requirements](../expected/index.md) unique to that subclass, which are enforced during construction. Because attributes are assigned at construction, you will not find complete documentation in a subclass's sourcecode of all it's available attributes. Instead, you must refer to the dictionaries at [parsing.validation][FoSpy.parsing.validation] or the associated [documentation page](../expected/index.md).
 
-Docstring documentation for public methods of each `Block` subclass can be found in the adjacent pages. All docstrings (private and public) can be found in the [master documentation](../full/master.md).
+Docstring documentation for public methods of each `Block` subclass can be found in the adjacent pages. All docstrings (private and public) can be found in the [master documentation](../full/core.md).
