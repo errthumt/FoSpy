@@ -25,6 +25,11 @@ jobs:
         run: |
           pip install .
 
+      - name: Doc building macros
+        working-directory: mkdocs/scripts
+        run: |
+          python _full_build.py
+
       - name: Install build dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python
