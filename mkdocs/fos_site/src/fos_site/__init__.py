@@ -1,4 +1,8 @@
-from . import fos_to_md, build_nav, run_example
+from . import build_nav
+
+from . import fos_to_md
+
+from . import run_example
 
 def build_site():
     run_example.main()

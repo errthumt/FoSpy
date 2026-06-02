@@ -1,7 +1,7 @@
 import re
 from pathlib import Path
 
-API_MD_PATH = Path("mkdocs/docs/examples/API_example.md")
+API_MD_PATH = Path("mkdocs/docs/examples/API_example/index.md")
 API_SCRIPT_PATH = Path("mkdocs/build_scripts/API_example.py")
 FULL_MD_PATH = Path("mkdocs/docs/examples/API_example/full.md")
 
@@ -35,7 +35,7 @@ def extract_code_to_main(md_path, out_path, out_md_path):
     return out_path
 
 
-def main():
+def extract_and_run():
     from ._utils import ch2repo
     ch2repo()
 
@@ -47,7 +47,7 @@ def main():
     import API_example as example
 
     ch2repo()
-    os.chdir(API_MD_PATH.parent)
+    os.chdir(API_MD_PATH.parent.parent)
     example.main()
 
     ch2repo()

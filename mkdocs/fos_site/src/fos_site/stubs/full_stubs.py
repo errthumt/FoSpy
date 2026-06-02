@@ -47,7 +47,7 @@ def sort_tree(tree: dict) -> dict:
             sorted_tree[key] = tree[key]
     return sorted_tree
 
-def main():
+def make_stubs():
     paths: dict[str, dict] = {".": {}}
 
     for py_file in SOURCE_ROOT.rglob("*.py"):
@@ -103,4 +103,4 @@ def main():
     return paths
 
 if __name__ == "__main__":
-    print(main())
+    print(make_stubs())

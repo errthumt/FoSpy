@@ -35,7 +35,7 @@ def get_all_symbols(py_file: Path, list_name: str = SYMBOL_LIST_NAME) -> list[st
 
 
 
-def main():
+def make_stubs():
     from .._utils import ch2repo
     ch2repo()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

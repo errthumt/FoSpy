@@ -1,31 +1,5 @@
-import os
+
 from pathlib import Path
-
-# ------------------------------------------------------------
-# Configuration
-# ------------------------------------------------------------
-
-ROOT = Path(__file__).resolve().parent.parent.parent  # project root
-MKDOCS = ROOT / "mkdocs" / "docs" / "examples"
-
-SYN_DIR = MKDOCS / "synthesis"
-TPL_DIR = MKDOCS / "templates"
-
-# Files to include at the top of each index
-SYN_INIT_FILES = [
-    ("Initial Synthesis (FOS)", SYN_DIR / "start_synthesis.fos"),
-    ("Initial Synthesis (JSON)", SYN_DIR / "start_synthesis.json"),
-]
-
-TPL_INIT_FILES = [
-    ("Initial Templates (FOS)", TPL_DIR / "start_templates.fos"),
-]
-
-
-# ------------------------------------------------------------
-# Helpers
-# ------------------------------------------------------------
-
 def read_file_safely(path: Path) -> str:
     """Return file contents or a placeholder if missing."""
     if not path.exists():
@@ -76,25 +50,3 @@ def generate_index(folder: Path, title: str, init_files, source_folder: Path):
         add_checkpoints(f, source_folder)
 
     print(f"Generated: {index_path}")
-
-
-def main():
-    generate_index(
-        SYN_DIR,
-        "Synthesis Examples",
-        SYN_INIT_FILES,
-        SYN_DIR,
-    )
-
-    generate_index(
-        TPL_DIR,
-        "Template Examples",
-        TPL_INIT_FILES,
-        TPL_DIR,
-    )
-
-    print("All example pages generated successfully.")
-
-
-if __name__ == "__main__":
-    main()

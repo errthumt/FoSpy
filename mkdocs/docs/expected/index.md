@@ -153,7 +153,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']Missing optional properties: ['test']`Material`
+## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']Missing optional properties: ['test']`Material`
 
 [Class Documentation][FoSpy.blocks.materials.Material]
 
@@ -184,13 +184,93 @@ Missing optional properties: ['test']
 
 ______________________________________________________________________
 
+## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'test', 'treatments']`Material`
+
+[Class Documentation][FoSpy.blocks.materials.Material]
+
+Missing optional properties: ['purity', 'test', 'treatments']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']`Material`
+
+[Class Documentation][FoSpy.blocks.materials.Material]
+
+Missing optional properties: ['purity', 'treatments']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']`Material`
+
+[Class Documentation][FoSpy.blocks.materials.Material]
+
+Missing optional properties: ['purity', 'treatments']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']!table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']Missing optional properties: ['purity', 'treatments']`Material`
+
+[Class Documentation][FoSpy.blocks.materials.Material]
+
+Missing optional properties: ['purity', 'treatments']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
 ## `Material`
 
 !table_check:Placeholder for missing class.
 
 !table_check: Missing required properties: ['amount', 'amount_unit', 'cas', 'env', 'form', 'formula', 'name', 'supplier', 'type']
 
-!table_check: Missing optional properties: ['purity', 'test', 'treatments']
+!table_check: Missing optional properties: ['purity', 'treatments']
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -338,7 +418,7 @@ These subclasses don't currently have any additional required properties but wil
 
 ______________________________________________________________________
 
-## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['test']`Synthesis`
+## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['test']`Synthesis`
 
 [Class Documentation][FoSpy.blocks.synthesis.Synthesis]
 
@@ -366,11 +446,91 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']`Synthesis`
+
+[Class Documentation][FoSpy.blocks.synthesis.Synthesis]
+
+Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']`Synthesis`
+
+[Class Documentation][FoSpy.blocks.synthesis.Synthesis]
+
+Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']`Synthesis`
+
+[Class Documentation][FoSpy.blocks.synthesis.Synthesis]
+
+Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+## !table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']`Synthesis`
+
+[Class Documentation][FoSpy.blocks.synthesis.Synthesis]
+
+Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
 ## `Synthesis`
 
 !table_check:Placeholder for missing class.
 
-!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'test', 'treatments']
+!table_check: Missing required properties: ['experimenters', 'materials', 'metadata', 'products', 'reaction', 'treatments']
 
 !table_check: Missing optional properties: ['cif', 'cifs', 'equipment', 'laboratory_conditions']
 
@@ -447,6 +607,24 @@ Developers are currently working on ways to flexibly allow any template list in 
 | cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [`EmbeddedCIF` objects](#embeddedfile) |
 
 ______________________________________________________________________
+
+## !table_check: Missing required properties: ['test_key']!table_check: Missing required properties: ['test_key']!table_check: Missing required properties: ['test_key']!table_check: Missing required properties: ['test_key']`TestBlock`
+
+[Class Documentation][FoSpy.parsing.validation.TestBlock]
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
 
 ## !table_check: Missing required properties: ['test_key']`TestBlock`
 
