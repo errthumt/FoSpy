@@ -47,6 +47,9 @@ def build_full_nav(tree: dict) -> list:
 
 
 def main():
+    import os
+    os.chdir(Path(__file__).parent.parent.parent)
+
     # 1. Run stub generators
     block_paths = block_stubs.main()      # list[str]
     full_tree = full_stubs.main()         # nested dict

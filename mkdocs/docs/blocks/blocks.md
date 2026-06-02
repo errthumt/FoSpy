@@ -20,18 +20,6 @@ their own comment metadata.
 
 ## Block Types in this Module
 
----
-### `Block`
-::: FoSpy.blocks.blocks.Block
----
-### `ListBlock`
-::: FoSpy.blocks.blocks.ListBlock
----
-### `SimpleWrapper`
-::: FoSpy.blocks.blocks.SimpleWrapper
----
-### `SingleBlock`
-::: FoSpy.blocks.blocks.SingleBlock
----
-### `SubContainer`
-::: FoSpy.blocks.blocks.SubContainer
+::: FoSpy.blocks.blocks
+    options:
+        members: true

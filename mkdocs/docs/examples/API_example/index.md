@@ -6,15 +6,15 @@ Most users won't want to write scripts like these for every synthesis, but given
 
 Once script-based automation and editing is formalized, we can begin wrapping commands into a GUI for any chemist to use.
 
-The uninterupted full script can be found in [example.py](/example/example.py), but each snippet is pulled apart here and explained.
+The uninterupted full script can be found in [example.py](/example.py), but each snippet is pulled apart here and explained.
 
 The full script was run on starting files for a synthesis and a set of templates:
-* [start_synthesis.fos](/example/synthesis/start_synthesis.fos)
-* [start_templates.fos](/example/templates/start_templates.fos)
+* [start_synthesis.fos](../synthesis/#initial-synthesis-fos)
+* [start_templates.fos](../templates/#initial-templates-fos)
 
 Each time one of the files is edited in the script, the changes are saved into a new file matching the checkpoint number on this page:
-* [Synthesis Folder](/example/synthesis)
-* [Templates Folder](/example/templates)
+* [Synthesis Folder](../synthesis/)
+* [Templates Folder](../templates/)
 
 ## Boilerplate and Debugging
 First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `TemplateSet`, I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.). Those are created automatically when reading the FOS files.
@@ -44,15 +44,15 @@ block_debug.on = True
 This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling `save()` without a filename will now just re-save them in the new location.
 ```python
 # load synthesis and templates from files
-my_synthesis = Synthesis.fromFile(r"example/synthesis/start_synthesis.fos")
-my_templates = TemplateSet.fromFile(r"example/templates/start_templates.fos")
+my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")
+my_templates = TemplateSet.fromFile(r"templates/start_templates.fos")
 
 # save the synthesis to a json for comparison
-my_synthesis.save(r"example/synthesis/start_synthesis.json")
+my_synthesis.save(r"synthesis/start_synthesis.json")
 
 # save the files to new files so that they don't overwrite the old ones.
-my_synthesis.save(r"example/synthesis/check01.fos")
-my_templates.save(r"example/templates/check01.fos")
+my_synthesis.save(r"synthesis/check01.fos")
+my_templates.save(r"templates/check01.fos")
 ```
 
 ## Object-Oriented Shortcuts
@@ -98,7 +98,7 @@ my_synthesis.rename.materials.add_comments("Synthesis files are required to have
 
 my_exps[0].rename_block("affiliation","isu_research_group")
 my_synthesis.keys_to_end("cifs")
-my_synthesis.save("example/synthesis/check02.fos")
+my_synthesis.save("synthesis/check02.fos")
 ```
 
 ### Comments
@@ -127,7 +127,7 @@ my_synthesis.products = [{
     "structure_comments": "Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space group Cmcm"
 }]
 
-my_synthesis.save("example/synthesis/check03.fos")
+my_synthesis.save("synthesis/check03.fos")
 ```
 
 ## (Checkpoint 4) Finding Blocks in Lists and Using Templates
@@ -150,7 +150,7 @@ joe = joe_template.fill(affiliation="Kovnir Group - Iowa State University")
 my_exps.append(joe)
 my_exps.add_comments("Note that now there are two experimenters, so the",
                      "experimenters header has changed to double brackets")
-my_synthesis.save("example/synthesis/check04.fos")
+my_synthesis.save("synthesis/check04.fos")
 ```
 
 ## (Checkpoint 5) Adding Unexpected Variable Types
@@ -172,7 +172,7 @@ joe.name.add_comments("This copy of Joe has information about him as an experime
 my_exps.add_comments("Note that there are now multiple experimenters in this block,",
                      "So the header now has double brackets")
 
-my_synthesis.save("example/synthesis/check05.fos")
+my_synthesis.save("synthesis/check05.fos")
 ```
 
 In a FOS file, unexpected property types are signaled using `property$alias`, where `alias` is a word that had been pre-programmed to match to a certain block type (see the example below). Usually aliases are the same word as their corresponding type, but more documentation will be created to see available types and what alias to use for them.
@@ -255,8 +255,8 @@ my_mats.remove_any(cas="7440-36-0") # This removes the antimony from my synthesi
 my_mats.append(arsenic)
 
 clear = [file.clear_all_comments() for file in (my_synthesis, my_templates)]
-my_synthesis.save("example/synthesis/check06.fos")
-my_templates.save("example/templates/check06.fos")
+my_synthesis.save("synthesis/check06.fos")
+my_templates.save("templates/check06.fos")
 ```
 
 ## (Checkpoint 7) Reusing Templates
@@ -294,7 +294,7 @@ anneal2 = anneal_template.fill(repeats=1,
 
 anneal1.program.append({"type":"quench","medium":"water"})
 
-my_templates.save("example/templates/check07.fos")
+my_templates.save("templates/check07.fos")
 ```
 
 ## (Checkpoint 8) Removing Blocks From Lists Using Indices
@@ -307,7 +307,7 @@ my_treats.remove_idx(from_idx=2)
 for anneal in (anneal1, anneal2):
     my_treats.append(anneal)
 
-my_synthesis.save("example/synthesis/check08.fos")
+my_synthesis.save("synthesis/check08.fos")
 ```
 
 ## (Checkpoint 9) Managing Embedded Files
@@ -325,8 +325,8 @@ cif_temps.insert(0,Ba2Zn5Sb6)
 # sample.
 my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
 
-my_templates.save("example/templates/check09.fos")
-my_synthesis.save("example/synthesis/check09.fos")
+my_templates.save("templates/check09.fos")
+my_synthesis.save("synthesis/check09.fos")
 ```
 
 ## Calculation Routines
@@ -356,8 +356,8 @@ my_synthesis.default_key_order()
 my_synthesis.key_to_idx("reagents", 5)
 my_mats.set_list_type("looped")
 
-my_templates.save("example/templates/check10.fos")
-my_synthesis.save("example/synthesis/check10.fos")
+my_templates.save("templates/check10.fos")
+my_synthesis.save("synthesis/check10.fos")
 
 # Silence all debugs except the one used for checking equality.
 all_debugs_off(soundoff=False)
@@ -377,7 +377,7 @@ my_synthesis.cifs[0].quick_pattern(subprocess=True)
 ```
 
 Simulates powder diffraction data for the embedded CIF
-![simulated powder pattern](../../../example/PXRD.png)
+![simulated powder pattern](../../../../PXRD.png)
 
 ### Annealing Diagrams
 ```python
@@ -385,4 +385,4 @@ my_synthesis.treatments.get_first(type="anneal").show_plot()
 ```
 
 Generates a temperature diagram for the annealing program.
-![annealing diagram](../../../example/anneal.png)
+![annealing diagram](../../../../anneal.png)
