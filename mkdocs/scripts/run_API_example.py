@@ -4,7 +4,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent # mkdocs/scripts/
 DOCS = BASE.parent / "docs" / "examples" / "API_example"
 
-def extract_code_to_main(md_path, out_path):
+def extract_code_to_main(md_path, out_path, out_md_path):
     text = Path(md_path).read_text()
 
     pattern = re.compile(r"```python\s+(.*?)```", re.DOTALL | re.IGNORECASE)
@@ -19,16 +19,27 @@ def extract_code_to_main(md_path, out_path):
         "    main()\n"
     )
 
+    md_script = (
+        "# Full Example Script\n\n"
+        "Uninterrupted code extracted from the [API example walkthrough](./index.md).\n\n"
+        "```python\n"
+        f"{final_script}"
+        "```"
+    )
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(final_script)
+    out_md_path.parent.mkdir(parents=True, exist_ok=True)
+    out_md_path.write_text(md_script)
     return out_path
 
 
 def main():
     md_path = DOCS / "index.md"
     out_path = BASE / "API_example.py"
+    out_md_path = DOCS / "full.md"
 
-    extract_code_to_main(md_path, out_path)
+    extract_code_to_main(md_path, out_path, out_md_path)
 
     import os
     os.chdir(DOCS.parent)
