@@ -6,17 +6,17 @@ Most users won't want to write scripts like these for every synthesis, but given
 
 Once script-based automation and editing is formalized, we can begin wrapping commands into a GUI for any chemist to use.
 
-The uninterupted full script can be found in [example.py](/example.py), but each snippet is pulled apart here and explained.
+The uninterupted full script can be found [here](./full.md), but each snippet is pulled apart here and explained.
 
 The full script was run on starting files for a synthesis and a set of templates:
 
-* [start_synthesis.fos](../synthesis/#initial-synthesis-fos)
-* [start_templates.fos](../templates/#initial-templates-fos)
+* [start_synthesis.fos](../synthesis/index.md#initial-synthesis-fos)
+* [start_templates.fos](../templates/index.md#initial-templates-fos)
 
 Each time one of the files is edited in the script, the changes are saved into a new file matching the checkpoint number on this page:
 
-* [Synthesis Output](../synthesis/)
-* [Templates Output](../templates/)
+* [Synthesis Output](../synthesis/index.md)
+* [Templates Output](../templates/index.md)
 
 ## Boilerplate and Debugging
 First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `TemplateSet`, I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.). Those are created automatically when reading the FOS files.
@@ -379,7 +379,7 @@ my_synthesis.cifs[0].quick_pattern(subprocess=True)
 ```
 
 Simulates powder diffraction data for the embedded CIF
-![simulated powder pattern](../../../../PXRD.png)
+![simulated powder pattern](./assets/PXRD.png)
 
 ### Annealing Diagrams
 ```python
@@ -387,4 +387,4 @@ my_synthesis.treatments.get_first(type="anneal").show_plot()
 ```
 
 Generates a temperature diagram for the annealing program.
-![annealing diagram](../../../../anneal.png)
+![annealing diagram](./assets/anneal.png)

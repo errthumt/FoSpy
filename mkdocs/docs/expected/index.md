@@ -13,7 +13,7 @@ Properties marked with (dispatched) are used to identify and delegate constructi
 `ListBlock` subclasses do not have required properties. Instead, they are a rich list of objects with a certain required `SingleBlock` subclass. Some `ListBlock` subclasses have their own methods and unique attributes. If a `ListBlock` is required for a given `SingleBlock` subclass but it doesn't need any method or attribute overrides, it can be instantiated with the class method `ListBlock.Simple(SingleBlockSubclass)` (referred to below as a "simple list").
 
 ### `TemplateList`s
-`TemplateList` is a unique subclass of `ListBlock` used for storing [`TemplateBlock` subclass objects](#templateblock). `TemplateList` has a class method `Simple()` similar to `ListBlock`'s method, but instead of full objects (e.g. `Material`), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for `TemplateList` entries can be found in the [API script example](../examples/templates/).
+`TemplateList` is a unique subclass of `ListBlock` used for storing [`TemplateBlock` subclass objects](#templateblock). `TemplateList` has a class method `Simple()` similar to `ListBlock`'s method, but instead of full objects (e.g. `Material`), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for `TemplateList` entries can be found in the [API script example](../examples/templates/index.md).
 
 ## Modifying Property Validation at Runtime
 The intent of the FOS is to be as flexible as possible while still enforcing standards for fully capturing a synthetic method. However, it may be necessary for private or niche applications to modify standards to match your own synthesis. This can be done by mutating the dictionaries in `FoSpy.parsing.validation` at the start of your script. The example below creates a new block type with its own expected properties, and then adds it as an optional top-level block for a synthesis file.
@@ -235,7 +235,7 @@ If all three are provided, the last one found during reading will be discarded a
 ### Optional properties
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| rename | `validators.rename.rename_dict` | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [API script example](../../example/readme.md) for usage.|
+| rename | `validators.rename.rename_dict` | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [API script example](../examples/API_example/index.md) for usage.|
 
 ### SingleBlock Method Subclasses
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
@@ -272,7 +272,7 @@ These subclasses don't currently have any additional required properties but wil
 ## `TemplateBlock`
 **[Subclass of `SingleBlock`](#singleblock)**
 
-`TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [API script example](../../example/readme.md) for some uses of templates.
+`TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [API script example](../examples/API_example/index.md) for some uses of templates.
 
 ### Required properties
 | Property | Validation Routine or Class | Description |
