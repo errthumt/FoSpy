@@ -27,7 +27,7 @@ jobs:
 
       - name: Install fos_site
         run: |
-          pip install ./mkdocs/fos_site
+          pip install -e ./mkdocs/fos_site
 
       - name: Install build dependencies
         run: |

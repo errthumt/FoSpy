@@ -157,8 +157,6 @@ ______________________________________________________________________
 
 [Class Documentation][FoSpy.blocks.materials.Material]
 
-!table_check: Extra required properties: ['test']
-
 **[Subclass of `SingleBlock`](#singleblock)**
 
 ### Required properties
