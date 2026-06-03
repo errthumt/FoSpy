@@ -2,7 +2,7 @@
 
 There is a copy button in the top right of the code block.
 
-[Click here to go to the rendered version](..\..\expected\index.md)
+[Click here to go to the rendered version](../../expected/index.md)
 
 ````markdown
 # Object Construction and Property Validation for Files of Synthesis (FOS)
