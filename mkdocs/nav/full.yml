@@ -7,7 +7,6 @@ nav:
   - Template Files: examples/templates/index.md
 - Property Documentation:
   - Expected Properties: expected/index.md
-- For Devs: internal/index.md
 - Block Modules:
   - What is a Block?: blocks/index.md
   - blocks: blocks/blocks.md
@@ -51,3 +50,4 @@ nav:
       - units: full/parsing/validators/units.md
   - plotting:
       EmbeddedCIF: full/plotting/EmbeddedCIF.md
+- For Devs: internal/index.md

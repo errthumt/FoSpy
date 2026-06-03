@@ -1,6 +1,6 @@
 # Setting Up a Dev Environment for FoSpy
 
-This page is a guide on how to set up a python environment for in-progress testing of the FOS API. This can either by code collaborators, or if you want the most recent changes in the package to be reflected whenever you are testing your FOS files.
+This page is a guide on how to set up a python environment for in-progress testing of the FOS API. This can either be for code collaborators, or if you want the most recent changes in the package to be reflected whenever you are testing your FOS files.
 
 ## Easy Install for Windows
 
@@ -33,6 +33,7 @@ Installing with the [easy install package](#easy-install-for-windows) should cre
 
 - Live Session: An interactive python session with `Synthesis` and `TemplateSet` already imported.
 - Toggle Branch: Toggle between the stable "Main" branch and the "Dev" branch with staged features.
+  - This is only for users who aren't editing branch files; it discards all your changes.
 - Test Load: Attempt to read a synthesis file and either save a copy, or print the error log to a text file.
 
 ```cmd
@@ -77,7 +78,7 @@ Python virtual environments are contained within their own folder. Putting the f
 
 **This repository is set up to "hide" files contained inside FoSpy\venv from being uploaded back to the GitHub. If you anticipate contributing to the project, make sure your environment is named placed at that location so you don't accidentally commit secret files back to the public site.**
 
-I'm using my standalone python install here, but if our system default Python is stable, you can use the simple `python` command instead of `python314\python`
+I'm using my standalone python install here, but if your system default Python is stable, you can use the simple `python` command instead of `python314\python`
 
 ```cmd
 C:\Users\travi\FOS_DEV>python314\python -m venv FoSpy\venv
