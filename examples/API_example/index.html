@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>API Walkthrough - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "API Walkthrough";
+        var mkdocs_page_input_path = "examples/API_example/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">API Walkthrough</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#boilerplate-and-debugging">Boilerplate and Debugging</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-1-opening-and-saving-fos-files">(Checkpoint 1) Opening and saving FOS files</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#object-oriented-shortcuts">Object-Oriented Shortcuts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-2-renaming-blocks-and-adding-comments">(Checkpoint 2) Renaming Blocks and Adding Comments</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#comments">Comments</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-3-changing-simple-data">(Checkpoint 3) Changing Simple Data</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-4-finding-blocks-in-lists-and-using-templates">(Checkpoint 4) Finding Blocks in Lists and Using Templates</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-5-adding-unexpected-variable-types">(Checkpoint 5) Adding Unexpected Variable Types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#editing-objects-in-listed-blocks">Editing Objects in Listed Blocks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-6-creating-templates-and-filling-in-larger-templates">(Checkpoint 6) Creating Templates and Filling in Larger Templates</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#filling-in-larger-templates">Filling in Larger Templates</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-7-reusing-templates">(Checkpoint 7) Reusing Templates</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-8-removing-blocks-from-lists-using-indices">(Checkpoint 8) Removing Blocks From Lists Using Indices</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-9-managing-embedded-files">(Checkpoint 9) Managing Embedded Files</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#calculation-routines">Calculation Routines</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-10-cleaning-up">(Checkpoint 10) Cleaning Up</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#bonus-generating-figures">Bonus: Generating Figures</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#simulating-powder-patterns">Simulating Powder Patterns</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#annealing-diagrams">Annealing Diagrams</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API Example</li>
+      <li class="breadcrumb-item active">API Walkthrough</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="example-usage-for-fospy">Example Usage for FoSpy</h1>
+<p>The files in this folder are examples of what a full API editing session might look like for Synthesis and Template files using the FOS format.</p>
+<p>Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward automating synthesis file generation for many syntheses at once from a variety of inputs, ranging from a GUI application to AI-assisted transcription.</p>
+<p>The uninterupted full script can be found <a href="full/">here</a>, but each snippet is pulled apart here and explained.</p>
+<p>This page contains checkpoints where the current synthesis or template file is saved. The initial inputs and the result of each checkpoint can be found at the pages below:</p>
+<ul>
+<li><a href="../synthesis/">Synthesis Files</a></li>
+<li><a href="../templates/">Template Files</a></li>
+</ul>
+<h2 id="boilerplate-and-debugging">Boilerplate and Debugging</h2>
+<p>First, I import some of the classes I will be using. Since I'm only manually creating a <code>Synthesis</code> and a <code>TemplateSet</code>, I don't need to import any of the classes that are created in the process (like <code>Materials</code>, <code>Treatments</code>, etc.). Those are created automatically when reading the input files.</p>
+<pre><code class="language-python">from FoSpy.blocks.synthesis import Synthesis
+from FoSpy.blocks.template import TemplateSet
+from chemformula import ChemFormula
+</code></pre>
+<p><code>FoSpy</code> uses a <code>_debug</code> module to print progress messages during some processes that may be helpful for understanding what is going on in the background, or what is being executed successfully before something breaks. By default, no debug messages are printed. Each module uses its own <code>Debug</code> object to print messages, so you can either enable/disable all debug messages, or you can pick a particular module that you want to keep track of and only enable <code>_debug.on</code> for that module.</p>
+<pre><code class="language-python"># No debug messages by default, but they can be turned on like this.
+from FoSpy._debug import all_debugs_on, all_debugs_off
+all_debugs_on(soundoff=False)
+
+# Change the width of your debug screen so that module labels print on one line.
+from FoSpy import _debug as db
+db.DEBUG_WIDTH = 120
+
+# Optional way to turn on/off one module's debug messages.
+from FoSpy.blocks.blocks import _debug as block_debug
+block_debug.on = True
+</code></pre>
+<h2 id="checkpoint-1-opening-and-saving-fos-files">(Checkpoint 1) Opening and saving FOS files</h2>
+<p>This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling <code>save()</code> without a filename will now just re-save them in the new location.</p>
+<pre><code class="language-python"># load synthesis and templates from files
+my_synthesis = Synthesis.fromFile(r&quot;synthesis/start_synthesis.fos&quot;)
+my_templates = TemplateSet.fromFile(r&quot;templates/start_templates.fos&quot;)
+
+# save the synthesis to a json for comparison
+my_synthesis.save(r&quot;synthesis/start_synthesis.json&quot;)
+
+# save the files to new files so that they don't overwrite the old ones.
+my_synthesis.save(r&quot;synthesis/check01.fos&quot;)
+my_templates.save(r&quot;templates/check01.fos&quot;)
+</code></pre>
+<h2 id="object-oriented-shortcuts">Object-Oriented Shortcuts</h2>
+<p>The nice thing about python is that in most cases, if you set a new variable "equal" to something, the new variable just points at the original instead of copying it. So any edits to <code>my_meta</code>, for example, will also be edits to <code>my_synthesis.metadata</code>.</p>
+<p>Beware if you are not familiar with object-oriented code or namespaces: This also means that if you <em>reassign</em> a variable, it unlinks it from the original. For example, in the code below, I mistakenly link <code>my_mats = my_synthesis.cifs</code> before correctly assigning <code>my_mats = my_synthesis.materials</code> in the next line. This <em>does not</em> link the CIF files and materials together in any way. Instead, <code>my_mats</code> "forgets" that it was ever linked to the CIFs and points at the materials for the rest of the script.</p>
+<pre><code class="language-python"># some shortcuts so I don't need to keep referencing my_synthesis
+my_meta = my_synthesis.metadata
+my_exps = my_synthesis.experimenters
+my_reaction = my_synthesis.reaction
+my_mats = my_synthesis.cifs
+my_mats = my_synthesis.materials
+my_treats = my_synthesis.treatments
+</code></pre>
+<h2 id="checkpoint-2-renaming-blocks-and-adding-comments">(Checkpoint 2) Renaming Blocks and Adding Comments</h2>
+<p>Each type of block in a FOS has a set of fields that are required for it. Additionally, there is a separate list of "optional" fields that still must follow certain rules when you put them in a block.</p>
+<p>However, you may want to modify the name of a section or a value without changing its expected behavior. You can do this by adding a "rename" block.
+* <strong>To rename main FOS headers:</strong> The rename block is an extra heading (<code>[Rename]</code>) in the FOS file.
+* <strong>To rename properties inside a block</strong> The rename block is a nested block:</p>
+<pre><code class="language-FOS">[Experimenters]
+// This tells the FOS reader to expect &quot;isu_research_group&quot; instead of affiliation, *only* for the first experimenter.
+rename: [
+    affiliation: isu_research_group
+]
+name: Travis Errthum
+isu_research_group : Kovnir Group
+orcid: 0009-0006-1937-5672
+</code></pre>
+<p>We can apply this in python using the <code>rename_block()</code> command. Note that for safety, we also reapply our <code>my_mats</code> shortcut, in case reassigning the block value might have unlinked our original shortcut.
+Unless we rearrange our blocks with <code>keys_to_end()</code>, the new <code>[Rename]</code> block would have been at the bottom of the FOS file, after the embedded CIF file.</p>
+<pre><code class="language-python">my_synthesis.clear_all_comments()
+my_synthesis.rename_block(&quot;materials&quot;,&quot;reagents&quot;)
+my_mats = my_synthesis.reagents
+my_synthesis.rename.add_comments(&quot;This new block has been added because I renamed a required block.&quot;)
+my_synthesis.rename.materials.add_comments(&quot;Synthesis files are required to have a materials block, so&quot;,
+                                           &quot;This line specifies that it has been renamed to reagents.&quot;)
+
+my_exps[0].rename_block(&quot;affiliation&quot;,&quot;isu_research_group&quot;)
+my_synthesis.keys_to_end(&quot;cifs&quot;)
+my_synthesis.save(&quot;synthesis/check02.fos&quot;)
+</code></pre>
+<h3 id="comments">Comments</h3>
+<p>In the code above, I also attached a couple of comments to lines in the FOS file. Comments are printed above the line they are attached to. For example, <code>my_synthesis.rename.add_comments()</code> attaches comments above the <code>[Rename]</code> header in the FOS file. The other command, <code>my_synthesis.rename.materials.add_comments()</code>, attaches the comment above the new <code>materials:reagents</code> line underneath the <code>[Rename]</code> heading.</p>
+<h2 id="checkpoint-3-changing-simple-data">(Checkpoint 3) Changing Simple Data</h2>
+<p>Here I change some of the metadata and reaction information for my synthesis. Certain variables are automatically converted. For example, the <code>nominal_formula</code> is coded to be a <code>ChemFormula</code> object, so when I set that property equal to simple text, it automatically converts the text into a true formula object and raises an error if it's not able to read it.</p>
+<pre><code class="language-python"># change some metadata for my synthesis
+my_meta.name = &quot;TE002&quot;
+my_meta.date = &quot;05-17-2026&quot;
+my_meta.internal_project_ID = &quot;Arsenide 28+d clathrates&quot;
+my_reaction.nominal_formula = &quot;Ba8Cu13Zn11As28.5&quot;
+
+my_synthesis.products = [{
+    &quot;name&quot;: &quot;Barium transition-metal arsenide (8-24-28.5)&quot;,
+    &quot;formula&quot;: &quot;Ba8Cu13Zn11As28.5&quot;,
+    &quot;expected&quot;: True,
+    &quot;obtained&quot;: True,
+    &quot;expected_amount&quot;: &quot;250.0&quot;,
+    &quot;expected_amount_unit&quot;: &quot;mg&quot;,
+    &quot;obtained_amount&quot;: &quot;150.0&quot;,
+    &quot;obtained_amount_unit&quot;: &quot;mg&quot;,
+    &quot;observations&quot;: &quot;Gray Powder&quot;,
+    &quot;characterizations&quot;: &quot;PXRD&quot;,
+    &quot;structure_comments&quot;: &quot;Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space group Cmcm&quot;
+}]
+
+my_synthesis.save(&quot;synthesis/check03.fos&quot;)
+</code></pre>
+<h2 id="checkpoint-4-finding-blocks-in-lists-and-using-templates">(Checkpoint 4) Finding Blocks in Lists and Using Templates</h2>
+<p>My original template file had an entry in the experimenters block for an experimenter named Joe. If I want to add Joe to the experimenters for my synthesis, I have to pull his entry from the list of experimenter templates. I can do this with the <code>get_first()</code> command, which finds the first entry in a list with a property matching the one I specify (in this case, <code>template_name="Joe"</code>). There is also <code>get_any()</code> which uses similar search rules but returns a list of <em>all</em> matching entries. There are also deletion commands that follow the same rules, like <code>remove_any()</code></p>
+<p>After finding Joe's template and setting it to the <code>joe_template</code> shortcut, I have to fill in the empty values in the template before it can be used as a complete experimenter. In this case, Joe's template is only missing an affiliation value, so I use the <code>fill()</code> command to fill it in and return a true experimenter. As you'll see later on, you can put as many <code>property=value</code> statements in the <code>fill()</code> command as you need to in order to fill in the template.</p>
+<p>Notice that the renaming functionality we used earlier for affiliation only applies to the first experimenter. Joe's experimenter entry still uses the expected "affiliation" tag until told otherwise.</p>
+<pre><code class="language-python">my_synthesis.clear_all_comments()
+# more shortcuts
+exp_temps = my_templates.experimenters
+mat_temps = my_templates.materials
+cif_temps = my_templates.cifs
+
+# template file has a template for Joe, but it's missing an affiliation value.
+# So I fill in the affiliation and add it to the experimenters on my synthesis
+joe_template = exp_temps.get_first(template_name=&quot;Joe&quot;)
+joe = joe_template.fill(affiliation=&quot;Kovnir Group - Iowa State University&quot;)
+my_exps.append(joe)
+my_exps.add_comments(&quot;Note that now there are two experimenters, so the&quot;,
+                     &quot;experimenters header has changed to double brackets&quot;)
+my_synthesis.save(&quot;synthesis/check04.fos&quot;)
+</code></pre>
+<h2 id="checkpoint-5-adding-unexpected-variable-types">(Checkpoint 5) Adding Unexpected Variable Types</h2>
+<p>Sometimes, you may want to add a special block type (like <code>Material</code>, <code>Treatment</code>, or <code>Experimenter</code>), even if the FOS program isn't expecting it. You can do this using the <code>add_block</code> command. In this case, I want create a new property for my first experimenter to give him a friend. The unexpected friend property gets assigned as an <code>"experimenter"</code>, which eventually gets matched to the <code>Experimenter</code> data type in the code.</p>
+<p>Then, perhaps after an awkward social encounter, I decide to refer to Joe as Travis's colleague instead of friend. Note that because <code>friend</code> was already an unexpected property, renaming this does not add <code>friend: colleague</code> to the <code>rename</code> block in the resulting FOS, because it is simpler to just move the <code>"experimenter"</code> assignment over to the new <code>colleague</code> block.</p>
+<pre><code class="language-python">my_synthesis.clear_all_comments()
+
+travis = my_synthesis.experimenters[0]
+travis.add_block(&quot;friend&quot;,&quot;experimenter&quot;,joe.copy())
+travis.friend.affiliation = &quot;Graham's Dad&quot;
+
+travis.rename_block(&quot;friend&quot;,&quot;colleague&quot;)
+
+travis.colleague.add_comments(&quot;This copy of Joe has information about him as Travis's colleague&quot;)
+joe.name.add_comments(&quot;This copy of Joe has information about him as an experimenter&quot;)
+my_exps.add_comments(&quot;Note that there are now multiple experimenters in this block,&quot;,
+                     &quot;So the header now has double brackets&quot;)
+
+my_synthesis.save(&quot;synthesis/check05.fos&quot;)
+</code></pre>
+<p>In a FOS file, unexpected property types are signaled using <code>property$alias</code>, where <code>alias</code> is a word that had been pre-programmed to match to a certain block type (see the example below). Usually aliases are the same word as their corresponding type, but more documentation will be created to see available types and what alias to use for them.</p>
+<pre><code class="language-FOS">// Note that there are now multiple experimenters in this block,
+// So the header now has double brackets
+[[Experimenters]]
+name: Travis Errthum
+isu_research_group: Kovnir Group - Iowa State University
+orcid: 0009-0006-1937-5672
+// This copy of Joe has information about him as Travis's colleague
+colleague$experimenter: [
+    name: Joseph Race
+    affiliation: Graham's Dad
+    orcid: 0000-0002-8551-3627
+]
+rename: [
+    affiliation: isu_research_group
+]
+
+// This copy of Joe has information about him as an experimenter
+name: Joseph Race
+affiliation: Kovnir Group - Iowa State University
+orcid: 0000-0002-8551-3627
+
+</code></pre>
+<h2 id="editing-objects-in-listed-blocks">Editing Objects in Listed Blocks</h2>
+<p>The materials block of my synthesis (<code>my_mats = my_synthesis.materials</code>) is a fancy list of <code>Material</code> objects. I can access an individual item in that list with an index in brackets (<code>my_mats[i]</code>). Python indices are zero-based, so <code>my_mats[0]</code> refers to the first material in the list (in this case barium). Since barium's <code>amount_unit</code> is specified as molar ratio, then changing the amount value changes the molar ratio.</p>
+<pre><code class="language-python"># Changing Barium's molar ratio
+my_mats[0].amount = 8
+</code></pre>
+<h2 id="checkpoint-6-creating-templates-and-filling-in-larger-templates">(Checkpoint 6) Creating Templates and Filling in Larger Templates</h2>
+<p>In addition to loading templates writting to FOS files, you can also create templates from existing blocks by using <code>make_template()</code> and specifying which properties you want to leave empty in the template. Here, I use the zinc material loaded from my synthesis to create a generic template for any metal powder with the same purity.</p>
+<p>Then, I use the <code>add_block()</code> command we already used on our synthesis to add a separate block to store generic materials. This is to distinguish my new template from the other material templates in my file, which are only missing <code>amount</code> and <code>type</code>.</p>
+<pre><code class="language-python"># I find zinc in my materials, change its ratio, and also generate a template
+# from it.
+zinc = my_mats.get_first(form=&quot;powder&quot;)
+zinc.amount = 11
+
+# The template name is &quot;A generic metal powder, purity 0.995&quot;, and it has empty
+# fields for name, formula, cas, and ratio
+powder_template = zinc.make_template(&quot;A generic metal powder, purity 0.995&quot;,
+                                      &quot;name&quot;,&quot;formula&quot;,&quot;cas&quot;,&quot;amount&quot;)
+powder_template.default_key_order()
+
+# This saves my powder template to a new category of templates titled &quot;Generic$materials&quot;
+my_templates.add_block(&quot;generic&quot;,&quot;materials&quot;, powder_template)
+my_templates.keys_to_end(&quot;cifs&quot;)
+</code></pre>
+<h3 id="filling-in-larger-templates">Filling in Larger Templates</h3>
+<p>When you have many values to fill into a template that may need to be determined by other subprocesses, using <code>fill()</code> with lots of <code>property=value</code> pieces will be difficult. Instead, you can construct a python <code>dict</code> (dictionary) which has all of the missing values, then send the whole dictionary to the <code>fill()</code> command.</p>
+<pre><code class="language-python"># Setting up information that I want to fill into the powder template
+copper_info = {
+    &quot;name&quot;: &quot;Copper&quot;,
+    &quot;formula&quot;: &quot;Cu&quot;,
+    &quot;cas&quot;: &quot;7440-50-8&quot;,
+    &quot;amount&quot;: 13
+}
+
+# Generate a new material, copper, from the template I made earlier and add it
+# to my synthesis materials
+copper = powder_template.fill(**copper_info)
+copper.clear_comments()
+my_mats.append(copper)
+
+# Here I'm using the arsenic template that was already in the template file to
+# replace antimony.
+arsenic_template = mat_temps.get_first(formula=ChemFormula(&quot;As&quot;))
+arsenic = arsenic_template.fill(type=&quot;reagent&quot;, amount=28.5)
+my_mats.remove_any(cas=&quot;7440-36-0&quot;) # This removes the antimony from my synthesis
+my_mats.append(arsenic)
+
+clear = [file.clear_all_comments() for file in (my_synthesis, my_templates)]
+my_synthesis.save(&quot;synthesis/check06.fos&quot;)
+my_templates.save(&quot;templates/check06.fos&quot;)
+</code></pre>
+<h2 id="checkpoint-7-reusing-templates">(Checkpoint 7) Reusing Templates</h2>
+<p>When you fill in a template, it creates a copy with all the values filled in. So once I build a template of, say, a ramp section of an annealing profile, I can use that template to create several different ramp sections with different filled in values. Note that I have not yet added my new annealing treatments to my synthesis, so they will not appear in this checkpoint.</p>
+<pre><code class="language-python">
+# Building templates from the existing annealing program on my synthesis so that
+# I can replace it with a different program.
+anneal_template = my_treats[2].make_template(&quot;Empty Anneal Template&quot;,
+                                             &quot;repeats&quot;, &quot;observations&quot;,&quot;program&quot;)
+anneal_template.clear_comments()
+ramp_template = my_treats[2].program[0].make_template(&quot;Any ramp&quot;,
+                                                      &quot;temp&quot;, &quot;time&quot;)
+dwell_template = my_treats[2].program[1].make_template(&quot;Any dwell&quot;,
+                                                       &quot;time&quot;)
+# Save my new templates to my template file.
+my_templates.treatments = [anneal_template]
+my_templates.anneal_sections = [ramp_template, dwell_template]
+my_templates.keys_to_end(&quot;cifs&quot;)
+
+# Filling in my annealing templates
+ramp1 = ramp_template.fill(temp=&quot;550&quot;, time=&quot;2&quot;)
+ramp2 = ramp_template.fill(temp=&quot;650&quot;, time = &quot;10&quot;)
+dwell1 = dwell_template.fill(time=&quot;12&quot;)
+dwell2 = dwell_template.fill(time=&quot;72&quot;)
+
+# Using my anneal template to create two different annealing treatments with my
+# different program sections.
+anneal1 = anneal_template.fill(repeats=1,
+                               observations=&quot;None&quot;,
+                               program=[ramp1, dwell1])
+anneal2 = anneal_template.fill(repeats=1,
+                               observations=&quot;None&quot;,
+                               program=[ramp2, dwell2])
+
+anneal1.program.append({&quot;type&quot;:&quot;quench&quot;,&quot;medium&quot;:&quot;water&quot;})
+
+my_templates.save(&quot;templates/check07.fos&quot;)
+</code></pre>
+<h2 id="checkpoint-8-removing-blocks-from-lists-using-indices">(Checkpoint 8) Removing Blocks From Lists Using Indices</h2>
+<p>In addition to the <code>remove_any()</code> command for lists of blocks, there is also <code>remove_idx(from_idx, to_idx)</code> which allows you to remove a range of values from the list. Here I'm using it to remove all treatments after my first 2 treatments, so that I can add my new annealing treatments to the synthesis instead.</p>
+<pre><code class="language-python"># Remove all treatments except the first two
+my_treats.remove_idx(from_idx=2)
+
+# Adding both annealing treatments to my synthesis
+for anneal in (anneal1, anneal2):
+    my_treats.append(anneal)
+
+my_synthesis.save(&quot;synthesis/check08.fos&quot;)
+</code></pre>
+<h2 id="checkpoint-9-managing-embedded-files">(Checkpoint 9) Managing Embedded Files</h2>
+<p>Embedded files are just blocks like every other section, except they have a special <code>embedded</code> property that stores the un-edited lines of the original file.</p>
+<pre><code class="language-python"># Copying Phil's cif from my templates into my synthesis.
+py618 = cif_temps[0].copy()
+my_synthesis.cifs.append(py618)
+
+# copying the Ba2Zn5Sb6 cif from my synthesis to my templates
+Ba2Zn5Sb6 = my_synthesis.cifs[0]
+cif_temps.insert(0,Ba2Zn5Sb6)
+
+# removing the Ba2Zn5Sb6 from my synthesis because it's not applicable for this
+# sample.
+my_synthesis.cifs.remove_any(file_name=&quot;Ba2Zn5Sb6_ICSD&quot;)
+
+my_templates.save(&quot;templates/check09.fos&quot;)
+my_synthesis.save(&quot;synthesis/check09.fos&quot;)
+</code></pre>
+<h2 id="calculation-routines">Calculation Routines</h2>
+<p>There is the capability to add "calculation_routines" to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. Calculated comments are given a special syntax so that they are stored when reading a FOS file, and they can be overwritten at any time with a new updated value.</p>
+<pre><code class="language-python"># Every material gets a weight percent comment added above their ratio
+my_synthesis.add_calc_routine(&quot;reagents.add_weight_pcts&quot;)
+'''for anneal in my_synthesis.treatments.get_any(type=&quot;anneal&quot;):
+    anneal.add_calc_routine(&quot;program.add_all_missing_parameters&quot;)'''
+my_synthesis.reagents[0].amount.add_comments(&quot;Weight percents were calculated automatically when saving.&quot;)
+</code></pre>
+<h2 id="checkpoint-10-cleaning-up">(Checkpoint 10) Cleaning Up</h2>
+<p>All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn't matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
+* Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
+* Set some specifc positions for certain blocks to make the FOS easier to read.
+* Set the generic templates block to use the "explicit" key:value syntax for all of its templates
+* Set the synthesis materials block to use the "looped" syntax where all the keys are specified at the beginning of the block.</p>
+<pre><code class="language-python"># some reordering stuff to make the final printout more consistent.
+my_templates.default_key_order()
+my_templates.key_to_idx(&quot;generic&quot;, 3)
+my_templates.key_to_idx(&quot;anneal_sections&quot;, 5)
+my_templates.generic.set_list_type(&quot;explicit&quot;)
+
+my_synthesis.default_key_order()
+my_synthesis.key_to_idx(&quot;reagents&quot;, 5)
+my_mats.set_list_type(&quot;looped&quot;)
+
+my_templates.save(&quot;templates/check10.fos&quot;)
+my_synthesis.save(&quot;synthesis/check10.fos&quot;)
+
+# Silence all debugs except the one used for checking equality.
+all_debugs_off(soundoff=False)
+db._debug.on = True
+
+# Check to see if the saved file matches the current python object.
+print(f&quot;Synthesis matches: {my_synthesis.matches_file()}&quot;)
+print(f&quot;Templates match:   {my_templates.matches_file()}&quot;)
+</code></pre>
+<h2 id="bonus-generating-figures">Bonus: Generating Figures</h2>
+<p>There are features being developed that allow generating useful figures from the information loaded in a FOS file. Currently we have two figures:</p>
+<h3 id="simulating-powder-patterns">Simulating Powder Patterns</h3>
+<pre><code class="language-python"># optional: figure
+my_synthesis.cifs[0].quick_pattern(subprocess=True)
+</code></pre>
+<p>Simulates powder diffraction data for the embedded CIF
+<img alt="simulated powder pattern" src="assets/PXRD.png" /></p>
+<h3 id="annealing-diagrams">Annealing Diagrams</h3>
+<pre><code class="language-python"># optional: figure
+my_synthesis.treatments.get_first(type=&quot;anneal&quot;).show_plot()
+</code></pre>
+<p>Generates a temperature diagram for the annealing program.
+<img alt="annealing diagram" src="assets/anneal.png" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../.." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="full/" class="btn btn-neutral float-right" title="Full Example Script">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../.." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="full/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

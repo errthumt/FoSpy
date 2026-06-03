@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>format_fos - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "format_fos";
+        var mkdocs_page_input_path = "full/parsing/format_fos.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >parsing</a>
+    <ul class="current">
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">format_fos</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.SYNTAX">SYNTAX</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos._debug">_debug</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug">Debug</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.label">label</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.label_width">label_width</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.module_name">module_name</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.on">on</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.__init__">__init__</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.msg">msg</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.format_fos.Debug.pmsg">pmsg</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos._indent">_indent</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.empty_nested">empty_nested</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_block_header">format_block_header</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_calc_comment">format_calc_comment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_comment">format_comment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_embed_start">format_embed_start</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_field">format_field</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_key_value">format_key_value</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_loop_key">format_loop_key</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_nested_end">format_nested_end</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.format_fos.format_nested_start">format_nested_start</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Full Documentation</li>
+          <li class="breadcrumb-item">parsing</li>
+      <li class="breadcrumb-item active">format_fos</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>Full documentation pages are generated for docstring
+reference only and may contain symbols imported from other
+modules. Imported symbols are not distinguished from locally
+defined symbols and will appear in any module that they are
+imported into. For better information on where symbols should
+be imported from, <a href="https://github.com/errthumt/FoSpy/tree/main/src/FoSpy">review the sourcecode on the
+github.</a></p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="FoSpy.parsing.format_fos" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">FoSpy.parsing.format_fos</span>
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.format_fos.SYNTAX" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">SYNTAX</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">SYNTAX = {'block_header': {'single': {'open': '[', 'close': ']'}, 'list': {'open': '[[', 'close': ']]'}}, 'nested': {'open': '[', 'close': ']'}, 'embedded': {'open': '{{{', 'close': 'END FOS EMBED }}}', 'prefix': '#'}, 'key_value': {'delimiter': ':', 'require_value': True, 'prefix': False}, 'comment': {'prefix': '//', 'allow_leading_ws': True}, 'calc_comment': {'prefix': '!', 'allow_leading_ws': True}, 'indent_size': 4}</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.format_fos._debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">_debug</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">_debug = Debug()</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="FoSpy.parsing.format_fos.Debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">Debug</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Debug:
+    def __init__(self):
+        self.on = False
+
+        frame = inspect.currentframe().f_back
+        self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+        self.label = f"|(Debug message from {self.module_name})"
+        self.label_width = len(self.label)
+
+    def _get_text_width(self, module=None):
+        if module:
+            label = f"|(Debug message from {module} via {self.module_name})"
+            label_width = len(label)
+        else:
+            label = self.label
+            label_width = self.label_width
+
+        text_width = DEBUG_WIDTH - label_width
+        return text_width, label, label_width
+
+
+    def msg(self,msg, module=None):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        wrapped = textwrap.fill(str(msg), width=text_width)
+
+        for line in wrapped.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')
+
+    def pmsg(self,msg,module=None,**kwargs):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        buf = io.StringIO()
+        pprint(msg,stream=buf, width=text_width,**kwargs)
+        txt = buf.getvalue()
+        for line in txt.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.label" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label = f'|(Debug message from {module_name})'</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.label_width" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label_width</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label_width = len(label)</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.module_name" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">module_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">module_name = get('__name__', '&lt;unknown&gt;')</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.on" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">on</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">on = False</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.__init__" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">__init__()</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def __init__(self):
+    self.on = False
+
+    frame = inspect.currentframe().f_back
+    self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+    self.label = f"|(Debug message from {self.module_name})"
+    self.label_width = len(self.label)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.msg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">msg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">msg(msg, module=None)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def msg(self,msg, module=None):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    wrapped = textwrap.fill(str(msg), width=text_width)
+
+    for line in wrapped.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.format_fos.Debug.pmsg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pmsg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">pmsg(msg, module=None, **kwargs)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def pmsg(self,msg,module=None,**kwargs):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    buf = io.StringIO()
+    pprint(msg,stream=buf, width=text_width,**kwargs)
+    txt = buf.getvalue()
+    for line in txt.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos._indent" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">_indent</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">_indent(st, ind)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _indent(st:str, ind):
+    return f"{' '*ind*SYNTAX["indent_size"]}{st}"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.empty_nested" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">empty_nested</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">empty_nested(is_list)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def empty_nested(is_list):
+    spec = SYNTAX["nested"]
+    open_br = spec["open"]
+    opn = open_br * (2 if is_list else 1)
+    close_br = spec["close"]
+    close = close_br *(2 if is_list else 1)
+
+    return f"{opn}{close}"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_block_header" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_block_header</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_block_header(name, list_type)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_block_header(name: str, list_type: str):
+    spec = SYNTAX["block_header"]
+    if list_type == "list":
+        return f"{spec['list']['open']}{name.capitalize()}{spec['list']['close']}"
+    else:
+        return f"{spec['single']['open']}{name.capitalize()}{spec['single']['close']}"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_calc_comment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_calc_comment</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_calc_comment(text)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_calc_comment(text:str):
+    spec = SYNTAX["calc_comment"]
+    prefix = spec["prefix"]
+    return f"{prefix} {text}"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_comment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_comment</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_comment(text, ind=0)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_comment(text: str, ind: int = 0):
+    spec = SYNTAX["comment"]
+    prefix = spec["prefix"]
+    return _indent(f"{prefix} {text}", ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_embed_start" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_embed_start</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_embed_start(key, ind=0, looped=False)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_embed_start(key:str, ind=0, looped=False):
+    prefix = SYNTAX["key_value"].get("prefix")
+    delim = SYNTAX["key_value"]["delimiter"]
+    if looped:
+        return _indent(SYNTAX["embedded"]["open"], ind)
+
+    if prefix:
+        key = f"{prefix}{key}"
+    return _indent(f"{key}{delim}{"" if " " in delim else " "}{SYNTAX["embedded"]["open"]}", ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_field" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_field</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_field(label)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_field(label:str):
+    return f"&lt;!{label.upper()}-FIELD&gt;"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_key_value" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_key_value</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_key_value(key, val, ind=0, looped=False)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_key_value(key: str, val: str, ind=0, looped=False):
+    spec = SYNTAX["key_value"]
+    delim = spec["delimiter"]
+    prefix = spec.get("prefix")
+    if looped:
+        return _indent(val, ind)
+
+    if prefix:
+        key = f"{prefix}{key}"
+
+    return _indent(f"{key}{delim}{"" if " " in delim else " "}{val}",ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_loop_key" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_loop_key</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_loop_key(key, ind=0)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_loop_key(key: str, ind=0):
+    spec = SYNTAX["key_value"]
+    prefix = spec.get("prefix")
+    delim  = spec["delimiter"]
+
+    if prefix:
+        # key_
+        return _indent(f"{key}{prefix}",ind)
+    else:
+        # :key
+        return _indent(f"{delim}{key}",ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_nested_end" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_nested_end</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_nested_end(is_list, ind=0)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_nested_end(is_list, ind=0):
+    spec = SYNTAX["nested"]
+    close_br = spec["close"]
+    close = close_br *(2 if is_list else 1)
+    return _indent(close, ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.format_fos.format_nested_start" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_nested_start</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_nested_start(key, is_list, looped=False, ind=0)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_nested_start(key, is_list: bool, looped=False, ind=0):
+    spec = SYNTAX["nested"]
+    open_br = spec["open"]
+
+    val = open_br * (2 if is_list else 1)
+
+    return format_key_value(key, val, ind, looped)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../json/utils/" class="btn btn-neutral float-left" title="utils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../read/" class="btn btn-neutral float-right" title="read">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../../json/utils/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../read/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>What is a Block? - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "What is a Block?";
+        var mkdocs_page_input_path = "blocks/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">What is a Block?</a>
+    <ul class="current">
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Block Modules</li>
+      <li class="breadcrumb-item active">What is a Block?</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="what-is-a-block">What is a <code>Block</code>?</h1>
+<p>In <code>FoSpy</code>, a <code>Block</code> is a Python subclass object representing a section of information read from the FOS format. Blocks can be read at the top level from each section underneath a <code>[Heading]</code> or <code>[[Heading]]</code> in a FOS:</p>
+<pre><code class="language-fos">[Block_name]
+property1: foo
+property2: bar
+</code></pre>
+<p>Or, they can be nested inside another block as one of its properties:</p>
+<pre><code class="language-fos">[Block_name]
+property1: hello world!
+blockproperty: [
+    foo: bar
+]
+</code></pre>
+<p>There are two primary types of <code>Block</code> types: <a class="autorefs autorefs-internal" href="blocks/#FoSpy.blocks.blocks.SingleBlock"><code>SingleBlock</code></a> and <a class="autorefs autorefs-internal" href="blocks/#FoSpy.blocks.blocks.ListBlock"><code>ListBlock</code></a>. When a FOS-formatted file is read, it's parsed as a single dictionary of nested list/dict structures. Each "sub" dictionary within this structure is constructed into a <code>SingleBlock</code> object, whereas each list of constructed objects is constructed into a parent <code>ListBlock</code> object.</p>
+<ul>
+<li><code>ListBlock</code> subclasses are primarily used for enforcing that all the blocks within the list are the same <code>SingleBlock</code> subclass (e.g., <code>Materials</code> or <code>Treatments</code>), but may also have special methods for working with multiple items within that list at once, such as finding the weight percent of each material.</li>
+<li><code>SingleBlock</code> subclasses are used for enforcing the expected properties for a given set of data. <code>Synthesis</code>, for example, is a <code>SingleBlock</code> subclass that is required to have certain properties, like a <code>Reaction</code> block and a <code>Materials</code> list. It also has optional properties, which are not required but are expected to be of a certain type. The <code>[CIFs]</code> heading in a FOS, for instance, is expected to be a list of <code>EmbeddedCIF</code> objects.</li>
+</ul>
+<p>When a <code>SingleBlock</code> is constructed from a dictionary, each key in the dictionary is set as one of its attributes. <a href="../expected/">Some attribute names have specific requirements</a> unique to that subclass, which are enforced during construction. Because attributes are assigned at construction, you will not find complete documentation in a subclass's sourcecode of all it's available attributes. Instead, you must refer to the dictionaries at <a class="autorefs autorefs-internal" title="default_required" href="../full/parsing/validation/#FoSpy.parsing.validation.default_required">parsing.validation</a> or the associated <a href="../expected/">documentation page</a>.</p>
+<p>Docstring documentation for public methods of each <code>Block</code> subclass can be found in the adjacent pages. All docstrings (private and public) can be found in the <a href="../full/">full documentation</a>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../expected/" class="btn btn-neutral float-left" title="Expected Properties"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="blocks/" class="btn btn-neutral float-right" title="blocks">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../expected/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="blocks/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

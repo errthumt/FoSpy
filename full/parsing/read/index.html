@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>read - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "read";
+        var mkdocs_page_input_path = "full/parsing/read.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../../blocks/treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" >parsing</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">read</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.SYNTAX">SYNTAX</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read._debug">_debug</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.md">md</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.mk">mk</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.Debug">Debug</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.label">label</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.label_width">label_width</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.module_name">module_name</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.on">on</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.__init__">__init__</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.msg">msg</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.parsing.read.Debug.pmsg">pmsg</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.create_list_block_dict">create_list_block_dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.create_single_block_dict">create_single_block_dict</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.dict_from_file">dict_from_file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.empty_nested">empty_nested</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.format_comment">format_comment</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.format_field">format_field</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy.parsing.read.format_key_value">format_key_value</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Full Documentation</li>
+          <li class="breadcrumb-item">parsing</li>
+      <li class="breadcrumb-item active">read</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>Full documentation pages are generated for docstring
+reference only and may contain symbols imported from other
+modules. Imported symbols are not distinguished from locally
+defined symbols and will appear in any module that they are
+imported into. For better information on where symbols should
+be imported from, <a href="https://github.com/errthumt/FoSpy/tree/main/src/FoSpy">review the sourcecode on the
+github.</a></p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="FoSpy.parsing.read" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">FoSpy.parsing.read</span>
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.read.SYNTAX" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">SYNTAX</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">SYNTAX = {'block_header': {'single': {'open': '[', 'close': ']'}, 'list': {'open': '[[', 'close': ']]'}}, 'nested': {'open': '[', 'close': ']'}, 'embedded': {'open': '{{{', 'close': 'END FOS EMBED }}}', 'prefix': '#'}, 'key_value': {'delimiter': ':', 'require_value': True, 'prefix': False}, 'comment': {'prefix': '//', 'allow_leading_ws': True}, 'calc_comment': {'prefix': '!', 'allow_leading_ws': True}, 'indent_size': 4}</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.read._debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">_debug</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">_debug = Debug()</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.read.md" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">md</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">md = {'_fos_comments': {}, '_fos_key_comments': {}, '_list_type': '', '_routine_paths': []}</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy.parsing.read.mk" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">mk</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">mk = {'comments': '_fos_comments', 'key_comments': '_fos_key_comments', 'list_type': '_list_type', 'routine_paths': '_routine_paths'}</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="FoSpy.parsing.read.Debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">Debug</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Debug:
+    def __init__(self):
+        self.on = False
+
+        frame = inspect.currentframe().f_back
+        self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+        self.label = f"|(Debug message from {self.module_name})"
+        self.label_width = len(self.label)
+
+    def _get_text_width(self, module=None):
+        if module:
+            label = f"|(Debug message from {module} via {self.module_name})"
+            label_width = len(label)
+        else:
+            label = self.label
+            label_width = self.label_width
+
+        text_width = DEBUG_WIDTH - label_width
+        return text_width, label, label_width
+
+
+    def msg(self,msg, module=None):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        wrapped = textwrap.fill(str(msg), width=text_width)
+
+        for line in wrapped.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')
+
+    def pmsg(self,msg,module=None,**kwargs):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        buf = io.StringIO()
+        pprint(msg,stream=buf, width=text_width,**kwargs)
+        txt = buf.getvalue()
+        for line in txt.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.read.Debug.label" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label = f'|(Debug message from {module_name})'</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.read.Debug.label_width" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label_width</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label_width = len(label)</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.read.Debug.module_name" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">module_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">module_name = get('__name__', '&lt;unknown&gt;')</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.parsing.read.Debug.on" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">on</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">on = False</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.read.Debug.__init__" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">__init__()</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def __init__(self):
+    self.on = False
+
+    frame = inspect.currentframe().f_back
+    self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+    self.label = f"|(Debug message from {self.module_name})"
+    self.label_width = len(self.label)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.read.Debug.msg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">msg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">msg(msg, module=None)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def msg(self,msg, module=None):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    wrapped = textwrap.fill(str(msg), width=text_width)
+
+    for line in wrapped.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.parsing.read.Debug.pmsg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pmsg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">pmsg(msg, module=None, **kwargs)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def pmsg(self,msg,module=None,**kwargs):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    buf = io.StringIO()
+    pprint(msg,stream=buf, width=text_width,**kwargs)
+    txt = buf.getvalue()
+    for line in txt.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.create_list_block_dict" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">create_list_block_dict</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">create_list_block_dict(lines)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/read.py</code></summary>
+              <pre class="highlight"><code class="language-python">def create_list_block_dict(lines):
+
+    open_br = SYNTAX["nested"]["open"]
+    close_br = SYNTAX["nested"]["close"]
+
+    block_list = []
+    current_lines = []
+    keys = []
+
+    nested = 0
+    m = False
+    for l in lines:
+        if rx.COMMENT_LINE.match(l):
+            continue
+        m = rx.LOOP_KEY.match(l)
+        if m:
+            break
+
+    if m: # loop_key mode
+        getting_keys = True
+        comments = []
+        key_comments = {}
+
+        key_idx = 0
+        embedding = False
+        for line in lines:
+            # _debug.msg(f'processing list line: {line}')
+
+            if embedding:
+                if rx.EMBEDDED_END.match(line):
+                    embedding = False
+                current_lines.append(line)
+                continue
+
+            is_loop_key = rx.LOOP_KEY.match(line)
+            is_key_val = rx.KEY_VALUE.match(line)
+            is_comment = rx.COMMENT_LINE.match(line)
+            is_embed_start = rx.EMBEDDED_START.match(line)
+            if getting_keys and is_comment:
+                comments.append(is_comment.group("text").lstrip())
+            elif nested&gt;0 or is_comment:
+                current_lines.append(line)
+            elif is_loop_key:
+                if not getting_keys:
+                    raise SyntaxError(f"Error on line: '{line}'. You cannot declare more loop keys after starting values.")
+                key = is_loop_key.group("key")
+                if key in keys:
+                    raise ValueError(f"Duplicate key found: '{key}'. Each key can only be specified once at the beginning of a looped list block.")
+                key_comments[key.lstrip("-")] = comments
+                comments = []
+                keys.append(key)
+                # _debug.msg(f'added key: {key}')
+
+            elif is_key_val:
+                if getting_keys:
+                    getting_keys = False
+                    for l in comments:
+                        current_lines.append(format_comment(l))
+                embedding = is_embed_start
+                current_lines.append(line)
+
+            else:
+                if getting_keys:
+                    getting_keys = False
+                    for l in comments:
+                        current_lines.append(format_comment(l))
+                if key_idx == len(keys):
+                    block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
+                    trailing_comments = []
+                    for l in reversed(current_lines):
+                        if rx.COMMENT_LINE.match(l):
+                            trailing_comments.append(l)
+                        else:
+                            break
+
+                    trailing_comments.reverse()
+                    current_lines = trailing_comments
+                    key_idx = 0
+                embedding = rx.EMBEDDED_START.match(line)
+                key = keys[key_idx]
+                current_lines.append(format_key_value(key, line))
+                key_idx += 1
+
+
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
+            if nested&lt;0:
+                raise ValueError("Mismatched brackets when trying to parse blocks.")
+
+        if current_lines:
+            # _debug.msg("sending lines to single block:")
+            for l in current_lines:
+                # _debug.msg(l)
+                pass
+            # _debug.msg("---")
+            block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
+
+        block_list[0][mk["key_comments"]] = key_comments
+    else:
+        embedding = False
+        for line in lines:
+            is_key_val, is_comment = rx.KEY_VALUE.match(line), rx.COMMENT_LINE.match(line)
+            if embedding or rx.EMBEDDED_START.match(line):
+                if rx.EMBEDDED_END.match(line):
+                    embedding = False
+                elif rx.EMBEDDED_START.match(line):
+                    embedding = True
+                current_lines.append(line)
+                continue
+
+            if not (is_key_val or is_comment or nested&gt;0):
+                raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
+            key = is_key_val.group("key") if is_key_val else None
+            if nested &gt; 0:
+                current_lines.append(line)
+            elif key in keys:
+                block_list.append(create_single_block_dict(current_lines))
+                trailing_comments = []
+                for l in reversed(current_lines):
+                    if rx.COMMENT_LINE.match(l):
+                        trailing_comments.append(l)
+                    else:
+                        break
+
+                trailing_comments.reverse()
+                current_lines = [*trailing_comments, line]
+                keys = [key]
+            else:
+                if key is not None:
+                    keys.append(key)
+                #_debug.pmsg(keys)
+                current_lines.append(line)
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
+            _debug.msg(f"Current nested: {nested} | Current line: {line}")
+            if nested&lt;0:
+                raise ValueError("Mismatched brackets when trying to parse blocks.")
+
+        block_list.append(create_single_block_dict(current_lines))
+    if nested != 0:
+        raise ValueError("Mismatched brackets when trying to parse blocks.")
+    return block_list</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.create_single_block_dict" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">create_single_block_dict</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">create_single_block_dict(lines, _list_type='explicit')</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/read.py</code></summary>
+              <pre class="highlight"><code class="language-python">def create_single_block_dict(lines, _list_type="explicit"):
+    """"""
+
+    """ _debug.msg('Processing the following lines as a single block:')
+    for line in lines:
+        _debug.msg(line)
+    _debug.msg('-----') """
+    if len(lines)==0:
+        return {}
+
+    # Single string mode, process block as a multiline string instead of key: value pairs
+    if lines[0].strip() == ";;;":
+        return " ".join([l.strip() for l in lines[1:]]).strip()
+
+
+    open_br = SYNTAX["nested"]["open"]
+    close_br = SYNTAX["nested"]["close"]
+
+    nested_lines = []
+    nested_type = None
+    out_dict = {mk["list_type"]:_list_type, mk["comments"]:{}}
+    nested = 0
+    nested_key = None
+    comments = []
+    embedding = False
+    for line in lines:
+        # _debug.msg(f'processing: {line}')
+        is_comment = rx.COMMENT_LINE.match(line)
+        if is_comment:
+            if nested &gt; 0:
+                nested_lines.append(line)
+            else:
+                comments.append(is_comment.group("text").lstrip())
+        elif embedding:
+            if rx.EMBEDDED_END.match(line):
+                embedding = False
+                out_dict[nested_key] = nested_lines
+                nested_lines = []
+                nested_key = None
+                nested_type = None
+                _debug.msg("Ending Embedding")
+            else:
+                nested_lines.append(line)
+        elif nested==0:
+            m = rx.KEY_VALUE.match(line)
+            if m:
+                key, val = m.group("key"), m.group("val")
+            else:
+                raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
+            # _debug.msg(f"processed: key:'{key}', val:'{val}'")
+            if key.startswith("-"):
+                key = key[1:]
+                val = format_field("template")
+            if key in out_dict:
+                raise ValueError(f"Duplicate key found: '{key}' Each key can only appear once within a block.")
+
+            emb = rx.EMBEDDED_START.match(line)
+            m = rx.NESTED_START.match(val) or emb
+            if val in (empty_nested(True),empty_nested(False)):
+                out_dict[key] = []
+                out_dict[mk["comments"]][key]=comments
+                comments = []
+
+            elif m:
+                # _debug.msg(f'{key} is nested')
+
+                nested_key = key
+                if rx.EMBEDDED_START.match(line):
+                    embedding = True
+                    _debug.msg("Starting embedding")
+
+                elif m.group("list"):
+                    nested_type = "list"
+                    nested += 2
+
+                else:
+                    nested_type = "single"
+                    nested += 1
+
+                out_dict[mk["comments"]][nested_key] = comments
+                comments = []
+
+                remainder = m.group("rest") if not emb else None
+                if remainder:
+                    nested_lines.append(remainder)
+                continue
+            else:
+                out_dict[key] = val
+                out_dict[mk["comments"]][key] = comments
+                comments = []
+        else:
+            nested += line.count(open_br)
+            nested -= line.count(close_br)
+
+            if nested &lt; 0:
+                raise ValueError("Mismatched brackets when trying to parse blocks.")
+            elif nested == 0:
+                # _debug.msg(f'ended nesting on line: {line}')
+                stripped = line.rstrip(close_br)
+                if stripped:
+                    nested_lines.append(stripped)
+                val = [create_single_block_dict(nested_lines)] if nested_type == "single" else create_list_block_dict(nested_lines)
+                if isinstance(val[0], str):
+                    val = val[0]
+                out_dict[nested_key] = val
+                nested_lines = []
+                nested_key = None
+                nested_type = None
+            else:
+                nested_lines.append(line)
+    for meta_key in mk.values():
+        if meta_key not in out_dict:
+            out_dict[meta_key] = md[meta_key]
+
+    if nested != 0:
+        raise ValueError("Mismatched brackets when trying to parse blocks.")
+
+    return out_dict</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.dict_from_file" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">dict_from_file</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">dict_from_file(filepath)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/read.py</code></summary>
+              <pre class="highlight"><code class="language-python">def dict_from_file(filepath):
+    blocks = {}
+    comments = {}
+    current_block = "metadata"
+    current_type = "single"
+    embedding = False
+    break_line = None
+    break_num = 0
+    with open(filepath, "r", encoding="utf-8") as f:
+        endComments = []
+        for line in f:
+            break_num += 1
+            if rx.EMBEDDED_END.match(line):
+                embedding = False
+                block.append(line)
+                continue
+
+            if embedding:
+                if rx.EMBEDDED_START.match(line):
+                    break_line = line
+                    break
+                block.append(line)
+                continue
+
+            txt = line.strip()     
+            if txt == "" or rx.CALC_COMMENT_LINE.match(txt):
+                continue
+
+            if rx.EMBEDDED_START.match(txt):
+                _debug.msg(f"Starting Embedding on line: {txt}")
+                embedding = True
+
+            block = blocks.get(current_block)
+            if block is None:
+                blocks[current_block] = (current_type,[])
+                block = blocks[current_block][1]
+            else:
+                block = block[1]
+
+
+            m = rx.BLOCK_HEADER.match(txt)
+            if m:
+                name_found = False
+                for regex_name, typ in zip(("list_name", "single_name"),("list","single")):
+                    if m.group(regex_name) is not None:
+                        current_block = m.group(regex_name).lower()
+                        current_type = typ
+                        name_found = True
+                        break
+                if not name_found:
+                    raise SyntaxError(f"Line: '{txt}' was identified as a block header but no header name could be identified")
+
+                #_debug.msg(f"Identified {current_type} block header in line: {txt}")
+                #_debug.msg(f"Block name: {current_block}")
+
+                comments[current_block] = [rx.COMMENT_LINE.match(l).group("text").lstrip() for l in endComments]
+                endComments = []
+                continue
+
+            if rx.COMMENT_LINE.match(txt):
+                endComments.append(txt)
+                continue
+
+            for l in [*endComments,txt]:
+                block.append(l.strip())
+            endComments = []
+    if embedding:
+        raise SyntaxError("An embedded document was never closed before the end of the file or starting a new embed.\n"
+                          f"Current Line (line #{break_num}): {"&lt;end of FOS file&gt;\n" if not break_line else break_line}"
+                          "Ensure that there are spaces between '#', 'END FOS EMBED', and '}}}' when ending an "
+                          "embedded document.")
+
+    for block, (typ, lines) in blocks.items():
+        if typ == "single":
+            blockDict = create_single_block_dict(lines)
+            if blockDict == {}:
+                blocks[block] = []
+            else:
+                blocks[block] = [blockDict]
+        elif typ == "list":
+            blocks[block] = create_list_block_dict(lines)
+        else:
+            raise ValueError(f"Unrecognized block type: '{typ}', expected either single or list")
+    blocks[mk["comments"]] = comments
+
+    for meta_key in mk.values():
+        if meta_key not in blocks:
+            try:
+                blocks[meta_key] = md[meta_key].copy()
+            except:
+                blocks[meta_key] = md[meta_key]
+
+    return blocks</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.empty_nested" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">empty_nested</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">empty_nested(is_list)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def empty_nested(is_list):
+    spec = SYNTAX["nested"]
+    open_br = spec["open"]
+    opn = open_br * (2 if is_list else 1)
+    close_br = spec["close"]
+    close = close_br *(2 if is_list else 1)
+
+    return f"{opn}{close}"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.format_comment" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_comment</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_comment(text, ind=0)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_comment(text: str, ind: int = 0):
+    spec = SYNTAX["comment"]
+    prefix = spec["prefix"]
+    return _indent(f"{prefix} {text}", ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.format_field" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_field</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_field(label)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_field(label:str):
+    return f"&lt;!{label.upper()}-FIELD&gt;"</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy.parsing.read.format_key_value" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">format_key_value</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">format_key_value(key, val, ind=0, looped=False)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/parsing/format_fos.py</code></summary>
+              <pre class="highlight"><code class="language-python">def format_key_value(key: str, val: str, ind=0, looped=False):
+    spec = SYNTAX["key_value"]
+    delim = spec["delimiter"]
+    prefix = spec.get("prefix")
+    if looped:
+        return _indent(val, ind)
+
+    if prefix:
+        key = f"{prefix}{key}"
+
+    return _indent(f"{key}{delim}{"" if " " in delim else " "}{val}",ind)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../format_fos/" class="btn btn-neutral float-left" title="format_fos"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../regex/" class="btn btn-neutral float-right" title="regex">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../format_fos/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../regex/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

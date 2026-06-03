@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>treatments - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "treatments";
+        var mkdocs_page_input_path = "blocks/treatments.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../template/">template</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">treatments</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#methods-attached-to-any-object">Methods attached to any object</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#add_commentsself_attr-comments">add_comments(self_attr, *comments)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.blocks._add_comments_to_parent">_add_comments_to_parent</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clear_commentsself_attr">clear_comments(self_attr)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.blocks._clear_comments_from_parent">_clear_comments_from_parent</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#block-types-in-this-module">Block Types in this Module</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#treatment">Treatment</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Treatment">Treatment</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Treatment.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Treatment.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Treatment.example_calc">example_calc</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#annealing">Annealing</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing">Annealing</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.__init__">__init__</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.build_profile">build_profile</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.interactive_plot">interactive_plot</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.show_plot">show_plot</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Annealing.update_profile">update_profile</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#annealsection">AnnealSection</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealSection">AnnealSection</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealSection.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealSection.add_missing_parameter">add_missing_parameter</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealSection.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealSection.get_time">get_time</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ramp">Ramp</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp">Ramp</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp.__init__">__init__</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp.get_rate">get_rate</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Ramp.get_temp">get_temp</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rampnotemp">RampNoTemp</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTemp">RampNoTemp</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTemp.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTemp.add_missing_parameter">add_missing_parameter</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTemp.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTemp.get_temp">get_temp</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rampnotime">RampNoTime</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTime">RampNoTime</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTime.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTime.add_missing_parameter">add_missing_parameter</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTime.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoTime.get_time">get_time</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rampnorate">RampNoRate</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoRate">RampNoRate</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoRate.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoRate.add_missing_parameter">add_missing_parameter</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoRate.dispatch_subclass">dispatch_subclass</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.RampNoRate.get_rate">get_rate</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#dwell">Dwell</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Dwell">Dwell</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Dwell.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Dwell.dispatch_subclass">dispatch_subclass</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#quench">Quench</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Quench">Quench</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Quench.dispatch">dispatch</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.Quench.dispatch_subclass">dispatch_subclass</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#annealprogram">AnnealProgram</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealProgram">AnnealProgram</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealProgram.add_all_missing_parameters">add_all_missing_parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.treatments.AnnealProgram.append">append</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Block Modules</li>
+      <li class="breadcrumb-item active">treatments</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="fospyblockstreatments"><code>FoSpy.blocks.treatments</code></h1>
+<p>This site only contains documentation for the
+<a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.Block"><code>Block</code></a> subclasses defined in this
+module, not the entire module API. For a complete reference of
+all functions, classes, and variables, see the <a href="../../full/">full API
+documentation</a>.</p>
+<h2 id="methods-attached-to-any-object">Methods attached to any object</h2>
+<p>When <a class="autorefs autorefs-internal" title="__setattr__(name, value)" href="../blocks/#FoSpy.blocks.blocks.SingleBlock.__setattr__">assigning an object as an
+attribute</a>,
+<code>SingleBlock</code>s attach special methods that are used to edit
+their own comment metadata.</p>
+<hr />
+<h3 id="add_commentsself_attr-comments"><code>add_comments(self_attr, *comments)</code></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="FoSpy.blocks.blocks._add_comments_to_parent"></a>
+    <div class="doc doc-contents first">
+
+        <p>Method attached to any <a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.SingleBlock"><code>SingleBlock</code></a>
+attribute as <code>add_comments(self_attr, *comments)</code>. Mutates the parent
+<code>SingleBlock</code>'s comments metadata under the assigned attribute name.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <pre><code>my_synthesis.materials.add_comments(&quot;A comment on the materials header&quot;)
+my_synthesis._meta.comments
+# returns: 
+#       {&quot;materials&quot;:
+#           [
+#               &quot;an older comment&quot;, 
+#               &quot;A comment on the materials header&quot;
+#           ]
+#       }
+</code></pre>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>*comments</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Comments to attach to the assigned attribute name in
+the parent block's metadata. Comments are printed above
+their attached attribute when saving in the FOS format.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/blocks.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _add_comments_to_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `add_comments(self_attr, *comments)`. Mutates the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis.materials.add_comments("A comment on the materials header")
+        my_synthesis._meta.comments
+        # returns: 
+        #       {"materials":
+        #           [
+        #               "an older comment", 
+        #               "A comment on the materials header"
+        #           ]
+        #       }
+        ```
+
+    Args:
+        *comments (str):
+            Comments to attach to the assigned attribute name in
+            the parent block's metadata. Comments are printed above
+            their attached attribute when saving in the FOS format.
+    """
+    def func(self_attr, *comments):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments.setdefault(attr_name,[])
+        for comment in comments:
+            parent_comments[attr_name].append(str(comment))
+    return func</code></pre>
+            </details>
+    </div>
+
+</div><hr />
+<h3 id="clear_commentsself_attr"><code>clear_comments(self_attr)</code></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="FoSpy.blocks.blocks._clear_comments_from_parent"></a>
+    <div class="doc doc-contents first">
+
+        <p>Method attached to any <a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.SingleBlock"><code>SingleBlock</code></a>
+attribute as <code>clear_comments(self_attr)</code>. Clears the parent
+<code>SingleBlock</code>'s comments metadata under the assigned attribute name.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <pre><code>my_synthesis._meta.comments[&quot;materials&quot;]
+# returns [&quot;This comment was read from a FOS file&quot;]
+
+my_synthesis.materials.clear_comments()
+my_synthesis._meta.comments[&quot;materials&quot;]
+# now returns []
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/blocks.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _clear_comments_from_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `clear_comments(self_attr)`. Clears the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis._meta.comments["materials"]
+        # returns ["This comment was read from a FOS file"]
+
+        my_synthesis.materials.clear_comments()
+        my_synthesis._meta.comments["materials"]
+        # now returns []
+        ```
+    """
+    def func(self_attr):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments[attr_name] = []
+    return func</code></pre>
+            </details>
+    </div>
+
+</div><hr />
+<h2 id="block-types-in-this-module">Block Types in this Module</h2>
+<hr />
+<h3 id="treatment"><code>Treatment</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.Treatment"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.SingleBlock" href="../blocks/#FoSpy.blocks.blocks.SingleBlock">SingleBlock</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Treatment(SingleBlock):
+    # Maps type strings to subclass constructors.
+    # Populated after each subclass definition.
+    dispatch = {}
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        from .blocks import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
+        t = blockDict.get("type", None)
+        subclass = cls.dispatch.get(t,cls)
+        return subclass(blockDict, _dispatched=True)
+
+    @_calc_routine(attach=False)
+    def example_calc(self):
+        _debug.msg(f"Running example routine for {self.type} treatment")
+        return None</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.Treatment.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Treatment.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    from .blocks import _unwrap_block
+    blockDict = _unwrap_block(blockDict)
+    t = blockDict.get("type", None)
+    subclass = cls.dispatch.get(t,cls)
+    return subclass(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Treatment.example_calc" class="doc doc-heading">
+            <code class="highlight language-python">example_calc()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine(attach=False)
+def example_calc(self):
+    _debug.msg(f"Running example routine for {self.type} treatment")
+    return None</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="annealing"><code>Annealing</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.Annealing"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.Treatment" href="#FoSpy.blocks.treatments.Treatment">Treatment</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Annealing(Treatment):
+    dispatch = {}
+    def __init__(self, blockDict, _dispatched=False):
+        super().__init__(blockDict, _dispatched=_dispatched)
+        self.build_profile()
+
+    def build_profile(self, **kwargs):
+        from .template import TemplateBlock
+        if isinstance(self, TemplateBlock):
+            from warnings import warn
+            warn("Cannot build profile for a template annealing block. Skipping profile build.")
+            return None
+
+        from cif2xrd.furnace import Profile #type: ignore
+        import matplotlib.pyplot as plt
+
+        furnace = Profile(**kwargs)
+
+        for section in self.program:
+            if section.type == "ramp":
+                temp = section.get_temp("C").magnitude
+                furnace.ramp(temp, f"{section.get_time('h').magnitude} h")
+            elif section.type == "dwell":
+                furnace.dwell(f"{section.get_time('h').magnitude} h")
+            elif section.type == "quench":
+                furnace.quench(section.medium)
+
+        self._profile = furnace
+
+    def update_profile(self, **kwargs):
+        return self._profile.update_params(**kwargs)
+
+    def show_plot(self, **kwargs):
+        self.update_profile(**kwargs)
+        return self._profile.plot(show=True)
+
+    def interactive_plot(self, **kwargs):
+        self.update_profile(**kwargs)
+        return self._profile.interactive()</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.__init__" class="doc doc-heading">
+            <code class="highlight language-python">__init__(blockDict, _dispatched=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def __init__(self, blockDict, _dispatched=False):
+    super().__init__(blockDict, _dispatched=_dispatched)
+    self.build_profile()</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.build_profile" class="doc doc-heading">
+            <code class="highlight language-python">build_profile(**kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def build_profile(self, **kwargs):
+    from .template import TemplateBlock
+    if isinstance(self, TemplateBlock):
+        from warnings import warn
+        warn("Cannot build profile for a template annealing block. Skipping profile build.")
+        return None
+
+    from cif2xrd.furnace import Profile #type: ignore
+    import matplotlib.pyplot as plt
+
+    furnace = Profile(**kwargs)
+
+    for section in self.program:
+        if section.type == "ramp":
+            temp = section.get_temp("C").magnitude
+            furnace.ramp(temp, f"{section.get_time('h').magnitude} h")
+        elif section.type == "dwell":
+            furnace.dwell(f"{section.get_time('h').magnitude} h")
+        elif section.type == "quench":
+            furnace.quench(section.medium)
+
+    self._profile = furnace</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.interactive_plot" class="doc doc-heading">
+            <code class="highlight language-python">interactive_plot(**kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def interactive_plot(self, **kwargs):
+    self.update_profile(**kwargs)
+    return self._profile.interactive()</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.show_plot" class="doc doc-heading">
+            <code class="highlight language-python">show_plot(**kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def show_plot(self, **kwargs):
+    self.update_profile(**kwargs)
+    return self._profile.plot(show=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Annealing.update_profile" class="doc doc-heading">
+            <code class="highlight language-python">update_profile(**kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def update_profile(self, **kwargs):
+    return self._profile.update_params(**kwargs)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="annealsection"><code>AnnealSection</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.AnnealSection"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.SingleBlock" href="../blocks/#FoSpy.blocks.blocks.SingleBlock">SingleBlock</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class AnnealSection(SingleBlock):
+    dispatch = {}
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        from .blocks import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
+        t = blockDict.get("type",None)
+        subclass = cls.dispatch.get(t,cls)
+        if subclass is cls:
+            return cls(blockDict, _dispatched=True)
+        return subclass.dispatch_subclass(blockDict)
+
+    @_calc_routine()
+    def add_missing_parameter(self):
+        return
+
+    def get_time(self, time_units="h"):
+        from ..parsing.validators.units import FOSQuantity, FOSUnit
+        if not hasattr(self, "time"):
+            raise ValueError("This Anneal section does not have a 'time' attribute.")
+
+        time = FOSQuantity(float(self.time.magnitude), self.time.units)
+        value = time.to(FOSUnit(time_units))
+        return value</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealSection.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealSection.add_missing_parameter" class="doc doc-heading">
+            <code class="highlight language-python">add_missing_parameter()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_missing_parameter(self):
+    return</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealSection.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    from .blocks import _unwrap_block
+    blockDict = _unwrap_block(blockDict)
+    t = blockDict.get("type",None)
+    subclass = cls.dispatch.get(t,cls)
+    if subclass is cls:
+        return cls(blockDict, _dispatched=True)
+    return subclass.dispatch_subclass(blockDict)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealSection.get_time" class="doc doc-heading">
+            <code class="highlight language-python">get_time(time_units='h')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_time(self, time_units="h"):
+    from ..parsing.validators.units import FOSQuantity, FOSUnit
+    if not hasattr(self, "time"):
+        raise ValueError("This Anneal section does not have a 'time' attribute.")
+
+    time = FOSQuantity(float(self.time.magnitude), self.time.units)
+    value = time.to(FOSUnit(time_units))
+    return value</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="ramp"><code>Ramp</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.Ramp"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.AnnealSection" href="#FoSpy.blocks.treatments.AnnealSection">AnnealSection</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Ramp(AnnealSection):
+    dispatch = {}
+
+    def __init__(self, blockDict, _dispatched=False):
+        super().__init__(blockDict, _dispatched=_dispatched)
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        from ._blockUtils import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
+        seeking = ["temp","time","rate"]
+        found = []
+        for key in blockDict:
+            if key in seeking:
+                found.append(key)
+            if len(found) == 2:
+                break
+        if len(found) != 2:
+            raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
+
+        for key in seeking:
+            if key not in found:
+                blockDict.pop(key,None)
+                subclass = cls.dispatch.get(key,None)
+                if subclass is None:
+                    raise ValueError(f"Ramp section missing required key '{key}' and no subclass found to handle this case.")
+                return subclass(blockDict, _dispatched=True)
+
+    def get_rate(self, temp_units="C", time_units="h"):
+        from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
+        if not hasattr(self, "rate"):
+            raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
+        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,"[time]")}")
+        rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
+        value = rate.to(new_unit)
+        return value
+
+    def get_temp(self, temp_units="C"):
+        from ..parsing.validators.units import FOSTempUnit, FOSQuantity
+        if not hasattr(self, "temp"):
+            raise ValueError("Ramp section does not have a 'temp' attribute. Conisder reclassifying this section as a RampNoTemp section.")
+        temp = FOSQuantity(float(self.temp.magnitude),self.temp.units)
+        value = temp.to(FOSTempUnit(temp_units))
+        return value</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.Ramp.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Ramp.__init__" class="doc doc-heading">
+            <code class="highlight language-python">__init__(blockDict, _dispatched=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def __init__(self, blockDict, _dispatched=False):
+    super().__init__(blockDict, _dispatched=_dispatched)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Ramp.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    from ._blockUtils import _unwrap_block
+    blockDict = _unwrap_block(blockDict)
+    seeking = ["temp","time","rate"]
+    found = []
+    for key in blockDict:
+        if key in seeking:
+            found.append(key)
+        if len(found) == 2:
+            break
+    if len(found) != 2:
+        raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
+
+    for key in seeking:
+        if key not in found:
+            blockDict.pop(key,None)
+            subclass = cls.dispatch.get(key,None)
+            if subclass is None:
+                raise ValueError(f"Ramp section missing required key '{key}' and no subclass found to handle this case.")
+            return subclass(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Ramp.get_rate" class="doc doc-heading">
+            <code class="highlight language-python">get_rate(temp_units='C', time_units='h')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_rate(self, temp_units="C", time_units="h"):
+    from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
+    if not hasattr(self, "rate"):
+        raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
+    new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,"[time]")}")
+    rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
+    value = rate.to(new_unit)
+    return value</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Ramp.get_temp" class="doc doc-heading">
+            <code class="highlight language-python">get_temp(temp_units='C')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_temp(self, temp_units="C"):
+    from ..parsing.validators.units import FOSTempUnit, FOSQuantity
+    if not hasattr(self, "temp"):
+        raise ValueError("Ramp section does not have a 'temp' attribute. Conisder reclassifying this section as a RampNoTemp section.")
+    temp = FOSQuantity(float(self.temp.magnitude),self.temp.units)
+    value = temp.to(FOSTempUnit(temp_units))
+    return value</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="rampnotemp"><code>RampNoTemp</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.RampNoTemp"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.Ramp" href="#FoSpy.blocks.treatments.Ramp">Ramp</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class RampNoTemp(Ramp):
+    dispatch = {}
+    def get_temp(self, temp_units="C"):
+        from ..parsing.validators.units import convert_temp
+        current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
+        rate = self.get_rate(current_temp, current_time)
+        time = self.get_time(current_time)
+        temp = rate * time
+        temp = convert_temp(temp, current_temp, temp_units)
+        return temp
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        return cls(blockDict, _dispatched=True)
+
+    @_calc_routine()
+    def add_missing_parameter(self):
+        temp_unit = [v.strip() for v in self.rate_units.split("/")][0]
+        temp = self.get_temp(temp_unit)
+        self.add_calc_comment("time", f"Temperature after ramp: {temp} {temp_unit}", "missing temp")</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTemp.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTemp.add_missing_parameter" class="doc doc-heading">
+            <code class="highlight language-python">add_missing_parameter()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_missing_parameter(self):
+    temp_unit = [v.strip() for v in self.rate_units.split("/")][0]
+    temp = self.get_temp(temp_unit)
+    self.add_calc_comment("time", f"Temperature after ramp: {temp} {temp_unit}", "missing temp")</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTemp.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    return cls(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTemp.get_temp" class="doc doc-heading">
+            <code class="highlight language-python">get_temp(temp_units='C')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_temp(self, temp_units="C"):
+    from ..parsing.validators.units import convert_temp
+    current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
+    rate = self.get_rate(current_temp, current_time)
+    time = self.get_time(current_time)
+    temp = rate * time
+    temp = convert_temp(temp, current_temp, temp_units)
+    return temp</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="rampnotime"><code>RampNoTime</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.RampNoTime"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.Ramp" href="#FoSpy.blocks.treatments.Ramp">Ramp</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class RampNoTime(Ramp):
+    dispatch = {}
+    def get_time(self, time_units="h"):
+        from ..parsing.validators.units import convert_time
+        current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
+        rate = self.get_rate(current_temp, current_time)
+        temp = self.get_temp(current_temp)
+        time = temp / rate
+        time = convert_time(time, current_time, time_units)
+        return time
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        return cls(blockDict, _dispatched=True)
+
+    @_calc_routine()
+    def add_missing_parameter(self):
+        time_unit = [v.strip() for v in self.rate_units.split("/")][1]
+        time = self.get_time(time_unit)
+        self.add_calc_comment("temp", f"Time for ramp: {time} {time_unit}", "missing time")</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTime.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTime.add_missing_parameter" class="doc doc-heading">
+            <code class="highlight language-python">add_missing_parameter()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_missing_parameter(self):
+    time_unit = [v.strip() for v in self.rate_units.split("/")][1]
+    time = self.get_time(time_unit)
+    self.add_calc_comment("temp", f"Time for ramp: {time} {time_unit}", "missing time")</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTime.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    return cls(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoTime.get_time" class="doc doc-heading">
+            <code class="highlight language-python">get_time(time_units='h')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_time(self, time_units="h"):
+    from ..parsing.validators.units import convert_time
+    current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
+    rate = self.get_rate(current_temp, current_time)
+    temp = self.get_temp(current_temp)
+    time = temp / rate
+    time = convert_time(time, current_time, time_units)
+    return time</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="rampnorate"><code>RampNoRate</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.RampNoRate"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.Ramp" href="#FoSpy.blocks.treatments.Ramp">Ramp</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class RampNoRate(Ramp):
+    dispatch = {}
+    def get_rate(self, temp_units="C", time_units="h"):
+        from ..parsing.validators.units import FOSQuantity, temp_rate_unit, FOSTempUnit
+        try:
+            ramp_set = self._parent_block.get_any(type="ramp")
+            self_idx = ramp_set.index(self)
+            if self_idx == 0:
+                last_temp = self._parent_block._parent_block.start_temp
+            else:
+                last_temp = ramp_set[self_idx-1].get_temp(temp_units)
+        except:
+            last_temp = FOSQuantity(25,FOSTempUnit("C"))
+
+        last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
+
+        delta_temp = self.get_temp(temp_units)-last_temp
+        time = self.get_time(time_units)
+        rate = delta_temp / time
+        return rate
+
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        return cls(blockDict, _dispatched=True)
+
+    @_calc_routine()
+    def add_missing_parameter(self):
+        rate = self.get_rate()
+        self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoRate.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoRate.add_missing_parameter" class="doc doc-heading">
+            <code class="highlight language-python">add_missing_parameter()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_missing_parameter(self):
+    rate = self.get_rate()
+    self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoRate.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    return cls(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.RampNoRate.get_rate" class="doc doc-heading">
+            <code class="highlight language-python">get_rate(temp_units='C', time_units='h')</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_rate(self, temp_units="C", time_units="h"):
+    from ..parsing.validators.units import FOSQuantity, temp_rate_unit, FOSTempUnit
+    try:
+        ramp_set = self._parent_block.get_any(type="ramp")
+        self_idx = ramp_set.index(self)
+        if self_idx == 0:
+            last_temp = self._parent_block._parent_block.start_temp
+        else:
+            last_temp = ramp_set[self_idx-1].get_temp(temp_units)
+    except:
+        last_temp = FOSQuantity(25,FOSTempUnit("C"))
+
+    last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
+
+    delta_temp = self.get_temp(temp_units)-last_temp
+    time = self.get_time(time_units)
+    rate = delta_temp / time
+    return rate</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="dwell"><code>Dwell</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.Dwell"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.AnnealSection" href="#FoSpy.blocks.treatments.AnnealSection">AnnealSection</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Dwell(AnnealSection):
+    dispatch = {}
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        return cls(blockDict, _dispatched=True)</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.Dwell.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Dwell.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    return cls(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="quench"><code>Quench</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.Quench"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.treatments.AnnealSection" href="#FoSpy.blocks.treatments.AnnealSection">AnnealSection</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Quench(AnnealSection):
+    dispatch = {}
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        return cls(blockDict, _dispatched=True)</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy.blocks.treatments.Quench.dispatch" class="doc doc-heading">
+            <code class="highlight language-python">dispatch = {}</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.Quench.dispatch_subclass" class="doc doc-heading">
+            <code class="highlight language-python">dispatch_subclass(blockDict)</code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@classmethod
+def dispatch_subclass(cls, blockDict):
+    return cls(blockDict, _dispatched=True)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="annealprogram"><code>AnnealProgram</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.treatments.AnnealProgram"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.ListBlock" href="../blocks/#FoSpy.blocks.blocks.ListBlock">ListBlock</a></code></p>
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+                <pre class="highlight"><code class="language-python">class AnnealProgram(ListBlock):
+    _reqCls = AnnealSection
+    def append(self, obj):
+        super().append(obj)
+        if hasattr(self, "_parent_block") and self._parent_block is not None:
+            self._parent_block.build_profile()
+
+    @_calc_routine()
+    def add_all_missing_parameters(self):
+        for section in self:
+            if hasattr(section, "add_missing_parameter"):
+                section.add_missing_parameter()</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealProgram.add_all_missing_parameters" class="doc doc-heading">
+            <code class="highlight language-python">add_all_missing_parameters()</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_all_missing_parameters(self):
+    for section in self:
+        if hasattr(section, "add_missing_parameter"):
+            section.add_missing_parameter()</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.treatments.AnnealProgram.append" class="doc doc-heading">
+            <code class="highlight language-python">append(obj)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/treatments.py</code></summary>
+              <pre class="highlight"><code class="language-python">def append(self, obj):
+    super().append(obj)
+    if hasattr(self, "_parent_block") and self._parent_block is not None:
+        self._parent_block.build_profile()</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../template/" class="btn btn-neutral float-left" title="template"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../full/" class="btn btn-neutral float-right" title="Full Docs Home">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../template/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../full/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

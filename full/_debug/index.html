@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>_debug - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "_debug";
+        var mkdocs_page_input_path = "full/_debug.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">_debug</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.DEBUG_WIDTH">DEBUG_WIDTH</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug._debug">_debug</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.Debug">Debug</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.label">label</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.label_width">label_width</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.module_name">module_name</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.on">on</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.__init__">__init__</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.msg">msg</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#FoSpy._debug.Debug.pmsg">pmsg</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug._find_debugs">_find_debugs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.all_debugs_off">all_debugs_off</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.all_debugs_on">all_debugs_on</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.debug_status">debug_status</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#FoSpy._debug.deep_diff">deep_diff</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Full Documentation</li>
+      <li class="breadcrumb-item active">_debug</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>Full documentation pages are generated for docstring
+reference only and may contain symbols imported from other
+modules. Imported symbols are not distinguished from locally
+defined symbols and will appear in any module that they are
+imported into. For better information on where symbols should
+be imported from, <a href="https://github.com/errthumt/FoSpy/tree/main/src/FoSpy">review the sourcecode on the
+github.</a></p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="FoSpy._debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-module-name">FoSpy._debug</span>
+
+
+</h2>
+
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy._debug.DEBUG_WIDTH" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">DEBUG_WIDTH</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">DEBUG_WIDTH = 120</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="FoSpy._debug._debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">_debug</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">_debug = Debug()</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="FoSpy._debug.Debug" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">Debug</span>
+
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Debug:
+    def __init__(self):
+        self.on = False
+
+        frame = inspect.currentframe().f_back
+        self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+        self.label = f"|(Debug message from {self.module_name})"
+        self.label_width = len(self.label)
+
+    def _get_text_width(self, module=None):
+        if module:
+            label = f"|(Debug message from {module} via {self.module_name})"
+            label_width = len(label)
+        else:
+            label = self.label
+            label_width = self.label_width
+
+        text_width = DEBUG_WIDTH - label_width
+        return text_width, label, label_width
+
+
+    def msg(self,msg, module=None):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        wrapped = textwrap.fill(str(msg), width=text_width)
+
+        for line in wrapped.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')
+
+    def pmsg(self,msg,module=None,**kwargs):
+        if not self.on:
+            return
+
+        text_width, label, label_width = self._get_text_width(module)
+
+        buf = io.StringIO()
+        pprint(msg,stream=buf, width=text_width,**kwargs)
+        txt = buf.getvalue()
+        for line in txt.splitlines():
+            print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy._debug.Debug.label" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label = f'|(Debug message from {module_name})'</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy._debug.Debug.label_width" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">label_width</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">label_width = len(label)</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy._debug.Debug.module_name" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">module_name</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">module_name = get('__name__', '&lt;unknown&gt;')</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h4 id="FoSpy._debug.Debug.on" class="doc doc-heading">
+            <span class="doc doc-object-name doc-attribute-name">on</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">on = False</code></pre>
+
+    <div class="doc doc-contents ">
+
+    </div>
+
+</div>
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy._debug.Debug.__init__" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">__init__</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">__init__()</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def __init__(self):
+    self.on = False
+
+    frame = inspect.currentframe().f_back
+    self.module_name = frame.f_globals.get("__name__", "&lt;unknown&gt;")
+    self.label = f"|(Debug message from {self.module_name})"
+    self.label_width = len(self.label)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy._debug.Debug.msg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">msg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">msg(msg, module=None)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def msg(self,msg, module=None):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    wrapped = textwrap.fill(str(msg), width=text_width)
+
+    for line in wrapped.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy._debug.Debug.pmsg" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">pmsg</span>
+
+
+</h4>
+<pre class="highlight"><code class="language-python doc-signature">pmsg(msg, module=None, **kwargs)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def pmsg(self,msg,module=None,**kwargs):
+    if not self.on:
+        return
+
+    text_width, label, label_width = self._get_text_width(module)
+
+    buf = io.StringIO()
+    pprint(msg,stream=buf, width=text_width,**kwargs)
+    txt = buf.getvalue()
+    for line in txt.splitlines():
+        print(f'{line:&lt;{text_width}}{label:&gt;{label_width}}')</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy._debug._find_debugs" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">_find_debugs</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">_find_debugs()</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _find_debugs():
+    results = []
+    for name, module in sys.modules.items():
+        # Some entries in sys.modules are None (partially imported modules)
+        if module is None:
+            continue
+
+        if hasattr(module, "_debug"):
+            results.append((name, module._debug))
+    return results</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy._debug.all_debugs_off" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">all_debugs_off</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">all_debugs_off(soundoff=True)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def all_debugs_off(soundoff=True):
+    all_debugs_on(soundoff=False)
+    for module, debug_obj in _find_debugs():
+        if hasattr(debug_obj,"on"):
+            if soundoff:
+                debug_obj.msg("Turning Debug Off")
+            debug_obj.on = False         </code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy._debug.all_debugs_on" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">all_debugs_on</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">all_debugs_on(soundoff=True)</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def all_debugs_on(soundoff=True):
+    for module, debug_obj in _find_debugs():
+        if hasattr(debug_obj,"on"):
+            debug_obj.on = True
+            if soundoff:
+                debug_obj.msg("Turning Debug On")</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy._debug.debug_status" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">debug_status</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">debug_status()</code></pre>
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def debug_status():
+    results = []
+    for module, debug_obj in _find_debugs():
+        if hasattr(debug_obj,"on"):
+            results.append((module, 'ON' if debug_obj.on else "OFF"))
+    return results</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="FoSpy._debug.deep_diff" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">deep_diff</span>
+
+
+</h3>
+<pre class="highlight"><code class="language-python doc-signature">deep_diff(d1, d2, path='', suppress_routine_paths=False)</code></pre>
+
+    <div class="doc doc-contents ">
+
+        <p>Recursively diff two nested dict/list structures.
+Ignores:
+  - calculated comments (strings starting with SYNTAX["calc_comment"]["prefix"])
+  - whitespace-only differences in strings
+  - empty _fos_comments entries
+Optionally ignores:
+  - any differences under meta_keys["routine_paths"]</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/_debug.py</code></summary>
+              <pre class="highlight"><code class="language-python">def deep_diff(d1, d2, path="", suppress_routine_paths=False):
+    """
+    Recursively diff two nested dict/list structures.
+    Ignores:
+      - calculated comments (strings starting with SYNTAX["calc_comment"]["prefix"])
+      - whitespace-only differences in strings
+      - empty _fos_comments entries
+    Optionally ignores:
+      - any differences under meta_keys["routine_paths"]
+    """
+    from .parsing.syntax import SYNTAX, meta_keys
+    calc_prefix = SYNTAX["calc_comment"]["prefix"]
+    diffs = []
+
+    # -----------------------------
+    # Helpers
+    # -----------------------------
+
+    def is_calc_comment(x):
+        return isinstance(x, str) and x.strip().startswith(calc_prefix)
+
+    def normalize_ws(x):
+        if isinstance(x, str):
+            return x.strip()
+        return x
+
+    def is_ws_only_diff(a, b):
+        if not isinstance(a, str) or not isinstance(b, str):
+            return False
+        return a.strip() == b.strip()
+
+    def is_empty_comment_list(path, d1, d2):
+        if meta_keys["comments"] not in path:
+            return False
+        if d1 is None or d2 is None:
+            return True
+        if isinstance(d1, list) and isinstance(d2, list):
+            return len(d1) == 0 and len(d2) == 0
+        return False
+
+    def is_routine_path(p):
+        """True if this diff path belongs to any routine-path key."""
+        return any(rp in p for rp in meta_keys["routine_paths"])
+
+    # -----------------------------
+    # Case 1 — both dicts
+    # -----------------------------
+    if isinstance(d1, dict) and isinstance(d2, dict):
+
+        # keys only in d1
+        for k in d1.keys() - d2.keys():
+            p = f"{path}/{k}"
+            if suppress_routine_paths and is_routine_path(p):
+                continue
+            if not is_empty_comment_list(p, d1.get(k), None):
+                diffs.append(f"{p}: missing in d2")
+
+        # keys only in d2
+        for k in d2.keys() - d1.keys():
+            p = f"{path}/{k}"
+            if suppress_routine_paths and is_routine_path(p):
+                continue
+            if not is_empty_comment_list(p, None, d2.get(k)):
+                diffs.append(f"{p}: missing in d1")
+
+        # keys in both
+        for k in d1.keys() &amp; d2.keys():
+            diffs.extend(
+                deep_diff(
+                    d1[k],
+                    d2[k],
+                    f"{path}/{k}",
+                    suppress_routine_paths=suppress_routine_paths
+                )
+            )
+
+        return diffs
+
+    # -----------------------------
+    # Case 2 — both lists
+    # -----------------------------
+    if isinstance(d1, list) and isinstance(d2, list):
+        # Filter out calculated comments
+        f1 = [x for x in d1 if not is_calc_comment(x)]
+        f2 = [x for x in d2 if not is_calc_comment(x)]
+
+        # length mismatch
+        if len(f1) != len(f2):
+            if not (suppress_routine_paths and is_routine_path(path)):
+                diffs.append(f"{path}: list length {len(f1)} != {len(f2)}")
+            min_len = min(len(f1), len(f2))
+        else:
+            min_len = len(f1)
+
+        # compare element‑wise
+        for i in range(min_len):
+            diffs.extend(
+                deep_diff(
+                    f1[i],
+                    f2[i],
+                    f"{path}[{i}]",
+                    suppress_routine_paths=suppress_routine_paths
+                )
+            )
+
+        return diffs
+
+    # -----------------------------
+    # Case 3 — scalar mismatch
+    # -----------------------------
+    if d1 != d2:
+
+        # Ignore calculated comments
+        if is_calc_comment(d1) or is_calc_comment(d2):
+            return diffs
+
+        # Ignore whitespace-only differences
+        if is_ws_only_diff(d1, d2):
+            return diffs
+
+        # Compare normalized whitespace versions
+        if normalize_ws(d1) == normalize_ws(d2):
+            return diffs
+
+        # Suppress routine-path diffs if requested
+        if suppress_routine_paths and is_routine_path(path):
+            return diffs
+
+        diffs.append(f"{path}: {d1!r} != {d2!r}")
+
+    return diffs</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../" class="btn btn-neutral float-left" title="Full Docs Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../core/" class="btn btn-neutral float-right" title="core">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../core/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>embedded - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "embedded";
+        var mkdocs_page_input_path = "blocks/embedded.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">embedded</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#methods-attached-to-any-object">Methods attached to any object</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#add_commentsself_attr-comments">add_comments(self_attr, *comments)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.blocks._add_comments_to_parent">_add_comments_to_parent</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#clear_commentsself_attr">clear_comments(self_attr)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.blocks._clear_comments_from_parent">_clear_comments_from_parent</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#block-types-in-this-module">Block Types in this Module</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#embeddedcif">EmbeddedCIF</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF">EmbeddedCIF</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF.get_pattern">get_pattern</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF.quick_pattern">quick_pattern</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#embeddedfile">EmbeddedFile</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedFile">EmbeddedFile</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedFile.serialize">serialize</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Block Modules</li>
+      <li class="breadcrumb-item active">embedded</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="fospyblocksembedded"><code>FoSpy.blocks.embedded</code></h1>
+<p>This site only contains documentation for the
+<a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.Block"><code>Block</code></a> subclasses defined in this
+module, not the entire module API. For a complete reference of
+all functions, classes, and variables, see the <a href="../../full/">full API
+documentation</a>.</p>
+<h2 id="methods-attached-to-any-object">Methods attached to any object</h2>
+<p>When <a class="autorefs autorefs-internal" title="__setattr__(name, value)" href="../blocks/#FoSpy.blocks.blocks.SingleBlock.__setattr__">assigning an object as an
+attribute</a>,
+<code>SingleBlock</code>s attach special methods that are used to edit
+their own comment metadata.</p>
+<hr />
+<h3 id="add_commentsself_attr-comments"><code>add_comments(self_attr, *comments)</code></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="FoSpy.blocks.blocks._add_comments_to_parent"></a>
+    <div class="doc doc-contents first">
+
+        <p>Method attached to any <a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.SingleBlock"><code>SingleBlock</code></a>
+attribute as <code>add_comments(self_attr, *comments)</code>. Mutates the parent
+<code>SingleBlock</code>'s comments metadata under the assigned attribute name.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <pre><code>my_synthesis.materials.add_comments(&quot;A comment on the materials header&quot;)
+my_synthesis._meta.comments
+# returns: 
+#       {&quot;materials&quot;:
+#           [
+#               &quot;an older comment&quot;, 
+#               &quot;A comment on the materials header&quot;
+#           ]
+#       }
+</code></pre>
+</details>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>*comments</code></b>
+                  (<code><span title="str">str</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Comments to attach to the assigned attribute name in
+the parent block's metadata. Comments are printed above
+their attached attribute when saving in the FOS format.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/blocks.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _add_comments_to_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `add_comments(self_attr, *comments)`. Mutates the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis.materials.add_comments("A comment on the materials header")
+        my_synthesis._meta.comments
+        # returns: 
+        #       {"materials":
+        #           [
+        #               "an older comment", 
+        #               "A comment on the materials header"
+        #           ]
+        #       }
+        ```
+
+    Args:
+        *comments (str):
+            Comments to attach to the assigned attribute name in
+            the parent block's metadata. Comments are printed above
+            their attached attribute when saving in the FOS format.
+    """
+    def func(self_attr, *comments):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments.setdefault(attr_name,[])
+        for comment in comments:
+            parent_comments[attr_name].append(str(comment))
+    return func</code></pre>
+            </details>
+    </div>
+
+</div><hr />
+<h3 id="clear_commentsself_attr"><code>clear_comments(self_attr)</code></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<a id="FoSpy.blocks.blocks._clear_comments_from_parent"></a>
+    <div class="doc doc-contents first">
+
+        <p>Method attached to any <a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.SingleBlock"><code>SingleBlock</code></a>
+attribute as <code>clear_comments(self_attr)</code>. Clears the parent
+<code>SingleBlock</code>'s comments metadata under the assigned attribute name.</p>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <pre><code>my_synthesis._meta.comments[&quot;materials&quot;]
+# returns [&quot;This comment was read from a FOS file&quot;]
+
+my_synthesis.materials.clear_comments()
+my_synthesis._meta.comments[&quot;materials&quot;]
+# now returns []
+</code></pre>
+</details>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/blocks.py</code></summary>
+              <pre class="highlight"><code class="language-python">def _clear_comments_from_parent(attr_name):
+    """
+    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
+    attribute as `clear_comments(self_attr)`. Clears the parent
+    `SingleBlock`'s comments metadata under the assigned attribute name.
+
+    Example:
+        ```
+        my_synthesis._meta.comments["materials"]
+        # returns ["This comment was read from a FOS file"]
+
+        my_synthesis.materials.clear_comments()
+        my_synthesis._meta.comments["materials"]
+        # now returns []
+        ```
+    """
+    def func(self_attr):
+        parent_comments = self_attr._parent_block._meta.comments
+        parent_comments[attr_name] = []
+    return func</code></pre>
+            </details>
+    </div>
+
+</div><hr />
+<h2 id="block-types-in-this-module">Block Types in this Module</h2>
+<hr />
+<h3 id="embeddedcif"><code>EmbeddedCIF</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.embedded.EmbeddedCIF"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.embedded.EmbeddedFile" href="#FoSpy.blocks.embedded.EmbeddedFile">EmbeddedFile</a></code></p>
+
+
+
+        <p>Represents a CIF file embedded as a block in a FOS file.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
+                <pre class="highlight"><code class="language-python">class EmbeddedCIF(EmbeddedFile):
+    """
+    Represents a CIF file embedded as a block in a FOS file.
+    """
+
+    def get_pattern(self,**kwargs):
+        from cif2xrd.pattern import simPattern
+        self._write_to_temp()
+
+        sim = simPattern(cif_path=self._temppath, **kwargs)
+
+        return sim.two_theta, sim.intensity
+
+    def quick_pattern(self,subprocess=False, **kwargs):
+        import matplotlib.pyplot as plt
+        from ..plotting.EmbeddedCIF import _quick_pattern
+        two_theta, intensity = self.get_pattern(**kwargs)
+
+        if subprocess:
+            return self._subprocess(_quick_pattern,args=(two_theta, intensity))
+
+        return _quick_pattern(two_theta, intensity)</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.embedded.EmbeddedCIF.get_pattern" class="doc doc-heading">
+            <code class="highlight language-python">get_pattern(**kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
+              <pre class="highlight"><code class="language-python">def get_pattern(self,**kwargs):
+    from cif2xrd.pattern import simPattern
+    self._write_to_temp()
+
+    sim = simPattern(cif_path=self._temppath, **kwargs)
+
+    return sim.two_theta, sim.intensity</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.embedded.EmbeddedCIF.quick_pattern" class="doc doc-heading">
+            <code class="highlight language-python">quick_pattern(subprocess=False, **kwargs)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
+              <pre class="highlight"><code class="language-python">def quick_pattern(self,subprocess=False, **kwargs):
+    import matplotlib.pyplot as plt
+    from ..plotting.EmbeddedCIF import _quick_pattern
+    two_theta, intensity = self.get_pattern(**kwargs)
+
+    if subprocess:
+        return self._subprocess(_quick_pattern,args=(two_theta, intensity))
+
+    return _quick_pattern(two_theta, intensity)</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div><hr />
+<h3 id="embeddedfile"><code>EmbeddedFile</code></h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="FoSpy.blocks.embedded.EmbeddedFile"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.SingleBlock" href="../blocks/#FoSpy.blocks.blocks.SingleBlock">SingleBlock</a></code></p>
+
+
+
+        <p>Represents an non-FOS file embedded as a block in a FOS file.</p>
+
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
+                <pre class="highlight"><code class="language-python">class EmbeddedFile(SingleBlock):
+    """
+    Represents an non-FOS file embedded as a block in a FOS file.
+    """
+    def _write_to_temp(self, encoding="utf-8"):
+        self._temppath = self.find_temppath() / f"{self.file_name}{self.extension}"
+        with open(self._temppath, "w", encoding=encoding) as f:
+            for line in self.embedded:
+                f.write(line.rstrip("\r\n") + "\n")
+
+
+    def serialize(self,keepListType=False, clean=False):
+        """
+        Performs the default `SingleBlock` serialization, but restores the
+        "embedded" key to the full list of embedded lines instead of a string.
+        """
+        serial = super().serialize(keepListType, clean=clean)
+        serial["embedded"] = self.embedded.copy()
+        return serial</code></pre>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.embedded.EmbeddedFile.serialize" class="doc doc-heading">
+            <code class="highlight language-python">serialize(keepListType=False, clean=False)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Performs the default <code>SingleBlock</code> serialization, but restores the
+"embedded" key to the full list of embedded lines instead of a string.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
+              <pre class="highlight"><code class="language-python">def serialize(self,keepListType=False, clean=False):
+    """
+    Performs the default `SingleBlock` serialization, but restores the
+    "embedded" key to the full list of embedded lines instead of a string.
+    """
+    serial = super().serialize(keepListType, clean=clean)
+    serial["embedded"] = self.embedded.copy()
+    return serial</code></pre>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data/" class="btn btn-neutral float-left" title="data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../files/" class="btn btn-neutral float-right" title="files">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../files/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

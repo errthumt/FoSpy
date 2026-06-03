@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Expected Properties - FoSpy Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+        <link href="../stylesheets/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Expected Properties";
+        var mkdocs_page_input_path = "expected/index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> FoSpy Documentation
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/synthesis/">Synthesis Files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../examples/templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Expected Properties</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dispatching-subclasses">Dispatching Subclasses</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#listblock-and-simple-lists">ListBlock and Simple Lists</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#templatelists">TemplateLists</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#modifying-property-validation-at-runtime">Modifying Property Validation at Runtime</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#python">Python</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#new-fos-block">New FOS Block</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/">What is a Block?</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/blocks/">blocks</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/data/">data</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/files/">files</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/materials/">materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/metadata/">metadata</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/synthesis/">synthesis</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/template/">template</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../blocks/treatments/">treatments</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/">Full Docs Home</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/_debug/">_debug</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../full/core/">core</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/_blockUtils/">_blockUtils</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/blocks/">blocks</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/data/">data</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/embedded/">embedded</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/files/">files</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/materials/">materials</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/metadata/">metadata</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/synthesis/">synthesis</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/template/">template</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/blocks/treatments/">treatments</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/json/utils/">utils</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/format_fos/">format_fos</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/read/">read</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/regex/">regex</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/syntax/">syntax</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/validation/">validation</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../full/parsing/write/">write</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/filenames/">filenames</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/material/">material</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/numbers/">numbers</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/rename/">rename</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../full/parsing/validators/units/">units</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">FoSpy Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Property Documentation</li>
+      <li class="breadcrumb-item active">Expected Properties</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="object-construction-and-property-validation-for-files-of-synthesis-fos">Object Construction and Property Validation for Files of Synthesis (FOS)</h1>
+<h2 id="introduction">Introduction</h2>
+<p>During construction of a parsed FOS into a Synthesis object, or when reassigning a property of an exising object, most classes have properties that should be expected in a certain format, or might contain nested objects with their own properties. The parsed properties are passed as either strings or (in the case of nested objects) a <code>list</code> or <code>dict</code> structure to the validation routine mapped to them in <code>FoSpy.parsing.validation.py</code>. In the case of nested objects, the validation routine is usually the constructor of the required object.</p>
+<p>Classes can have required properties, which must be present at read time, or optional properties, which have validation routines but might not be expected for all syntheses.</p>
+<p>During attribute assignment, expected properties are built up in order of parent classes. Any subclass inherits all the expected properties of its parent classes, but they may be overwritten to other validators.</p>
+<h2 id="dispatching-subclasses">Dispatching Subclasses</h2>
+<p>Properties marked with (dispatched) are used to identify and delegate construction to the respective subclass. A class with a dispatch key is rarely constructed as itself, but may be used to inherit methods or required/optional properties.</p>
+<h2 id="listblock-and-simple-lists"><code>ListBlock</code> and Simple Lists</h2>
+<p><code>ListBlock</code> subclasses do not have required properties. Instead, they are a rich list of objects with a certain required <code>SingleBlock</code> subclass. Some <code>ListBlock</code> subclasses have their own methods and unique attributes. If a <code>ListBlock</code> is required for a given <code>SingleBlock</code> subclass but it doesn't need any method or attribute overrides, it can be instantiated with the class method <code>ListBlock.Simple(SingleBlockSubclass)</code> (referred to below as a "simple list").</p>
+<h3 id="templatelists"><code>TemplateList</code>s</h3>
+<p><code>TemplateList</code> is a unique subclass of <code>ListBlock</code> used for storing <a href="#templateblock"><code>TemplateBlock</code> subclass objects</a>. <code>TemplateList</code> has a class method <code>Simple()</code> similar to <code>ListBlock</code>'s method, but instead of full objects (e.g. <code>Material</code>), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for <code>TemplateList</code> entries can be found in the <a href="../examples/templates/">API script example</a>.</p>
+<h2 id="modifying-property-validation-at-runtime">Modifying Property Validation at Runtime</h2>
+<p>The intent of the FOS is to be as flexible as possible while still enforcing standards for fully capturing a synthetic method. However, it may be necessary for private or niche applications to modify standards to match your own synthesis. This can be done by mutating the dictionaries in <code>FoSpy.parsing.validation</code> at the start of your script. The example below creates a new block type with its own expected properties, and then adds it as an optional top-level block for a synthesis file.</p>
+<p>These modifications should be reserved for very unique and isolated cases. If you are modifying standards in a significant way, or such that may be applicable for other researchers, consider reaching out to <code>FoSpy</code> developers or creating a fork of the API.</p>
+<h3 id="python">Python</h3>
+<pre><code class="language-python">import FoSpy.parsing.validation as vd
+from FoSpy.blocks import (
+    blocks.SingleBlock as SingleBlock
+    synthesis.Synthesis as Synthesis
+)
+
+
+class MySpecialBlock(SingleBlock):
+    pass
+
+vd.required_keys[MySpecialBlock] = {
+    &quot;special_prop1&quot;: str
+    &quot;special_prop2&quot;: float
+}
+
+vd.optional_keys[Synthesis][&quot;special&quot;] = MySpecialBlock
+</code></pre>
+<h3 id="new-fos-block">New FOS Block</h3>
+<pre><code class="language-fos">[Special]
+special_prop1: foobar
+special_prop2: 6.022
+</code></pre>
+<hr />
+<h1 id="expected-property-tables">Expected Property Tables</h1>
+<h2 id="annealsection"><code>AnnealSection</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.AnnealSection">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td><code>str</code> (dispatched)</td>
+<td>Examples: <code>"dwell", "ramp", "quench"</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="annealing"><code>Annealing</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.Annealing">Class Documentation</a></p>
+<p><strong><a href="#treatment">Subclass of <code>Treatment</code></a></strong></p>
+<h3 id="required-properties_1">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>program</td>
+<td><code>AnnealProgram</code></td>
+<td>A <a href="#listblock-and-simple-lists">specialized <code>ListBlock</code></a> of <a href="#annealsection"><code>AnnealSection</code> objects</a></td>
+</tr>
+<tr>
+<td>start_temp</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>The initial temperature of the annealing profile</td>
+</tr>
+<tr>
+<td>start_temp_unit</td>
+<td><code>validators.units.FOSTempUnit</code></td>
+<td><code>FOSTempUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> which allows a little more coersion of temperature units. (Like recognizing <code>"C"</code> as degrees celsius as opposed to coulombs)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gas_flow</td>
+<td><code>FlowList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#singleblock-method-subclasses"><code>GasFlow</code> objects</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dwell"><code>Dwell</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.Dwell">Class Documentation</a></p>
+<p><strong><a href="#annealsection">Subclass of <code>AnnealSection</code></a></strong></p>
+<h3 id="required-properties_2">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>time</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>How long the temperature was kept constant in this section.</td>
+</tr>
+<tr>
+<td>time_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims('[time]')</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="embeddedfile"><code>EmbeddedFile</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/embedded/#FoSpy.blocks.embedded.EmbeddedFile">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_3">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>file_name</td>
+<td><code>validators.filenames.file_name</code></td>
+<td>Name of the embedded file</td>
+</tr>
+<tr>
+<td>extension</td>
+<td><code>validators.filenames.file_extension</code></td>
+<td>File extension</td>
+</tr>
+<tr>
+<td>embedded</td>
+<td><code>list</code></td>
+<td>A list of raw lines read directly from the FOS file which can be unpacked to a temporary file during runtime for reading as the original filetype.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="embeddedfile-method-subclasses"><code>EmbeddedFile</code> Method Subclasses</h3>
+<p>These subclasses don't have any additional required properties but will either be given additional requirements in the future or have specialized methods.</p>
+<ul>
+<li><code>EmbeddedCIF</code></li>
+</ul>
+<hr />
+<h2 id="experimenter"><code>Experimenter</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#FoSpy.blocks.metadata.Experimenter">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_4">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>str</code></td>
+<td>Name of the experimenter</td>
+</tr>
+<tr>
+<td>affiliation</td>
+<td><code>str</code></td>
+<td>Lab/University/Research Group/etc.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_1">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>orcid</td>
+<td><code>str</code></td>
+<td>The experimenter's <a href="https://orcid.org/">ORCID</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="material"><code>Material</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/materials/#FoSpy.blocks.materials.Material">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_5">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>str</code></td>
+<td>Identifiable name for the material</td>
+</tr>
+<tr>
+<td>type</td>
+<td><code>str</code></td>
+<td>How it was used in the synthesis (e.g., reagent, flux, solvent)</td>
+</tr>
+<tr>
+<td>formula</td>
+<td><code>ChemFormula</code></td>
+<td>Chemical composition written in a <a href="https://pypi.org/project/chemformula/">ChemFormula</a> compatible format</td>
+</tr>
+<tr>
+<td>supplier</td>
+<td><code>str</code></td>
+<td>Source of purchase/synthesis (may be internal)</td>
+</tr>
+<tr>
+<td>cas</td>
+<td><code>str</code></td>
+<td>CAS ID. May be "unknown"</td>
+</tr>
+<tr>
+<td>form</td>
+<td><code>str</code></td>
+<td>Physical shape or state of the material <strong>at time of acquisition</strong> (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the <em>material's</em> treatments property (not the synthesis treatments).</td>
+</tr>
+<tr>
+<td>env</td>
+<td><code>str</code></td>
+<td>What environment the material is stored in. (e.g., ambient, Ar(g))</td>
+</tr>
+<tr>
+<td>amount</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>Amount that was used.</td>
+</tr>
+<tr>
+<td>amount_unit</td>
+<td><code>str</code></td>
+<td>Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_2">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>purity</td>
+<td><code>validators.numbers.decimal_range</code></td>
+<td>0 &lt; purity \&lt;= 1</td>
+</tr>
+<tr>
+<td>treatments</td>
+<td><code>ListBlock.Simple(Treatment)</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#treatment"><code>Treatment</code> objects</a><br>Any modifications to the material between acquisition and use in the synthesis.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="metadata"><code>MetaData</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#FoSpy.blocks.metadata.MetaData">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_6">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>str</code></td>
+<td>Identifiable name for the synthesis or sample</td>
+</tr>
+<tr>
+<td>date</td>
+<td><code>str</code></td>
+<td>What date the synthesis was started</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="product"><code>Product</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#FoSpy.blocks.metadata.Product">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_7">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>str</code></td>
+<td>Identifiable name for the product.</td>
+</tr>
+<tr>
+<td>expected</td>
+<td><code>bool</code></td>
+<td>Whether or not it was expected from the synthesis.</td>
+</tr>
+<tr>
+<td>obtained</td>
+<td><code>bool</code></td>
+<td>Whether or not it was obtained from the synthesis.</td>
+</tr>
+<tr>
+<td>formula</td>
+<td><code>ChemFormula</code></td>
+<td>Chemical composition written in a <a href="https://pypi.org/project/chemformula/">ChemFormula</a> compatible format.</td>
+</tr>
+<tr>
+<td>observations</td>
+<td><code>str</code></td>
+<td>General observations about the product.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_3">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>expected_amount</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>How much of the product was nominally expected to be obtained from the synthesis.</td>
+</tr>
+<tr>
+<td>expected_amount_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)</td>
+</tr>
+<tr>
+<td>obtained_amount</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>How much of the product was actually obtained from the synthesis.</td>
+</tr>
+<tr>
+<td>obtained_amount_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)</td>
+</tr>
+<tr>
+<td>characterizations</td>
+<td><code>str</code></td>
+<td>Description of characterization methods used to determine/quantitate the product.</td>
+</tr>
+<tr>
+<td>structure_comments</td>
+<td><code>str</code></td>
+<td>General description on the structure of the product.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="quench"><code>Quench</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.Quench">Class Documentation</a></p>
+<p><strong><a href="#annealsection">Subclass of <code>AnnealSection</code></a></strong></p>
+<h3 id="required-properties_8">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>medium</td>
+<td><code>str</code></td>
+<td>What medium the reaction vessel was quenched in (e.g., water, air).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ramp"><code>Ramp</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.Ramp">Class Documentation</a></p>
+<p><strong><a href="#annealsection">Subclass of <code>AnnealSection</code></a></strong></p>
+<h3 id="required-properties_9">Required properties</h3>
+<p>During construction of a <code>Ramp</code> object, it is required to have at least 2 of the following optional properties, with their respective units:</p>
+<ul>
+<li><code>temp</code></li>
+<li><code>time</code></li>
+<li><code>rate</code></li>
+</ul>
+<p>If all three are provided, the last one found during reading will be discarded as redundant data, and the object is <a href="#dispatching-subclasses">dipatched</a> to a <code>Ramp</code> subclass with a "retrieval" method for calculating the missing property (e.g., <code>get_temp()</code>, <code>get_time()</code>, or <code>get_rate()</code>) When working with <code>Ramp</code> objects in the API, it is best practice to always use the "retrieval" methods. For subclasses that <em>do</em> have the desired property, retrieval methods default to returning it directly.</p>
+<h3 id="optional-properties_4">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>temp</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>The next temperature in the program</td>
+</tr>
+<tr>
+<td>time</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>How long it took to get from the last temperature to the new temperature.</td>
+</tr>
+<tr>
+<td>rate</td>
+<td><code>validators.numbers.any_decimal</code></td>
+<td>The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -&gt; positive, Decrease -&gt; negative)</td>
+</tr>
+<tr>
+<td>temp_unit</td>
+<td><code>validators.units.FOSTempUnit</code></td>
+<td><code>FOSTempUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> which allows a little more coersion of temperature units. (Like recognizing <code>"C"</code> as degrees celsius as opposed to coulombs)</td>
+</tr>
+<tr>
+<td>time_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims("[time]")</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
+</tr>
+<tr>
+<td>rate_unit</td>
+<td><code>validators.units.temp_rate_unit</code></td>
+<td>Makes use of <a href="https://pint.readthedocs.io/en/stable/"><code>pint</code>'s dimensionality properties</a> to verify that the value is a unit of temperature over time.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="reaction"><code>Reaction</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#FoSpy.blocks.metadata.Reaction">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_10">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nominal_formula</td>
+<td><code>ChemFormula</code></td>
+<td>Chemical composition written in a <a href="https://pypi.org/project/chemformula/">ChemFormula</a> compatible format</td>
+</tr>
+<tr>
+<td>nominal_amount</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>Total amount expected to be recovered from all participating reactants.</td>
+</tr>
+<tr>
+<td>nominal_amount_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="singleblock"><code>SingleBlock</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/blocks/#FoSpy.blocks.blocks.SingleBlock">Class Documentation</a></p>
+<p><strong>Parent Block Class</strong></p>
+<h3 id="required-properties_11">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ext</td>
+<td><code>SubContainer</code></td>
+<td><strong>Not to be passed to constructor. This property is automatically created</strong>. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_5">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rename</td>
+<td><code>validators.rename.rename_dict</code></td>
+<td>A dictionary of old_name:new_name pairs for renaming properties within the <code>SingleBlock</code> subclass while keeping them in sync with their validators. Refer to the <a href="../examples/API_example/">API script example</a> for usage.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="singleblock-method-subclasses">SingleBlock Method Subclasses</h3>
+<p>These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.</p>
+<ul>
+<li><code>GasFlow</code>: For specifying gas flow rates during an annealing treatment (to be expanded).</li>
+<li><code>LabConditions</code>: For specifying laboratory conditions during the synthesis (to be expanded).</li>
+<li><code>Equipment</code>: For specifying specialized laboratory equipment used in the synthesis (to be expanded).</li>
+<li><code>FileBlock</code>: Subclasses of <code>FileBlock</code> are intended to be the main/top-level block of a FOS file (e.g., <code>Synthesis</code>, <code>TemplateSet</code>).</li>
+</ul>
+<hr />
+<h2 id="synthesis"><code>Synthesis</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/synthesis/#FoSpy.blocks.synthesis.Synthesis">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>FileBlock</code></a></strong></p>
+<h3 id="required-properties_12">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>metadata</td>
+<td><code>MetaData</code></td>
+<td><a href="#metadata">Metadata for the synthesis file</a></td>
+</tr>
+<tr>
+<td>experimenters</td>
+<td><code>ExperimenterList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#experimenter"><code>Experimenter</code> objects</a></td>
+</tr>
+<tr>
+<td>reaction</td>
+<td><code>Reaction</code></td>
+<td><a href="#reaction">General reaction information</a></td>
+</tr>
+<tr>
+<td>products</td>
+<td><code>ProductList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#product"><code>Product</code> objects</a></td>
+</tr>
+<tr>
+<td>materials</td>
+<td><code>MaterialList</code></td>
+<td>A <a href="#listblock-and-simple-lists">specialized <code>ListBlock</code></a> of <a href="#material"><code>Material</code> objects</a></td>
+</tr>
+<tr>
+<td>treatments</td>
+<td><code>TreatmentList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#treatment"><code>Treatment</code> objects</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_6">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cif</td>
+<td><code>EmbeddedCIF</code></td>
+<td><a href="#embeddedfile-method-subclasses">A single embedded CIF file</a></td>
+</tr>
+<tr>
+<td>cifs</td>
+<td><code>ListBlock.Simple(EmbeddedCIF)</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#embeddedfile-method-subclasses"><code>EmbeddedCIF</code> objects</a></td>
+</tr>
+<tr>
+<td>laboratory_conditions</td>
+<td><code>LabConditions</code></td>
+<td><a href="#singleblock-method-subclasses">General Laboratory Conditions</a></td>
+</tr>
+<tr>
+<td>equipment</td>
+<td><code>EquipmentList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#singleblock-method-subclasses"><code>Equipment</code> objects</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="templateblock"><code>TemplateBlock</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/template/#FoSpy.blocks.template.TemplateBlock">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<p><code>TemplateBlock</code> is used to make hybridized subclasses of other <code>SingleBlock</code> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <code>fill()</code> method. Refer to the <a href="../examples/API_example/">API script example</a> for some uses of templates.</p>
+<h3 id="required-properties_13">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template_name</td>
+<td><code>str</code></td>
+<td>An identifiable name for the template.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="templatemeta"><code>TemplateMeta</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#FoSpy.blocks.metadata.TemplateMeta">Class Documentation</a></p>
+<p><strong><a href="#">Subclass of <code>SingleBlock</code></a></strong></p>
+<h3 id="required-properties_14">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td><code>str</code></td>
+<td>Identifiable name for the set of templates stored in a Template FOS file.</td>
+</tr>
+<tr>
+<td>description</td>
+<td><code>str</code></td>
+<td>Additional information about the set of templates.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="templateset"><code>TemplateSet</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/template/#FoSpy.blocks.template.TemplateSet">Class Documentation</a></p>
+<p><strong><a href="#">Subclass of <code>FileBlock</code></a></strong></p>
+<h3 id="required-properties_15">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>metadata</td>
+<td><code>TemplateMeta</code></td>
+<td>Meta information for the set of templates stored in a Template FOS file.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_7">Optional properties</h3>
+<p>In contrast with a <code>Synthesis</code> file, most top-level properties for a <code>TemplateSet</code> are expected to contain <a href="#templatelists">lists of templates</a> of a given type. <code>TemplateList.Simple()</code> allows entries to be incomplete and generates hybridized <code>TemplateBlock</code> subclasses for them.</p>
+<p>Developers are currently working on ways to flexibly allow any template list in a <code>TemplateSet</code>. For now, refer to <a href="#modifying-property-validation-at-runtime">modifying validation at runtime</a> or reach out to developers if current standards are limiting how you want to use templates.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>experimenters</td>
+<td><code>TemplateList.Simple(Experimenter)</code></td>
+<td>A list of incomplete <a href="#experimenter"><code>Experimenter</code> objects</a></td>
+</tr>
+<tr>
+<td>materials</td>
+<td><code>TemplateList.Simple(Material)</code></td>
+<td>A list of incomplete <a href="#material"><code>Material</code> objects</a></td>
+</tr>
+<tr>
+<td>treatments</td>
+<td><code>TemplateList.Simple(Treatment)</code></td>
+<td>A list of incomplete <a href="#treatment"><code>Treatment</code> objects</a></td>
+</tr>
+<tr>
+<td>annealings</td>
+<td><code>TemplateList.Simple(Annealing)</code></td>
+<td>A list of incomplete <a href="#annealing"><code>Annealing</code> objects</a></td>
+</tr>
+<tr>
+<td>anneal_sections</td>
+<td><code>TemplateList.Simple(AnnealSection)</code></td>
+<td>A list of incomplete <a href="#annealsection"><code>AnnealSection</code> objects</a></td>
+</tr>
+<tr>
+<td>cifs</td>
+<td><code>CifList</code></td>
+<td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#embeddedfile"><code>EmbeddedCIF</code> objects</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="treatment"><code>Treatment</code></h2>
+<p><a class="autorefs autorefs-internal" href="../blocks/treatments/#FoSpy.blocks.treatments.Treatment">Class Documentation</a></p>
+<p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
+<p>When applicable, treatments are dispatched to subclasses based on the type value. Specialized subclasses for treatments are added by developers on an as-needed basis for specialized methods, or requiring additional properties for some types. Unrecognized types are still allowed but aren't given any additional properties or methods. The current dispatch list is below:</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>Subclass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>anneal</td>
+<td><code>Annealing</code> <a href="#annealing">(link)</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="required-properties_16">Required properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td><code>str</code> (dispatched)</td>
+<td>What type of treatment was performed</td>
+</tr>
+<tr>
+<td>repeats</td>
+<td><code>int</code></td>
+<td>How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments)</td>
+</tr>
+<tr>
+<td>observations</td>
+<td><code>str</code></td>
+<td>General observations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-properties_8">Optional properties</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Validation Routine or Class</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>recovered_amount</td>
+<td><code>validators.numbers.positive_decimal</code></td>
+<td>How much material was recovered after treatment</td>
+</tr>
+<tr>
+<td>recovered_amount_unit</td>
+<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
+</tr>
+<tr>
+<td>start_time</td>
+<td><code>str</code></td>
+<td>What time the treatment was started</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td><code>str</code></td>
+<td>What time the treatment was finished</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../examples/templates/" class="btn btn-neutral float-left" title="Template Files"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../blocks/" class="btn btn-neutral float-right" title="What is a Block?">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../examples/templates/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../blocks/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

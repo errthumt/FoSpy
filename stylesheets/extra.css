@@ -1,0 +1,27 @@
+div.doc-contents h4::before {
+    content: "";
+    display: block;
+    height: 2px;
+    background: #e0e0e0;
+    margin-bottom: 2em;
+    margin-top: 1em;
+}
+
+div.doc-contents h5::before {
+    content: "";
+    display: block;
+    height: 2px;
+    background: #e0e0e0;
+    margin-bottom: 2em;
+    margin-top: 1em;
+}
+
+div.doc-contents h3::before {
+    content: "";
+    display: block;
+    height: 2px;
+    background: #e0e0e0;
+    margin-bottom: 2em;
+    margin-top: 1em;
+}
+
