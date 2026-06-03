@@ -13,4 +13,4 @@ def pkg_all():
     from .._utils import ch2repo
     ch2repo()
 
-    zipdir("internal/dev_build/windows", "mkdocs/docs/file_download/windows_dev_setup.zip")
+    zipdir("internal/dev_build/windows", "mkdocs/docs/file_download/fos_dev_setup_win.zip")

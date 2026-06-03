@@ -2,7 +2,7 @@
 
 There is a copy button in the top right of the code block.
 
-[Click here to go to the rendered version](../../examples/API_example/index.md)
+[Click here to go to the rendered version](..\..\examples\API_example\index.md)
 
 ````markdown
 # Example Usage for FoSpy

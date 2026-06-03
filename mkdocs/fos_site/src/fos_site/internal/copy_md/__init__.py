@@ -12,7 +12,7 @@ MD_PATHS = {
 
 def copy_all():
     from pathlib import Path
-    from .._utils import ch2repo
+    from ..._utils import ch2repo
     from .helpers import copy_md_code
     ch2repo()
     path_input = {k:(Path(src), Path(dest)) for k, (src, dest) in MD_PATHS.items()}

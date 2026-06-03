@@ -13,6 +13,40 @@ if not exist "%TARGET_DIR%" (
 echo Copying shortcut files...
 xcopy /e /i /y "%~dp0program_files\*" "%TARGET_DIR%"
 
+echo Creating Start Menu shortcuts...
+
+REM --- Start Menu folder for this user ---
+set "START_MENU=%APPDATA%\Microsoft\Windows\Start Menu\Programs\FoSpy_DEV"
+
+if not exist "%START_MENU%" (
+    mkdir "%START_MENU%"
+)
+
+REM --- Shortcut: FoSpy Live ---
+powershell -NoProfile -Command ^
+  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Live Session.lnk');" ^
+  "$s.TargetPath='%TARGET_DIR%\FoSpy_live.bat';" ^
+  "$s.WorkingDirectory='%TARGET_DIR%';" ^
+  "$s.Save()"
+
+REM --- Shortcut: Toggle Branch ---
+powershell -NoProfile -Command ^
+  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Toggle Branch.lnk');" ^
+  "$s.TargetPath='%TARGET_DIR%\FoSpy_toggle_branch.bat';" ^
+  "$s.WorkingDirectory='%TARGET_DIR%';" ^
+  "$s.Save()"
+
+REM --- Shortcut: Test Loader (Python script) ---
+powershell -NoProfile -Command ^
+  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Test Loader.lnk');" ^
+  "$s.TargetPath='%TARGET_DIR%\FoSpy\venv\Scripts\python.exe';" ^
+  "$s.Arguments='""%TARGET_DIR%\FoSpy_test_load.py""';" ^
+  "$s.WorkingDirectory='%TARGET_DIR%';" ^
+  "$s.Save()"
+
+echo Shortcuts created.
+
+
 echo Checking for Git Installation...
 where git >nul 2>&1
 if %errorlevel%==0 (
@@ -47,5 +81,7 @@ echo Installing FoSpy to virtual environment...
 cd FoSpy
 call venv\Scripts\activate
 pip install -e .
+
+git checkout main
 
 echo Done.
