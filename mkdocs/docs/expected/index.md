@@ -157,6 +157,8 @@ ______________________________________________________________________
 
 [Class Documentation][FoSpy.blocks.materials.Material]
 
+!table_check: Extra required properties: ['test']
+
 **[Subclass of `SingleBlock`](#singleblock)**
 
 ### Required properties
@@ -172,6 +174,7 @@ ______________________________________________________________________
 | env | `str` | What environment the material is stored in. (e.g., ambient, Ar(g))|
 | amount | `validators.numbers.positive_decimal` | Amount that was used. |
 | amount_unit | `str` | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters.|
+| test | foo | this property is not supposed to be here. |
 
 ### Optional properties
 

@@ -1,11 +1,28 @@
-from . import build_nav
+from . import check_tables, run_example, build_nav, fos_to_md
 
-from . import fos_to_md
+class FileMismatchError(Exception):
+    pass
 
-from . import run_example
+def build_full_site(automated=False):
+    diffs = check_tables.update_tables_report_diffs()
 
-def build_site():
-    run_example.main()
-    fos_to_md.main()
+    for diff in diffs.values():
+        if len(diff) > 0:
+            from pprint import pformat
+            report = f"Mismatch in property tables:\n{pformat(diffs)}"
+
+            if not automated:
+                from warnings import warn
+                warn(report, UserWarning)
+                input("Press enter to continue...")
+                break
+            else:
+                raise FileMismatchError(report)
+
+    run_example.extract_and_run(figures=False)
+    fos_to_md.generate_fos_pages()
     build_nav.generate_yml()
+
+def build_full_site_cli():
+    build_full_site(automated=True)
 
