@@ -1,6 +1,21 @@
 site_name: FoSpy Documentation
 
-theme: readthedocs
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+
 
 
 plugins:
@@ -9,6 +24,10 @@ plugins:
       python:
         options:
           heading_level: 4
+- copy-markdown:
+    button_text: Copy Full Page As Markdown
+    button_position: top
+
 
 extra_css:
   - stylesheets/extra.css
