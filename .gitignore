@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Windows editing files
+*~$*
+
 dist_venv/
 mkdocs/site/
 
