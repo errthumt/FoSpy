@@ -1,4 +1,4 @@
-from . import check_tables, run_example, build_nav, fos_to_md
+from . import check_tables, run_example, build_nav, fos_to_md, copy_md
 
 class FileMismatchError(Exception):
     pass
@@ -19,6 +19,7 @@ def build_full_site(automated=False):
             else:
                 raise FileMismatchError(report)
 
+    copy_md.copy_all()
     run_example.extract_and_run(figures=False)
     fos_to_md.generate_fos_pages()
     build_nav.generate_yml()
