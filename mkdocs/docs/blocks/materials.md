@@ -1,4 +1,4 @@
-# `FoSpy.blocks.blocks`
+# `FoSpy.blocks.materials`
 
 This site only contains documentation for the
 [`Block`][FoSpy.blocks.blocks.Block] subclasses defined in this
@@ -27,27 +27,12 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
-### `Block`
-::: FoSpy.blocks.blocks.Block
+### `Material`
+::: FoSpy.blocks.materials.Material
     options:
         show_if_no_docstring: true
 ---
-### `ListBlock`
-::: FoSpy.blocks.blocks.ListBlock
-    options:
-        show_if_no_docstring: true
----
-### `SimpleWrapper`
-::: FoSpy.blocks.blocks.SimpleWrapper
-    options:
-        show_if_no_docstring: true
----
-### `SingleBlock`
-::: FoSpy.blocks.blocks.SingleBlock
-    options:
-        show_if_no_docstring: true
----
-### `SubContainer`
-::: FoSpy.blocks.blocks.SubContainer
+### `MaterialList`
+::: FoSpy.blocks.materials.MaterialList
     options:
         show_if_no_docstring: true
