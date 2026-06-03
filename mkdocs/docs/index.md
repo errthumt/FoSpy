@@ -15,8 +15,10 @@ We are looking for as much input as possible from other scientists about what ty
 4. Attach the file to a [Github Issue](https://www.github.com/errthumt/FoSpy/issues/new) or email to [errthumt@iastate.edu](mailto:errthumt@iastate.edu)
 
 
-## Grammar Extension for IDE
+## Grammar Extension for IDE (TextMate)
 [VSCode Grammar Extension for FOS Files](https://github.com/errthumt/fos-grammar)
+
+The standalone TextMate JSON can also be found in the extension files.
 
 ## Proof of Concept: CyFoS-alpha
 There is a fully-packaged app as a proof-of-concept with a gui for opening and editing FOS files.
@@ -24,12 +26,3 @@ There is a fully-packaged app as a proof-of-concept with a gui for opening and e
 - [Github](https://www.github.com/errthumt/CyFoS-alpha)
 - [Installer download](https://github.com/errthumt/CyFoS-alpha/raw/refs/heads/main/installer/windows_release/CyFoS_Setup_1.2.5.exe)
 
-
-## For Devs
-
-### Setting Up A Dev Environment
-Windows batch script for setting up a dev environment: [windows_new_clone.bat](https://github.com/errthumt/FoSpy/raw/refs/heads/main/windows_new_clone.bat) (requires python and git installed)
-
-- Clones the repo under `C:\users\your-username\FoSpy`
-- Creates virtual python environment under `...\FoSpy\venv`
-- Installs the current FoSpy package as a live editable package to your venv.
