@@ -16,3 +16,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = []
+
+[project.scripts]
+fos-site-build = "fos_site:build_full_site_cli"

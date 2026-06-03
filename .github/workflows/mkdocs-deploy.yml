@@ -25,14 +25,17 @@ jobs:
         run: |
           pip install .
 
+      - name: Install fos_site
+        run: |
+          pip install ./mkdocs/fos_site
+
       - name: Install build dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python
 
-      - name: Doc building macros
-        working-directory: mkdocs/scripts
+      - name: Check property tables and rebuild markdown stubs.
         run: |
-          python _full_build.py
+          fos-site-build
 
       - name: Deploy to GitHub Pages
         working-directory: mkdocs

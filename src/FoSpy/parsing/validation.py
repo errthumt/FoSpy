@@ -64,8 +64,6 @@ class Equipment(SingleBlock):
 class GasFlow(SingleBlock):
     pass
 
-class TestBlock(SingleBlock):
-    pass
 
 EquipmentList = ListBlock.Simple(Equipment)
 FlowList = ListBlock.Simple(GasFlow)

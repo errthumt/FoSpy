@@ -230,6 +230,8 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
     missing_classes = diffs.get("missing_classes", []).copy()
     missing_required = diffs.get("missing_required", {}).copy()
     missing_optional = diffs.get("missing_optional", {}).copy()
+    extra_required = diffs.get("extra_required", {}).copy()
+    extra_optional = diffs.get("extra_optional", {}).copy()
 
     new_tokens = []
     i = 0
@@ -282,26 +284,30 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
                                    *get_paragraph_tokens(opt_text, tok),
                                    *template_tokens])
 
-            new_tokens.append(tok)
-            if "Class Documentation" not in tokens[i+4].content:
+            new_tokens.extend([tok,tokens[i+1],tokens[i+2]])
+            i+=2
+
+            if "Class Documentation" not in tokens[i+2].content:
                 # Build the link text
                 link_text = f"[Class Documentation][{find_class_module_path(class_name) or 'UnknownClass'}]"
 
-
                 # Insert a paragraph_open, inline, paragraph_close sequence
-                new_tokens.extend([
-                    tokens[i+1],
-                    tokens[i+2],
-                    *get_paragraph_tokens(link_text, tok)
-                ])
-                i += 2
+                new_tokens.extend(get_paragraph_tokens(link_text, tok))
+            else:
+                new_tokens.extend(tokens[i+1:i+4])
+                i+=3
 
-            missing_req = missing_required.get(class_name, [])
-            missing_opt = missing_optional.get(class_name, [])
-            if missing_req:
-                new_tokens.extend(get_paragraph_tokens(f"!table_check: Missing required properties: {missing_req}", tok))
-            if missing_opt:
-                new_tokens.extend(get_paragraph_tokens(f"Missing optional properties: {missing_opt}", tok))
+            checks = {
+                "Missing required": missing_required.get(class_name, []),
+                "Missing optional": missing_optional.get(class_name, []),
+                "Extra required": extra_required.get(class_name, []),
+                "Extra optional": extra_optional.get(class_name, [])
+            }
+
+            for label, props in checks.items():
+                if props:
+                    new_tokens.extend(get_paragraph_tokens(f"!table_check: {label} properties: {props}", tok))
+
         else:
             new_tokens.append(tok)
         i += 1
