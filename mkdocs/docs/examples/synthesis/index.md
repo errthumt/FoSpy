@@ -15,6 +15,7 @@ date: 03-11-2026
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
+// Comment to test site build automation
 [Experimenters]
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
@@ -504,6 +505,7 @@ date: 03-11-2026
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
+// Comment to test site build automation
 [Experimenters]
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
