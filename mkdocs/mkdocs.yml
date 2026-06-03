@@ -1,22 +1,40 @@
 site_name: FoSpy Documentation
 
-
 theme:
   name: material
+  highlightjs: false
+  palette:
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to system preference
   features:
     - content.code.copy
 
 markdown_extensions:
+  - codehilite
   - pymdownx.highlight:
+      use_pygments: true
       anchor_linenums: true
       line_spans: __span
-      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-
-
-
 
 plugins:
 - mkdocstrings:
@@ -24,13 +42,11 @@ plugins:
       python:
         options:
           heading_level: 4
-- copy-markdown:
-    button_text: Copy Full Page As Markdown
-    button_position: top
-
 
 extra_css:
   - stylesheets/extra.css
+  - stylesheets/plastic-dark.css
+  - stylesheets/light-plus.css
 
 INHERIT: ./nav.yml
     
