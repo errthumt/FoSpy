@@ -15,7 +15,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-dependencies = []
+dependencies = [
+    "markdown-it-py",
+    "mdformat"
+]
 
 [project.scripts]
 fos-site-build = "fos_site:build_full_site_cli"
