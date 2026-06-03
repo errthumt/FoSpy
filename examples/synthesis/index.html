@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Synthesis Examples - FoSpy Documentation</title>
+    <title>Synthesis Files - FoSpy Documentation</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -14,7 +14,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Synthesis Examples";
+        var mkdocs_page_name = "Synthesis Files";
         var mkdocs_page_input_path = "examples/synthesis/index.md";
         var mkdocs_page_url = null;
       </script>
@@ -38,158 +38,145 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../..">FoSpy</a>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
                 </li>
               </ul>
-              <p class="caption"><span class="caption-text">Blocks</span></p>
+              <p class="caption"><span class="caption-text">API Example</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../API_example/">API Walkthrough</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../API_example/full/">Full Example Script</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Synthesis Files</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#initial-synthesis-fos">Initial Synthesis (FOS)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#initial-synthesis-json">Initial Synthesis (JSON)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-1">Checkpoint 1</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-2">Checkpoint 2</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-3">Checkpoint 3</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-4">Checkpoint 4</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-5">Checkpoint 5</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-6">Checkpoint 6</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-8">Checkpoint 8</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-9">Checkpoint 9</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#checkpoint-10">Checkpoint 10</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../templates/">Template Files</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Property Documentation</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Expected Properties</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Block Modules</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../blocks/">What is a Block?</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/blocks/">FoSpy.blocks.blocks</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/blocks/">blocks</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/data/">FoSpy.blocks.data</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/data/">data</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/embedded/">FoSpy.blocks.embedded</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/embedded/">embedded</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/files/">FoSpy.blocks.files</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/files/">files</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/metadata/">FoSpy.blocks.metadata</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/materials/">materials</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/synthesis/">FoSpy.blocks.synthesis</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/metadata/">metadata</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/template/">FoSpy.blocks.template</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/synthesis/">synthesis</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/treatments/">FoSpy.blocks.treatments</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/template/">template</a>
                   </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Examples</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" >API example</a>
-    <ul>
-                <li class="toctree-l2"><a class="reference internal" href="../API_example/">Example Usage for FoSpy</a>
-                </li>
-                <li class="toctree-l2"><a class="reference internal" href="../API_example/full/">Full Example Script</a>
-                </li>
-    </ul>
-                  </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" >Synthesis</a>
-    <ul class="current">
-                <li class="toctree-l2 current"><a class="reference internal current" href="#">Synthesis Examples</a>
-    <ul class="current">
-    <li class="toctree-l3"><a class="reference internal" href="#initial-synthesis-fos">Initial Synthesis (FOS)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#initial-synthesis-json">Initial Synthesis (JSON)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-1">Checkpoint 1</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-2">Checkpoint 2</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-3">Checkpoint 3</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-4">Checkpoint 4</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-5">Checkpoint 5</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-6">Checkpoint 6</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-8">Checkpoint 8</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-9">Checkpoint 9</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#checkpoint-10">Checkpoint 10</a>
-    </li>
-    </ul>
-                </li>
-    </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" >Templates</a>
-    <ul>
-                <li class="toctree-l2"><a class="reference internal" href="../templates/">Template Examples</a>
-                </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../blocks/treatments/">treatments</a>
                   </li>
               </ul>
-              <p class="caption"><span class="caption-text">Expected</span></p>
+              <p class="caption"><span class="caption-text">Full Documentation</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../expected/">Object Construction and Property Validation for Files of Synthesis (FOS)</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/">Full Docs Home</a>
                   </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Full</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../full/">Full FoSpy Documentation</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/_debug/">_debug</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../full/_debug/"> debug</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../full/core/">core</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" >Blocks</a>
+                  <li class="toctree-l1"><a class="reference internal" >blocks</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/_blockUtils/"> blockUtils</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/_blockUtils/">_blockUtils</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/blocks/">Blocks</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/blocks/">blocks</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/data/">Data</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/data/">data</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/embedded/">Embedded</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/embedded/">embedded</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/files/">Files</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/files/">files</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/materials/">Materials</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/materials/">materials</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/metadata/">Metadata</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/metadata/">metadata</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/synthesis/">Synthesis</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/synthesis/">synthesis</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/template/">Template</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/template/">template</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/treatments/">Treatments</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/blocks/treatments/">treatments</a>
                 </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" >Json</a>
+                  <li class="toctree-l1"><a class="reference internal" >json</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/json/utils/">Utils</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/json/utils/">utils</a>
                 </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" >Parsing</a>
+                  <li class="toctree-l1"><a class="reference internal" >parsing</a>
     <ul>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/format_fos/">Format fos</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/format_fos/">format_fos</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/read/">Read</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/read/">read</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/regex/">Regex</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/regex/">regex</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/syntax/">Syntax</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/syntax/">syntax</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/validation/">Validation</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/validation/">validation</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/write/">Write</a>
+                <li class="toctree-l2"><a class="reference internal" href="../../full/parsing/write/">write</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" >Validators</a>
+                <li class="toctree-l2"><a class="reference internal" >validators</a>
     <ul>
-                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/filenames/">Filenames</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/filenames/">filenames</a>
                 </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/material/">Material</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/material/">material</a>
                 </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/numbers/">Numbers</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/numbers/">numbers</a>
                 </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/rename/">Rename</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/rename/">rename</a>
                 </li>
-                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/units/">Units</a>
+                <li class="toctree-l3"><a class="reference internal" href="../../full/parsing/validators/units/">units</a>
                 </li>
     </ul>
                 </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" >Plotting</a>
+                  <li class="toctree-l1"><a class="reference internal" >plotting</a>
     <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../../full/plotting/EmbeddedCIF/">EmbeddedCIF</a>
                 </li>
     </ul>
-                  </li>
-              </ul>
-              <p class="caption"><span class="caption-text">Internal</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../internal/">Internal</a>
                   </li>
               </ul>
       </div>
@@ -206,9 +193,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Examples</li>
-          <li class="breadcrumb-item">Synthesis</li>
-      <li class="breadcrumb-item active">Synthesis Examples</li>
+          <li class="breadcrumb-item">API Example</li>
+      <li class="breadcrumb-item active">Synthesis Files</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -229,6 +215,7 @@ date: 03-11-2026
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
+// Comment to test site build automation
 [Experimenters]
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
@@ -712,6 +699,7 @@ date: 03-11-2026
 internal_project_ID: Ba2-TM5-Pn6
 internal_project_description: Unique Clathrate
 
+// Comment to test site build automation
 [Experimenters]
 name: Travis Errthum
 affiliation: Kovnir Group - Iowa State University
@@ -30422,7 +30410,7 @@ _shelx_hkl_checksum   24951
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../API_example/full/" class="btn btn-neutral float-left" title="Full Example Script"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../templates/" class="btn btn-neutral float-right" title="Template Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../templates/" class="btn btn-neutral float-right" title="Template Files">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>

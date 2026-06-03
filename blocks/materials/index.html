@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>embedded - FoSpy Documentation</title>
+    <title>materials - FoSpy Documentation</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -14,8 +14,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "embedded";
-        var mkdocs_page_input_path = "blocks/embedded.md";
+        var mkdocs_page_name = "materials";
+        var mkdocs_page_input_path = "blocks/materials.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -65,7 +65,11 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../data/">data</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">embedded</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../embedded/">embedded</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../files/">files</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">materials</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#methods-attached-to-any-object">Methods attached to any object</a>
         <ul>
@@ -85,31 +89,29 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#block-types-in-this-module">Block Types in this Module</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#embeddedcif">EmbeddedCIF</a>
+    <li class="toctree-l3"><a class="reference internal" href="#material">Material</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF">EmbeddedCIF</a>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.Material">Material</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF.get_pattern">get_pattern</a>
-    </li>
-    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedCIF.quick_pattern">quick_pattern</a>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.Material.add_MW">add_MW</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#embeddedfile">EmbeddedFile</a>
+    <li class="toctree-l3"><a class="reference internal" href="#materiallist">MaterialList</a>
         <ul>
-    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedFile">EmbeddedFile</a>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.MaterialList">MaterialList</a>
     </li>
-    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.embedded.EmbeddedFile.serialize">serialize</a>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.MaterialList.add_all_MW">add_all_MW</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.MaterialList.add_weight_pcts">add_weight_pcts</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#FoSpy.blocks.materials.MaterialList.calc_weight_pcts">calc_weight_pcts</a>
     </li>
         </ul>
     </li>
         </ul>
     </li>
     </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../files/">files</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../materials/">materials</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../metadata/">metadata</a>
                   </li>
@@ -210,7 +212,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Block Modules</li>
-      <li class="breadcrumb-item active">embedded</li>
+      <li class="breadcrumb-item active">materials</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -219,7 +221,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="fospyblocksembedded"><code>FoSpy.blocks.embedded</code></h1>
+                <h1 id="fospyblocksmaterials"><code>FoSpy.blocks.materials</code></h1>
 <p>This site only contains documentation for the
 <a class="autorefs autorefs-internal" href="../blocks/#FoSpy.blocks.blocks.Block"><code>Block</code></a> subclasses defined in this
 module, not the entire module API. For a complete reference of
@@ -377,21 +379,21 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 </div><hr />
 <h2 id="block-types-in-this-module">Block Types in this Module</h2>
 <hr />
-<h3 id="embeddedcif"><code>EmbeddedCIF</code></h3>
+<h3 id="material"><code>Material</code></h3>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<a id="FoSpy.blocks.embedded.EmbeddedCIF"></a>
+<a id="FoSpy.blocks.materials.Material"></a>
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.embedded.EmbeddedFile" href="#FoSpy.blocks.embedded.EmbeddedFile">EmbeddedFile</a></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.SingleBlock" href="../blocks/#FoSpy.blocks.blocks.SingleBlock">SingleBlock</a></code></p>
 
 
 
-        <p>Represents a CIF file embedded as a block in a FOS file.</p>
+        <p>Represents a material used in a synthesis</p>
 
 
 
@@ -400,29 +402,19 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 
 
               <details class="quote">
-                <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
-                <pre class="highlight"><code class="language-python">class EmbeddedCIF(EmbeddedFile):
+                <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+                <pre class="highlight"><code class="language-python">class Material(SingleBlock):
     """
-    Represents a CIF file embedded as a block in a FOS file.
+    Represents a material used in a synthesis
     """
-
-    def get_pattern(self,**kwargs):
-        from cif2xrd.pattern import simPattern
-        self._write_to_temp()
-
-        sim = simPattern(cif_path=self._temppath, **kwargs)
-
-        return sim.two_theta, sim.intensity
-
-    def quick_pattern(self,subprocess=False, **kwargs):
-        import matplotlib.pyplot as plt
-        from ..plotting.EmbeddedCIF import _quick_pattern
-        two_theta, intensity = self.get_pattern(**kwargs)
-
-        if subprocess:
-            return self._subprocess(_quick_pattern,args=(two_theta, intensity))
-
-        return _quick_pattern(two_theta, intensity)</code></pre>
+    @_calc_routine()
+    def add_MW(self):
+        """
+        Attach a comment to the formula with molecular weight.
+        """
+        _debug.msg(f"Adding molecular weight to Material: {self.name}")
+        mw = self.formula.formula_weight
+        self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")</code></pre>
               </details>
 
 
@@ -441,52 +433,27 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 <div class="doc doc-object doc-function">
 
 
-<h4 id="FoSpy.blocks.embedded.EmbeddedCIF.get_pattern" class="doc doc-heading">
-            <code class="highlight language-python">get_pattern(**kwargs)</code>
+<h4 id="FoSpy.blocks.materials.Material.add_MW" class="doc doc-heading">
+            <code class="highlight language-python">add_MW()</code>
 
 </h4>
 
 
     <div class="doc doc-contents ">
 
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
-              <pre class="highlight"><code class="language-python">def get_pattern(self,**kwargs):
-    from cif2xrd.pattern import simPattern
-    self._write_to_temp()
-
-    sim = simPattern(cif_path=self._temppath, **kwargs)
-
-    return sim.two_theta, sim.intensity</code></pre>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="FoSpy.blocks.embedded.EmbeddedCIF.quick_pattern" class="doc doc-heading">
-            <code class="highlight language-python">quick_pattern(subprocess=False, **kwargs)</code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
+        <p>Attach a comment to the formula with molecular weight.</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
-              <pre class="highlight"><code class="language-python">def quick_pattern(self,subprocess=False, **kwargs):
-    import matplotlib.pyplot as plt
-    from ..plotting.EmbeddedCIF import _quick_pattern
-    two_theta, intensity = self.get_pattern(**kwargs)
-
-    if subprocess:
-        return self._subprocess(_quick_pattern,args=(two_theta, intensity))
-
-    return _quick_pattern(two_theta, intensity)</code></pre>
+              <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_MW(self):
+    """
+    Attach a comment to the formula with molecular weight.
+    """
+    _debug.msg(f"Adding molecular weight to Material: {self.name}")
+    mw = self.formula.formula_weight
+    self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")</code></pre>
             </details>
     </div>
 
@@ -500,21 +467,21 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 
 
 </div><hr />
-<h3 id="embeddedfile"><code>EmbeddedFile</code></h3>
+<h3 id="materiallist"><code>MaterialList</code></h3>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<a id="FoSpy.blocks.embedded.EmbeddedFile"></a>
+<a id="FoSpy.blocks.materials.MaterialList"></a>
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.SingleBlock" href="../blocks/#FoSpy.blocks.blocks.SingleBlock">SingleBlock</a></code></p>
+              Bases: <code><a class="autorefs autorefs-internal" title="FoSpy.blocks.blocks.ListBlock" href="../blocks/#FoSpy.blocks.blocks.ListBlock">ListBlock</a></code></p>
 
 
 
-        <p>Represents an non-FOS file embedded as a block in a FOS file.</p>
+        <p>Represents a list of materials used in a synthesis</p>
 
 
 
@@ -523,26 +490,70 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 
 
               <details class="quote">
-                <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
-                <pre class="highlight"><code class="language-python">class EmbeddedFile(SingleBlock):
+                <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+                <pre class="highlight"><code class="language-python">class MaterialList(ListBlock):
     """
-    Represents an non-FOS file embedded as a block in a FOS file.
+    Represents a list of materials used in a synthesis
     """
-    def _write_to_temp(self, encoding="utf-8"):
-        self._temppath = self.find_temppath() / f"{self.file_name}{self.extension}"
-        with open(self._temppath, "w", encoding=encoding) as f:
-            for line in self.embedded:
-                f.write(line.rstrip("\r\n") + "\n")
+    _reqCls = Material
+
+    def calc_weight_pcts(self, typ=None):
+        """
+        Calculate weight percent for each material with matching type.
+
+        Args:
+            typ:
+                Only materials with type attribute matching typ are considered
+                in the total weight and given weight percents. This is useful
+                if, for instance, you want weight percents of your contributing
+                "reagents" without including "flux" or "solvent" materials.
+
+        Returns:
+            dict mapping material : weight_pct
+        """
+        from decimal import Decimal
+
+        weights = {}
+        for mat in self._objs:
+            if mat.type == typ or typ is None:
+                amount = mat.amount
+                mw = mat.formula.formula_weight
+                weights[mat] = amount() * Decimal(mw)
+
+        percents = {}
+        total_weight = sum(weights.values())
+        for mat, wt in weights.items():
+            pct = 100 * wt / total_weight
+            percents[mat] = pct
+        return percents
 
 
-    def serialize(self,keepListType=False, clean=False):
+
+    @_calc_routine(attach=False)
+    def add_all_MW(self):
         """
-        Performs the default `SingleBlock` serialization, but restores the
-        "embedded" key to the full list of embedded lines instead of a string.
+        Attach a molecular weight comment to all materials
         """
-        serial = super().serialize(keepListType, clean=clean)
-        serial["embedded"] = self.embedded.copy()
-        return serial</code></pre>
+        for mat in self._objs:
+            mat.add_MW()
+
+    @_calc_routine()
+    def add_weight_pcts(self, typ=None):
+        """
+        Calculate weight percents and attach them as comments to each material's amount.
+
+        Args:
+            typ:
+                Only materials with type attribute matching typ are considered
+                in the total weight and given weight percents. This is useful
+                if, for instance, you want weight percents of your contributing
+                "reagents" without including "flux" or "solvent" materials.
+        """
+        for mat, pct in self.calc_weight_pcts(typ).items():
+            label = typ.capitalize() if typ else "Total"
+            comment = f"{label} weight percent: {pct:.2f}%"
+            _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
+            mat.add_calc_comment("amount",comment, f"{label}_pct")</code></pre>
               </details>
 
 
@@ -561,28 +572,188 @@ my_synthesis._meta.comments[&quot;materials&quot;]
 <div class="doc doc-object doc-function">
 
 
-<h4 id="FoSpy.blocks.embedded.EmbeddedFile.serialize" class="doc doc-heading">
-            <code class="highlight language-python">serialize(keepListType=False, clean=False)</code>
+<h4 id="FoSpy.blocks.materials.MaterialList.add_all_MW" class="doc doc-heading">
+            <code class="highlight language-python">add_all_MW()</code>
 
 </h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Performs the default <code>SingleBlock</code> serialization, but restores the
-"embedded" key to the full list of embedded lines instead of a string.</p>
+        <p>Attach a molecular weight comment to all materials</p>
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>FoSpy/blocks/embedded.py</code></summary>
-              <pre class="highlight"><code class="language-python">def serialize(self,keepListType=False, clean=False):
+              <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine(attach=False)
+def add_all_MW(self):
     """
-    Performs the default `SingleBlock` serialization, but restores the
-    "embedded" key to the full list of embedded lines instead of a string.
+    Attach a molecular weight comment to all materials
     """
-    serial = super().serialize(keepListType, clean=clean)
-    serial["embedded"] = self.embedded.copy()
-    return serial</code></pre>
+    for mat in self._objs:
+        mat.add_MW()</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.materials.MaterialList.add_weight_pcts" class="doc doc-heading">
+            <code class="highlight language-python">add_weight_pcts(typ=None)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate weight percents and attach them as comments to each material's amount.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>typ</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Only materials with type attribute matching typ are considered
+in the total weight and given weight percents. This is useful
+if, for instance, you want weight percents of your contributing
+"reagents" without including "flux" or "solvent" materials.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+              <pre class="highlight"><code class="language-python">@_calc_routine()
+def add_weight_pcts(self, typ=None):
+    """
+    Calculate weight percents and attach them as comments to each material's amount.
+
+    Args:
+        typ:
+            Only materials with type attribute matching typ are considered
+            in the total weight and given weight percents. This is useful
+            if, for instance, you want weight percents of your contributing
+            "reagents" without including "flux" or "solvent" materials.
+    """
+    for mat, pct in self.calc_weight_pcts(typ).items():
+        label = typ.capitalize() if typ else "Total"
+        comment = f"{label} weight percent: {pct:.2f}%"
+        _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
+        mat.add_calc_comment("amount",comment, f"{label}_pct")</code></pre>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="FoSpy.blocks.materials.MaterialList.calc_weight_pcts" class="doc doc-heading">
+            <code class="highlight language-python">calc_weight_pcts(typ=None)</code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Calculate weight percent for each material with matching type.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>typ</code></b>
+              –
+              <div class="doc-md-description">
+                <p>Only materials with type attribute matching typ are considered
+in the total weight and given weight percents. This is useful
+if, for instance, you want weight percents of your contributing
+"reagents" without including "flux" or "solvent" materials.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              –
+              <div class="doc-md-description">
+                <p>dict mapping material : weight_pct</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>FoSpy/blocks/materials.py</code></summary>
+              <pre class="highlight"><code class="language-python">def calc_weight_pcts(self, typ=None):
+    """
+    Calculate weight percent for each material with matching type.
+
+    Args:
+        typ:
+            Only materials with type attribute matching typ are considered
+            in the total weight and given weight percents. This is useful
+            if, for instance, you want weight percents of your contributing
+            "reagents" without including "flux" or "solvent" materials.
+
+    Returns:
+        dict mapping material : weight_pct
+    """
+    from decimal import Decimal
+
+    weights = {}
+    for mat in self._objs:
+        if mat.type == typ or typ is None:
+            amount = mat.amount
+            mw = mat.formula.formula_weight
+            weights[mat] = amount() * Decimal(mw)
+
+    percents = {}
+    total_weight = sum(weights.values())
+    for mat, wt in weights.items():
+        pct = 100 * wt / total_weight
+        percents[mat] = pct
+    return percents</code></pre>
             </details>
     </div>
 
@@ -600,8 +771,8 @@ my_synthesis._meta.comments[&quot;materials&quot;]
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../data/" class="btn btn-neutral float-left" title="data"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../files/" class="btn btn-neutral float-right" title="files">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../files/" class="btn btn-neutral float-left" title="files"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../metadata/" class="btn btn-neutral float-right" title="metadata">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -624,10 +795,10 @@ my_synthesis._meta.comments[&quot;materials&quot;]
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../data/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../files/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../files/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../metadata/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
