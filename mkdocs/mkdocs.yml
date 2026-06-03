@@ -12,7 +12,8 @@ theme:
 
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
-      scheme: default 
+      scheme: default
+      primary: red
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
@@ -20,9 +21,11 @@ theme:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: pink
       toggle:
         icon: material/brightness-auto
         name: Switch to system preference
+
   features:
     - content.code.copy
 
@@ -48,5 +51,5 @@ extra_css:
   - stylesheets/plastic-dark.css
   - stylesheets/light-plus.css
 
-INHERIT: ./nav.yml
+INHERIT: ./nav/full.yml
     

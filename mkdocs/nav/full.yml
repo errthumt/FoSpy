@@ -1,0 +1,53 @@
+nav:
+- Home: index.md
+- API Example:
+  - API Walkthrough: examples/API_example/index.md
+  - Full Example Script: examples/API_example/full.md
+  - Synthesis Files: examples/synthesis/index.md
+  - Template Files: examples/templates/index.md
+- Property Documentation:
+  - Expected Properties: expected/index.md
+- Block Modules:
+  - What is a Block?: blocks/index.md
+  - blocks: blocks/blocks.md
+  - data: blocks/data.md
+  - embedded: blocks/embedded.md
+  - files: blocks/files.md
+  - materials: blocks/materials.md
+  - metadata: blocks/metadata.md
+  - synthesis: blocks/synthesis.md
+  - template: blocks/template.md
+  - treatments: blocks/treatments.md
+- Full Documentation:
+  - Full Docs Home: full/index.md
+  - _debug: full/_debug.md
+  - core: full/core.md
+  - blocks:
+    - _blockUtils: full/blocks/_blockUtils.md
+    - blocks: full/blocks/blocks.md
+    - data: full/blocks/data.md
+    - embedded: full/blocks/embedded.md
+    - files: full/blocks/files.md
+    - materials: full/blocks/materials.md
+    - metadata: full/blocks/metadata.md
+    - synthesis: full/blocks/synthesis.md
+    - template: full/blocks/template.md
+    - treatments: full/blocks/treatments.md
+  - json:
+      utils: full/json/utils.md
+  - parsing:
+    - format_fos: full/parsing/format_fos.md
+    - read: full/parsing/read.md
+    - regex: full/parsing/regex.md
+    - syntax: full/parsing/syntax.md
+    - validation: full/parsing/validation.md
+    - write: full/parsing/write.md
+    - validators:
+      - filenames: full/parsing/validators/filenames.md
+      - material: full/parsing/validators/material.md
+      - numbers: full/parsing/validators/numbers.md
+      - rename: full/parsing/validators/rename.md
+      - units: full/parsing/validators/units.md
+  - plotting:
+      EmbeddedCIF: full/plotting/EmbeddedCIF.md
+- For Devs: internal/index.md

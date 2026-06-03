@@ -1,8 +1,9 @@
 import yaml
 from pathlib import Path
 
-NAV_HEADER_PATH = Path("mkdocs/nav_header.yml")
-NAV_OUTPUT_PATH = Path("mkdocs/nav.yml")
+NAV_HEADER_PATH = Path("mkdocs/nav/header.yml")
+NAV_FOOTER_PATH = Path("mkdocs/nav/footer.yml")
+NAV_OUTPUT_PATH = Path("mkdocs/nav/full.yml")
 
 
 def generate_yml():
@@ -21,6 +22,9 @@ def generate_yml():
     with NAV_HEADER_PATH.open("r", encoding="utf-8") as f:
         nav_header = yaml.safe_load(f)
 
+    with NAV_FOOTER_PATH.open("r", encoding="utf-8") as f:
+        nav_footer = yaml.safe_load(f)
+
     # 3. Build Block Modules section
     block_section = {
         "Block Modules": build_full_nav(block_tree)
@@ -32,11 +36,11 @@ def generate_yml():
     }
 
     # 5. Combine everything
-    nav = nav_header + [block_section, full_section]
+    nav = nav_header + [block_section, full_section] + nav_footer
 
     # 6. Write mkdocs/nav.yml
     with NAV_OUTPUT_PATH.open("w", encoding="utf-8") as f:
         yaml.dump({"nav": nav}, f, sort_keys=False)
 
-    print("mkdocs/nav.yml generated.")
+    print("mkdocs/nav/full.yml generated.")
 
