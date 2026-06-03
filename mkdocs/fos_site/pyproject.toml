@@ -16,7 +16,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "markdown-it-py",
+    "markdown-it-py[linkify]",
     "mdformat"
 ]
 
