@@ -125,7 +125,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 // This new block has been added because I renamed a required block.
 [Rename]
 // Synthesis files are required to have a materials block, so
-// This line specifies that it has been renamed to reagents.
+// this line specifies that it has been renamed to reagents.
 materials: reagents
 
 [Cifs]

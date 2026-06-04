@@ -1,10 +1,12 @@
 # Example Usage for FoSpy
 
-The files in this folder are examples of what a full API editing session might look like for Synthesis and Template files using the FOS format.
+This page is an example of what a full API editing session might look like for Synthesis and Template files using the FOS format.
 
 Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward automating synthesis file generation for many syntheses at once from a variety of inputs, ranging from a GUI application to AI-assisted transcription.
 
 The uninterupted full script can be found [here](./full.md), but each snippet is pulled apart here and explained.
+
+Explanations on this page are intended to be understandable to non-Python enthusiasts... as such, there are some colloquial words (e.g, shortcut, block) that are used in place of more "Pythonic" language (e.g., namespace, object).
 
 This page contains checkpoints where the current synthesis or template file is saved. The initial inputs and the result of each checkpoint can be found at the pages below:
 
@@ -20,7 +22,8 @@ from FoSpy.blocks.template import TemplateSet
 from chemformula import ChemFormula
 ```
 
-`FoSpy` uses a `_debug` module to print progress messages during some processes that may be helpful for understanding what is going on in the background, or what is being executed successfully before something breaks. By default, no debug messages are printed. Each module uses its own `Debug` object to print messages, so you can either enable/disable all debug messages, or you can pick a particular module that you want to keep track of and only enable `_debug.on` for that module.
+`FoSpy` uses a `_debug` module to print progress messages during some processes. These are helpful for devs to track what is going on in the background, or what is being executed successfully before something breaks. By default, no debug messages are printed. Each module uses its own `Debug` object to print messages under the module attribute `_debug` (e.g., `FoSpy.blocks._debug`, `FoSpy.parsing.read._debug`), so you can either enable/disable all debug messages, or you can pick a particular module that you want to keep track of and only enable `_debug.on` for that module.
+
 ```python
 # No debug messages by default, but they can be turned on like this.
 from FoSpy._debug import all_debugs_on, all_debugs_off
@@ -35,8 +38,10 @@ from FoSpy.blocks.blocks import _debug as block_debug
 block_debug.on = True
 ```
 
-## (Checkpoint 1) Opening and saving FOS files
+## Opening and saving FOS files
 This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling `save()` without a filename will now just re-save them in the new location.
+
+`save()` and `fromFile()` accept paths to FOS-formatted files or JSON-formatted files.
 ```python
 # load synthesis and templates from files
 my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")
@@ -50,8 +55,15 @@ my_synthesis.save(r"synthesis/check01.fos")
 my_templates.save(r"templates/check01.fos")
 ```
 
+### Checkpoint 1
+[Updated Synthesis](../synthesis/index.md#checkpoint-1) | [Updated Templates](../templates/index.md#checkpoint-1)
+
 ## Object-Oriented Shortcuts
-The nice thing about python is that in most cases, if you set a new variable "equal" to something, the new variable just points at the original instead of copying it. So any edits to `my_meta`, for example, will also be edits to `my_synthesis.metadata`.
+The nice thing about python is that in most cases, if you set a new variable "equal" to something, the new variable just points at the original instead of copying it. For example, after this line:
+
+`my_meta = my_synthesis.metadata`
+
+any edits to `my_meta` will also be edits to `my_synthesis.metadata`.
 
 Beware if you are not familiar with object-oriented code or namespaces: This also means that if you *reassign* a variable, it unlinks it from the original. For example, in the code below, I mistakenly link `my_mats = my_synthesis.cifs` before correctly assigning `my_mats = my_synthesis.materials` in the next line. This *does not* link the CIF files and materials together in any way. Instead, `my_mats` "forgets" that it was ever linked to the CIFs and points at the materials for the rest of the script.
 ```python
@@ -64,43 +76,54 @@ my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
 ```
 
-## (Checkpoint 2) Renaming Blocks and Adding Comments
+## Renaming Blocks and Adding Comments
 Each type of block in a FOS has a set of fields that are required for it. Additionally, there is a separate list of "optional" fields that still must follow certain rules when you put them in a block.
 
 However, you may want to modify the name of a section or a value without changing its expected behavior. You can do this by adding a "rename" block.
+
 * **To rename main FOS headers:** The rename block is an extra heading (`[Rename]`) in the FOS file.
-* **To rename properties inside a block** The rename block is a nested block:
-```FOS
+* **To rename properties inside a block:** The rename block is a nested block named `rename`.
+
+```FOS hl_lines="4 8"
 [Experimenters]
 // This tells the FOS reader to expect "isu_research_group" instead of affiliation, *only* for the first experimenter.
 rename: [
     affiliation: isu_research_group
 ]
 name: Travis Errthum
+// This now gets validated as affiliation
 isu_research_group : Kovnir Group
 orcid: 0009-0006-1937-5672
 ```
 
 We can apply this in python using the `rename_block()` command. Note that for safety, we also reapply our `my_mats` shortcut, in case reassigning the block value might have unlinked our original shortcut.
-Unless we rearrange our blocks with `keys_to_end()`, the new `[Rename]` block would have been at the bottom of the FOS file, after the embedded CIF file.
+
+I also do some rearranging of the document block order here. Unless we rearrange our blocks with `keys_to_end()`, the new `[Rename]` block would have been added at the bottom of the FOS file, after the embedded CIF file.
 ```python
 my_synthesis.clear_all_comments()
 my_synthesis.rename_block("materials","reagents")
 my_mats = my_synthesis.reagents
-my_synthesis.rename.add_comments("This new block has been added because I renamed a required block.")
-my_synthesis.rename.materials.add_comments("Synthesis files are required to have a materials block, so",
-                                           "This line specifies that it has been renamed to reagents.")
+my_synthesis.rename.add_comments(
+    "This new block has been added because I renamed a required block.")
+my_synthesis.rename.materials.add_comments(
+    "Synthesis files are required to have a materials block, so",
+    "this line specifies that it has been renamed to reagents.")
 
 my_exps[0].rename_block("affiliation","isu_research_group")
 my_synthesis.keys_to_end("cifs")
 my_synthesis.save("synthesis/check02.fos")
 ```
 
+### Checkpoint 2
+[Updated Synthesis](../synthesis/index.md#checkpoint-2)
+
 ### Comments
 In the code above, I also attached a couple of comments to lines in the FOS file. Comments are printed above the line they are attached to. For example, `my_synthesis.rename.add_comments()` attaches comments above the `[Rename]` header in the FOS file. The other command, `my_synthesis.rename.materials.add_comments()`, attaches the comment above the new `materials:reagents` line underneath the `[Rename]` heading.
 
-## (Checkpoint 3) Changing Simple Data
+## Changing Simple Data
 Here I change some of the metadata and reaction information for my synthesis. Certain variables are automatically converted. For example, the `nominal_formula` is coded to be a `ChemFormula` object, so when I set that property equal to simple text, it automatically converts the text into a true formula object and raises an error if it's not able to read it.
+
+Note that `my_synthesis.products` is supposed to be a list of `Product` blocks, but because it is automatically passed to the corresponding validator when I reassign it, I can assign it to a dictionary, and let the validator construct the dictionary into a `Product` on the back end.
 ```python
 # change some metadata for my synthesis
 my_meta.name = "TE002"
@@ -125,7 +148,10 @@ my_synthesis.products = [{
 my_synthesis.save("synthesis/check03.fos")
 ```
 
-## (Checkpoint 4) Finding Blocks in Lists and Using Templates
+### Checkpoint 3
+[Updated Synthesis](../synthesis/index.md#checkpoint-3)
+
+## Finding Blocks in Lists and Using Templates
 My original template file had an entry in the experimenters block for an experimenter named Joe. If I want to add Joe to the experimenters for my synthesis, I have to pull his entry from the list of experimenter templates. I can do this with the `get_first()` command, which finds the first entry in a list with a property matching the one I specify (in this case, `template_name="Joe"`). There is also `get_any()` which uses similar search rules but returns a list of *all* matching entries. There are also deletion commands that follow the same rules, like `remove_any()`
 
 After finding Joe's template and setting it to the `joe_template` shortcut, I have to fill in the empty values in the template before it can be used as a complete experimenter. In this case, Joe's template is only missing an affiliation value, so I use the `fill()` command to fill it in and return a true experimenter. As you'll see later on, you can put as many `property=value` statements in the `fill()` command as you need to in order to fill in the template.
@@ -148,10 +174,13 @@ my_exps.add_comments("Note that now there are two experimenters, so the",
 my_synthesis.save("synthesis/check04.fos")
 ```
 
-## (Checkpoint 5) Adding Unexpected Variable Types
-Sometimes, you may want to add a special block type (like `Material`, `Treatment`, or `Experimenter`), even if the FOS program isn't expecting it. You can do this using the `add_block` command. In this case, I want create a new property for my first experimenter to give him a friend. The unexpected friend property gets assigned as an `"experimenter"`, which eventually gets matched to the `Experimenter` data type in the code.
+### Checkpoint 4
+[Updated Synthesis](../synthesis/index.md#checkpoint-4)
 
-Then, perhaps after an awkward social encounter, I decide to refer to Joe as Travis's colleague instead of friend. Note that because `friend` was already an unexpected property, renaming this does not add `friend: colleague` to the `rename` block in the resulting FOS, because it is simpler to just move the `"experimenter"` assignment over to the new `colleague` block.
+## Adding Unexpected Variable Types
+Sometimes, you may want to add a special block type (like `Material`, `Treatment`, or `Experimenter`), even if the FOS program isn't expecting it. You can do this using the `add_block` command. In this case, I want to create a new property for my first experimenter to give him a friend. The unexpected friend property gets assigned as an `"experimenter"`, which eventually gets matched to the `Experimenter` data type in the code.
+
+Then, perhaps after an awkward social encounter, I decide to refer to Joe as Travis's colleague instead of friend. Note that because `friend` was already an unexpected property, renaming this does not add `friend: colleague` to the `rename` block in the resulting FOS; It is simpler to move the `"experimenter"` assignment over to the new `colleague` block.
 
 ```python
 my_synthesis.clear_all_comments()
@@ -169,6 +198,11 @@ my_exps.add_comments("Note that there are now multiple experimenters in this blo
 
 my_synthesis.save("synthesis/check05.fos")
 ```
+
+### Checkpoint 5
+[Updated Synthesis](../synthesis/index.md#checkpoint-5)
+
+### FOS Output
 
 In a FOS file, unexpected property types are signaled using `property$alias`, where `alias` is a word that had been pre-programmed to match to a certain block type (see the example below). Usually aliases are the same word as their corresponding type, but more documentation will be created to see available types and what alias to use for them.
 ```FOS
@@ -204,8 +238,8 @@ my_mats[0].amount = 8
 ```
 
 
-## (Checkpoint 6) Creating Templates and Filling in Larger Templates
-In addition to loading templates writting to FOS files, you can also create templates from existing blocks by using `make_template()` and specifying which properties you want to leave empty in the template. Here, I use the zinc material loaded from my synthesis to create a generic template for any metal powder with the same purity.
+## Creating Templates and Filling in Larger Templates
+In addition to loading templates written to FOS files, you can also create templates from existing blocks by using `make_template()` and specifying which properties you want to leave empty in the template. Here, I use the zinc material loaded from my synthesis to create a generic template for any metal powder with the same purity.
 
 Then, I use the `add_block()` command we already used on our synthesis to add a separate block to store generic materials. This is to distinguish my new template from the other material templates in my file, which are only missing `amount` and `type`.
 ```python
@@ -254,7 +288,10 @@ my_synthesis.save("synthesis/check06.fos")
 my_templates.save("templates/check06.fos")
 ```
 
-## (Checkpoint 7) Reusing Templates
+### Checkpoint 6
+[Updated Synthesis](../synthesis/index.md#checkpoint-6) | [Updated Templates](../templates/index.md#checkpoint-6)
+
+## Reusing Templates
 When you fill in a template, it creates a copy with all the values filled in. So once I build a template of, say, a ramp section of an annealing profile, I can use that template to create several different ramp sections with different filled in values. Note that I have not yet added my new annealing treatments to my synthesis, so they will not appear in this checkpoint.
 ```python
 
@@ -292,7 +329,10 @@ anneal1.program.append({"type":"quench","medium":"water"})
 my_templates.save("templates/check07.fos")
 ```
 
-## (Checkpoint 8) Removing Blocks From Lists Using Indices
+### Checkpoint 7
+[Updated Templates](../templates/index.md#checkpoint-7)
+
+## Removing Blocks From Lists Using Indices
 In addition to the `remove_any()` command for lists of blocks, there is also `remove_idx(from_idx, to_idx)` which allows you to remove a range of values from the list. Here I'm using it to remove all treatments after my first 2 treatments, so that I can add my new annealing treatments to the synthesis instead.
 ```python
 # Remove all treatments except the first two
@@ -305,7 +345,10 @@ for anneal in (anneal1, anneal2):
 my_synthesis.save("synthesis/check08.fos")
 ```
 
-## (Checkpoint 9) Managing Embedded Files
+### Checkpoint 8
+[Updated Synthesis](../synthesis/index.md#checkpoint-8)
+
+## Managing Embedded Files
 Embedded files are just blocks like every other section, except they have a special `embedded` property that stores the un-edited lines of the original file.
 ```python
 # Copying Phil's cif from my templates into my synthesis.
@@ -324,21 +367,30 @@ my_templates.save("templates/check09.fos")
 my_synthesis.save("synthesis/check09.fos")
 ```
 
+### Checkpoint 9
+[Updated Synthesis](../synthesis/index.md#checkpoint-9) | [Updated Templates](../templates/index.md#checkpoint-9)
+
 ## Calculation Routines
-There is the capability to add "calculation_routines" to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. Calculated comments are given a special syntax so that they are stored when reading a FOS file, and they can be overwritten at any time with a new updated value.
+There is the capability to add "calculation_routines" to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. 
+
+Since calculated comments are for user convenience and contain redundant information (which might inadvertently conflict with other changes), they are given a special syntax so that they are stored when *saving* a FOS file, but not read when *loading* a FOS file. They can be overwritten at any time with a new updated value.
 ```python
 # Every material gets a weight percent comment added above their ratio
 my_synthesis.add_calc_routine("reagents.add_weight_pcts")
-'''for anneal in my_synthesis.treatments.get_any(type="anneal"):
-    anneal.add_calc_routine("program.add_all_missing_parameters")'''
 my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
+
+# Every anneal treatment gets missing rate parameter comment.
+for anneal in my_synthesis.treatments.get_any(type="anneal"):
+    anneal.add_calc_routine("program.add_all_missing_parameters")
+
 ```
 
-## (Checkpoint 10) Cleaning Up
+## Cleaning Up
 All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn't matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
+
 * Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
-* Set some specifc positions for certain blocks to make the FOS easier to read.
-* Set the generic templates block to use the "explicit" key:value syntax for all of its templates
+* Set some specific positions for certain blocks for better organization.
+* Set the generic templates block to use the "explicit" key:value syntax for all of its templates.
 * Set the synthesis materials block to use the "looped" syntax where all the keys are specified at the beginning of the block.
 ```python
 # some reordering stuff to make the final printout more consistent.
@@ -362,6 +414,9 @@ db._debug.on = True
 print(f"Synthesis matches: {my_synthesis.matches_file()}")
 print(f"Templates match:   {my_templates.matches_file()}")
 ```
+
+### Checkpoint 10 (Finished)
+[Finalized Synthesis](../synthesis/index.md#checkpoint-10) | [Finalized Templates](../templates/index.md#checkpoint-10)
 
 ## Bonus: Generating Figures
 There are features being developed that allow generating useful figures from the information loaded in a FOS file. Currently we have two figures:

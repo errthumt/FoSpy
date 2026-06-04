@@ -871,7 +871,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 // This new block has been added because I renamed a required block.
 [Rename]
 // Synthesis files are required to have a materials block, so
-// This line specifies that it has been renamed to reagents.
+// this line specifies that it has been renamed to reagents.
 materials: reagents
 
 [Cifs]
@@ -1119,7 +1119,7 @@ group Cmcm]
 // This new block has been added because I renamed a required block.
 [Rename]
 // Synthesis files are required to have a materials block, so
-// This line specifies that it has been renamed to reagents.
+// this line specifies that it has been renamed to reagents.
 materials: reagents
 
 [Cifs]
@@ -16388,6 +16388,7 @@ group Cmcm]
     None
     program: [[
         type: ramp
+        // ! Rate for ramp: 262.5 delta_degree_Celsius / hour
         temp: 550
         time: 2
         temp_unit: degree_Celsius
@@ -16408,6 +16409,7 @@ group Cmcm]
     None
     program: [[
         type: ramp
+        // ! Rate for ramp: 62.5 delta_degree_Celsius / hour
         temp: 650
         time: 10
         temp_unit: degree_Celsius
