@@ -6,12 +6,6 @@ from .template import TemplateBlock, TemplateList
 from .._debug import Debug
 _debug = Debug()
 
-__block_classes__ = [
-    "Material",
-    "MaterialList"
-]
-
-
 class Material(SingleBlock):
     """
     Represents a material used in a synthesis
@@ -89,3 +83,8 @@ class MaterialList(ListBlock):
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("amount",comment, f"{label}_pct")
 
+from ._blockUtils import _get_block_classes
+import sys
+__block_classes__ = _get_block_classes(sys.modules[__name__])
+"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
+Used for generating documentation site."""

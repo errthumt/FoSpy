@@ -27,27 +27,42 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+### `Experimenter`
+::: FoSpy.blocks.metadata.Experimenter
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 ### `MetaData`
 ::: FoSpy.blocks.metadata.MetaData
     options:
         show_if_no_docstring: true
----
-### `TemplateMeta`
-::: FoSpy.blocks.metadata.TemplateMeta
-    options:
-        show_if_no_docstring: true
----
-### `Reaction`
-::: FoSpy.blocks.metadata.Reaction
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `Product`
 ::: FoSpy.blocks.metadata.Product
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
-### `Experimenter`
-::: FoSpy.blocks.metadata.Experimenter
+### `Reaction`
+::: FoSpy.blocks.metadata.Reaction
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `TemplateMeta`
+::: FoSpy.blocks.metadata.TemplateMeta
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

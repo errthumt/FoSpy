@@ -27,52 +27,82 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
-### `Treatment`
-::: FoSpy.blocks.treatments.Treatment
+### `AnnealProgram`
+::: FoSpy.blocks.treatments.AnnealProgram
     options:
         show_if_no_docstring: true
----
-### `Annealing`
-::: FoSpy.blocks.treatments.Annealing
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `AnnealSection`
 ::: FoSpy.blocks.treatments.AnnealSection
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
-### `Ramp`
-::: FoSpy.blocks.treatments.Ramp
+### `Annealing`
+::: FoSpy.blocks.treatments.Annealing
     options:
         show_if_no_docstring: true
----
-### `RampNoTemp`
-::: FoSpy.blocks.treatments.RampNoTemp
-    options:
-        show_if_no_docstring: true
----
-### `RampNoTime`
-::: FoSpy.blocks.treatments.RampNoTime
-    options:
-        show_if_no_docstring: true
----
-### `RampNoRate`
-::: FoSpy.blocks.treatments.RampNoRate
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `Dwell`
 ::: FoSpy.blocks.treatments.Dwell
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `Quench`
 ::: FoSpy.blocks.treatments.Quench
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
-### `AnnealProgram`
-::: FoSpy.blocks.treatments.AnnealProgram
+### `Ramp`
+::: FoSpy.blocks.treatments.Ramp
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `RampNoRate`
+::: FoSpy.blocks.treatments.RampNoRate
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `RampNoTemp`
+::: FoSpy.blocks.treatments.RampNoTemp
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `RampNoTime`
+::: FoSpy.blocks.treatments.RampNoTime
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `Treatment`
+::: FoSpy.blocks.treatments.Treatment
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

@@ -27,12 +27,18 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
-### `TraceData`
-::: FoSpy.blocks.data.TraceData
-    options:
-        show_if_no_docstring: true
----
 ### `CSVdata`
 ::: FoSpy.blocks.data.CSVdata
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `TraceData`
+::: FoSpy.blocks.data.TraceData
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

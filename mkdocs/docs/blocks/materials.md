@@ -31,8 +31,14 @@ their own comment metadata.
 ::: FoSpy.blocks.materials.Material
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `MaterialList`
 ::: FoSpy.blocks.materials.MaterialList
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

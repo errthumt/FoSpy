@@ -10,15 +10,6 @@ from ._blockUtils import _unwrap_block
 from .._debug import Debug
 _debug = Debug()
 
-__block_classes__ = [
-    "Block",
-    "ListBlock",
-    "SimpleWrapper",
-    "SingleBlock",
-    "SubContainer"
-]
-
-
 def _add_comments_to_parent(attr_name):
     """
     Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
@@ -119,6 +110,8 @@ class Block:
     """
     def find_fileblock(self):
         """
+        Finds the parent file object.
+
         Walks upward through `_parent_block` attributes until a
         [`FileBlock`][FoSpy.blocks.files.FileBlock] instance is found and
         returns that instance.
@@ -137,6 +130,8 @@ class Block:
     
     def find_tempdir(self):
         """
+        Find the parent file object's temporary directory.
+
         Finds the temporary directory created by the
         [`FileBlock`][FoSpy.blocks.files.FileBlock] instance containing this
         block as one of its attributes. Returns a `tempfile.TemporaryDirectory`
@@ -150,6 +145,8 @@ class Block:
     
     def find_temppath(self):
         """
+        Find the parent file object's temporary directory path.
+
         Similar to [`find_tempdir`][FoSpy.blocks.blocks.Block.find_tempdir] but
         returns the corresponding `pathlib.Path` object instead.
         """
@@ -205,7 +202,7 @@ class SingleBlock(Block):
     `self.ext` for safety, but can still be accessed as an attribute of the
     SingleBlock object if not overwritten
 
-    **Some notable subclasses:**
+    Notable Subclasses:
     [`FileBlock(SingleBlock)`][FoSpy.blocks.files.FileBlock]
     [`Synthesis(FileBlock)`][FoSpy.blocks.synthesis.Synthesis]
     [`Reaction(SingleBlock)`][FoSpy.blocks.metadata.Reaction]
@@ -218,6 +215,8 @@ class SingleBlock(Block):
     @classmethod
     def TemplateClass(cls,*args:str):
         """
+        Create a template for a subclass of `SingleBlock`.
+
         Generates a hybridized subclass of the current block class and
         [`TemplateBlock`][FoSpy.blocks.template.TemplateBlock]. Template
         subclasses override original expected validators with either a
@@ -279,6 +278,8 @@ class SingleBlock(Block):
     @classmethod
     def reflex(cls, serialize=True, **kwargs:any):
         """
+        Generate a flexible template for the current class.
+
         Flexibly generates a template for the current class where any required
         properties missing from `kwargs` are automatically converted to template
         types (See
@@ -386,6 +387,8 @@ class SingleBlock(Block):
     
     def get_validators(self):
         """
+        Overrides class validators with any renamed properties.
+
         Similar to class method: 
         [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators],
         but uses
@@ -396,6 +399,8 @@ class SingleBlock(Block):
     
     def get_req_validators(self):
         """
+        Overrides class validators with any renamed properties.
+
         Similar to class method:
         [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators],
         but uses
@@ -622,8 +627,9 @@ class SingleBlock(Block):
 
     def __getattr__(self, name:str):
         """
-        Check both `self` and `self.ext` for attribute before returning. A
-        matching attribute of `self` will be returned first, but if `self` has
+        Check both `self` and `self.ext` for attribute before returning.
+        
+        A matching attribute of `self` will be returned first, but if `self` has
         no matching attribute, a matching attribute of `self.ext` can be
         returned instead.
         """
@@ -639,8 +645,9 @@ class SingleBlock(Block):
 
     def __eq__(self, other, suppress_routine_paths=False):
         """
-        Check equality of two `SingleBlock` objects by checking a deep
-        difference of their
+        Check equality of two `SingleBlock` objects.
+         
+        Equality is checked by a deep difference of their
         [serialized][FoSpy.blocks.blocks.SingleBlock.serialize] dictionaries.
 
         Args:
@@ -724,9 +731,10 @@ class SingleBlock(Block):
     
     def add_comments(self, *comments):
         """
-        Default Behavior. If a `SingleBlock` is stored as an attribute of
-        another `SingleBlock`, this method will be overwritten by the parent's
-        `__setattr__`.
+        Default behavior to be overwritten when attached to a parent block.
+        
+        If a `SingleBlock` is stored as an attribute of another `SingleBlock`,
+        this method will be overwritten by the parent's `__setattr__`.
         """
         keys = list(self.get_req_validators())
 
@@ -904,6 +912,8 @@ class SingleBlock(Block):
     
     def to_json(self, filepath=None, clean=True, indent=4, **kwargs):
         """
+        Converts `self` into a JSON-formatted string or file.
+
         [Serializes][FoSpy.blocks.blocks.SingleBlock.serialize] and either
         returns as a JSON-formatted string or saves to a JSON file.
 
@@ -963,6 +973,8 @@ class SingleBlock(Block):
 
     def make_template(self,template_name:str,*args:str):
         """
+        Converts `self` into a template of its original subclass.
+
         Returns a copy of `self` as a template of its original subclass, with
         specified fields replaced with template types. See
         [`TemplateClass`][FoSpy.blocks.blocks.SingleBlock.TemplateClass] for
@@ -1023,6 +1035,8 @@ class SingleBlock(Block):
     
     def add_calc_routine(self, path:str, **kwargs):
         """
+        Schedules a calculated comment.
+
         Appends a
         [`_calc_routine()`][FoSpy.blocks._blockUtils._calc_routine]-decorated
         function to `self._calc_routines` to be run at
@@ -1130,6 +1144,8 @@ class SingleBlock(Block):
     
     def add_all_calc_routines(self, recursive=False):
         """
+        Schedule all available calculation routines.
+
         Adds all available calc_routines to `self._calc_routines` using
         [`list_avail_routines()`][FoSpy.blocks.blocks.SingleBlock.list_avail_routines]
         and
@@ -1173,6 +1189,8 @@ class SingleBlock(Block):
     
     def keys_to_front(self,*args):
         """
+        Reorder attributes for serialization.
+
         Move any attribute names in `*args` to the front of _key_order to be
         serialized first. Order within `*args` is maintained in result.
         """
@@ -1193,6 +1211,8 @@ class SingleBlock(Block):
 
     def default_key_order(self, deep=False):
         """
+        Set to default attribute order for serialization.
+
         Rearrange attribute order to the default order assigned by
         [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators]
 
@@ -1218,6 +1238,8 @@ class SingleBlock(Block):
 
     def keys_to_end(self, *args):
         """
+        Reorder attributes for serialization.
+
         Move any attribute names in `*args` to the end of _key_order to be
         serialized last. Order within `*args` is maintained in result.
         """
@@ -1237,6 +1259,8 @@ class SingleBlock(Block):
         
     def key_to_idx(self, key:str, idx:int):
         """
+        Reorder attributes for serialization.
+
         Move any attribute name to a specific index in `_key_order` for
         serialization order. The invisible `"metadata"` key is always refreshed
         to the front of the list, so indices are effectively 1-based.
@@ -1331,20 +1355,16 @@ class ListBlock(Block):
     _reqCls = None
     def __init__(self, blockList:list):
         """
-        Constructs a `ListBlock` from a list of serialized dictionaries.
+        Constructs a `ListBlock` from a list of objects or serialized dictionaries.
 
-        Each dict in blockList is passed directly to the constructor of the
-        required `SingleBlock` class. To construct a `ListBlock` from a list of
-        previously-constructed `SingleBlock` objects, use
-        `ListBlock.fromBlocks()` instead.
+        Each item in blockList is checked against the `SingleBlock` subclass
+        specified for the `ListBlock` subclass. If the item is not the correct
+        subclass, it is passed to the `SingleBlock` subclass's
+        `dispatch_subclass` method for coersion.
 
         Args:
             blockList:
-                A list of serialized dictionaries. Each dictionary is passed to
-                the `SingleBlock` constructor specified by `cls`
-            cls:
-                The `SingleBlock` subclass enforced during construction. This is
-                usually passed in subclass definitions. 
+                A list of `dicts` or `SingleBlock` objects
         """
         self._objs = []
         if not isinstance(blockList, list):
@@ -1354,34 +1374,6 @@ class ListBlock(Block):
             obj._parent_block = self
             self._objs.append(obj)
     
-    @classmethod
-    def fromBlocks(cls, blockList:list):
-        """
-        Constructs a `ListBlock` from a list of previously-constructed `SingleBlock` objects.
-
-        Args:
-            blockList:
-                A list of `SingleBlock` objects. All entries must match the
-                class defined in `ListBlock` subclass definition.
-
-        Raises:
-            TypeError: this function can only be called from a subclass that has
-            already defined the required `SingleBlock` subclass.
-
-        Example:
-        ```
-            # Entries already constructed as Material(SingleBlock) objects
-            matList = [zinc, antimony, barium]
-            # MaterialList(ListBlock) enforces only Material(SingleBlock) objects.
-            materials = MaterialList(matList) 
-        ```
-        """
-        try:
-            obj = cls([])
-        except TypeError as e:
-            raise TypeError(f"Please note: you must call fromBlocks from a subclass (such as MaterialList.fromBlocks()).\n{e}")
-        obj._objs = blockList.copy()
-        return obj
     
     @classmethod
     def Simple(cls, reqCls=SingleBlock):
@@ -1642,3 +1634,9 @@ class ListBlock(Block):
         for obj in self._objs:
             if hasattr(obj, "default_key_order"):
                 obj.default_key_order(deep=deep)
+
+from ._blockUtils import _get_block_classes
+import sys
+__block_classes__ = _get_block_classes(sys.modules[__name__])
+"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
+Used for generating documentation site."""
