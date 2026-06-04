@@ -46,9 +46,11 @@ def main():
     my_synthesis.clear_all_comments()
     my_synthesis.rename_block("materials","reagents")
     my_mats = my_synthesis.reagents
-    my_synthesis.rename.add_comments("This new block has been added because I renamed a required block.")
-    my_synthesis.rename.materials.add_comments("Synthesis files are required to have a materials block, so",
-                                               "This line specifies that it has been renamed to reagents.")
+    my_synthesis.rename.add_comments(
+        "This new block has been added because I renamed a required block.")
+    my_synthesis.rename.materials.add_comments(
+        "Synthesis files are required to have a materials block, so",
+        "this line specifies that it has been renamed to reagents.")
 
     my_exps[0].rename_block("affiliation","isu_research_group")
     my_synthesis.keys_to_end("cifs")
@@ -218,9 +220,12 @@ def main():
 
     # Every material gets a weight percent comment added above their ratio
     my_synthesis.add_calc_routine("reagents.add_weight_pcts")
-    '''for anneal in my_synthesis.treatments.get_any(type="anneal"):
-        anneal.add_calc_routine("program.add_all_missing_parameters")'''
     my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
+
+    # Every anneal treatment gets missing rate parameter comment.
+    for anneal in my_synthesis.treatments.get_any(type="anneal"):
+        anneal.add_calc_routine("program.add_all_missing_parameters")
+
 
 
     # some reordering stuff to make the final printout more consistent.
