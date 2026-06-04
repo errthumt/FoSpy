@@ -1,12 +1,9 @@
+from FoSpy.blocks.blocks import ListBlock
+
 from .blocks import SingleBlock
 
 from .._debug import Debug
 _debug = Debug()
-
-__block_classes__ = [
-    "EmbeddedCIF",
-    "EmbeddedFile",
-]
 
 class EmbeddedFile(SingleBlock):
     """
@@ -50,3 +47,16 @@ class EmbeddedCIF(EmbeddedFile):
             return self._subprocess(_quick_pattern,args=(two_theta, intensity))
         
         return _quick_pattern(two_theta, intensity)
+
+
+CifList = ListBlock.Simple(EmbeddedCIF)
+"""
+A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
+[`EmbeddedCIF` objects][FoSpy.blocks.embedded.EmbeddedCIF].
+"""
+
+from ._blockUtils import _get_block_classes
+import sys
+__block_classes__ = _get_block_classes(sys.modules[__name__])
+"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
+Used for generating documentation site."""

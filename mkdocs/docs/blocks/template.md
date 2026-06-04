@@ -27,22 +27,34 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
-### `TemplateSet`
-::: FoSpy.blocks.template.TemplateSet
+### `FlexTemplate`
+::: FoSpy.blocks.template.FlexTemplate
     options:
         show_if_no_docstring: true
----
-### `TemplateList`
-::: FoSpy.blocks.template.TemplateList
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `TemplateBlock`
 ::: FoSpy.blocks.template.TemplateBlock
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
-### `FlexTemplate`
-::: FoSpy.blocks.template.FlexTemplate
+### `TemplateList`
+::: FoSpy.blocks.template.TemplateList
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+### `TemplateSet`
+::: FoSpy.blocks.template.TemplateSet
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

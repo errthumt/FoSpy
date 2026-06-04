@@ -45,6 +45,7 @@ plugins:
       python:
         options:
           heading_level: 4
+          annotations_path: source
 
 extra_css:
   - stylesheets/extra.css

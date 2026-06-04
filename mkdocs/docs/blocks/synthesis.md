@@ -31,3 +31,6 @@ their own comment metadata.
 ::: FoSpy.blocks.synthesis.Synthesis
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

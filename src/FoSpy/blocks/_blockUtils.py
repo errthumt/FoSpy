@@ -60,3 +60,18 @@ def _is_full_template(val):
             if key != "template_name" and not (key.startswith("_") or _is_full_template(v)):
                 return False
         return True
+    
+def _get_block_classes(module):
+    from .blocks import Block
+    import inspect
+
+    __block_classes__ = []
+
+    for name, obj in inspect.getmembers(module, inspect.isclass):
+        if obj.__module__ != module.__name__:
+            continue
+
+        if issubclass(obj, Block):
+            __block_classes__.append(name)
+
+    return __block_classes__

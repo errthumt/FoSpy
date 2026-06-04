@@ -31,23 +31,22 @@ their own comment metadata.
 ::: FoSpy.blocks.blocks.Block
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `ListBlock`
 ::: FoSpy.blocks.blocks.ListBlock
     options:
         show_if_no_docstring: true
----
-### `SimpleWrapper`
-::: FoSpy.blocks.blocks.SimpleWrapper
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `SingleBlock`
 ::: FoSpy.blocks.blocks.SingleBlock
     options:
         show_if_no_docstring: true
----
-### `SubContainer`
-::: FoSpy.blocks.blocks.SubContainer
-    options:
-        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

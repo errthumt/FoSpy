@@ -31,8 +31,14 @@ their own comment metadata.
 ::: FoSpy.blocks.embedded.EmbeddedCIF
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
 ---
 ### `EmbeddedFile`
 ::: FoSpy.blocks.embedded.EmbeddedFile
     options:
         show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

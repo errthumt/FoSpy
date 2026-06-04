@@ -37,6 +37,7 @@ def get_all_symbols(py_file: Path, list_name: str = SYMBOL_LIST_NAME) -> list[st
 
 def make_stubs():
     from .._utils import ch2repo
+    import importlib
     ch2repo()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -48,7 +49,9 @@ def make_stubs():
             continue
 
         module_name = py_file.stem
-        symbols = get_all_symbols(py_file)
+        module = importlib.import_module(f"{PACKAGE_ROOT}.{module_name}")
+        symbols = getattr(module, SYMBOL_LIST_NAME, [])
+
 
         md_path = OUTPUT_DIR / f"{module_name}.md"
         with md_path.open("w", encoding="utf-8") as f:
@@ -87,7 +90,6 @@ def make_stubs():
             f.write(textwrap.dedent(attach_pre).lstrip("\n"))
 
             if not symbols:
-                # Fallback: no __all__ found, nothing to document explicitly
                 f.write(f"::: {PACKAGE_ROOT}.{module_name}\n")
                 f.write("    options:\n")
                 f.write("        members: true\n")
@@ -98,6 +100,9 @@ def make_stubs():
                 f.write(f"::: {PACKAGE_ROOT}.{module_name}.{sym}\n")
                 f.write("    options:\n")
                 f.write("        show_if_no_docstring: true\n")
+                f.write("        inherited_members: true\n")
+                f.write("        summary:\n")
+                f.write("           functions: true\n")
 
         paths[module_name] = f"{BLOCKS_DIR_NAME}/{module_name}.md"
 
