@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling >= 1.26"]
+requires = ["hatchling >= 1.26", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
@@ -23,7 +23,18 @@ dependencies = [
     "cif2xrd >= 1.0.3",
     "pint"
 ]
+dynamic = [
+    "urls",
+    "version"
+]
 
-[project.urls]
+
+[tool.hatch.version]
+source="vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "_version.py"
+
+[tool.hatch.metadata.hooks.vcs.urls]
 Homepage = "https://github.com/errthumt/FoSpy"
 Issues = "https://github.com/errthumt/FoSpy/issues"
