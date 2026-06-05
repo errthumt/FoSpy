@@ -35,7 +35,7 @@ jobs:
 
       - name: Check property tables and rebuild markdown stubs.
         run: |
-          fos-site-build
+          fos-site-build --deploy
 
       - name: Commit changes
         run: |
