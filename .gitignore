@@ -9,6 +9,9 @@ __pycache__/
 dist_venv/
 mkdocs/site/
 
+# hatchling dynamic versioning
+_version.py
+
 # C extensions
 *.so
 

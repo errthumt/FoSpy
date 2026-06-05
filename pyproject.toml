@@ -4,7 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "FoSpy"
-version = "0.0.4"
 authors = [
   { name="Travis Errthum" },
 ]
@@ -24,9 +23,12 @@ dependencies = [
     "pint"
 ]
 dynamic = [
-    "urls",
     "version"
 ]
+
+[project.urls]
+Homepage = "https://github.com/errthumt/FoSpy"
+Issues = "https://github.com/errthumt/FoSpy/issues"
 
 
 [tool.hatch.version]
@@ -35,6 +37,3 @@ source="vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "_version.py"
 
-[tool.hatch.metadata.hooks.vcs.urls]
-Homepage = "https://github.com/errthumt/FoSpy"
-Issues = "https://github.com/errthumt/FoSpy/issues"
