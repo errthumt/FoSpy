@@ -5,7 +5,7 @@ class FileMismatchError(Exception):
     pass
 
 def build_full_site(deploy=False, figures=False):
-    diffs = check_tables.update_tables_report_diffs()
+    diffs, update_func = check_tables.update_tables_report_diffs(delay=True)
 
     for diff in diffs.values():
         if len(diff) > 0:
@@ -15,7 +15,12 @@ def build_full_site(deploy=False, figures=False):
             if not deploy:
                 from warnings import warn
                 warn(report, UserWarning)
-                input("Press enter to continue...")
+                update = input("Add placeholders to property tables? (y/n): ").lower().strip() == "y"
+                if update:
+                    update_func()
+                cont = input("Continue with site build? (y/n): ").lower().strip() == "y"
+                if not cont:
+                    raise FileMismatchError(report)
                 break
             else:
                 raise FileMismatchError(report)

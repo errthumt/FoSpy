@@ -202,6 +202,10 @@ optional_keys = {
         "equipment": EquipmentList
     },
 
+    Reaction: {
+        "characterizations": str
+    },
+
     Experimenter: {
         "orcid" : str
     },
