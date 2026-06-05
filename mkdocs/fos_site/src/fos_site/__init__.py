@@ -34,5 +34,5 @@ def build_full_site_cli():
     parser.set_defaults(on_deploy=False)
     parser.set_defaults(figures=False)
     args = parser.parse_args()
-    build_full_site(automated=args.deploy, figures=args.figures)
+    build_full_site(deploy=args.deploy, figures=args.figures)
 
