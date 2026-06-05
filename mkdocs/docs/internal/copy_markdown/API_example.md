@@ -396,8 +396,8 @@ for anneal in my_synthesis.treatments.get_any(type="anneal"):
 All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn't matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
 
 * Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
-* Set some specific positions for certain blocks to make the FOS easier to read.
-* Set the generic templates block to use the "explicit" key:value syntax for all of its templates
+* Set some specific positions for certain blocks for better organization.
+* Set the generic templates block to use the "explicit" key:value syntax for all of its templates.
 * Set the synthesis materials block to use the "looped" syntax where all the keys are specified at the beginning of the block.
 ```python
 # some reordering stuff to make the final printout more consistent.

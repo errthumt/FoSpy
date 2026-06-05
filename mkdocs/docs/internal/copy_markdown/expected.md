@@ -64,15 +64,15 @@ special_prop2: 6.022
 
 ______________________________________________________________________
 
-# Expected Property Tables
+## Expected Property Tables
 
-## `AnnealSection`
+### `AnnealSection`
 
 [Class Documentation][FoSpy.blocks.treatments.AnnealSection]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -80,13 +80,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Annealing`
+### `Annealing`
 
 [Class Documentation][FoSpy.blocks.treatments.Annealing]
 
 **[Subclass of `Treatment`](#treatment)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -94,7 +94,7 @@ ______________________________________________________________________
 | start_temp | `validators.numbers.positive_decimal` | The initial temperature of the annealing profile |
 | start_temp_unit | `validators.units.FOSTempUnit` | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs)|
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -102,13 +102,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Dwell`
+### `Dwell`
 
 [Class Documentation][FoSpy.blocks.treatments.Dwell]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -117,13 +117,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `EmbeddedFile`
+### `EmbeddedFile`
 
 [Class Documentation][FoSpy.blocks.embedded.EmbeddedFile]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -131,7 +131,7 @@ ______________________________________________________________________
 | extension | `validators.filenames.file_extension` | File extension |
 | embedded | `list` | A list of raw lines read directly from the FOS file which can be unpacked to a temporary file during runtime for reading as the original filetype. |
 
-### `EmbeddedFile` Method Subclasses
+#### `EmbeddedFile` Method Subclasses
 
 These subclasses don't have any additional required properties but will either be given additional requirements in the future or have specialized methods.
 
@@ -139,20 +139,20 @@ These subclasses don't have any additional required properties but will either b
 
 ______________________________________________________________________
 
-## `Experimenter`
+### `Experimenter`
 
 [Class Documentation][FoSpy.blocks.metadata.Experimenter]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | name | `str` | Name of the experimenter |
 | affiliation | `str` | Lab/University/Research Group/etc. |
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -160,13 +160,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Material`
+### `Material`
 
 [Class Documentation][FoSpy.blocks.materials.Material]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -180,7 +180,7 @@ ______________________________________________________________________
 | amount | `validators.numbers.positive_decimal` | Amount that was used. |
 | amount_unit | `str` | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters.|
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -189,13 +189,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `MetaData`
+### `MetaData`
 
 [Class Documentation][FoSpy.blocks.metadata.MetaData]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -204,13 +204,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Product`
+### `Product`
 
 [Class Documentation][FoSpy.blocks.metadata.Product]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -220,7 +220,7 @@ ______________________________________________________________________
 | formula | `ChemFormula` | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format. |
 | observations | `str` | General observations about the product. |
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -233,13 +233,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Quench`
+### `Quench`
 
 [Class Documentation][FoSpy.blocks.treatments.Quench]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -247,13 +247,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `Ramp`
+### `Ramp`
 
 [Class Documentation][FoSpy.blocks.treatments.Ramp]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
-### Required properties
+#### Required properties
 
 During construction of a `Ramp` object, it is required to have at least 2 of the following optional properties, with their respective units:
 
@@ -263,7 +263,7 @@ During construction of a `Ramp` object, it is required to have at least 2 of the
 
 If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dipatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the API, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -276,13 +276,13 @@ If all three are provided, the last one found during reading will be discarded a
 
 ______________________________________________________________________
 
-## `Reaction`
+### `Reaction`
 
 [Class Documentation][FoSpy.blocks.metadata.Reaction]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -292,25 +292,25 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `SingleBlock`
+### `SingleBlock`
 
 [Class Documentation][FoSpy.blocks.blocks.SingleBlock]
 
 **Parent Block Class**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | ext | `SubContainer` | **Not to be passed to constructor. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes. |
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | rename | `validators.rename.rename_dict` | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [API script example](../examples/API_example/index.md) for usage.|
 
-### SingleBlock Method Subclasses
+#### SingleBlock Method Subclasses
 
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 
@@ -321,13 +321,13 @@ These subclasses don't currently have any additional required properties but wil
 
 ______________________________________________________________________
 
-## `Synthesis`
+### `Synthesis`
 
 [Class Documentation][FoSpy.blocks.synthesis.Synthesis]
 
 **[Subclass of `FileBlock`](#singleblock)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -338,7 +338,7 @@ ______________________________________________________________________
 | materials | `MaterialList` | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) |
 | treatments | `TreatmentList` | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) |
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -349,7 +349,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `TemplateBlock`
+### `TemplateBlock`
 
 [Class Documentation][FoSpy.blocks.template.TemplateBlock]
 
@@ -357,7 +357,7 @@ ______________________________________________________________________
 
 `TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [API script example](../examples/API_example/index.md) for some uses of templates.
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -365,13 +365,13 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `TemplateMeta`
+### `TemplateMeta`
 
 [Class Documentation][FoSpy.blocks.metadata.TemplateMeta]
 
 **[Subclass of `SingleBlock`](#)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -380,19 +380,19 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## `TemplateSet`
+### `TemplateSet`
 
 [Class Documentation][FoSpy.blocks.template.TemplateSet]
 
 **[Subclass of `FileBlock`](#)**
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | metadata | `TemplateMeta` | Meta information for the set of templates stored in a Template FOS file. |
 
-### Optional properties
+#### Optional properties
 
 In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. `TemplateList.Simple()` allows entries to be incomplete and generates hybridized `TemplateBlock` subclasses for them.
 
@@ -409,7 +409,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 ______________________________________________________________________
 
-## `Treatment`
+### `Treatment`
 
 [Class Documentation][FoSpy.blocks.treatments.Treatment]
 
@@ -421,7 +421,7 @@ When applicable, treatments are dispatched to subclasses based on the type value
 | --- | --- |
 | anneal | `Annealing` [(link)](#annealing) |
 
-### Required properties
+#### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
@@ -429,7 +429,7 @@ When applicable, treatments are dispatched to subclasses based on the type value
 | repeats | `int` | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) |
 | observations | `str` | General observations |
 
-### Optional properties
+#### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
