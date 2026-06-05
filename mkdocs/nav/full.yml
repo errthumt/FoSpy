@@ -5,8 +5,7 @@ nav:
   - Full Example Script: examples/API_example/full.md
   - Synthesis Files: examples/synthesis/index.md
   - Template Files: examples/templates/index.md
-- Property Documentation:
-  - Expected Properties: expected/index.md
+- Expected Properties: expected/index.md
 - Block Modules:
   - What is a Block?: blocks/index.md
   - blocks: blocks/blocks.md

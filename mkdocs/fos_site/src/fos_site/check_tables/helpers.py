@@ -153,7 +153,7 @@ def get_heading_tokens(heading_text, tok):
     # --- heading_open ---
     heading_open = tok.__class__(
         type="heading_open",
-        tag="h2",
+        tag="h3",
         nesting=1,
         attrs={},
         map=[None, None],     # safe default
@@ -203,7 +203,7 @@ def get_heading_tokens(heading_text, tok):
     # --- heading_close ---
     heading_close = tok.__class__(
         type="heading_close",
-        tag="h2",
+        tag="h3",
         nesting=-1,
         attrs={},
         map=None,
@@ -239,7 +239,7 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
     template_tokens = get_template_tokens(temp_path)
     while i < len(tokens):
         tok = tokens[i]
-        if tok.type == "heading_open" and tok.tag == "h1":
+        if tok.type == "heading_open" and tok.tag == "h2":
             inline = tokens[i + 1]
             if inline.type == "inline" and "Expected Property Tables" in inline.content:
                 tables_start = True
@@ -257,7 +257,7 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
             continue
 
         # Detect class header: ## `ClassName`
-        if tok.type == "heading_open" and tok.tag == "h2":
+        if tok.type == "heading_open" and tok.tag == "h3":
             inline = tokens[i + 1]
 
             # --- FIX FOR COMMONMARK ---
@@ -326,7 +326,7 @@ def extract_property_tables(tokens):
     i = 0
     while i < len(tokens):
         tok = tokens[i]
-        if tok.type == "heading_open" and tok.tag == "h1":
+        if tok.type == "heading_open" and tok.tag == "h2":
             inline = tokens[i + 1]
             if inline.type == "inline" and "Expected Property Tables" in inline.content:
                 tables_start = True
@@ -337,7 +337,7 @@ def extract_property_tables(tokens):
             continue
 
         # Detect class header: ## `Annealing`
-        if tok.type == "heading_open" and tok.tag == "h2":
+        if tok.type == "heading_open" and tok.tag == "h3":
             inline = tokens[i + 1]
             text = inline.content.strip("`")
             current_class = text
@@ -346,7 +346,7 @@ def extract_property_tables(tokens):
             continue
 
         # Detect Required / Optional section headers
-        if tok.type == "heading_open" and tok.tag == "h3":
+        if tok.type == "heading_open" and tok.tag == "h4":
             inline = tokens[i + 1]
             text = inline.content.lower()
             if "required" in text:
