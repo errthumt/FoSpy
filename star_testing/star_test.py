@@ -9,6 +9,8 @@ STAR_OUT = TEST_ROOT / "test.star"
 
 def dict_as_star(d:dict):
     out = {}
+    if not isinstance(d, dict):
+        return d
     for k,v in d.items():
         if isinstance(v, dict):
             out[k] = dict_as_star(v)
