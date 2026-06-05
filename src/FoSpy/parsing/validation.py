@@ -193,7 +193,8 @@ functions."""
 
 optional_keys = {
     SingleBlock: {
-        "rename": validators.rename.rename_dict
+        "rename": validators.rename.rename_dict,
+        "missing_key": str
     },
     Synthesis: {
         "cif": EmbeddedCIF,
