@@ -1,4 +1,6 @@
 site_name: FoSpy Documentation
+repo_url: https://github.com/errthumt/FoSpy
+repo_name: errthumt/FoSpy
 
 theme:
   name: material

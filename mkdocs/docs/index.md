@@ -1,9 +1,6 @@
 # FoSpy
 An API for opening, editing, and saving Files of Synthesis (*.fos)
 
-## GitHub
-[FoSpy @ errthumt](https://www.github.com/errthumt/FoSpy)
-
 ## Survey: Try Making Your Own FOS
 
 We are looking for as much input as possible from other scientists about what types of information should be in the FOS format. Create your own file of synthesis that precisely describes your synthetic approach to a material. **Don't worry about strict syntax guidelines or how long it might take to make these files in bulk** (GUI and LLM automation are right around the corner). Only worry about capturing all the relevant information so that we can make sure our format standards will work for you.
