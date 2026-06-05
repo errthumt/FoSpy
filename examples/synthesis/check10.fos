@@ -138,6 +138,7 @@ group Cmcm]
     None
     program: [[
         type: ramp
+        // ! Rate for ramp: 262.5 delta_degree_Celsius / hour
         temp: 550
         time: 2
         temp_unit: degree_Celsius
@@ -158,6 +159,7 @@ group Cmcm]
     None
     program: [[
         type: ramp
+        // ! Rate for ramp: 62.5 delta_degree_Celsius / hour
         temp: 650
         time: 10
         temp_unit: degree_Celsius
