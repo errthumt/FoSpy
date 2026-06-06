@@ -3,6 +3,10 @@ on:
   push:
     tags:
       - v*
+  release:
+    types:
+      - released
+
 jobs:
   gate:
     runs-on: ubuntu-latest
