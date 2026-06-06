@@ -42,7 +42,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Auto-build site corrections" || echo "No changes to commit"
+          git commit -m "WORKFLOW: Docs Build" || echo "No changes to commit"
 
       - name: Push changes
         run: git push
