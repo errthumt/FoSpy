@@ -32,7 +32,13 @@ jobs:
       - name: Install build dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python mkdocs-copy-markdown mkdocs-pygments pymdown-extensions black mike
-          curl -sSfL https://raw.githubusercontent.com/caarlos0/svu/main/install.sh | sh -s -- -b /usr/local/bin
+      
+      - name: Install svu
+        run: |
+          echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
+          sudo apt update
+          sudo apt install svu
+
 
       - name: Check property tables and rebuild markdown stubs.
         run: |
