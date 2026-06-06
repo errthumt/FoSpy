@@ -1,27 +1,28 @@
 name: Publish FoSpy to PyPI and TestPyPI
 on: 
   push:
-    tags:
-      - v*
+    branches:
+      - main
 jobs:
   gate:
     runs-on: ubuntu-latest
     outputs:
-      should_run: ${{ steps.checkForMain.outputs.should_run }}
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
-      - id: checkForMain
+      - uses: actions/checkout@v4
+
+      - name: Detect tag for this commit
+        id: tag
         run: |
-          if [[ "${GITHUB_BASE_REF}" != "main" ]]; then
-            echo "should_run=false" >> $GITHUB_OUTPUT
-          else
-            echo "should_run=true" >> $GITHUB_OUTPUT
-          fi
+          TAG=$(git tag --points-at HEAD)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Detected tag: $TAG"
 
   build:
     name: Build Distribution
     runs-on: ubuntu-latest
     needs: gate
-    if: needs.gate.outputs.should_run == 'true'
+    if: needs.gate.outputs.tag != ''
     
     steps:
       - uses: actions/checkout@v6
