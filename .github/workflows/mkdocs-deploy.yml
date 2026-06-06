@@ -23,7 +23,7 @@ jobs:
 
       - name: Install FoSpy
         run: |
-          pip install .
+          pip install -e .
 
       - name: Install fos_site
         run: |
