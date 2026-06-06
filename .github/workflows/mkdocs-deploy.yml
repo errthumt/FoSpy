@@ -108,4 +108,5 @@ jobs:
         working-directory: mkdocs
         run: |
           mike deploy --push --update-aliases "${{ steps.version.outputs.version }}" incoming
+          mike retitle incoming "${{ steps.version.outputs.version }}" --push
 
