@@ -82,13 +82,23 @@ jobs:
           echo "svu n => $NEXT_VERSION"
 
           # Get the current mike version (may be empty)
-          CURRENT_VERSION=$(mike list --json | jq -r '.[0].version // empty')
+          CURRENT_VERSION=$(mike list latest --json | jq -r '.version // empty')
           echo "mike current => $CURRENT_VERSION"
 
           # If svu n equals current mike version, bump patch instead
           if [ "$NEXT_VERSION" = "$CURRENT_VERSION" ]; then
             echo "next == current → using svu patch instead"
             NEXT_VERSION=$(svu patch)
+          else
+            echo "next != current → using svu n"
+            echo "checking for existing incoming"
+            INCOMING_VERSION=$(mike list incoming --json | jq -r '.version // empty')
+            if [["$INCOMING_VERSION" = "" ||  ( "$NEXT_VERSION" = "$INCOMING_VERSION" && "$INCOMING_VERSION" != "$CURRENT_VERSION" ) ]]; then
+              echo "overwriting existing/missing incoming page"
+            else
+              echo "next != incoming → removing existing incoming page"
+              mike delete "$INCOMING_VERSION"
+            fi
           fi
 
           echo "final version => $NEXT_VERSION"
