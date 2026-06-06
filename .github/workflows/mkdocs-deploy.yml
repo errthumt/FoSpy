@@ -93,7 +93,7 @@ jobs:
             echo "next != current → using svu n"
             echo "checking for existing incoming"
             INCOMING_VERSION=$(mike list incoming --json | jq -r '.version // empty')
-            if [["$INCOMING_VERSION" = "" ||  ( "$NEXT_VERSION" = "$INCOMING_VERSION" && "$INCOMING_VERSION" != "$CURRENT_VERSION" ) ]]; then
+            if [[ "$INCOMING_VERSION" = "" ||  ( "$NEXT_VERSION" = "$INCOMING_VERSION" && "$INCOMING_VERSION" != "$CURRENT_VERSION" ) ]] ; then
               echo "overwriting existing/missing incoming page"
             else
               echo "next != incoming → removing existing incoming page"
