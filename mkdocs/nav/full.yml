@@ -33,7 +33,7 @@ nav:
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
   - json:
-      utils: full/json/utils.md
+    - utils: full/json/utils.md
   - parsing:
     - format_fos: full/parsing/format_fos.md
     - read: full/parsing/read.md
@@ -48,6 +48,6 @@ nav:
       - rename: full/parsing/validators/rename.md
       - units: full/parsing/validators/units.md
   - plotting:
-      EmbeddedCIF: full/plotting/EmbeddedCIF.md
+    - EmbeddedCIF: full/plotting/EmbeddedCIF.md
 - For Devs: internal/index.md
 - PyPI: https://pypi.org/project/FoSpy
