@@ -11,12 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Detect tag for this commit
+      - name: Detect tag containing latest commit
         id: tag
         run: |
-          TAG=$(git tag --points-at HEAD)
+          LATEST_COMMIT=$(git rev-parse HEAD)
+          TAGS=($(git tag --contains "$LATEST_COMMIT" --sort=-creatordate))
+          TAG="${TAGS[0]}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Detected tag: $TAG"
+
 
   build:
     name: Build Distribution
@@ -73,7 +76,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
   publish-to-testpypi:
     name: Publish to TestPyPI
-    if: startsWith(github.ref, 'refs/tags/') && !contains(github.event.head_commit.message, 'WORKFLOW')
+    if: ${{ !contains(github.event.head_commit.message, 'WORKFLOW') }}
     needs:
       - build
     runs-on: ubuntu-latest
