@@ -1,0 +1,109 @@
+name: TE001
+date: 03-11-2026
+// Any information before the first header is considered metadata.
+
+[[Experimenters]]
+// You can have multiple experimenters, but here we just have one.
+name: 
+affiliation: 
+orcid: 
+
+// General information about the reaction.
+[Reaction]
+nominal_formula: 
+nominal_amount: 
+nominal_amount_unit: 
+
+// Information about expected or obtained products.
+[Products]
+name: 
+formula: 
+expected: true
+obtained: true
+expected_amount: 
+expected_amount_unit: 
+obtained_amount: 
+obtained_amount_unit: 
+observations: 
+characterizations: 
+structure_comments: 
+
+
+[[Materials]]
+// For multiple blocks under a header, you can declare all the common fields at
+// the top, and then just list the values for each block.
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:purity
+:env
+:amount
+:amount_unit
+:treatments
+
+    Barium
+    reagent
+    Ba
+    Thermofisher
+    7440-39-3
+    lump
+    0.999
+    Ar (g)
+    2.0
+    mol ratio
+    []
+    
+
+// Treatments are anything that you do to facilitate the reaction. Any
+// treatments done to a material before the reaction should be listed in that
+// material's treatments (above). This section is for treatments combining or
+// modifying multiple materials at once.
+[[Treatments]]
+:type
+:repeats
+:observations
+
+    weigh
+    1
+    // The syntax below allows me to use multiple lines for longer texts.
+    [;;;
+    Weighed stoichiometrically to carbonized ampoule.
+    Barium added last to avoid contact with ampoule 
+    during reaction]
+    // If a property is not in all blocks in a list, you can add it to
+    // individual blocks using the normal key:value syntax.
+    recovered_mass: 250.0
+
+    anneal
+    2
+    Opened under argon atmosphere and ground well before sealing in new ampoule in between annealings.
+    start_temp: 25
+    start_temp_unit: C
+    program: [[
+        type: ramp
+        temp: 600
+        time: 10
+        temp_unit: C
+        time_unit: h
+
+
+        type: dwell
+        time: 120
+        time_unit: h
+    ]]
+
+// (Experimental) Files can be embedded directly as text.
+[CIFs]
+file_name: embedded_cif
+extension: .cif
+embedded: {{{
+
+#(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_71031-ICSD
+
+CIF Text Here
+
+#################### END FOS EMBED }}}
