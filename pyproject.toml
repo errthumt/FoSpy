@@ -38,7 +38,7 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages=["fospy"]
+packages=["src/FoSpy"]
 
 [tool.hatch.version]
 source="vcs"
