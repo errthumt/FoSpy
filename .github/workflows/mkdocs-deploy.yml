@@ -97,7 +97,7 @@ jobs:
               echo "overwriting existing/missing incoming page"
             else
               echo "next != incoming → removing existing incoming page"
-              mike delete "$INCOMING_VERSION"
+              mike delete "$INCOMING_VERSION" --push
             fi
           fi
 
