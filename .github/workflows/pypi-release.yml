@@ -1,34 +1,29 @@
 name: Publish FoSpy to PyPI and TestPyPI
 on: 
   push:
-    branches:
-      - main
+    tags:
+      - v*
 jobs:
   gate:
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.tag.outputs.tag }}
+      should_run: ${{ steps.check.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Detect tag containing latest commit
-        id: tag
+      - id: check
         run: |
-          LATEST_COMMIT=$(git rev-parse HEAD)
-          echo $LATEST_COMMIT
-          TAGS=$(git tag --contains $LATEST_COMMIT --sort=-creatordate)
-          echo $TAGS
-          TAG="${TAGS[0]}"
-          echo $TAG
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-          echo "Detected tag: $TAG"
+          if [[ "${GITHUB_BASE_REF}" != "main" ]]; then
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          fi
+
 
 
   build:
     name: Build Distribution
     runs-on: ubuntu-latest
     needs: gate
-    if: needs.gate.outputs.tag != ''
+    if: needs.gate.outputs.should_run
     
     steps:
       - uses: actions/checkout@v6
