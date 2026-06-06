@@ -75,6 +75,7 @@ jobs:
 
       - name: Determine mike version using svu
         id: version
+        working-directory: mkdocs
         run: |
           # Get the next version from svu
           NEXT_VERSION=$(svu n)
