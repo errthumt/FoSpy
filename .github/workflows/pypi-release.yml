@@ -15,8 +15,11 @@ jobs:
         id: tag
         run: |
           LATEST_COMMIT=$(git rev-parse HEAD)
+          echo $LATEST_COMMIT
           TAGS=($(git tag --contains "$LATEST_COMMIT" --sort=-creatordate))
+          echo $TAGS
           TAG="${TAGS[0]}"
+          echo $TAG
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "Detected tag: $TAG"
 
