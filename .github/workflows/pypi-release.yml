@@ -23,7 +23,7 @@ jobs:
     name: Build Distribution
     runs-on: ubuntu-latest
     needs: gate
-    if: needs.gate.outputs.should_run == 'true'
+    if: ${{ !endsWith(github.event.base_ref, 'main') }}
     
     steps:
       - uses: actions/checkout@v6
