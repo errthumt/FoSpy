@@ -5,28 +5,7 @@ A package for opening, editing, and saving Files of Synthesis (*.fos)
   * FOS syntax for the GUI alpha is an earlier iteration and may not be in use.
 
 
-## Code Example
-```python
-from FoSpy import Synthesis, TemplateSet
-
-# load synthesis and templates from files
-my_synthesis = Synthesis.fromFile(r"example/synthesis.fos")
-my_templates = TemplateSet.fromFile(r"example/templates.fos")
-
-# change some metadata for my synthesis
-my_synthesis.metadata.name = "TE002"
-my_synthesis.metadata.date = "05-17-2026"
-my_synthesis.metadata.internal_project_ID = "Arsenide 28+d clathrates"
-my_synthesis.reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
-
-# load a template and fill it in before adding to synthesis
-arsenic_template = my_templates.materials.get_first(formula=ChemFormula("As"))
-arsenic = arsenic_template.fill(type="reagent", ratio=28.5)
-my_synthesis.materials.append(arsenic)
-
-# save changes
-saved = [file.save() for file in (my_templates, my_synthesis)]
-```
+[Code Example](https://errthumt.github.io/FoSpy/examples/API_example/)
 
 ## A Simple FOS File
 ```

@@ -30,6 +30,15 @@ dynamic = [
 Homepage = "https://github.com/errthumt/FoSpy"
 Issues = "https://github.com/errthumt/FoSpy/issues"
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "internal/*",
+    "mkdocs/*",
+    "SSMC-CI_2026/*"
+]
+
+[tool.hatch.build.targets.wheel]
+packages=["fospy"]
 
 [tool.hatch.version]
 source="vcs"
