@@ -1347,7 +1347,7 @@ class ListBlock(Block):
             Specifies which `SingleBlock` subclass the objects in `_objs` must belong to.
 
     Notable Subclasses:
-    ```
+    ```python
     MaterialList(ListBlock) # Contains Material(SingleBlock) objects
     TreamentList(ListBlock) # Contains Treatment(SingleBlock) objects
     ```
@@ -1364,9 +1364,12 @@ class ListBlock(Block):
 
         Args:
             blockList:
-                A list of `dicts` or `SingleBlock` objects
+                A list containing either `dicts` or `SingleBlock` objects (Mixing
+                is allowed).
         """
         self._objs = []
+        if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
+            raise TypeError(f"ListBlock instances can only be constructed from subclasses with an assigned _reqCls. {self.__class__} has no _reqCls.")
         if not isinstance(blockList, list):
             blockList = [blockList]
         for blockDict in blockList:
