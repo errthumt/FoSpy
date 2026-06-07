@@ -394,13 +394,21 @@ class SingleBlock(Block):
         """
         Overrides class validators with any renamed properties.
 
-        Similar to class method: 
+        Similar to class method:
         [`build_validators`][FoSpy.blocks.blocks.SingleBlock.build_validators],
         but uses
         [`_rename_validators`][FoSpy.blocks.blocks.SingleBlock._rename_validators]
-        to align any renamed properties with their original validators.
+        to align any renamed properties with their original validators. Also
+        adds any optional key overrides added by key$alias syntax.
+
+        Returns:
+            a dict mapping expected keys to validation routines.
         """
-        return self._rename_validators(self.build_validators())
+        vals = self._rename_validators(self.build_validators())
+        if hasattr(self, "_key_overrides"):
+            for key, val in self._key_overrides.items():
+                vals[key] = val
+        return vals
     
     def get_req_validators(self):
         """
@@ -578,11 +586,8 @@ class SingleBlock(Block):
                 raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
                                  f"it cannot be overwritten to '{val.__name__}'.")
             if name not in validators:
-                from ..parsing.validation import optional_keys
                 validators[name] = val
                 self._key_overrides[name] = val
-                optional_keys.setdefault(type(self),{})
-                optional_keys[type(self)][name] = val
 
         if name in validators:
             validator = validators[name]
