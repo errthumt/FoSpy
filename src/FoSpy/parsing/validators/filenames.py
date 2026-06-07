@@ -15,7 +15,6 @@ def file_name(name: str, sourceDict={}) -> str:
     #_debug.pmsg(sourceDict)
     if "extension" in sourceDict:
         ext = file_extension(sourceDict["extension"])
-        _debug.msg(ext)
         if name.endswith(ext):
             new_name = name[:-len(ext)]
             _debug.msg(f"Converted filename: {name} into {new_name}")

@@ -1674,10 +1674,11 @@ class ListBlock(Block):
             for obj in self:
                 if obj._meta.list_type == "explicit":
                     return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit")
-                return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
+            return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
         elif not override_list_type:
             keepListType = len(self)>1
-            return [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+            l = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+            return l
         else:
             copy = self.copy()
             copy.set_list_type(override_list_type)
