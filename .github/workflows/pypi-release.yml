@@ -30,9 +30,6 @@ jobs:
     needs: check-for-main
     if: needs.check-for-main.outputs.keepTag == 'false'
     steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - name: Generate Bypass Token
         id: bypass-token
         uses: actions/create-github-app-token@v2
@@ -42,14 +39,18 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
 
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+        env:
+          GITHUB_TOKEN: ${{ steps.bypass-token.outputs.token }}
+          
       - name: Debug token owner
         run: |
           curl -H "Authorization: Bearer ${{ steps.bypass-token.outputs.token }}" \
               https://api.github.com/user
 
       - name: Remove tag
-        env:
-          GITHUB_TOKEN: ${{ steps.bypass-token.outputs.token }}
         run: |
           git remote set-url origin https://x-access-token:${{ steps.bypass-token.outputs.token }}@github.com/${GITHUB_REPOSITORY}.git
           git push origin --delete ${{ github.ref }}
