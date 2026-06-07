@@ -33,9 +33,17 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: Generate Bypass Token
+        id: bypass-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.WORKFLOW_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_PRIVATE_KEY }}
+
       - name: Remove tag
+        env:
+          GITHUB_TOKEN: ${{ steps.bypass-token.outputs.token }}
         run: |
-          git remote set-url origin https://${{ secrets.WORKFLOW_RULESET_BYPASS }}@github.com/${{ github.repository }}
           git push origin --delete ${{ github.ref }}
 
   build:
