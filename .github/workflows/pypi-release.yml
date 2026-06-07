@@ -8,6 +8,70 @@ on:
       - released
 
 jobs:
+  check-for-main:
+    name: v* Tags only allowed on main branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check for main branch
+        run: |
+          branch=$(git branch -r --contains ${{ github.ref }} --format "%(refname:lstrip=3)")
+          echo $branch
+          if [ "$branch" != "main" ]; then
+            echo "Tag ${{ github.ref }} must be created on main branch"
+            exit 1
+          fi
+
+  build:
+    name: Build Distribution
+    runs-on: ubuntu-latest
+    needs: check-for-main
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install pypa/build
+        run: >-
+          python3 -m
+          pip install
+          build
+          --user
+      - name: Build a binary wheel and a source tarball
+        run: python3 -m build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+
+  publish-to-testpypi:
+    name: Publish to TestPyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: TestPyPI Publish
+      url: https://test.pypi.org/project/FoSpy
+    permissions:
+      id-token: write
+    
+    steps:
+      - name: Download all distribution packages
+        uses: actions/download-artifact@v5
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
   setup-mkdocs:
     name: Setup mkdocs and mike for PyPI release.
     runs-on: ubuntu-latest
@@ -41,33 +105,6 @@ jobs:
         run: |
           mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --push
 
-  build:
-    name: Build Distribution
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.x'
-
-      - name: Install pypa/build
-        run: >-
-          python3 -m
-          pip install
-          build
-          --user
-      - name: Build a binary wheel and a source tarball
-        run: python3 -m build
-      - name: Store the distribution packages
-        uses: actions/upload-artifact@v5
-        with:
-          name: python-package-distributions
-          path: dist/
-
   publish-to-pypi:
     name: Publish to PyPI
     needs: setup-mkdocs
@@ -86,23 +123,3 @@ jobs:
           path: dist/
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-  publish-to-testpypi:
-    name: Publish to TestPyPI
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: TestPyPI Publish
-      url: https://test.pypi.org/project/FoSpy
-    permissions:
-      id-token: write
-    
-    steps:
-      - name: Download all distribution packages
-        uses: actions/download-artifact@v5
-        with:
-          name: python-package-distributions
-          path: dist/
-      - name: Publish to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
