@@ -51,7 +51,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.bypass-token.outputs.token }}
         run: |
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git remote set-url origin https://x-access-token:${{ steps.bypass-token.outputs.token }}@github.com/${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git push origin --delete ${{ github.ref }}
 
   build:
