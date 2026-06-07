@@ -1500,14 +1500,14 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 isu_research_group: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
 // This copy of Joe has information about him as Travis's colleague
 colleague$experimenter: [
     name: Joseph Race
     affiliation: Graham's Dad
     orcid: 0000-0002-8551-3627
-]
-rename: [
-    affiliation: isu_research_group
 ]
 
 // This copy of Joe has information about him as an experimenter
@@ -1756,13 +1756,13 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 isu_research_group: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
 colleague$experimenter: [
     name: Joseph Race
     affiliation: Graham's Dad
     orcid: 0000-0002-8551-3627
-]
-rename: [
-    affiliation: isu_research_group
 ]
 
 name: Joseph Race
@@ -2014,13 +2014,13 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 isu_research_group: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
 colleague$experimenter: [
     name: Joseph Race
     affiliation: Graham's Dad
     orcid: 0000-0002-8551-3627
-]
-rename: [
-    affiliation: isu_research_group
 ]
 
 name: Joseph Race
@@ -2285,13 +2285,13 @@ internal_project_description: Unique Clathrate
 name: Travis Errthum
 isu_research_group: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
 colleague$experimenter: [
     name: Joseph Race
     affiliation: Graham's Dad
     orcid: 0000-0002-8551-3627
-]
-rename: [
-    affiliation: isu_research_group
 ]
 
 name: Joseph Race
@@ -16260,13 +16260,13 @@ materials: reagents
 name: Travis Errthum
 isu_research_group: Kovnir Group - Iowa State University
 orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
 colleague$experimenter: [
     name: Joseph Race
     affiliation: Graham's Dad
     orcid: 0000-0002-8551-3627
-]
-rename: [
-    affiliation: isu_research_group
 ]
 
 name: Joseph Race
