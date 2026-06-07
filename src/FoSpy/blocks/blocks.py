@@ -1,4 +1,6 @@
 
+from typing import ClassVar
+
 from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
@@ -231,13 +233,16 @@ class SingleBlock(Block):
         from .template import TemplateBlock, TemplateField, TemplateList
         from ..parsing.validation import required_keys, optional_keys
         if issubclass(cls, TemplateBlock):
-            SubTemplate = cls
+            class ExtendedTemplate(cls):
+                pass
+            SubTemplate = ExtendedTemplate
         else:
-            class SubTemplate(TemplateBlock, cls):
+            class NewTemplate(TemplateBlock, cls):
                 dispatch = {}
                 def __init__(self, blockDict, _dispatched=False):
                     super().__init__(blockDict, _dispatched=_dispatched)
                     self._full_class = cls
+            SubTemplate = NewTemplate
         required_keys[SubTemplate] = {}
         optional_keys[SubTemplate] = {}
         required_validators = cls.build_req_validators()
@@ -276,7 +281,7 @@ class SingleBlock(Block):
         return SubTemplate
    
     @classmethod
-    def reflex(cls, serialize=True, **kwargs:any):
+    def reflex(cls, serialize=True, **kwargs:dict):
         """
         Generate a flexible template for the current class.
 
@@ -1352,7 +1357,7 @@ class ListBlock(Block):
     TreamentList(ListBlock) # Contains Treatment(SingleBlock) objects
     ```
     """
-    _reqCls = None
+    _reqCls: type[SingleBlock] = None
     def __init__(self, blockList:list):
         """
         Constructs a `ListBlock` from a list of objects or serialized dictionaries.
@@ -1366,6 +1371,9 @@ class ListBlock(Block):
             blockList:
                 A list containing either `dicts` or `SingleBlock` objects (Mixing
                 is allowed).
+        Raises:
+            TypeError:
+                `ListBlock` instances can only be constructed from subclasses with an assigned _reqCls, not the parent `ListBlock` class.
         """
         self._objs = []
         if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
@@ -1380,6 +1388,20 @@ class ListBlock(Block):
     
     @classmethod
     def Simple(cls, reqCls=SingleBlock):
+        """
+        Creates a simple subclass of `ListBlock`
+
+        Creates a subclass of `ListBlock` that only accepts objects of the
+        specified `SingleBlock` subclass.
+
+        Simple ListBlocks are used when no specialized methods or attributes are
+        needed.
+
+        Args:
+            reqCls:
+                The subclass of `SingleBlock` that this `ListBlock` subclass
+                accepts.
+        """
         if not issubclass(reqCls, SingleBlock):
             raise TypeError("reqCls must be a subclass of SingleBlock")
         if cls._reqCls is not None:
@@ -1403,9 +1425,22 @@ class ListBlock(Block):
         """
         Only private attributes starting with "_" can be set.
         
-        Items in self._objs can be edited individually by indexing with self[i],
-        or self._objs can be replaced with a new list, which is re-validated and
-        coerced to the correct `SingleBlock` subclass specified by _reqCls
+        Items in self._objs can be edited/replaced individually by indexing with
+        self[i], or self._objs can be replaced with a new list, which is
+        re-validated and coerced to the correct `SingleBlock` subclass specified
+        by _reqCls
+
+        Args:
+            name:
+                The name of the attribute to set.
+            value:
+                The value to set the attribute to.
+        Raises:
+            AttributeError:
+                Only private attributes starting with "_" can be set.
+            TypeError:
+                self._objs must be a list of objects which can be coerced to the
+                correct `SingleBlock` subclass specified by _reqCls
         """
         if name == "_objs":
             if type(value) is not list:
@@ -1422,7 +1457,7 @@ class ListBlock(Block):
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
                     obj._parent_block = self
                     new_list.append(obj)
-            return super().__setattr__(name, new_list)
+                return super().__setattr__(name, new_list)
 
         elif name.startswith("_") or name in self._reserved:
             return super().__setattr__(name,value)
@@ -1436,18 +1471,63 @@ class ListBlock(Block):
 
     def append(self, obj:SingleBlock):
         """
-        Append a `SingleBlock` object of the correct class to `self._objs` and revalidate.
+        Append a `SingleBlock`-coercable object to this `ListBlock`
+
+        Appends the object to this `ListBlock`'s `_objs` list, and passes the
+        entire list back to
+        [`__setattr__`][FoSpy.blocks.blocks.ListBlock.__setattr__] for
+        validation.
+
+        Args:
+            obj:
+                The object to append
         """
         objs = self._objs.copy()
         objs.append(obj)
         self._objs = objs
     
     def insert(self, idx, obj:SingleBlock):
+        """
+        Insert a `SingleBlock`-coercable object into this `ListBlock`.
+
+        Inserts the object into this `ListBlock`'s `_objs` list, and passes the
+        entire list back to
+        [`__setattr__`][FoSpy.blocks.blocks.ListBlock.__setattr__] for
+        validation.
+
+        Args:
+            idx:
+                The index to insert the object at
+            obj:
+                The object to insert
+        """
         objs = self._objs.copy()
         objs.insert(idx,obj)
         self._objs = objs
 
     def remove_idx(self, from_idx:int=None, to_idx:int=None):
+        """
+        Remove a range of items from this `ListBlock`
+
+        Removes a range of items from this `ListBlock`'s `_objs` list, and
+        passes the entire list back to
+        [`__setattr__`][FoSpy.blocks.blocks.ListBlock.__setattr__] for
+        validation.
+
+        `from_idx` is inclusive, and `to_idx` is non-inclusive. i.e., if
+        `from_idx` is 0 and `to_idx` is 1, then the first item in the list will
+        be removed, but not the second.
+
+        If `from_idx` is None, then all items starting at and including `to_idx`
+        will be removed. If `to_idx` is None, then all items up to and **not**
+        including `from_idx` will be removed.
+
+        Args:
+            from_idx:
+                The index of the first item to remove
+            to_idx:
+                The non-inclusive index to stop removing
+        """
         if from_idx is None and to_idx is None:
             self._objs = []
 
@@ -1462,37 +1542,146 @@ class ListBlock(Block):
 
         self._objs = objs   
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx:int):
+        """
+        Get an item from this `ListBlock` by index.
+
+        Args:
+            idx:
+                The index of the item
+        """
         return self._objs[idx]
     
+    def __setitem__(self, idx, val):
+        """
+        Set an item to this `ListBlock` by index.
+
+        After setting, all items in this `ListBlock`'s `_objs` list are passed
+        back to [`__setattr__`][FoSpy.blocks.blocks.ListBlock.__setattr__] for
+        validation.
+
+        Args:
+            idx:
+                The index of the item
+            val:
+                The new value for the item
+        """
+        new_objs = self._objs.copy()
+        new_objs[idx] = val
+        self._objs = new_objs
+    
     def __len__(self):
+        """
+        Get the number of items in this `ListBlock`
+        """
         return len(self._objs)
     
     def __iter__(self):
+        """
+        Iterate over the items in this `ListBlock`
+        """
         return iter(self._objs)
     
-    def __eq__(self, other):
+    def __eq__(self, other, suppress_routine_paths=False):
+        """
+        Check equality of two `ListBlock` objects.
+        
+        Equality is checked by a deep difference of their serialized lists.
+        
+        Args:
+            other:
+                The other `ListBlock` object to check equality with
+            suppress_routine_paths:
+                Optional flag to still return true if the only differences found
+                are in [calculation
+                routine][FoSpy.blocks.blocks.SingleBlock.add_calc_routine]
+                metadata. Calculation routines are for user information only and
+                may not be relevant for equality.
+        """
         from .._debug import deep_diff
         try:
-            return len(deep_diff(self.serialize(), other.serialize()))==0
+            return len(deep_diff(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths))==0
         except:
             return False
         
     def __hash__(self):
+        """
+        Get the hash of this `ListBlock` object
+        """
         return id(self)
     
     def set_list_type(self,typ="explicit"):
+        """
+        Set FOS list formatting (explicit or looped).
+
+        Sets metadata for all items in this `ListBlock` to the specified type.
+
+        List Types:
+            - "explicit": Each object declares its own keys.
+            - "looped": 
+                Common keys are declared once at the beginning of a list. Each
+                object specifies values for those keys in the declared order.
+                Anomalous keys are still printed as key:value pairs.
+
+        Args:
+            typ:
+                The type to set
+        """
         if typ not in ("explicit", "looped"):
             raise ValueError("List type must be 'single' or 'looped'.")
         for obj in self:
             obj._meta.list_type = typ
         
-    def serialize(self, clean=False):
-        for obj in self:
-            if obj._meta.list_type == "explicit":
-                self.set_list_type("explicit")
-                break
-        return [obj.serialize(keepListType=True if len(self)>1 else False, clean=clean) for obj in self]
+    def serialize(self, clean=False, shallow=False, override_list_type:str|bool=None):
+        """
+        Serialize this `ListBlock` as a list of dictionaries.
+
+        Overriding list type is only skipped when all objects in the list have
+        the same list type. To prevent mutation, list type override is performed
+        by calling
+        [`set_list_type`][FoSpy.blocks.blocks.ListBlock.set_list_type] on a copy
+        of this `ListBlock` and returning the serialized copy.
+
+        `ListBlock`s of length one are always overridden to "explicit".
+
+        List Types:
+            - "explicit": Each object declares its own keys.
+            - "looped": 
+                Common keys are declared once at the beginning of a list. Each
+                object specifies values for those keys in the declared order.
+                Anomalous keys are still printed as key:value pairs.
+
+        Args:
+            clean:
+                When True, no FOS format read/write metadata is included in the
+                serial. Recommended for sending output to other formats like
+                JSON.
+            shallow:
+                When True, no recursive serialization occurs. Recommended when
+                serialization is used only to inspect top-level keys for object
+                dictionaries.
+            override_list_type:
+                - When `None` (default): Checks for mixed list types and
+                  recurses with override set to "explicit" if found.
+                - When `False`: Does not override any list type. This should be
+                  avoided for FOS-formatted output unless you know that all
+                  objects in the list have the same list type.
+                - When `str`: Copies this `ListBlock` and passes override to
+                  [`copy.set_list_type`][FoSpy.blocks.blocks.ListBlock.set_list_type]
+                  before returning the serialized copy
+        """
+        if override_list_type is None:
+            for obj in self:
+                if obj._meta.list_type == "explicit":
+                    return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit")
+                return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
+        elif not override_list_type:
+            keepListType = len(self)>1
+            return [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+        else:
+            copy = self.copy()
+            copy.set_list_type(override_list_type)
+            return copy.serialize(clean=clean, shallow=shallow, override_list_type=False)
     
      
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
@@ -1577,7 +1766,7 @@ class ListBlock(Block):
     def copy(self):
         """Returns a deep copy by serializing and then reconstructing."""
         cls = type(self)
-        return cls(self.serialize(keepListType=True))
+        return cls(self.serialize(override_list_type=False))
     
     def remove_any(self, **kwargs):
         """
