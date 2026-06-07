@@ -30,10 +30,6 @@ jobs:
     needs: check-for-main
     if: needs.check-for-main.outputs.keepTag == 'false'
     steps:
-      - name: Setup SSH Deploy Key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.WORKFLOW_RULESET_BYPASS }}
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
@@ -41,6 +37,7 @@ jobs:
         run: |
           git config user.name tag-bot
           git config user.email github-actions[bot]@users.noreply.github.com
+          git remote set-url origin https://${{ secrets.WORKFLOW_RULESET_BYPASS }}@github.com/${{ github.repository }}
           git push origin --delete ${{ github.ref }}
 
   build:
