@@ -42,9 +42,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-        env:
-          GITHUB_TOKEN: ${{ steps.bypass-token.outputs.token }}
-          
+          token: ${{ steps.bypass-token.outputs.token }}
+
       - name: Debug token owner
         run: |
           curl -H "Authorization: Bearer ${{ steps.bypass-token.outputs.token }}" \
