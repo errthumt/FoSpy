@@ -133,7 +133,7 @@ jobs:
         run: |
           pip install -e .
       
-      - name: Remove incoming branch
+      - name: Remove placeholder "incoming" branch
         working-directory: mkdocs
         run: |
           git config --global user.name "mike-bot"
