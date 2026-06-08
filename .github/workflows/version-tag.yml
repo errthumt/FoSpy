@@ -1,4 +1,4 @@
-name: Version Tag
+name: New Version/Release
 on: 
   push:
     tags:
@@ -12,12 +12,13 @@ permissions:
 
 jobs:
   check-for-main:
-    name: v* tags only allowed on main branch
+    name: Verify on main
     runs-on: ubuntu-latest
     outputs:
       keepTag: ${{ steps.check.outputs.keepTag }}
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout Repo
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -45,15 +46,11 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
 
-      - uses: actions/checkout@v6
+      - name: Checkout with bypass token
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ steps.bypass-token.outputs.token }}
-
-      - name: Debug token owner
-        run: |
-          curl -H "Authorization: Bearer ${{ steps.bypass-token.outputs.token }}" \
-              https://api.github.com/user
 
       - name: Remove tag
         run: |
@@ -61,7 +58,7 @@ jobs:
           git push origin --delete ${{ github.ref }}
 
   build:
-    name: Build Distribution
+    name: Build PyPI Distribution
     runs-on: ubuntu-latest
     needs: check-for-main
     if: needs.check-for-main.outputs.keepTag == 'true'
@@ -89,16 +86,42 @@ jobs:
           name: python-package-distributions
           path: dist/
 
-  publish-to-testpypi:
-    name: Publish to TestPyPI
+  check-for-testpypi:
+    name: Check if TestPyPI version exists
     needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      exists: ${{ steps.check.outputs.exists }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check for TestPyPI version
+        id: check
+        run: |
+          TARGET_VERSION=$(git describe --tags --abbrev=0 | cut -c 2-)
+          echo "Target version: $TARGET_VERSION"
+          VERSION_LIST=$(pip index versions FoSpy --index-url https://test.pypi.org/pypi --json 2>/dev/null | tr -d '\r' | jq '.versions')
+          echo "$VERSION_LIST"
+          if echo "$VERSION_LIST" | jq -e --arg target "$TARGET_VERSION" 'any(index($target))' > /dev/null; then
+              echo "Version $TARGET_VERSION already exists on TestPyPI"
+              echo "exists=true" >> $GITHUB_OUTPUT
+          else
+              echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+  publish-to-testpypi:
+    name: Publish Version to TestPyPI
+    needs: check-for-testpypi
     runs-on: ubuntu-latest
     environment:
       name: TestPyPI Publish
       url: https://test.pypi.org/project/FoSpy
     permissions:
       id-token: write
-    
+    if: needs.check-for-testpypi.outputs.exists == 'false'
     steps:
       - name: Download all distribution packages
         uses: actions/download-artifact@v5
@@ -111,12 +134,13 @@ jobs:
           repository-url: https://test.pypi.org/legacy/
 
   setup-mkdocs:
-    name: Setup mkdocs and mike for PyPI release.
+    name: Deploy Release to MkDocs
     runs-on: ubuntu-latest
     needs: build
     if: github.event_name == 'release' &&  github.event.action == 'released' && !contains(github.event.head_commit.message, 'WORKFLOW')
     steps:
-      - uses: actions/checkout@v6
+      - name: Checkout Repo
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -125,7 +149,7 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install build dependencies
+      - name: Install MkDocs Dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python mkdocs-copy-markdown mkdocs-pygments pymdown-extensions black mike
 
@@ -152,7 +176,7 @@ jobs:
           mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --push
 
   publish-to-pypi:
-    name: Publish to PyPI
+    name: Publish Release to PyPI
     needs: setup-mkdocs
     runs-on: ubuntu-latest
     environment:
@@ -160,7 +184,6 @@ jobs:
       url: https://pypi.org/project/FoSpy
     permissions:
       id-token: write
-    
     steps:
       - name: Download all distribution packages
         uses: actions/download-artifact@v5

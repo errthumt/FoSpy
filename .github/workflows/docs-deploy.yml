@@ -1,4 +1,4 @@
-name: Deploy MkDocs site
+name: Build Site and Deploy "incoming" to MkDocs
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -29,7 +29,31 @@ jobs:
         run: |
           pip install -e ./mkdocs/fos_site
 
-      - name: Install build dependencies
+      - name: Check property tables and rebuild markdown stubs.
+        run: |
+          fos-site-build --deploy
+      
+      - name: Commit and Push Site Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "WORKFLOW: Docs Build" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge changes to dev
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git fetch --all
+          git checkout dev
+          git merge origin/main -m "Resync dev with doc corrections" || true
+          git push origin dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install MkDocs dependencies
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python mkdocs-copy-markdown mkdocs-pygments pymdown-extensions black mike
       
@@ -39,41 +63,7 @@ jobs:
           sudo apt update
           sudo apt install svu
 
-
-      - name: Check property tables and rebuild markdown stubs.
-        run: |
-          fos-site-build --deploy
-
-      - name: Commit changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "WORKFLOW: Docs Build" || echo "No changes to commit"
-
-      - name: Push changes
-        run: git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
-
-      - name: Fetch all branches
-        run: git fetch --all
-
-      - name: Merge main back into dev
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git checkout dev
-          git merge origin/main -m "Resync dev with doc corrections" || true
-          git push origin dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Determine mike version using svu
+      - name: Determine "incoming" version with svu
         id: version
         working-directory: mkdocs
         run: |
