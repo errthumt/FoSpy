@@ -109,6 +109,8 @@ jobs:
           pip --version
           TARGET_VERSION=$(git describe --tags --abbrev=0 | cut -c 2-)
           echo "Target version: $TARGET_VERSION"
+          echo $(pip index versions FoSpy --index-url https://test.pypi.org/pypi --json)
+          echo $(pip index versions FoSpy --index-url https://test.pypi.org/pypi --json 2>/dev/null)
           VERSION_LIST=$(pip index versions FoSpy --index-url https://test.pypi.org/pypi --json 2>/dev/null | jq '.versions')
           echo "$VERSION_LIST"
           if echo "$VERSION_LIST" | jq -e --arg target "$TARGET_VERSION" 'any(index($target))' > /dev/null; then
