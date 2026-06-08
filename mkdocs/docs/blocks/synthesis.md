@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Synthesis }
 ### `Synthesis`
 ::: FoSpy.blocks.synthesis.Synthesis
     options:

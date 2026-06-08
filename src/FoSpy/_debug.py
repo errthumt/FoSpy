@@ -90,7 +90,8 @@ def deep_diff(d1, d2, path="", suppress_routine_paths=False):
     """
     Recursively diff two nested dict/list structures.
     Ignores:
-      - calculated comments (strings starting with SYNTAX["calc_comment"]["prefix"])
+      - calculated comments (strings starting with
+        [`SYNTAX["calc_comment"]["prefix"]`][FoSpy.parsing.syntax.SYNTAX])
       - whitespace-only differences in strings
       - empty _fos_comments entries
     Optionally ignores:

@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-FileBlock }
 ### `FileBlock`
 ::: FoSpy.blocks.files.FileBlock
     options:

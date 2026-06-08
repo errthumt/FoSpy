@@ -289,7 +289,7 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
 
             if "Class Documentation" not in tokens[i+2].content:
                 # Build the link text
-                link_text = f"[Class Documentation][{find_class_module_path(class_name) or 'UnknownClass'}]"
+                link_text = f"[Class Documentation][blockdocs-{class_name}]"
 
                 # Insert a paragraph_open, inline, paragraph_close sequence
                 new_tokens.extend(get_paragraph_tokens(link_text, tok))
