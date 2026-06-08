@@ -133,7 +133,7 @@ jobs:
           git config user.name mike-bot
           git config user.email github-actions[bot]@users.noreply.github.com
           git fetch origin gh-pages --depth=1
-          mike delete incoming --update-aliases --push
+          mike delete incoming --push
       
       - name: Deploy release branch to "latest" alias
         working-directory: mkdocs
