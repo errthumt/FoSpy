@@ -88,8 +88,8 @@ class FileBlock(SingleBlock):
                     raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
                 else:
                     filepath = self._sourceFile
-
             self._sourceFile = os.path.abspath(filepath)
+            self.refresh_attachments()
             pathstr = str(self._sourceFile)
             try:
                 ext = pathstr.lower().split(".")[-1]

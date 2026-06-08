@@ -348,8 +348,14 @@ my_synthesis.save("synthesis/check08.fos")
 ### Checkpoint 8
 [Updated Synthesis](../synthesis/index.md#checkpoint-8)
 
-## Managing Embedded Files
-Embedded files are just blocks like every other section, except they have a special `embedded` property that stores the un-edited lines of the original file.
+## Managing Attached Files
+Attached files are blocks just like every other section, but they contain and/or point to raw information from another file. Files can be attached in a few different ways:
+
+- [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../synthesis/index.md#initial-synthesis-fos) for an example.
+- [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). See the CIF attached to the [initial templates file](../templates/index.md#initial-templates-fos) for an example.
+  - The "path" property can use ".." characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../synthesis/index.md#checkpoint-9) for an example.
+  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`][FoSpy.blocks.blocks.Block.track_attachments], that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
+
 ```python
 # Copying Phil's cif from my templates into my synthesis.
 py618 = cif_temps[0].copy()
@@ -388,11 +394,21 @@ for anneal in my_synthesis.treatments.get_any(type="anneal"):
 ## Cleaning Up
 All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn't matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
 
+* Reconfigure `my_synthesis` so that it keeps its own copy of the PY618 CIF file instead of tracking the one in the templates folder.
 * Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
 * Set some specific positions for certain blocks for better organization.
 * Set the generic templates block to use the "explicit" key:value syntax for all of its templates.
 * Set the synthesis materials block to use the "looped" syntax where all the keys are specified at the beginning of the block.
 ```python
+# Reconfigure my_synthesis to copy attachments if location is changed,
+# instead of updating path to the original location.
+my_synthesis.track_attachments(new_copy=True, overwrite=True)
+# Path used to be "..\templates" (which resolves to example\templates)
+# New path is "." (which resolves to example\synthesis)
+# With new config, a new CIF will be copied to the new location when saving
+my_synthesis.cifs[0].path = "."
+
+
 # some reordering stuff to make the final printout more consistent.
 my_templates.default_key_order()
 my_templates.key_to_idx("generic", 3)

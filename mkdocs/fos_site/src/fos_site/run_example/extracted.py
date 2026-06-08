@@ -223,6 +223,15 @@ def main():
 
 
 
+    # Reconfigure my_synthesis to copy attachments if location is changed,
+    # instead of updating path to the original location.
+    my_synthesis.track_attachments(new_copy=True, overwrite=True)
+    # Path used to be "..\templates" (which resolves to example\templates)
+    # New path is "." (which resolves to example\synthesis)
+    # With new config, a new CIF will be copied to the new location when saving
+    my_synthesis.cifs[0].path = "."
+
+
     # some reordering stuff to make the final printout more consistent.
     my_templates.default_key_order()
     my_templates.key_to_idx("generic", 3)
@@ -246,11 +255,11 @@ def main():
 
 
     # optional: figure
-    my_synthesis.cifs[0].quick_pattern(subprocess=True)
+    # my_synthesis.cifs[0].quick_pattern(subprocess=True)
 
 
     # optional: figure
-    my_synthesis.treatments.get_first(type="anneal").show_plot()
+    # my_synthesis.treatments.get_first(type="anneal").show_plot()
 
 if __name__ == '__main__':
     main()

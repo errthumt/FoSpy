@@ -8,6 +8,7 @@ nav:
 - Expected Properties: expected/index.md
 - Block Modules:
   - What is a Block?: blocks/index.md
+  - attachments: blocks/attachments.md
   - blocks: blocks/blocks.md
   - data: blocks/data.md
   - embedded: blocks/embedded.md
@@ -20,9 +21,11 @@ nav:
 - Full Documentation:
   - Full Docs Home: full/index.md
   - _debug: full/_debug.md
+  - _errors: full/_errors.md
   - core: full/core.md
   - blocks:
     - _blockUtils: full/blocks/_blockUtils.md
+    - attachments: full/blocks/attachments.md
     - blocks: full/blocks/blocks.md
     - data: full/blocks/data.md
     - embedded: full/blocks/embedded.md
