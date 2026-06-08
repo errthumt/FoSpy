@@ -18,7 +18,7 @@ classifiers = [
 dependencies = [
     "markdown-it-py[linkify]",
     "mdformat",
-    "yaml"
+    "PyYAML"
 ]
 
 [project.scripts]
