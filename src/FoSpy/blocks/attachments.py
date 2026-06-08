@@ -3,11 +3,23 @@ from .blocks import SingleBlock, ListBlock
 from .._debug import Debug
 _debug = Debug()
 
+class AttachmentTypeError(Exception):
+    pass
 
 class Attachment(SingleBlock):
     dispatch={}
     extensions={}
-    enforced_subtype=None
+    enforced_subtype=None  
+    def __init__(self, blockDict, **kwargs):
+        super().__init__(blockDict, **kwargs)
+        self._filepath = None
+
+    def _get_filepath(self):
+        """
+        Default behavior: Must be overwritten in subclasses.
+        """
+        raise AttachmentTypeError("Attachments must be constructed as a subclass with a set_filepath method.")
+
 
     @classmethod
     def enforce_subtype(cls, subcls, **kwargs):
@@ -49,11 +61,22 @@ class Attachment(SingleBlock):
 
 class EmbeddedFile(Attachment):
     def _write_to_temp(self, encoding="utf-8"):
-        self._temppath = self.find_temppath() / f"{self.file_name}{self.extension}"
-        with open(self._temppath, "w", encoding=encoding) as f:
+        try:
+            temppath = self.find_temppath()
+        except Exception as e:
+            _debug.msg(f"Could not find a temporary path to write to.\n{e}")
+            return None
+        filepath = temppath / f"{self.file_name}{self.extension}"
+        with open(filepath, "w", encoding=encoding) as f:
             for line in self.embedded:
                 f.write(line.rstrip("\r\n") + "\n")
+        _debug.msg(f"Successfully wrote embedded file to temporary path: {filepath}")
+        return filepath
 
+    def _get_filepath(self):
+        if self._filepath is not None:
+            return self._filepath
+        return self._write_to_temp()
      
     def serialize(self,**kwargs):
         """
@@ -68,9 +91,8 @@ Attachment.dispatch["embedded"] = EmbeddedFile
 class CIFFile(Attachment):
     def get_pattern(self,**kwargs):
         from cif2xrd.pattern import simPattern
-        self._write_to_temp()
 
-        sim = simPattern(cif_path=self._temppath, **kwargs)
+        sim = simPattern(cif_path=self._get_filepath(), **kwargs)
 
         return sim.two_theta, sim.intensity
     
