@@ -87,7 +87,7 @@ jobs:
               echo "overwriting existing/missing incoming page"
             else
               echo "next != incoming → removing existing incoming page"
-              mike delete "$INCOMING_VERSION" --push
+              mike delete "$INCOMING_VERSION" --push --allow-empty
             fi
           fi
 
@@ -98,5 +98,5 @@ jobs:
         working-directory: mkdocs
         run: |
           mike deploy --push --update-aliases --allow-empty "${{ steps.version.outputs.version }}" incoming
-          mike retitle incoming "${{ steps.version.outputs.version }}" --push
+          mike retitle incoming "${{ steps.version.outputs.version }}" --push --allow-empty
 
