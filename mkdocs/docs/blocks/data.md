@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-CSVdata }
 ### `CSVdata`
 ::: FoSpy.blocks.data.CSVdata
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-TraceData }
 ### `TraceData`
 ::: FoSpy.blocks.data.TraceData
     options:

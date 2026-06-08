@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Block }
 ### `Block`
 ::: FoSpy.blocks.blocks.Block
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-ListBlock }
 ### `ListBlock`
 ::: FoSpy.blocks.blocks.ListBlock
     options:
@@ -43,6 +45,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-SingleBlock }
 ### `SingleBlock`
 ::: FoSpy.blocks.blocks.SingleBlock
     options:

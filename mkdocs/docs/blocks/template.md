@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-FlexTemplate }
 ### `FlexTemplate`
 ::: FoSpy.blocks.template.FlexTemplate
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-TemplateBlock }
 ### `TemplateBlock`
 ::: FoSpy.blocks.template.TemplateBlock
     options:
@@ -43,6 +45,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-TemplateList }
 ### `TemplateList`
 ::: FoSpy.blocks.template.TemplateList
     options:
@@ -51,6 +54,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-TemplateSet }
 ### `TemplateSet`
 ::: FoSpy.blocks.template.TemplateSet
     options:
