@@ -119,6 +119,7 @@ class Block:
         returns that instance.
         """
         from .files import FileBlock
+        from .._errors import FileBlockNotFoundError
 
         blk = self
         while blk is not None:
@@ -128,7 +129,7 @@ class Block:
                 blk = blk._parent_block
             else:
                 blk = None
-        raise LookupError("Could not find a FileBlock containing the current object")
+        raise FileBlockNotFoundError("Could not find a FileBlock containing the current object")
     
     def find_tempdir(self):
         """
@@ -629,9 +630,9 @@ class SingleBlock(Block):
 
 
             return self._assign_and_inject(name,
-                                                    validator(value,**val_kwargs)
-                                                    if val_kwargs != {}
-                                                    else validator(value))
+                                            validator(value,**val_kwargs)
+                                            if val_kwargs != {}
+                                            else validator(value))
         else:
             return self._assign_and_inject(name, value, extended=True)
 
@@ -715,6 +716,8 @@ class SingleBlock(Block):
             [`add_comments_to_parent`][FoSpy.blocks.blocks._add_comments_to_parent]
             [`clear_comments_from_parent`][FoSpy.blocks.blocks._clear_comments_from_parent]
         """
+        from .attachments import Attachment
+
         if name == 'ext':
             return super().__setattr__('ext', value)
         if not hasattr(value, "__dict__"):
@@ -728,6 +731,11 @@ class SingleBlock(Block):
         attr_obj = getattr(self.ext if extended else self, name)
 
         setattr(attr_obj, "_parent_block", self)
+
+        if isinstance(attr_obj, Attachment):
+            attr_obj._get_filepath()
+        elif hasattr(attr_obj, "refresh_attachments"):
+            attr_obj.refresh_attachments()
 
         methods = ((_add_comments_to_parent(name), "add_comments"),
                 (_clear_comments_from_parent(name), "clear_comments"))
@@ -951,7 +959,6 @@ class SingleBlock(Block):
         
         with open(filepath, "w") as f:
             json.dump(serial, f, indent=indent, **kwargs)
-
     
     def add_calc_comment(self, key:str, comment:str, calc_id:str):
         """
@@ -1342,6 +1349,17 @@ class SingleBlock(Block):
             if hasattr(val, "clear_all_comments"):
                 val.clear_all_comments()
 
+    def refresh_attachments(self, new_copy=False, overwrite=False, **kwargs):
+        from .attachments import Attachment
+        for propDict in self.__dict__, self.ext.__dict__:
+            for key, val in propDict.items():
+                if key.startswith("_") or key in self._reserved:
+                    continue
+                if hasattr(val, "refresh_attachments"):
+                    val.refresh_attachments(new_copy=new_copy, overwrite=overwrite, **kwargs)
+                elif isinstance(val, Attachment) and hasattr(val, "refresh"):
+                    val.refresh(new_copy=new_copy, overwrite=overwrite, **kwargs)
+
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
@@ -1380,15 +1398,16 @@ class ListBlock(Block):
             TypeError:
                 `ListBlock` instances can only be constructed from subclasses with an assigned _reqCls, not the parent `ListBlock` class.
         """
-        self._objs = []
+        #self._objs = []
         if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
             raise TypeError(f"ListBlock instances can only be constructed from subclasses with an assigned _reqCls. {self.__class__} has no _reqCls.")
         if not isinstance(blockList, list):
             blockList = [blockList]
-        for blockDict in blockList:
-            obj = self._reqCls.dispatch_subclass(blockDict)
-            obj._parent_block = self
-            self._objs.append(obj)
+        self._objs = blockList
+        # for blockDict in blockList:
+        #     obj = self._reqCls.dispatch_subclass(blockDict)
+        #     obj._parent_block = self
+        #     self._objs.append(obj)
     
     
     @classmethod
@@ -1447,6 +1466,8 @@ class ListBlock(Block):
                 self._objs must be a list of objects which can be coerced to the
                 correct `SingleBlock` subclass specified by _reqCls
         """
+        from .attachments import Attachment
+
         if name == "_objs":
             if type(value) is not list:
                 raise TypeError(f"{type(self).__name__}._objs must be a list of objects.")
@@ -1457,10 +1478,15 @@ class ListBlock(Block):
                 for obj in value:
                     if not isinstance(obj, typ):
                         try:
-                            obj=typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
+                            new_obj = typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
                         except:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
+                        if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
+                            new_obj._filepath = obj._filepath
+                        obj=new_obj
                     obj._parent_block = self
+                    if hasattr(obj, "refresh") and isinstance(obj, Attachment):
+                        obj.refresh()
                     new_list.append(obj)
                 return super().__setattr__(name, new_list)
 
@@ -1832,6 +1858,14 @@ class ListBlock(Block):
         for obj in self._objs:
             if hasattr(obj, "default_key_order"):
                 obj.default_key_order(deep=deep)
+
+    def refresh_attachments(self, new_copy=False, overwrite=False, **kwargs):
+        from .attachments import Attachment
+        for val in self:
+            if hasattr(val, "refresh_attachments"):
+                val.refresh_attachments(new_copy=new_copy, overwrite=overwrite, **kwargs)
+            if isinstance(val, Attachment) and hasattr(val, "refresh"):
+                val.refresh(new_copy=new_copy, overwrite=overwrite, **kwargs)
 
 from ._blockUtils import _get_block_classes
 import sys
