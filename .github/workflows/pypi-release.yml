@@ -140,8 +140,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
           git fetch origin gh-pages --depth=1
-          mike delete incoming --push
-      
+
+          incoming=$(mike list incoming --json | jq -r '.version // empty')
+          echo $incoming
+          if [[ "$incoming" != "" ]]; then
+            mike delete $incoming --push
+          fi
       - name: Deploy release branch to "latest" alias
         working-directory: mkdocs
         run: |
