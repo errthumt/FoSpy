@@ -1,4 +1,4 @@
-name: Publish FoSpy to PyPI and TestPyPI
+name: Version Tag
 on: 
   push:
     tags:
@@ -9,23 +9,26 @@ on:
 
 jobs:
   check-for-main:
-    name: v* Tags only allowed on main branch
+    name: v* tags only allowed on main branch
     runs-on: ubuntu-latest
     outputs:
       keepTag: ${{ steps.check.outputs.keepTag }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Check for main branch
         id: check
         run: |
-          branch=$(git branch --show-current)
+          branches=$(git branch -r --contains HEAD)
+          branch=${branches##*/}
           echo $branch
           keepTag=$([ "$branch" == "main" ] && echo "true" || echo "false")
           echo "keepTag=$keepTag" >> $GITHUB_OUTPUT
   
   remove-tag:
-    name: Remove tag
+    name: Remove forbidden tag
     runs-on: ubuntu-latest
     needs: check-for-main
     if: needs.check-for-main.outputs.keepTag == 'false'
