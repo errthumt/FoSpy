@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-AnnealProgram }
 ### `AnnealProgram`
 ::: FoSpy.blocks.treatments.AnnealProgram
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-AnnealSection }
 ### `AnnealSection`
 ::: FoSpy.blocks.treatments.AnnealSection
     options:
@@ -43,6 +45,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Annealing }
 ### `Annealing`
 ::: FoSpy.blocks.treatments.Annealing
     options:
@@ -51,6 +54,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Dwell }
 ### `Dwell`
 ::: FoSpy.blocks.treatments.Dwell
     options:
@@ -59,6 +63,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Quench }
 ### `Quench`
 ::: FoSpy.blocks.treatments.Quench
     options:
@@ -67,6 +72,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Ramp }
 ### `Ramp`
 ::: FoSpy.blocks.treatments.Ramp
     options:
@@ -75,6 +81,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-RampNoRate }
 ### `RampNoRate`
 ::: FoSpy.blocks.treatments.RampNoRate
     options:
@@ -83,6 +90,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-RampNoTemp }
 ### `RampNoTemp`
 ::: FoSpy.blocks.treatments.RampNoTemp
     options:
@@ -91,6 +99,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-RampNoTime }
 ### `RampNoTime`
 ::: FoSpy.blocks.treatments.RampNoTime
     options:
@@ -99,6 +108,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Treatment }
 ### `Treatment`
 ::: FoSpy.blocks.treatments.Treatment
     options:

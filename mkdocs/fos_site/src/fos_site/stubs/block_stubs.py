@@ -96,6 +96,7 @@ def make_stubs():
 
             for sym in symbols:
                 f.write("---\n")
+                f.write(f"[](){{ #blockdocs-{sym} }}\n")
                 f.write(f"### `{sym}`\n")
                 f.write(f"::: {PACKAGE_ROOT}.{module_name}.{sym}\n")
                 f.write("    options:\n")

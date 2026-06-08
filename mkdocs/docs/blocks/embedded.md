@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-EmbeddedCIF }
 ### `EmbeddedCIF`
 ::: FoSpy.blocks.embedded.EmbeddedCIF
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-EmbeddedFile }
 ### `EmbeddedFile`
 ::: FoSpy.blocks.embedded.EmbeddedFile
     options:
