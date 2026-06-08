@@ -181,7 +181,7 @@ jobs:
       - name: Deploy release branch to "latest" alias
         working-directory: mkdocs
         run: |
-          mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --push
+          mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --push --allow-empty
 
   publish-to-pypi:
     name: Publish Release to PyPI
