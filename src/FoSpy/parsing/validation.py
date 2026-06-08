@@ -59,6 +59,7 @@ from ..blocks.treatments import (
 
 from . import validators
 import chemformula
+import pathlib
 
 # Placeholder classes
 class LabConditions(SingleBlock):
@@ -200,6 +201,7 @@ functions."""
 optional_keys = {
     Attachment: {
         "embedded": list,
+        "path": pathlib.Path
     }, 
     SingleBlock: {
         "rename": validators.rename.rename_dict

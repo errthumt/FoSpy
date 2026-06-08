@@ -36,6 +36,7 @@ class FileBlock(SingleBlock):
         atexit.register(self.cleanup)
 
         super().__init__(blockDict, _dispatched=_dispatched)
+        self.refresh_attachments()
 
     def cleanup(self):
         if self._tempdir is not None:
@@ -117,6 +118,9 @@ class FileBlock(SingleBlock):
             else:
                 raise e
         return True
+    
+    def check_attachments(self):
+        pass
 
     def matches_file(self):
         reloaded = self.fromFile(self._sourceFile)
