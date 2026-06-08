@@ -107,6 +107,6 @@ jobs:
       - name: Deploy to GitHub Pages
         working-directory: mkdocs
         run: |
-          mike deploy --push --update-aliases --allow-empty"${{ steps.version.outputs.version }}" incoming
+          mike deploy --push --update-aliases --allow-empty "${{ steps.version.outputs.version }}" incoming
           mike retitle incoming "${{ steps.version.outputs.version }}" --push
 
