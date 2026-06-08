@@ -7,6 +7,9 @@ on:
     types:
       - released
 
+permissions:
+  contents: write
+
 jobs:
   check-for-main:
     name: v* tags only allowed on main branch
