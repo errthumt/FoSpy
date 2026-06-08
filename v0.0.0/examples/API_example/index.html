@@ -1,0 +1,3258 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://errthumt.github.io/FoSpy/v0.0.0/examples/API_example/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="full/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>API Walkthrough - FoSpy Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/plastic-dark.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/light-plus.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-usage-for-fospy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+          <aside class="md-banner md-banner--warning">
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest stable version.
+  <a href="../../.."> 
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),base=new URL("../.."),outdated=__md_get("__outdated",sessionStorage,base);!0===outdated&&el&&(el.hidden=!1)</script>
+          </aside>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="FoSpy Documentation" class="md-header__button md-logo" aria-label="FoSpy Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FoSpy Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Walkthrough
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/errthumt/FoSpy/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    errthumt/FoSpy
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="FoSpy Documentation" class="md-nav__button md-logo" aria-label="FoSpy Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    FoSpy Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/errthumt/FoSpy/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    errthumt/FoSpy
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Example
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Example
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#boilerplate-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boilerplate and Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opening-and-saving-fos-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening and saving FOS files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Opening and saving FOS files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-oriented-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object-Oriented Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-blocks-and-adding-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming Blocks and Adding Comments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Renaming Blocks and Adding Comments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changing-simple-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing Simple Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changing Simple Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-blocks-in-lists-and-using-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Blocks in Lists and Using Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Blocks in Lists and Using Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 4
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-unexpected-variable-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Unexpected Variable Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding Unexpected Variable Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fos-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FOS Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editing-objects-in-listed-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing Objects in Listed Blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-templates-and-filling-in-larger-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Templates and Filling in Larger Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Templates and Filling in Larger Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filling-in-larger-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filling in Larger Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reusing-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusing Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reusing Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-blocks-from-lists-using-indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing Blocks From Lists Using Indices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Removing Blocks From Lists Using Indices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 8
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-embedded-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Embedded Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Embedded Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 9
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculation-routines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calculation Routines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleaning-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleaning Up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cleaning Up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-10-finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 10 (Finished)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonus-generating-figures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonus: Generating Figures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonus: Generating Figures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulating-powder-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulating Powder Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annealing-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Annealing Diagrams
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="full/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full Example Script
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../synthesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Synthesis Files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../templates/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Template Files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../expected/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Expected Properties
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Block Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Block Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What is a Block?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/embedded/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    embedded
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    materials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/synthesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    synthesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../blocks/treatments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    treatments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Full Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Full Docs Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/_debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    _debug
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    blocks
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    blocks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/_blockUtils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    _blockUtils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/blocks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    blocks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/embedded/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    embedded
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/files/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    files
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/materials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    materials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    metadata
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/synthesis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    synthesis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/blocks/treatments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    treatments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    json
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    json
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/json/utils/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    utils
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    parsing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    parsing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/format_fos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    format_fos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/read/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    read
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/regex/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    regex
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/write/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    write
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6_7" id="__nav_5_6_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    validators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_6_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    validators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validators/filenames/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    filenames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validators/material/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    material
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validators/numbers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    numbers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validators/rename/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    rename
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/parsing/validators/units/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    units
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    plotting
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    plotting
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../full/plotting/EmbeddedCIF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    EmbeddedCIF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../internal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    For Devs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pypi.org/project/FoSpy" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyPI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#boilerplate-and-debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boilerplate and Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opening-and-saving-fos-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opening and saving FOS files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Opening and saving FOS files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-oriented-shortcuts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object-Oriented Shortcuts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renaming-blocks-and-adding-comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renaming Blocks and Adding Comments
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Renaming Blocks and Adding Comments">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changing-simple-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changing Simple Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Changing Simple Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 3
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#finding-blocks-in-lists-and-using-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Blocks in Lists and Using Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Finding Blocks in Lists and Using Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 4
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-unexpected-variable-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Unexpected Variable Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding Unexpected Variable Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fos-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FOS Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editing-objects-in-listed-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing Objects in Listed Blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-templates-and-filling-in-larger-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Templates and Filling in Larger Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Templates and Filling in Larger Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filling-in-larger-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filling in Larger Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 6
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reusing-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusing Templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reusing Templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 7
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-blocks-from-lists-using-indices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing Blocks From Lists Using Indices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Removing Blocks From Lists Using Indices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 8
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-embedded-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Embedded Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Embedded Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 9
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calculation-routines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calculation Routines
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleaning-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleaning Up
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cleaning Up">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checkpoint-10-finished" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checkpoint 10 (Finished)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bonus-generating-figures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bonus: Generating Figures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bonus: Generating Figures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simulating-powder-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulating Powder Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#annealing-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Annealing Diagrams
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-usage-for-fospy">Example Usage for FoSpy</h1>
+<p>This page is an example of what a full API editing session might look like for Synthesis and Template files using the FOS format.</p>
+<p>Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward automating synthesis file generation for many syntheses at once from a variety of inputs, ranging from a GUI application to AI-assisted transcription.</p>
+<p>The uninterupted full script can be found <a href="full/">here</a>, but each snippet is pulled apart here and explained.</p>
+<p>Explanations on this page are intended to be understandable to non-Python enthusiasts... as such, there are some colloquial words (e.g, shortcut, block) that are used in place of more "Pythonic" language (e.g., namespace, object).</p>
+<p>This page contains checkpoints where the current synthesis or template file is saved. The initial inputs and the result of each checkpoint can be found at the pages below:</p>
+<ul>
+<li><a href="../synthesis/">Synthesis Files</a></li>
+<li><a href="../templates/">Template Files</a></li>
+</ul>
+<h2 id="boilerplate-and-debugging">Boilerplate and Debugging</h2>
+<p>First, I import some of the classes I will be using. Since I'm only manually creating a <code>Synthesis</code> and a <code>TemplateSet</code>, I don't need to import any of the classes that are created in the process (like <code>Materials</code>, <code>Treatments</code>, etc.). Those are created automatically when reading the input files.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy.blocks.synthesis</span><span class="w"> </span><span class="kn">import</span> <span class="n">Synthesis</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy.blocks.template</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemplateSet</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">chemformula</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemFormula</span>
+</span></code></pre></div>
+<p><code>FoSpy</code> uses a <code>_debug</code> module to print progress messages during some processes. These are helpful for devs to track what is going on in the background, or what is being executed successfully before something breaks. By default, no debug messages are printed. Each module uses its own <code>Debug</code> object to print messages under the module attribute <code>_debug</code> (e.g., <code>FoSpy.blocks._debug</code>, <code>FoSpy.parsing.read._debug</code>), so you can either enable/disable all debug messages, or you can pick a particular module that you want to keep track of and only enable <code>_debug.on</code> for that module.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># No debug messages by default, but they can be turned on like this.</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy._debug</span><span class="w"> </span><span class="kn">import</span> <span class="n">all_debugs_on</span><span class="p">,</span> <span class="n">all_debugs_off</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">all_debugs_on</span><span class="p">(</span><span class="n">soundoff</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Change the width of your debug screen so that module labels print on one line.</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">_debug</span> <span class="k">as</span> <span class="n">db</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">db</span><span class="o">.</span><span class="n">DEBUG_WIDTH</span> <span class="o">=</span> <span class="mi">120</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Optional way to turn on/off one module&#39;s debug messages.</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy.blocks.blocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">_debug</span> <span class="k">as</span> <span class="n">block_debug</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">block_debug</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kc">True</span>
+</span></code></pre></div>
+<h2 id="opening-and-saving-fos-files">Opening and saving FOS files</h2>
+<p>This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling <code>save()</code> without a filename will now just re-save them in the new location.</p>
+<p><code>save()</code> and <code>fromFile()</code> accept paths to FOS-formatted files or JSON-formatted files.
+<div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># load synthesis and templates from files</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">my_synthesis</span> <span class="o">=</span> <span class="n">Synthesis</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;synthesis/start_synthesis.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">my_templates</span> <span class="o">=</span> <span class="n">TemplateSet</span><span class="o">.</span><span class="n">fromFile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;templates/start_templates.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># save the synthesis to a json for comparison</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;synthesis/start_synthesis.json&quot;</span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># save the files to new files so that they don&#39;t overwrite the old ones.</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;synthesis/check01.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;templates/check01.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-1">Checkpoint 1</h3>
+<p><a href="../synthesis/#checkpoint-1">Updated Synthesis</a> | <a href="../templates/#checkpoint-1">Updated Templates</a></p>
+<h2 id="object-oriented-shortcuts">Object-Oriented Shortcuts</h2>
+<p>The nice thing about python is that in most cases, if you set a new variable "equal" to something, the new variable just points at the original instead of copying it. For example, after this line:</p>
+<p><code>my_meta = my_synthesis.metadata</code></p>
+<p>any edits to <code>my_meta</code> will also be edits to <code>my_synthesis.metadata</code>.</p>
+<p>Beware if you are not familiar with object-oriented code or namespaces: This also means that if you <em>reassign</em> a variable, it unlinks it from the original. For example, in the code below, I mistakenly link <code>my_mats = my_synthesis.cifs</code> before correctly assigning <code>my_mats = my_synthesis.materials</code> in the next line. This <em>does not</em> link the CIF files and materials together in any way. Instead, <code>my_mats</code> "forgets" that it was ever linked to the CIFs and points at the materials for the rest of the script.
+<div class="highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># some shortcuts so I don&#39;t need to keep referencing my_synthesis</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">my_meta</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">metadata</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">my_exps</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">experimenters</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">my_reaction</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">reaction</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">my_mats</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">my_mats</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">materials</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">my_treats</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span>
+</span></code></pre></div></p>
+<h2 id="renaming-blocks-and-adding-comments">Renaming Blocks and Adding Comments</h2>
+<p>Each type of block in a FOS has a set of fields that are required for it. Additionally, there is a separate list of "optional" fields that still must follow certain rules when you put them in a block.</p>
+<p>However, you may want to modify the name of a section or a value without changing its expected behavior. You can do this by adding a "rename" block.</p>
+<ul>
+<li><strong>To rename main FOS headers:</strong> The rename block is an extra heading (<code>[Rename]</code>) in the FOS file.</li>
+<li><strong>To rename properties inside a block:</strong> The rename block is a nested block named <code>rename</code>.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[Experimenters]
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>// This tells the FOS reader to expect &quot;isu_research_group&quot; instead of affiliation, *only* for the first experimenter.
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>rename: [
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="hll">    affiliation: isu_research_group
+</span></span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>]
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>name: Travis Errthum
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>// This now gets validated as affiliation
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="hll">isu_research_group : Kovnir Group
+</span></span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>orcid: 0009-0006-1937-5672
+</span></code></pre></div>
+<p>We can apply this in python using the <code>rename_block()</code> command. Note that for safety, we also reapply our <code>my_mats</code> shortcut, in case reassigning the block value might have unlinked our original shortcut.</p>
+<p>I also do some rearranging of the document block order here. Unless we rearrange our blocks with <code>keys_to_end()</code>, the new <code>[Rename]</code> block would have been added at the bottom of the FOS file, after the embedded CIF file.
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">clear_all_comments</span><span class="p">()</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">rename_block</span><span class="p">(</span><span class="s2">&quot;materials&quot;</span><span class="p">,</span><span class="s2">&quot;reagents&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">my_mats</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">reagents</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">rename</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;This new block has been added because I renamed a required block.&quot;</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">rename</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="s2">&quot;Synthesis files are required to have a materials block, so&quot;</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="s2">&quot;this line specifies that it has been renamed to reagents.&quot;</span><span class="p">)</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">my_exps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">rename_block</span><span class="p">(</span><span class="s2">&quot;affiliation&quot;</span><span class="p">,</span><span class="s2">&quot;isu_research_group&quot;</span><span class="p">)</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">keys_to_end</span><span class="p">(</span><span class="s2">&quot;cifs&quot;</span><span class="p">)</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check02.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-2">Checkpoint 2</h3>
+<p><a href="../synthesis/#checkpoint-2">Updated Synthesis</a></p>
+<h3 id="comments">Comments</h3>
+<p>In the code above, I also attached a couple of comments to lines in the FOS file. Comments are printed above the line they are attached to. For example, <code>my_synthesis.rename.add_comments()</code> attaches comments above the <code>[Rename]</code> header in the FOS file. The other command, <code>my_synthesis.rename.materials.add_comments()</code>, attaches the comment above the new <code>materials:reagents</code> line underneath the <code>[Rename]</code> heading.</p>
+<h2 id="changing-simple-data">Changing Simple Data</h2>
+<p>Here I change some of the metadata and reaction information for my synthesis. Certain variables are automatically converted. For example, the <code>nominal_formula</code> is coded to be a <code>ChemFormula</code> object, so when I set that property equal to simple text, it automatically converts the text into a true formula object and raises an error if it's not able to read it.</p>
+<p>Note that <code>my_synthesis.products</code> is supposed to be a list of <code>Product</code> blocks, but because it is automatically passed to the corresponding validator when I reassign it, I can assign it to a dictionary, and let the validator construct the dictionary into a <code>Product</code> on the back end.
+<div class="highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># change some metadata for my synthesis</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">my_meta</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;TE002&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">my_meta</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="s2">&quot;05-17-2026&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">my_meta</span><span class="o">.</span><span class="n">internal_project_ID</span> <span class="o">=</span> <span class="s2">&quot;Arsenide 28+d clathrates&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">my_reaction</span><span class="o">.</span><span class="n">nominal_formula</span> <span class="o">=</span> <span class="s2">&quot;Ba8Cu13Zn11As28.5&quot;</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">products</span> <span class="o">=</span> <span class="p">[{</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Barium transition-metal arsenide (8-24-28.5)&quot;</span><span class="p">,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="s2">&quot;formula&quot;</span><span class="p">:</span> <span class="s2">&quot;Ba8Cu13Zn11As28.5&quot;</span><span class="p">,</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="s2">&quot;expected&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="s2">&quot;obtained&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="s2">&quot;expected_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;250.0&quot;</span><span class="p">,</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="s2">&quot;expected_amount_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;mg&quot;</span><span class="p">,</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>    <span class="s2">&quot;obtained_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;150.0&quot;</span><span class="p">,</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    <span class="s2">&quot;obtained_amount_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;mg&quot;</span><span class="p">,</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>    <span class="s2">&quot;observations&quot;</span><span class="p">:</span> <span class="s2">&quot;Gray Powder&quot;</span><span class="p">,</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="s2">&quot;characterizations&quot;</span><span class="p">:</span> <span class="s2">&quot;PXRD&quot;</span><span class="p">,</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="s2">&quot;structure_comments&quot;</span><span class="p">:</span> <span class="s2">&quot;Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space group Cmcm&quot;</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="p">}]</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check03.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-3">Checkpoint 3</h3>
+<p><a href="../synthesis/#checkpoint-3">Updated Synthesis</a></p>
+<h2 id="finding-blocks-in-lists-and-using-templates">Finding Blocks in Lists and Using Templates</h2>
+<p>My original template file had an entry in the experimenters block for an experimenter named Joe. If I want to add Joe to the experimenters for my synthesis, I have to pull his entry from the list of experimenter templates. I can do this with the <code>get_first()</code> command, which finds the first entry in a list with a property matching the one I specify (in this case, <code>template_name="Joe"</code>). There is also <code>get_any()</code> which uses similar search rules but returns a list of <em>all</em> matching entries. There are also deletion commands that follow the same rules, like <code>remove_any()</code></p>
+<p>After finding Joe's template and setting it to the <code>joe_template</code> shortcut, I have to fill in the empty values in the template before it can be used as a complete experimenter. In this case, Joe's template is only missing an affiliation value, so I use the <code>fill()</code> command to fill it in and return a true experimenter. As you'll see later on, you can put as many <code>property=value</code> statements in the <code>fill()</code> command as you need to in order to fill in the template.</p>
+<p>Notice that the renaming functionality we used earlier for affiliation only applies to the first experimenter. Joe's experimenter entry still uses the expected "affiliation" tag until told otherwise.
+<div class="highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">clear_all_comments</span><span class="p">()</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># more shortcuts</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">exp_temps</span> <span class="o">=</span> <span class="n">my_templates</span><span class="o">.</span><span class="n">experimenters</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">mat_temps</span> <span class="o">=</span> <span class="n">my_templates</span><span class="o">.</span><span class="n">materials</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">cif_temps</span> <span class="o">=</span> <span class="n">my_templates</span><span class="o">.</span><span class="n">cifs</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># template file has a template for Joe, but it&#39;s missing an affiliation value.</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># So I fill in the affiliation and add it to the experimenters on my synthesis</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">joe_template</span> <span class="o">=</span> <span class="n">exp_temps</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="n">template_name</span><span class="o">=</span><span class="s2">&quot;Joe&quot;</span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">joe</span> <span class="o">=</span> <span class="n">joe_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">affiliation</span><span class="o">=</span><span class="s2">&quot;Kovnir Group - Iowa State University&quot;</span><span class="p">)</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">my_exps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">joe</span><span class="p">)</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">my_exps</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;Note that now there are two experimenters, so the&quot;</span><span class="p">,</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>                     <span class="s2">&quot;experimenters header has changed to double brackets&quot;</span><span class="p">)</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check04.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-4">Checkpoint 4</h3>
+<p><a href="../synthesis/#checkpoint-4">Updated Synthesis</a></p>
+<h2 id="adding-unexpected-variable-types">Adding Unexpected Variable Types</h2>
+<p>Sometimes, you may want to add a special block type (like <code>Material</code>, <code>Treatment</code>, or <code>Experimenter</code>), even if the FOS program isn't expecting it. You can do this using the <code>add_block</code> command. In this case, I want to create a new property for my first experimenter to give him a friend. The unexpected friend property gets assigned as an <code>"experimenter"</code>, which eventually gets matched to the <code>Experimenter</code> data type in the code.</p>
+<p>Then, perhaps after an awkward social encounter, I decide to refer to Joe as Travis's colleague instead of friend. Note that because <code>friend</code> was already an unexpected property, renaming this does not add <code>friend: colleague</code> to the <code>rename</code> block in the resulting FOS; It is simpler to move the <code>"experimenter"</code> assignment over to the new <code>colleague</code> block.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">clear_all_comments</span><span class="p">()</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">travis</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">experimenters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">travis</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="s2">&quot;friend&quot;</span><span class="p">,</span><span class="s2">&quot;experimenter&quot;</span><span class="p">,</span><span class="n">joe</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">travis</span><span class="o">.</span><span class="n">friend</span><span class="o">.</span><span class="n">affiliation</span> <span class="o">=</span> <span class="s2">&quot;Graham&#39;s Dad&quot;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">travis</span><span class="o">.</span><span class="n">rename_block</span><span class="p">(</span><span class="s2">&quot;friend&quot;</span><span class="p">,</span><span class="s2">&quot;colleague&quot;</span><span class="p">)</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">travis</span><span class="o">.</span><span class="n">colleague</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;This copy of Joe has information about him as Travis&#39;s colleague&quot;</span><span class="p">)</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">joe</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;This copy of Joe has information about him as an experimenter&quot;</span><span class="p">)</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">my_exps</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;Note that there are now multiple experimenters in this block,&quot;</span><span class="p">,</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>                     <span class="s2">&quot;So the header now has double brackets&quot;</span><span class="p">)</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check05.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="checkpoint-5">Checkpoint 5</h3>
+<p><a href="../synthesis/#checkpoint-5">Updated Synthesis</a></p>
+<h3 id="fos-output">FOS Output</h3>
+<p>In a FOS file, unexpected property types are signaled using <code>property$alias</code>, where <code>alias</code> is a word that had been pre-programmed to match to a certain block type (see the example below). Usually aliases are the same word as their corresponding type, but more documentation will be created to see available types and what alias to use for them.
+<div class="highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>// Note that there are now multiple experimenters in this block,
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>// So the header now has double brackets
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[[Experimenters]]
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>name: Travis Errthum
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isu_research_group: Kovnir Group - Iowa State University
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>orcid: 0009-0006-1937-5672
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>// This copy of Joe has information about him as Travis&#39;s colleague
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>colleague$experimenter: [
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    name: Joseph Race
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    affiliation: Graham&#39;s Dad
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    orcid: 0000-0002-8551-3627
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>]
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>rename: [
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    affiliation: isu_research_group
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>]
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>// This copy of Joe has information about him as an experimenter
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>name: Joseph Race
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>affiliation: Kovnir Group - Iowa State University
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>orcid: 0000-0002-8551-3627
+</span></code></pre></div></p>
+<h2 id="editing-objects-in-listed-blocks">Editing Objects in Listed Blocks</h2>
+<p>The materials block of my synthesis (<code>my_mats = my_synthesis.materials</code>) is a fancy list of <code>Material</code> objects. I can access an individual item in that list with an index in brackets (<code>my_mats[i]</code>). Python indices are zero-based, so <code>my_mats[0]</code> refers to the first material in the list (in this case barium). Since barium's <code>amount_unit</code> is specified as molar ratio, then changing the amount value changes the molar ratio.
+<div class="highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Changing Barium&#39;s molar ratio</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">my_mats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="mi">8</span>
+</span></code></pre></div></p>
+<h2 id="creating-templates-and-filling-in-larger-templates">Creating Templates and Filling in Larger Templates</h2>
+<p>In addition to loading templates written to FOS files, you can also create templates from existing blocks by using <code>make_template()</code> and specifying which properties you want to leave empty in the template. Here, I use the zinc material loaded from my synthesis to create a generic template for any metal powder with the same purity.</p>
+<p>Then, I use the <code>add_block()</code> command we already used on our synthesis to add a separate block to store generic materials. This is to distinguish my new template from the other material templates in my file, which are only missing <code>amount</code> and <code>type</code>.
+<div class="highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># I find zinc in my materials, change its ratio, and also generate a template</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># from it.</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">zinc</span> <span class="o">=</span> <span class="n">my_mats</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="s2">&quot;powder&quot;</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">zinc</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="mi">11</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># The template name is &quot;A generic metal powder, purity 0.995&quot;, and it has empty</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># fields for name, formula, cas, and ratio</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">powder_template</span> <span class="o">=</span> <span class="n">zinc</span><span class="o">.</span><span class="n">make_template</span><span class="p">(</span><span class="s2">&quot;A generic metal powder, purity 0.995&quot;</span><span class="p">,</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                                      <span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="s2">&quot;formula&quot;</span><span class="p">,</span><span class="s2">&quot;cas&quot;</span><span class="p">,</span><span class="s2">&quot;amount&quot;</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">powder_template</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># This saves my powder template to a new category of templates titled &quot;Generic$materials&quot;</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">add_block</span><span class="p">(</span><span class="s2">&quot;generic&quot;</span><span class="p">,</span><span class="s2">&quot;materials&quot;</span><span class="p">,</span> <span class="n">powder_template</span><span class="p">)</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">keys_to_end</span><span class="p">(</span><span class="s2">&quot;cifs&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="filling-in-larger-templates">Filling in Larger Templates</h3>
+<p>When you have many values to fill into a template that may need to be determined by other subprocesses, using <code>fill()</code> with lots of <code>property=value</code> pieces will be difficult. Instead, you can construct a python <code>dict</code> (dictionary) which has all of the missing values, then send the whole dictionary to the <code>fill()</code> command.
+<div class="highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Setting up information that I want to fill into the powder template</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">copper_info</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Copper&quot;</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="s2">&quot;formula&quot;</span><span class="p">:</span> <span class="s2">&quot;Cu&quot;</span><span class="p">,</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="s2">&quot;cas&quot;</span><span class="p">:</span> <span class="s2">&quot;7440-50-8&quot;</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="mi">13</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="p">}</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Generate a new material, copper, from the template I made earlier and add it</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># to my synthesis materials</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="n">copper</span> <span class="o">=</span> <span class="n">powder_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="o">**</span><span class="n">copper_info</span><span class="p">)</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="n">copper</span><span class="o">.</span><span class="n">clear_comments</span><span class="p">()</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copper</span><span class="p">)</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c1"># Here I&#39;m using the arsenic template that was already in the template file to</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># replace antimony.</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="n">arsenic_template</span> <span class="o">=</span> <span class="n">mat_temps</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">ChemFormula</span><span class="p">(</span><span class="s2">&quot;As&quot;</span><span class="p">))</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="n">arsenic</span> <span class="o">=</span> <span class="n">arsenic_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;reagent&quot;</span><span class="p">,</span> <span class="n">amount</span><span class="o">=</span><span class="mf">28.5</span><span class="p">)</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">remove_any</span><span class="p">(</span><span class="n">cas</span><span class="o">=</span><span class="s2">&quot;7440-36-0&quot;</span><span class="p">)</span> <span class="c1"># This removes the antimony from my synthesis</span>
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arsenic</span><span class="p">)</span>
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="n">clear</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">clear_all_comments</span><span class="p">()</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="p">(</span><span class="n">my_synthesis</span><span class="p">,</span> <span class="n">my_templates</span><span class="p">)]</span>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check06.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check06.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-6">Checkpoint 6</h3>
+<p><a href="../synthesis/#checkpoint-6">Updated Synthesis</a> | <a href="../templates/#checkpoint-6">Updated Templates</a></p>
+<h2 id="reusing-templates">Reusing Templates</h2>
+<p>When you fill in a template, it creates a copy with all the values filled in. So once I build a template of, say, a ramp section of an annealing profile, I can use that template to create several different ramp sections with different filled in values. Note that I have not yet added my new annealing treatments to my synthesis, so they will not appear in this checkpoint.
+<div class="highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Building templates from the existing annealing program on my synthesis so that</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># I can replace it with a different program.</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">anneal_template</span> <span class="o">=</span> <span class="n">my_treats</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">make_template</span><span class="p">(</span><span class="s2">&quot;Empty Anneal Template&quot;</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>                                             <span class="s2">&quot;repeats&quot;</span><span class="p">,</span> <span class="s2">&quot;observations&quot;</span><span class="p">,</span><span class="s2">&quot;program&quot;</span><span class="p">)</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">anneal_template</span><span class="o">.</span><span class="n">clear_comments</span><span class="p">()</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="n">ramp_template</span> <span class="o">=</span> <span class="n">my_treats</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">program</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">make_template</span><span class="p">(</span><span class="s2">&quot;Any ramp&quot;</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>                                                      <span class="s2">&quot;temp&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">dwell_template</span> <span class="o">=</span> <span class="n">my_treats</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">program</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">make_template</span><span class="p">(</span><span class="s2">&quot;Any dwell&quot;</span><span class="p">,</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                                                       <span class="s2">&quot;time&quot;</span><span class="p">)</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Save my new templates to my template file.</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">treatments</span> <span class="o">=</span> <span class="p">[</span><span class="n">anneal_template</span><span class="p">]</span>
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">anneal_sections</span> <span class="o">=</span> <span class="p">[</span><span class="n">ramp_template</span><span class="p">,</span> <span class="n">dwell_template</span><span class="p">]</span>
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">keys_to_end</span><span class="p">(</span><span class="s2">&quot;cifs&quot;</span><span class="p">)</span>
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Filling in my annealing templates</span>
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="n">ramp1</span> <span class="o">=</span> <span class="n">ramp_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="s2">&quot;550&quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span>
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="n">ramp2</span> <span class="o">=</span> <span class="n">ramp_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="s2">&quot;650&quot;</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="s2">&quot;10&quot;</span><span class="p">)</span>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="n">dwell1</span> <span class="o">=</span> <span class="n">dwell_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;12&quot;</span><span class="p">)</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="n">dwell2</span> <span class="o">=</span> <span class="n">dwell_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s2">&quot;72&quot;</span><span class="p">)</span>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1"># Using my anneal template to create two different annealing treatments with my</span>
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># different program sections.</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="n">anneal1</span> <span class="o">=</span> <span class="n">anneal_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>                               <span class="n">observations</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>                               <span class="n">program</span><span class="o">=</span><span class="p">[</span><span class="n">ramp1</span><span class="p">,</span> <span class="n">dwell1</span><span class="p">])</span>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="n">anneal2</span> <span class="o">=</span> <span class="n">anneal_template</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>                               <span class="n">observations</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>                               <span class="n">program</span><span class="o">=</span><span class="p">[</span><span class="n">ramp2</span><span class="p">,</span> <span class="n">dwell2</span><span class="p">])</span>
+</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>
+</span><span id="__span-13-30"><a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="n">anneal1</span><span class="o">.</span><span class="n">program</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;quench&quot;</span><span class="p">,</span><span class="s2">&quot;medium&quot;</span><span class="p">:</span><span class="s2">&quot;water&quot;</span><span class="p">})</span>
+</span><span id="__span-13-31"><a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>
+</span><span id="__span-13-32"><a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check07.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-7">Checkpoint 7</h3>
+<p><a href="../templates/#checkpoint-7">Updated Templates</a></p>
+<h2 id="removing-blocks-from-lists-using-indices">Removing Blocks From Lists Using Indices</h2>
+<p>In addition to the <code>remove_any()</code> command for lists of blocks, there is also <code>remove_idx(from_idx, to_idx)</code> which allows you to remove a range of values from the list. Here I'm using it to remove all treatments after my first 2 treatments, so that I can add my new annealing treatments to the synthesis instead.
+<div class="highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Remove all treatments except the first two</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">my_treats</span><span class="o">.</span><span class="n">remove_idx</span><span class="p">(</span><span class="n">from_idx</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Adding both annealing treatments to my synthesis</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="k">for</span> <span class="n">anneal</span> <span class="ow">in</span> <span class="p">(</span><span class="n">anneal1</span><span class="p">,</span> <span class="n">anneal2</span><span class="p">):</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">my_treats</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">anneal</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check08.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-8">Checkpoint 8</h3>
+<p><a href="../synthesis/#checkpoint-8">Updated Synthesis</a></p>
+<h2 id="managing-embedded-files">Managing Embedded Files</h2>
+<p>Embedded files are just blocks like every other section, except they have a special <code>embedded</code> property that stores the un-edited lines of the original file.
+<div class="highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Copying Phil&#39;s cif from my templates into my synthesis.</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">py618</span> <span class="o">=</span> <span class="n">cif_temps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">py618</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># copying the Ba2Zn5Sb6 cif from my synthesis to my templates</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="n">Ba2Zn5Sb6</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="n">cif_temps</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Ba2Zn5Sb6</span><span class="p">)</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="c1"># removing the Ba2Zn5Sb6 from my synthesis because it&#39;s not applicable for this</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># sample.</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">remove_any</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;Ba2Zn5Sb6_ICSD&quot;</span><span class="p">)</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check09.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check09.fos&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h3 id="checkpoint-9">Checkpoint 9</h3>
+<p><a href="../synthesis/#checkpoint-9">Updated Synthesis</a> | <a href="../templates/#checkpoint-9">Updated Templates</a></p>
+<h2 id="calculation-routines">Calculation Routines</h2>
+<p>There is the capability to add "calculation_routines" to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. </p>
+<p>Since calculated comments are for user convenience and contain redundant information (which might inadvertently conflict with other changes), they are given a special syntax so that they are stored when <em>saving</em> a FOS file, but not read when <em>loading</em> a FOS file. They can be overwritten at any time with a new updated value.
+<div class="highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Every material gets a weight percent comment added above their ratio</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;reagents.add_weight_pcts&quot;</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">reagents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;Weight percents were calculated automatically when saving.&quot;</span><span class="p">)</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Every anneal treatment gets missing rate parameter comment.</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">for</span> <span class="n">anneal</span> <span class="ow">in</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_any</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">):</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    <span class="n">anneal</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;program.add_all_missing_parameters&quot;</span><span class="p">)</span>
+</span></code></pre></div></p>
+<h2 id="cleaning-up">Cleaning Up</h2>
+<p>All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn't matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:</p>
+<ul>
+<li>Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.</li>
+<li>Set some specific positions for certain blocks for better organization.</li>
+<li>Set the generic templates block to use the "explicit" key:value syntax for all of its templates.</li>
+<li>Set the synthesis materials block to use the "looped" syntax where all the keys are specified at the beginning of the block.
+<div class="highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># some reordering stuff to make the final printout more consistent.</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;generic&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;anneal_sections&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">generic</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;explicit&quot;</span><span class="p">)</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;reagents&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;looped&quot;</span><span class="p">)</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check10.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check10.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="c1"># Silence all debugs except the one used for checking equality.</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="n">all_debugs_off</span><span class="p">(</span><span class="n">soundoff</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="n">db</span><span class="o">.</span><span class="n">_debug</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="c1"># Check to see if the saved file matches the current python object.</span>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis matches: </span><span class="si">{</span><span class="n">my_synthesis</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates match:   </span><span class="si">{</span><span class="n">my_templates</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span></code></pre></div></li>
+</ul>
+<h3 id="checkpoint-10-finished">Checkpoint 10 (Finished)</h3>
+<p><a href="../synthesis/#checkpoint-10">Finalized Synthesis</a> | <a href="../templates/#checkpoint-10">Finalized Templates</a></p>
+<h2 id="bonus-generating-figures">Bonus: Generating Figures</h2>
+<p>There are features being developed that allow generating useful figures from the information loaded in a FOS file. Currently we have two figures:</p>
+<h3 id="simulating-powder-patterns">Simulating Powder Patterns</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># optional: figure</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quick_pattern</span><span class="p">(</span><span class="n">subprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Simulates powder diffraction data for the embedded CIF
+<img alt="simulated powder pattern" src="assets/PXRD.png" /></p>
+<h3 id="annealing-diagrams">Annealing Diagrams</h3>
+<div class="highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># optional: figure</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show_plot</span><span class="p">()</span>
+</span></code></pre></div>
+<p>Generates a temperature diagram for the annealing program.
+<img alt="annealing diagram" src="assets/anneal.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
