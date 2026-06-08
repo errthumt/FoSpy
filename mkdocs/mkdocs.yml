@@ -5,6 +5,7 @@ repo_name: errthumt/FoSpy
 
 theme:
   name: material
+  custom_dir: overrides
   highlightjs: false
   palette:
     # Palette toggle for automatic mode
