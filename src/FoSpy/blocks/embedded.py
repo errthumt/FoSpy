@@ -49,11 +49,11 @@ class EmbeddedCIF(EmbeddedFile):
         return _quick_pattern(two_theta, intensity)
 
 
-CifList = ListBlock.Simple(EmbeddedCIF)
-"""
-A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
-[`EmbeddedCIF` objects][FoSpy.blocks.embedded.EmbeddedCIF].
-"""
+# CifList = ListBlock.Simple(EmbeddedCIF)
+# """
+# A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
+# [`EmbeddedCIF` objects][FoSpy.blocks.embedded.EmbeddedCIF].
+# """
 
 from ._blockUtils import _get_block_classes
 import sys

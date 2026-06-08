@@ -1,4 +1,4 @@
-from FoSpy.blocks.embedded import CifList
+#from FoSpy.blocks.embedded import CifList
 from FoSpy.blocks.metadata import ExperimenterList
 from FoSpy.blocks.metadata import ProductList
 from FoSpy.blocks.treatments import TreatmentList
@@ -12,9 +12,16 @@ from ..blocks.blocks import (
     SubContainer,
 )
 
-from ..blocks.embedded import (
-    EmbeddedCIF,
+# from ..blocks.embedded import (
+#     EmbeddedCIF,
+#     EmbeddedFile,
+# )
+
+from ..blocks.attachments import (
+    Attachment,
     EmbeddedFile,
+    CifList,
+    CIFFile
 )
 
 from ..blocks.materials import (
@@ -179,10 +186,9 @@ required_keys = {
         "start_temp_unit": validators.units.FOSTempUnit
     },
 
-    EmbeddedFile: {
+    Attachment: {
         "file_name": validators.filenames.file_name,
         "extension": validators.filenames.file_extension,
-        "embedded" : list
     }
 }
 """Maps block classes to dictionaries of required keys and their validators.
@@ -192,12 +198,15 @@ functions."""
 
 
 optional_keys = {
+    Attachment: {
+        "embedded": list,
+    }, 
     SingleBlock: {
         "rename": validators.rename.rename_dict
     },
     Synthesis: {
-        "cif": EmbeddedCIF,
-        "cifs": ListBlock.Simple(EmbeddedCIF),
+        "cif": Attachment.enforce_subtype(CIFFile),
+        "cifs": CifList,
         "laboratory_conditions": LabConditions,
         "equipment": EquipmentList
     },
