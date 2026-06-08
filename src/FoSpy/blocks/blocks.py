@@ -170,6 +170,10 @@ class Block:
 
         p = Process(target=target, args=args, kwargs=kwargs)
         p.start()
+
+    def track_attachments(self, new_copy="prompt",overwrite="prompt", **kwargs):
+        self._att_new_copy = new_copy
+        self._att_overwrite = overwrite
         
 class SubContainer:
     """
@@ -472,6 +476,8 @@ class SingleBlock(Block):
             warn(f"You should avoid directly constructing a {type(self).__name__} object. Use the dispatch_subclass() "
                  "method instead to allow for subclass delegation when constructing.", stacklevel=2)
 
+        self.track_attachments(False, False)
+
         from ..parsing.validation import aliases as als
         new_als = als.copy()
         new_als.update(self._aliases or {})
@@ -526,6 +532,8 @@ class SingleBlock(Block):
         for key, val in blockDict.items():
             self._key_order.append(key)
             setattr(self, key, val)
+
+        
      
     def __setattr__(self, name:str, value):
         """
@@ -1349,8 +1357,14 @@ class SingleBlock(Block):
             if hasattr(val, "clear_all_comments"):
                 val.clear_all_comments()
 
-    def refresh_attachments(self, new_copy=False, overwrite=False, **kwargs):
+    def refresh_attachments(self, new_copy=None, overwrite=None, **kwargs):
         from .attachments import Attachment
+
+        if new_copy is None:
+            new_copy = self._att_new_copy
+        if overwrite is None:
+            overwrite = self._att_overwrite
+
         for propDict in self.__dict__, self.ext.__dict__:
             for key, val in propDict.items():
                 if key.startswith("_") or key in self._reserved:
@@ -1401,9 +1415,12 @@ class ListBlock(Block):
         #self._objs = []
         if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
             raise TypeError(f"ListBlock instances can only be constructed from subclasses with an assigned _reqCls. {self.__class__} has no _reqCls.")
+        self.track_attachments(False, False)
         if not isinstance(blockList, list):
             blockList = [blockList]
         self._objs = blockList
+
+        
         # for blockDict in blockList:
         #     obj = self._reqCls.dispatch_subclass(blockDict)
         #     obj._parent_block = self
@@ -1486,7 +1503,7 @@ class ListBlock(Block):
                         obj=new_obj
                     obj._parent_block = self
                     if hasattr(obj, "refresh") and isinstance(obj, Attachment):
-                        obj.refresh()
+                        obj.refresh(new_copy=self._att_new_copy, overwrite=self._att_overwrite)
                     new_list.append(obj)
                 return super().__setattr__(name, new_list)
 
@@ -1859,8 +1876,14 @@ class ListBlock(Block):
             if hasattr(obj, "default_key_order"):
                 obj.default_key_order(deep=deep)
 
-    def refresh_attachments(self, new_copy=False, overwrite=False, **kwargs):
+    def refresh_attachments(self, new_copy=None, overwrite=None, **kwargs):
         from .attachments import Attachment
+
+        if new_copy is None:
+            new_copy = self._att_new_copy
+        if overwrite is None:
+            overwrite = self._att_overwrite
+
         for val in self:
             if hasattr(val, "refresh_attachments"):
                 val.refresh_attachments(new_copy=new_copy, overwrite=overwrite, **kwargs)
