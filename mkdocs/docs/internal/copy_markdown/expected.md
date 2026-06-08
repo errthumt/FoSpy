@@ -68,7 +68,7 @@ ______________________________________________________________________
 
 ### `AnnealSection`
 
-[Class Documentation][FoSpy.blocks.treatments.AnnealSection]
+[Class Documentation][blockdocs-AnnealSection]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -82,7 +82,7 @@ ______________________________________________________________________
 
 ### `Annealing`
 
-[Class Documentation][FoSpy.blocks.treatments.Annealing]
+[Class Documentation][blockdocs-Annealing]
 
 **[Subclass of `Treatment`](#treatment)**
 
@@ -104,7 +104,7 @@ ______________________________________________________________________
 
 ### `Dwell`
 
-[Class Documentation][FoSpy.blocks.treatments.Dwell]
+[Class Documentation][blockdocs-Dwell]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
@@ -119,7 +119,7 @@ ______________________________________________________________________
 
 ### `EmbeddedFile`
 
-[Class Documentation][FoSpy.blocks.embedded.EmbeddedFile]
+[Class Documentation][blockdocs-EmbeddedFile]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -141,7 +141,7 @@ ______________________________________________________________________
 
 ### `Experimenter`
 
-[Class Documentation][FoSpy.blocks.metadata.Experimenter]
+[Class Documentation][blockdocs-Experimenter]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -162,7 +162,7 @@ ______________________________________________________________________
 
 ### `Material`
 
-[Class Documentation][FoSpy.blocks.materials.Material]
+[Class Documentation][blockdocs-Material]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -191,7 +191,7 @@ ______________________________________________________________________
 
 ### `MetaData`
 
-[Class Documentation][FoSpy.blocks.metadata.MetaData]
+[Class Documentation][blockdocs-MetaData]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -206,7 +206,7 @@ ______________________________________________________________________
 
 ### `Product`
 
-[Class Documentation][FoSpy.blocks.metadata.Product]
+[Class Documentation][blockdocs-Product]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -235,7 +235,7 @@ ______________________________________________________________________
 
 ### `Quench`
 
-[Class Documentation][FoSpy.blocks.treatments.Quench]
+[Class Documentation][blockdocs-Quench]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
@@ -249,7 +249,7 @@ ______________________________________________________________________
 
 ### `Ramp`
 
-[Class Documentation][FoSpy.blocks.treatments.Ramp]
+[Class Documentation][blockdocs-Ramp]
 
 **[Subclass of `AnnealSection`](#annealsection)**
 
@@ -278,7 +278,7 @@ ______________________________________________________________________
 
 ### `Reaction`
 
-[Class Documentation][FoSpy.blocks.metadata.Reaction]
+[Class Documentation][blockdocs-Reaction]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -294,7 +294,7 @@ ______________________________________________________________________
 
 ### `SingleBlock`
 
-[Class Documentation][FoSpy.blocks.blocks.SingleBlock]
+[Class Documentation][blockdocs-SingleBlock]
 
 **Parent Block Class**
 
@@ -323,7 +323,7 @@ ______________________________________________________________________
 
 ### `Synthesis`
 
-[Class Documentation][FoSpy.blocks.synthesis.Synthesis]
+[Class Documentation][blockdocs-Synthesis]
 
 **[Subclass of `FileBlock`](#singleblock)**
 
@@ -351,7 +351,7 @@ ______________________________________________________________________
 
 ### `TemplateBlock`
 
-[Class Documentation][FoSpy.blocks.template.TemplateBlock]
+[Class Documentation][blockdocs-TemplateBlock]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -367,7 +367,7 @@ ______________________________________________________________________
 
 ### `TemplateMeta`
 
-[Class Documentation][FoSpy.blocks.metadata.TemplateMeta]
+[Class Documentation][blockdocs-TemplateMeta]
 
 **[Subclass of `SingleBlock`](#)**
 
@@ -382,7 +382,7 @@ ______________________________________________________________________
 
 ### `TemplateSet`
 
-[Class Documentation][FoSpy.blocks.template.TemplateSet]
+[Class Documentation][blockdocs-TemplateSet]
 
 **[Subclass of `FileBlock`](#)**
 
@@ -411,7 +411,7 @@ ______________________________________________________________________
 
 ### `Treatment`
 
-[Class Documentation][FoSpy.blocks.treatments.Treatment]
+[Class Documentation][blockdocs-Treatment]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 

@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Experimenter }
 ### `Experimenter`
 ::: FoSpy.blocks.metadata.Experimenter
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-MetaData }
 ### `MetaData`
 ::: FoSpy.blocks.metadata.MetaData
     options:
@@ -43,6 +45,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Product }
 ### `Product`
 ::: FoSpy.blocks.metadata.Product
     options:
@@ -51,6 +54,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-Reaction }
 ### `Reaction`
 ::: FoSpy.blocks.metadata.Reaction
     options:
@@ -59,6 +63,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-TemplateMeta }
 ### `TemplateMeta`
 ::: FoSpy.blocks.metadata.TemplateMeta
     options:

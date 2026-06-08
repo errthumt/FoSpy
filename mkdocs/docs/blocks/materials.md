@@ -27,6 +27,7 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Material }
 ### `Material`
 ::: FoSpy.blocks.materials.Material
     options:
@@ -35,6 +36,7 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-MaterialList }
 ### `MaterialList`
 ::: FoSpy.blocks.materials.MaterialList
     options:

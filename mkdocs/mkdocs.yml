@@ -41,6 +41,7 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - attr_list
 
 plugins:
 - mkdocstrings:
@@ -49,6 +50,11 @@ plugins:
         options:
           heading_level: 4
           annotations_path: source
+          members: true
+          filters: []
+- autorefs:
+    resolve_closest: true
+- search
 
 extra:
   version:
