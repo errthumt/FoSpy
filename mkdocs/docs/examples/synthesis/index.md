@@ -2444,7 +2444,7 @@ materials: reagents
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8
 extension: .cif
-path: ..\templates
+path: ../templates
 
 
 ```
