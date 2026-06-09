@@ -127,8 +127,3 @@ class FileBlock(SingleBlock):
 
         return self.__eq__(reloaded, suppress_routine_paths=True)
     
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""

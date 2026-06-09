@@ -69,8 +69,3 @@ class CSVdata(SingleBlock):
         optional_keys.setdefault(self.__class__, {})
         optional_keys[self.__class__][name] = list
 
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""
