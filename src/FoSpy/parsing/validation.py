@@ -20,8 +20,8 @@ TemplateLists = {
     "anneal_sections": b.TemplateList.Simple(b.AnnealSection),
     "cifs": b.CifList
 }
-"""Maps alias names to [`TemplateList`][FoSpy.parsing.validation.TemplateLists] classes for use in
-[`TemplateSet`][FoSpy.parsing.validation.TemplateSet] blocks."""
+"""Maps alias names to [`TemplateList`][FoSpy.blocks.template.TemplateList] classes for use in
+[`TemplateSet`][FoSpy.blocks.files.TemplateSet] blocks."""
 
 
 aliases = {
@@ -34,7 +34,7 @@ aliases = {
     "embed": b.EmbeddedFile
 }
 """Maps alias names to block classes for use in non-template
-[`SingleBlock`][FoSpy.parsing.validation.SingleBlock] blocks."""
+[`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] blocks."""
 
 required_keys = {
     b.SingleBlock: {
@@ -198,6 +198,6 @@ functions.
 
 Optional key mapping is only necessary if the expected value should be passed to
 a validator. Simple unexpected values can be assigned directly to
-[`SingleBlock`][FoSpy.parsing.validation.SingleBlock] instance attributes
+[`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] instance attributes
 without validation.
 """
