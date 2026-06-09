@@ -42,7 +42,10 @@ def make_stubs():
     ch2repo()
 
     if OUTPUT_DIR.exists():
-        shutil.rmtree(OUTPUT_DIR)
+        for item in OUTPUT_DIR.iterdir():
+            if item.is_file() and item.name != "index.md":
+                item.unlink()
+
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
