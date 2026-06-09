@@ -36,6 +36,15 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-ExperimenterList }
+### `ExperimenterList`
+::: FoSpy.blocks.metadata.ExperimenterList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-MetaData }
 ### `MetaData`
 ::: FoSpy.blocks.metadata.MetaData
@@ -48,6 +57,15 @@ their own comment metadata.
 [](){ #blockdocs-Product }
 ### `Product`
 ::: FoSpy.blocks.metadata.Product
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-ProductList }
+### `ProductList`
+::: FoSpy.blocks.metadata.ProductList
     options:
         show_if_no_docstring: true
         inherited_members: true
