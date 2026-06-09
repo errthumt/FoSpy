@@ -61,19 +61,8 @@ from . import validators
 import chemformula
 import pathlib
 
-# Placeholder classes
-class LabConditions(b.SingleBlock):
-    pass
-
-class Equipment(b.SingleBlock):
-    pass
-
-class GasFlow(b.SingleBlock):
-    pass
 
 
-EquipmentList = b.ListBlock.Simple(Equipment)
-FlowList = b.ListBlock.Simple(GasFlow)
 
 TemplateLists = {
     "experimenters": b.TemplateList.Simple(b.Experimenter),
@@ -209,8 +198,8 @@ optional_keys = {
     b.Synthesis: {
         "cif": b.Attachment.enforce_subtype(b.CIFFile),
         "cifs": b.CifList,
-        "laboratory_conditions": LabConditions,
-        "equipment": EquipmentList
+        "laboratory_conditions": b.LabConditions,
+        "equipment": b.EquipmentList
     },
 
     b.Experimenter: {
@@ -239,7 +228,7 @@ optional_keys = {
     },
 
     b.Annealing: {
-        "gas_flow": FlowList
+        "gas_flow": b.FlowList
     },
 
     b.Ramp: {
