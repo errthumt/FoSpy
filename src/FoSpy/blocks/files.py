@@ -45,6 +45,7 @@ class FileBlock(SingleBlock):
     @classmethod
     def fromFile(cls, filepath):
         from .metadata import MetaData
+        from ._blockUtils import _unwrap_block
         abspath = os.path.abspath(filepath)
         pathstr = str(abspath)
         try:
@@ -63,7 +64,12 @@ class FileBlock(SingleBlock):
         blockDict = ext_map[ext](abspath)
         if "metadata" not in blockDict:
             raise ValueError(f"Could not find metadata block in file {abspath}")
-        typ = blockDict["metadata"].get("fos_type")
+        
+        metadata = _unwrap_block(blockDict["metadata"])
+        if "fos_type" not in metadata:
+            raise ValueError(f"Could not find fos_type in metadata block in file {abspath}")
+
+        typ = metadata.get("fos_type","").lower()
         subcls = MetaData.dispatch.get(typ, ("", cls))[1]
 
         if not issubclass(subcls, cls):

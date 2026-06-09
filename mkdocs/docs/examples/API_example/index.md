@@ -14,11 +14,11 @@ This page contains checkpoints where the current synthesis or template file is s
 * [Template Files](../templates/index.md)
 
 ## Boilerplate and Debugging
-First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `TemplateSet`, I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.) because those are created automatically when reading the input files. However, if more specific block types are needed, it is recommended to protect them behind the blocks namespace like so:
+First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `FileBlock` (see the [note on filetype detection](#opening-and-saving-fos-files)), I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.) because those are created automatically when reading the input files. However, if more specific block types are needed, it is recommended to protect them behind the blocks namespace like so:
 
 ```python
 from FoSpy import (
-    Synthesis, TemplateSet,
+    Synthesis, FileBlock,
     blocks as fb
 )
 # for Material blocks use fb.Material
@@ -44,11 +44,13 @@ block_debug.on = True
 ## Opening and saving FOS files
 This code loads my synthesis and my templates from my respective files, and then saves them to a different location. Once the location has been changed, calling `save()` without a filename will now just re-save them in the new location.
 
+You can load a FOS-formatted file specifically from the intended `FileBlock` subclass (as in `Synthesis.fromFile`), or you can allow `FileBlock.fromFile` to detect which subclass to use based on the `fos_type` value in metadata.
+
 `save()` and `fromFile()` accept paths to FOS-formatted files or JSON-formatted files.
 ```python
 # load synthesis and templates from files
 my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")
-my_templates = TemplateSet.fromFile(r"templates/start_templates.fos")
+my_templates = FileBlock.fromFile(r"templates/start_templates.fos")
 
 # save the synthesis to a json for comparison
 my_synthesis.save(r"synthesis/start_synthesis.json")
