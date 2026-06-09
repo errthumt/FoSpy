@@ -1,6 +1,9 @@
 fos_id: TE001
 fos_type: synthesis
+// This comment will stay attached to the description when saving
+// (Until comments are cleared)
 description: My First Synthesis
+// ! Comments starting with a ! do not get read from the file.
 group_id: kovnir-0000-0003-1152-1912
 project_id: travis5672/clathrates/Ba2-TM5-Sb6
 

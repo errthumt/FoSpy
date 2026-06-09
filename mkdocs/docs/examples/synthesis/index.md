@@ -9,7 +9,10 @@ Each file on this page was generated at the corresponding checkpoint in the [wal
 ```fos
 fos_id: TE001
 fos_type: synthesis
+// This comment will stay attached to the description when saving
+// (Until comments are cleared)
 description: My First Synthesis
+// ! Comments starting with a ! do not get read from the file.
 group_id: kovnir-0000-0003-1152-1912
 project_id: travis5672/clathrates/Ba2-TM5-Sb6
 
@@ -498,6 +501,8 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ```fos
 fos_id: TE001
 fos_type: synthesis
+// This comment will stay attached to the description when saving
+// (Until comments are cleared)
 description: My First Synthesis
 group_id: kovnir-0000-0003-1152-1912
 project_id: travis5672/clathrates/Ba2-TM5-Sb6
