@@ -128,8 +128,7 @@ class NestedConfig(types.ModuleType):
     def __getattr__(self, key):
         # Auto-create nested modules
         mod = NestedConfig({}, key, parent_name=self.__name__)
-        super().__setattr__(key, mod)
-        self.__all__.append(key)
+        setattr(self, key, mod)
         return mod
     
     def __setattr__(self, key, val):
@@ -141,6 +140,9 @@ class NestedConfig(types.ModuleType):
                 self.__all__.append(key)
         super().__setattr__(key, val)
 
+    def __iter__(self):
+        return iter(self())
+
     def to_dict(self):
         out = {}
         for key in self.__all__:
@@ -150,6 +152,14 @@ class NestedConfig(types.ModuleType):
             else:
                 out[key] = val
         return out
+    
+    def get(self, key, default=None):
+        val = getattr(self, key)
+        if isinstance(val, NestedConfig):
+            if val() == {}:
+                return default
+            return val()
+        return val
     
     def __call__(self):
         return self.to_dict()
