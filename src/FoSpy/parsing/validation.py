@@ -2,32 +2,32 @@ from .._debug import Debug
 _debug = Debug()
 
 # from ..blocks.blocks import (
-#     ListBlock,
+#     b.ListBlock,
 #     SingleBlock,
 #     SubContainer,
 # )
 
 # from ..blocks.attachments import (
 #     Attachment,
-#     EmbeddedFile,
-#     CifList,
+#     b.EmbeddedFile,
+#     b.CifList,
 #     CIFFile
 # )
 
 # from ..blocks.materials import (
-#     Material,
-#     MaterialList,
+#     b.Material,
+#     b.MaterialList,
 #     TemplateBlock,
 #     TemplateList,
 # )
 
 # from ..blocks.metadata import (
-#     Experimenter,
+#     b.Experimenter,
 #     MetaData,
 #     Product,
 #     Reaction,
 #     TemplateMeta,
-#     ExperimenterList,
+#     b.ExperimenterList,
 #     ProductList
 # )
 
@@ -41,104 +41,108 @@ _debug = Debug()
 
 # from ..blocks.treatments import (
 #     AnnealProgram,
-#     AnnealSection,
-#     Annealing,
+#     b.AnnealSection,
+#     b.Annealing,
 #     Dwell,
 #     Quench,
 #     Ramp,
-#     Treatment,
-#     TreatmentList
+#     b.Treatment,
+#     b.TreatmentList
 # )
+from ..blocks._containers import (
+    SubContainer,
+    SimpleWrapper
+)
 
-from ..blocks import *
-from ..blocks._containers import *
+from .. import blocks as b
+
 
 from . import validators
 import chemformula
 import pathlib
 
 # Placeholder classes
-class LabConditions(SingleBlock):
+class LabConditions(b.SingleBlock):
     pass
 
-class Equipment(SingleBlock):
+class Equipment(b.SingleBlock):
     pass
 
-class GasFlow(SingleBlock):
+class GasFlow(b.SingleBlock):
     pass
 
 
-EquipmentList = ListBlock.Simple(Equipment)
-FlowList = ListBlock.Simple(GasFlow)
+EquipmentList = b.ListBlock.Simple(Equipment)
+FlowList = b.ListBlock.Simple(GasFlow)
 
 TemplateLists = {
-    "experimenters": TemplateList.Simple(Experimenter),
-    "materials": TemplateList.Simple(Material),
-    "treatments": TemplateList.Simple(Treatment),
-    "annealings": TemplateList.Simple(Annealing),
-    "anneal_sections": TemplateList.Simple(AnnealSection),
-    "cifs": CifList
+    "experimenters": b.TemplateList.Simple(b.b.Experimenter),
+    "materials": b.TemplateList.Simple(b.Material),
+    "treatments": b.TemplateList.Simple(b.Treatment),
+    "annealings": b.TemplateList.Simple(b.Annealing),
+    "anneal_sections": b.TemplateList.Simple(b.AnnealSection),
+    "cifs": b.CifList
 }
 """Maps alias names to [`TemplateList`][FoSpy.parsing.validation.TemplateLists] classes for use in
 [`TemplateSet`][FoSpy.parsing.validation.TemplateSet] blocks."""
 
 
 aliases = {
-    "material": Material,
-    "materials": MaterialList,
-    "treatment": Treatment,
-    "treatments": TreatmentList,
-    "experimenter": Experimenter,
-    "experimenters": ExperimenterList,
-    "embed": EmbeddedFile
+    "material": b.Material,
+    "materials": b.MaterialList,
+    "treatment": b.Treatment,
+    "treatments": b.TreatmentList,
+    "experimenter": b.Experimenter,
+    "experimenters": b.ExperimenterList,
+    "embed": b.EmbeddedFile
 }
 """Maps alias names to block classes for use in non-template
 [`SingleBlock`][FoSpy.parsing.validation.SingleBlock] blocks."""
 
 required_keys = {
-    SingleBlock: {
+    b.SingleBlock: {
             "ext" : SubContainer
     },
 
-    Synthesis: {
-        "metadata" : MetaData,
-        "experimenters": ExperimenterList,
-        "reaction" : Reaction,
-        "products": ProductList,
-        "materials" : MaterialList,
-        "treatments" : TreatmentList
+    b.Synthesis: {
+        "metadata" : b.MetaData,
+        "experimenters": b.ExperimenterList,
+        "reaction" : b.Reaction,
+        "products": b.ProductList,
+        "materials" : b.MaterialList,
+        "treatments" : b.TreatmentList
     },
 
-    TemplateSet: {
-        "metadata" : TemplateMeta
+    b.TemplateSet: {
+        "metadata" : b.TemplateMeta
     },
 
-    TemplateMeta: {
+    b.TemplateMeta: {
         "name" : str,
         "description" : str
     },
 
-    TemplateBlock: {
+    b.TemplateBlock: {
         "template_name" : str
     },
 
-    MetaData: {
+    b.MetaData: {
         "name": str,
         "date": str
     },
 
-    Experimenter: {
+    b.Experimenter: {
         "name" : str,
         "affiliation": str
     },
 
-    Reaction: {
+    b.Reaction: {
         "nominal_formula": chemformula.ChemFormula,
         "nominal_amount" : validators.numbers.positive_decimal("Reaction/nominal_amount", "nominal_amount"),
         "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
     },
 
-    Product: {
+    b.Product: {
         "name": str,
         "expected" : bool,
         "obtained" : bool,
@@ -146,7 +150,7 @@ required_keys = {
         "observations": str
     },
 
-    Material: {
+    b.Material: {
         "name": str,
         "type": str,
         "formula": chemformula.ChemFormula,
@@ -154,36 +158,36 @@ required_keys = {
         "cas": str,
         "form": str,
         "env": str,
-        "amount": validators.numbers.positive_decimal("Material/amount", "amount"),
+        "amount": validators.numbers.positive_decimal("b.Material/amount", "amount"),
         "amount_unit": str
     },
 
-    Treatment: {
+    b.Treatment: {
         "type": str,
         "repeats": int,
         "observations": str
     },
 
-    AnnealSection: {
+    b.AnnealSection: {
         "type": str
     },
 
-    Dwell: {
+    b.Dwell: {
         "time": validators.numbers.positive_decimal("Dwell/time", "time", True),
         "time_unit": validators.units.FOSUnit.enforce_dims("[time]")
     },
 
-    Quench: {
+    b.Quench: {
         "medium": str
     },
 
-    Annealing: {
-        "program": AnnealProgram,
-        "start_temp": validators.numbers.positive_decimal("Annealing/start_temp", "start_temp", True),
+    b.Annealing: {
+        "program": b.AnnealProgram,
+        "start_temp": validators.numbers.positive_decimal("b.Annealing/start_temp", "start_temp", True),
         "start_temp_unit": validators.units.FOSTempUnit
     },
 
-    Attachment: {
+    b.Attachment: {
         "file_name": validators.filenames.file_name,
         "extension": validators.filenames.file_extension,
     }
@@ -195,25 +199,25 @@ functions."""
 
 
 optional_keys = {
-    Attachment: {
+    b.Attachment: {
         "embedded": list,
         "path": pathlib.Path
     }, 
-    SingleBlock: {
+    b.SingleBlock: {
         "rename": validators.rename.rename_dict
     },
-    Synthesis: {
-        "cif": Attachment.enforce_subtype(CIFFile),
-        "cifs": CifList,
+    b.Synthesis: {
+        "cif": b.Attachment.enforce_subtype(b.CIFFile),
+        "cifs": b.CifList,
         "laboratory_conditions": LabConditions,
         "equipment": EquipmentList
     },
 
-    Experimenter: {
+    b.Experimenter: {
         "orcid" : str
     },
 
-    Product: {
+    b.Product: {
         "expected_amount": validators.numbers.positive_decimal("Product/expected_amount", "expected_amount", require_unit=True),
         "expected_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]),
         "obtained_amount": validators.numbers.positive_decimal("Product/obtained_amount", "obtained_amount", require_unit=True),
@@ -222,23 +226,23 @@ optional_keys = {
         "structure_comments": str
     },
 
-    Material : {
-        "purity" : validators.numbers.decimal_range("Material/purity","purity", 0, 1),
-        "treatments": ListBlock.Simple(Treatment)
+    b.Material : {
+        "purity" : validators.numbers.decimal_range("b.Material/purity","purity", 0, 1),
+        "treatments": b.ListBlock.Simple(b.Treatment)
     },
 
-    Treatment: {
-        "recovered_amount": validators.numbers.positive_decimal("Treatment/recovered_amount", "recovered_amount", True),
+    b.Treatment: {
+        "recovered_amount": validators.numbers.positive_decimal("b.Treatment/recovered_amount", "recovered_amount", True),
         "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,
         "end_time": str
     },
 
-    Annealing: {
+    b.Annealing: {
         "gas_flow": FlowList
     },
 
-    Ramp: {
+    b.Ramp: {
         "temp": validators.numbers.positive_decimal("RampNoRate/temp", "temp", True) ,
         "time": validators.numbers.positive_decimal("RampNoRate/time", "time", True),
         "rate": validators.numbers.any_decimal("RampNoTemp/rate", "rate", True),
@@ -247,7 +251,7 @@ optional_keys = {
         "rate_unit": validators.units.temp_rate_unit
     },
 
-    TemplateSet: TemplateLists
+    b.TemplateSet: TemplateLists
 }
 """
 Maps block classes to dictionaries of optional keys and their validators.
