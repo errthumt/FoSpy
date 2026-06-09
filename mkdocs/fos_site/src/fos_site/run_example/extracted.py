@@ -1,6 +1,9 @@
 def main():
-    from FoSpy.blocks.synthesis import Synthesis
-    from FoSpy.blocks.template import TemplateSet
+    from FoSpy import (
+        Synthesis, TemplateSet,
+        blocks as fb
+    )
+    # for Material blocks use fb.Material
     from chemformula import ChemFormula
 
 

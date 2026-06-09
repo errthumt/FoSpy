@@ -21,11 +21,14 @@ This page contains checkpoints where the current synthesis or template file is s
 * [Template Files](../templates/index.md)
 
 ## Boilerplate and Debugging
-First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `TemplateSet`, I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.). Those are created automatically when reading the input files.
+First, I import some of the classes I will be using. Since I'm only manually creating a `Synthesis` and a `TemplateSet`, I don't need to import any of the classes that are created in the process (like `Materials`, `Treatments`, etc.) because those are created automatically when reading the input files. However, if more specific block types are needed, it is recommended to protect them behind the blocks namespace like so:
 
 ```python
-from FoSpy.blocks.synthesis import Synthesis
-from FoSpy.blocks.template import TemplateSet
+from FoSpy import (
+    Synthesis, TemplateSet,
+    blocks as fb
+)
+# for Material blocks use fb.Material
 from chemformula import ChemFormula
 ```
 
