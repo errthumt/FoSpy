@@ -1,6 +1,6 @@
 
-from FoSpy.blocks._containers import SimpleWrapper, SubContainer
-
+from ._containers import SimpleWrapper, SubContainer
+from ..config import values as cfg
 from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
@@ -412,7 +412,7 @@ class SingleBlock(Block):
             warn(f"You should avoid directly constructing a {type(self).__name__} object. Use the dispatch_subclass() "
                  "method instead to allow for subclass delegation when constructing.", stacklevel=2)
 
-        self.track_attachments(False, False)
+        self.track_attachments(**cfg.track_attachments())
 
         from ..parsing.validation import aliases as als
         new_als = als.copy()
@@ -1351,7 +1351,7 @@ class ListBlock(Block):
         #self._objs = []
         if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
             raise TypeError(f"ListBlock instances can only be constructed from subclasses with an assigned _reqCls. {self.__class__} has no _reqCls.")
-        self.track_attachments(False, False)
+        self.track_attachments(**cfg.track_attachments())
         if not isinstance(blockList, list):
             blockList = [blockList]
         self._objs = blockList

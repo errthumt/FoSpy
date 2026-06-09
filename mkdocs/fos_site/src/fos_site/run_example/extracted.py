@@ -19,6 +19,9 @@ def main():
     from FoSpy.blocks.blocks import _debug as block_debug
     block_debug.on = True
 
+    from FoSpy import cfg
+    cfg.track_attachments.new_copy = "prompt"
+
 
     # load synthesis and templates from files
     my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")

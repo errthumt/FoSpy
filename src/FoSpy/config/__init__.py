@@ -151,6 +151,9 @@ class NestedConfig(types.ModuleType):
                 out[key] = val
         return out
     
+    def __call__(self):
+        return self.to_dict()
+    
 SESSION_START = None
 values = None
     

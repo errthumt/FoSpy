@@ -39,6 +39,7 @@ db.DEBUG_WIDTH = 120
 # Optional way to turn on/off one module's debug messages.
 from FoSpy.blocks.blocks import _debug as block_debug
 block_debug.on = True
+
 ```
 
 ## Opening and saving FOS files

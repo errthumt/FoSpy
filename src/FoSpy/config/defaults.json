@@ -1,3 +1,6 @@
 {
-    "name": "FoSpy default configuration"
+    "track_attachments": {
+        "new_copy": false,
+        "overwrite": false
+    }
 }
