@@ -359,7 +359,7 @@ Attached files are blocks just like every other section, but they contain and/or
 - [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../synthesis/index.md#initial-synthesis-fos) for an example.
 - [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). See the CIF attached to the [initial templates file](../templates/index.md#initial-templates-fos) for an example.
   - The "path" property can use ".." characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../synthesis/index.md#checkpoint-9) for an example.
-  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`][FoSpy.blocks.blocks.Block.track_attachments], that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
+  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`](../../blocks/blocks.md#FoSpy.blocks.blocks.Block.track_attachments), that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
 
 ```python
 # Copying Phil's cif from my templates into my synthesis.

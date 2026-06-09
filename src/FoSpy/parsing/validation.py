@@ -21,7 +21,7 @@ TemplateLists = {
     "cifs": b.CifList
 }
 """Maps alias names to [`TemplateList`][FoSpy.blocks.template.TemplateList] classes for use in
-[`TemplateSet`][FoSpy.blocks.files.TemplateSet] blocks."""
+[`TemplateSet`][FoSpy.blocks.template.TemplateSet] blocks."""
 
 
 aliases = {
