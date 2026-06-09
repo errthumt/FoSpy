@@ -1,61 +1,57 @@
-#from FoSpy.blocks.embedded import CifList
-from FoSpy.blocks.metadata import ExperimenterList
-from FoSpy.blocks.metadata import ProductList
-from FoSpy.blocks.treatments import TreatmentList
-
 from .._debug import Debug
 _debug = Debug()
 
-from ..blocks.blocks import (
-    ListBlock,
-    SingleBlock,
-    SubContainer,
-)
-
-# from ..blocks.embedded import (
-#     EmbeddedCIF,
-#     EmbeddedFile,
+# from ..blocks.blocks import (
+#     ListBlock,
+#     SingleBlock,
+#     SubContainer,
 # )
 
-from ..blocks.attachments import (
-    Attachment,
-    EmbeddedFile,
-    CifList,
-    CIFFile
-)
+# from ..blocks.attachments import (
+#     Attachment,
+#     EmbeddedFile,
+#     CifList,
+#     CIFFile
+# )
 
-from ..blocks.materials import (
-    Material,
-    MaterialList,
-    TemplateBlock,
-    TemplateList,
-)
+# from ..blocks.materials import (
+#     Material,
+#     MaterialList,
+#     TemplateBlock,
+#     TemplateList,
+# )
 
-from ..blocks.metadata import (
-    Experimenter,
-    MetaData,
-    Product,
-    Reaction,
-    TemplateMeta,
-)
+# from ..blocks.metadata import (
+#     Experimenter,
+#     MetaData,
+#     Product,
+#     Reaction,
+#     TemplateMeta,
+#     ExperimenterList,
+#     ProductList
+# )
 
-from ..blocks.synthesis import (
-    Synthesis,
-)
+# from ..blocks.synthesis import (
+#     Synthesis,
+# )
 
-from ..blocks.template import (
-    TemplateSet,
-)
+# from ..blocks.template import (
+#     TemplateSet,
+# )
 
-from ..blocks.treatments import (
-    AnnealProgram,
-    AnnealSection,
-    Annealing,
-    Dwell,
-    Quench,
-    Ramp,
-    Treatment,
-)
+# from ..blocks.treatments import (
+#     AnnealProgram,
+#     AnnealSection,
+#     Annealing,
+#     Dwell,
+#     Quench,
+#     Ramp,
+#     Treatment,
+#     TreatmentList
+# )
+
+from ..blocks import *
+from ..blocks._containers import *
 
 from . import validators
 import chemformula

@@ -26,6 +26,48 @@ their own comment metadata.
 
 ## Block Types in this Module
 
-::: FoSpy.blocks.attachments
+---
+[](){ #blockdocs-Attachment }
+### `Attachment`
+::: FoSpy.blocks.attachments.Attachment
     options:
-        members: true
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-CIFFile }
+### `CIFFile`
+::: FoSpy.blocks.attachments.CIFFile
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-CifList }
+### `CifList`
+::: FoSpy.blocks.attachments.CifList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-EmbeddedFile }
+### `EmbeddedFile`
+::: FoSpy.blocks.attachments.EmbeddedFile
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-PathFile }
+### `PathFile`
+::: FoSpy.blocks.attachments.PathFile
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true

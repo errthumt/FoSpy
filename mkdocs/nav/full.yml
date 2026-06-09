@@ -25,6 +25,7 @@ nav:
   - core: full/core.md
   - blocks:
     - _blockUtils: full/blocks/_blockUtils.md
+    - _containers: full/blocks/_containers.md
     - attachments: full/blocks/attachments.md
     - blocks: full/blocks/blocks.md
     - data: full/blocks/data.md

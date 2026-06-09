@@ -116,3 +116,12 @@ their own comment metadata.
         inherited_members: true
         summary:
            functions: true
+---
+[](){ #blockdocs-TreatmentList }
+### `TreatmentList`
+::: FoSpy.blocks.treatments.TreatmentList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
