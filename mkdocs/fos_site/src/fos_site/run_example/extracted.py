@@ -1,6 +1,6 @@
 def main():
     from FoSpy import (
-        Synthesis, TemplateSet,
+        Synthesis, FileBlock,
         blocks as fb
     )
     # for Material blocks use fb.Material
@@ -22,7 +22,7 @@ def main():
 
     # load synthesis and templates from files
     my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")
-    my_templates = TemplateSet.fromFile(r"templates/start_templates.fos")
+    my_templates = FileBlock.fromFile(r"templates/start_templates.fos")
 
     # save the synthesis to a json for comparison
     my_synthesis.save(r"synthesis/start_synthesis.json")
