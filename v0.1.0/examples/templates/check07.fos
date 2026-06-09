@@ -1,0 +1,74 @@
+fos_id: Travis's Templates
+fos_type: templates
+description: A collection of templates commonly appearing in Travis's syntheses
+
+[[Experimenters]]
+template_name: Travis
+name: Travis Errthum
+affiliation: Iowa State University Dept of Chemistry
+orcid: 0009-0006-1937-5672
+
+template_name: Joe
+name: Joseph Race
+-affiliation: <!TEMPLATE-FIELD>
+orcid: 0000-0002-8551-3627
+
+[Materials]
+template_name: Ground Arsenic, glovebox
+name: Arsenic
+-type: <!TEMPLATE-FIELD>
+formula: As
+supplier: Furukama
+cas: 7440-38-2
+form: lump
+env: Ar (g)
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
+purity: 0.9995
+treatments: [
+    type: Grinding
+    repeats: 1
+    observations: ground lumps into powder for weighing and homogenization
+]
+
+[Generic$materials]
+template_name: A generic metal powder, purity 0.995
+-name: <!TEMPLATE-FIELD>
+type: reagent
+-formula: <!TEMPLATE-FIELD>
+supplier: Sigma Aldrich
+-cas: <!TEMPLATE-FIELD>
+form: powder
+env: Ar (g)
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
+purity: 0.995
+treatments: []
+
+[Treatments]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-observations: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+
+[[Anneal_sections]]
+template_name: Any ramp
+type: ramp
+-temp: <!TEMPLATE-FIELD>
+-time: <!TEMPLATE-FIELD>
+temp_unit: degree_Celsius
+time_unit: hour
+
+template_name: Any dwell
+type: dwell
+-time: <!TEMPLATE-FIELD>
+time_unit: hour
+
+[Cifs]
+file_name: PY618_Ba8-Cu12-Zn12-As29,8
+extension: .cif
+path: .
+
