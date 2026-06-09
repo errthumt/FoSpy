@@ -117,10 +117,10 @@ In addition to the required properties above, all `Attachment` objects must be c
 
 The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is:
 
-- [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../synthesis/index.md#initial-synthesis-fos) for an example.
-- [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). A lone `.` character refers to the folder containing the `FileBlock` input. See the CIF attached to the [initial templates file](../templates/index.md#initial-templates-fos) for an example.
-  - The "path" property can use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../synthesis/index.md#checkpoint-9) for an example.
-  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`][FoSpy.blocks.blocks.Block.track_attachments], that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
+- [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../examples/synthesis/index.md#initial-synthesis-fos) for an example.
+- [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). A lone `.` character refers to the folder containing the `FileBlock` input. See the CIF attached to the [initial templates file](../examples/templates/index.md#initial-templates-fos) for an example.
+  - The "path" property can use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../examples/synthesis/index.md#checkpoint-9) for an example.
+  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`](../blocks/blocks.md#FoSpy.blocks.blocks.Block.track_attachments), that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
 
 #### Optional properties
 
@@ -131,7 +131,7 @@ The first matching property found will be used and the remainder will be discard
 
 #### Attachment Method Subclasses
 
-Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`][FoSpy.blocks.attachments.PathFile._get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`][FoSpy.blocks.attachments.EmbeddedFile._get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
+Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`](../blocks/attachments.md#FoSpy.blocks.attachments.PathFile._get_filepath) simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`](../blocks/attachments.md#FoSpy.blocks.attachments.EmbeddedFile._get_filepath) objects create a temporary file to print their embedded lines to before returning its filepath.
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
@@ -230,7 +230,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| fos_id | `str` | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#fileblock-method-subclasses) files:** it is for convenience. |
+| fos_id | `str` | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. |
 | fos_type | `str` | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` |
 | description | `str` | A brief description of the intent for the file (characteristic methods, target products, template category, etc.).
 
@@ -310,9 +310,9 @@ If all three are provided, the last one found during reading will be discarded a
 
 The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:
 
-- `RampNoRate`: overrides [`get_rate()`][FoSpy.blocks.treatments.RampNoRate.get_rate]
-- `RampNoTemp`: overrides [`get_temp()`][FoSpy.blocks.treatments.RampNoRate.get_temp]
-- `RampNoTime`: overrides [`get_time()`][FoSpy.blocks.treatments.RampNoRate.get_time]
+- `RampNoRate`: overrides [`get_rate()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_rate)
+- `RampNoTemp`: overrides [`get_temp()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_temp)
+- `RampNoTime`: overrides [`get_time()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_time)
 
 ______________________________________________________________________
 
@@ -382,8 +382,8 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| cif | `EmbeddedCIF` | [A single embedded CIF file](#embeddedfile-method-subclasses) |
-| cifs | `ListBlock.Simple(EmbeddedCIF)` | A [simple list](#listblock-and-simple-lists) of [`EmbeddedCIF` objects](#embeddedfile-method-subclasses) |
+| cif | `Attachment.enforce_subtype(CIFFile)` | [A single attached CIF file](#attachment) |
+| cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
 | laboratory_conditions | `LabConditions` | [General Laboratory Conditions](#singleblock-method-subclasses) |
 | equipment | `EquipmentList` | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
 
@@ -418,7 +418,7 @@ ______________________________________________________________________
 
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 
-- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`][FoSpy.blocks.blocks.SingleBlock.reflex] method and [`TemplateList`][FoSpy.blocks.template.TemplateList] construction.
+- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.reflex) method and [`TemplateList`](../blocks/template.md#FoSpy.blocks.template.TemplateList) construction.
 
 ______________________________________________________________________
 
@@ -441,7 +441,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 | treatments | `TemplateList.Simple(Treatment)` | A list of incomplete [`Treatment` objects](#treatment) |
 | annealings | `TemplateList.Simple(Annealing)` | A list of incomplete [`Annealing` objects](#annealing) |
 | anneal_sections | `TemplateList.Simple(AnnealSection)` | A list of incomplete [`AnnealSection` objects](#annealsection) |
-| cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [`EmbeddedCIF` objects](#embeddedfile) |
+| cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
 
 ______________________________________________________________________
 
