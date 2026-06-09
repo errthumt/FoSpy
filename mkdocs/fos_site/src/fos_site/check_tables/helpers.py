@@ -232,6 +232,7 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
     missing_optional = diffs.get("missing_optional", {}).copy()
     extra_required = diffs.get("extra_required", {}).copy()
     extra_optional = diffs.get("extra_optional", {}).copy()
+    
 
     new_tokens = []
     i = 0
@@ -275,7 +276,7 @@ def add_class_doc_links(tokens, diffs={}, temp_path=None):
 
             new_headings, missing_classes = pop_before(missing_classes, class_name)
             for heading in new_headings:
-                pre_text = "!table_check:Placeholder for missing class."
+                pre_text = "!table_check: Placeholder for missing class."
                 req_text = f"!table_check: Missing required properties: {missing_required.get(heading, [])}"
                 opt_text = f"!table_check: Missing optional properties: {missing_optional.get(heading, [])}"
                 new_tokens.extend([*get_heading_tokens(f"`{heading}`", tok),
@@ -323,6 +324,7 @@ def extract_property_tables(tokens):
     current_section = None
     method_blocks = get_method_blocks()
     extra_method_blocks = []
+    placeholders = []
     tables = {}
     tables_start = False
     reading_method_blocks = False
@@ -337,6 +339,12 @@ def extract_property_tables(tokens):
                 continue
         elif not tables_start:
             i+=1
+            continue
+        
+        if tok.type == "paragraph_open" and tokens[i+1].content.startswith("!table_check"):
+            placeholders.append(tokens[i+1].content)
+            # Skip the next 3 tokens (paragraph_open, inline, paragraph_close)
+            i += 3
             continue
 
         if tok.type == "heading_open" and tok.tag == "h4":
@@ -410,7 +418,10 @@ def extract_property_tables(tokens):
 
         i += 1
 
-    return tables, {"missing_method_blocks": method_blocks, "extra_method_blocks": extra_method_blocks}
+    return tables, {
+        "missing_method_blocks": method_blocks,
+        "extra_method_blocks": extra_method_blocks,
+        "placeholders": placeholders}
 
 
 def process_markdown(md_path: Path, diffs={}, temp_path:Path=None):
@@ -522,13 +533,13 @@ def diff_property_tables(extracted_tables):
 def get_table_diffs(md_path: Path):
     md_text = md_path.read_text(encoding="utf-8")
     tokens = parse_markdown(md_text, tables=True)
-    extracted_tables, method_block_diffs = extract_property_tables(tokens)
+    extracted_tables, other_diffs = extract_property_tables(tokens)
 
     #from pprint import pp
     #pp(extracted_tables)
 
     diffs = diff_property_tables(extracted_tables)
-    diffs.update(method_block_diffs)
+    diffs.update(other_diffs)
     return diffs
 
 def get_method_blocks():
