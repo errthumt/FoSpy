@@ -37,8 +37,13 @@ def get_all_symbols(py_file: Path, list_name: str = SYMBOL_LIST_NAME) -> list[st
 
 def make_stubs():
     from .._utils import ch2repo
+    import shutil
     import importlib
     ch2repo()
+
+    if OUTPUT_DIR.exists():
+        shutil.rmtree(OUTPUT_DIR)
+
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     py_files = SOURCE_DIR.glob("*.py")

@@ -9,7 +9,7 @@ def update_tables_report_diffs(delay=False):
     from .._utils import ch2repo
     ch2repo()
 
-    from .helpers import get_table_diffs, process_markdown
+    from .helpers import get_table_diffs, process_markdown, get_method_blocks
 
     diffs = get_table_diffs(MD_PATH)
 

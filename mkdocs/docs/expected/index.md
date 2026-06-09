@@ -95,6 +95,52 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+### `Attachment`
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+#### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| file_name | [`validators.filenames.file_name`][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( ` \ / : * ? " < > \| `). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. | 
+| extension | [`validators.filenames.file_extension`][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
+
+##### Additional Requirements
+In addition to the required properties above, all `Attachment` objects must be constructed with one of the following optional properties:
+
+- embedded
+- path
+
+The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is:
+
+- [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../synthesis/index.md#initial-synthesis-fos) for an example.
+- [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). A lone `.` character refers to the folder containing the `FileBlock` input. See the CIF attached to the [initial templates file](../templates/index.md#initial-templates-fos) for an example.
+  - The "path" property can use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../synthesis/index.md#checkpoint-9) for an example.
+  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`][FoSpy.blocks.blocks.Block.track_attachments], that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
+
+#### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. In the FOS format, this uses a special syntax: <br><pre><code>embedded: {{{<br><Embedded ASCII\><br>#################### END FOS EMBED }}}</code></pre> |
+| path | `pathlib.Path` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`" |
+
+#### Attachment Method Subclasses
+
+Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`][FoSpy.blocks.PathFile._get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`][FoSpy.blocks.EmbeddedFile._get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
+
+Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
+
+##### Attachment Types
+
+- `EmbeddedFile`
+- `PathFile`
+
+##### File Types
+
+- `CIFFile`
+
 ### `Dwell`
 
 [Class Documentation][blockdocs-Dwell]
@@ -107,28 +153,6 @@ ______________________________________________________________________
 |---------|-----------------------------|-------------|
 | time | `validators.numbers.positive_decimal` | How long the temperature was kept constant in this section. |
 | time_unit | `validators.units.FOSUnit.enforce_dims('[time]')` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
-
-______________________________________________________________________
-
-### `EmbeddedFile`
-
-[Class Documentation][blockdocs-EmbeddedFile]
-
-**[Subclass of `SingleBlock`](#singleblock)**
-
-#### Required properties
-
-| Property | Validation Routine or Class | Description |
-|---------|-----------------------------|-------------|
-| file_name | `validators.filenames.file_name` | Name of the embedded file |
-| extension | `validators.filenames.file_extension` | File extension |
-| embedded | `list` | A list of raw lines read directly from the FOS file which can be unpacked to a temporary file during runtime for reading as the original filetype. |
-
-#### `EmbeddedFile` Method Subclasses
-
-These subclasses don't have any additional required properties but will either be given additional requirements in the future or have specialized methods.
-
-- `EmbeddedCIF`
 
 ______________________________________________________________________
 

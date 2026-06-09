@@ -76,7 +76,7 @@ EquipmentList = b.ListBlock.Simple(Equipment)
 FlowList = b.ListBlock.Simple(GasFlow)
 
 TemplateLists = {
-    "experimenters": b.TemplateList.Simple(b.b.Experimenter),
+    "experimenters": b.TemplateList.Simple(b.Experimenter),
     "materials": b.TemplateList.Simple(b.Material),
     "treatments": b.TemplateList.Simple(b.Treatment),
     "annealings": b.TemplateList.Simple(b.Annealing),
