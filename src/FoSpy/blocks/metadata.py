@@ -68,8 +68,14 @@ A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
 [`Product` objects][FoSpy.blocks.metadata.Product].
 """
 
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""
+class LabConditions(SingleBlock):
+    pass
+
+class Equipment(SingleBlock):
+    pass
+
+class GasFlow(SingleBlock):
+    pass
+
+EquipmentList = ListBlock.Simple(Equipment)
+FlowList = ListBlock.Simple(GasFlow)
