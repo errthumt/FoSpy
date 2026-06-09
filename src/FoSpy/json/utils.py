@@ -72,8 +72,9 @@ def build_property_dict(data, key_map, current={}):
     Build a property dictionary from a data dictionary and a mapping dictionary.
 
     Args:
-        data_dict (dict): The data dictionary containing the values. map_dict
-        (dict):
+        data_dict (dict): The data dictionary containing the values.
+        
+        map_dict (dict):
             The mapping dictionary mirroring the structure of the data
             dictionary, where values are replaced with destination property
             names to be passed to `fill_properties()`.
