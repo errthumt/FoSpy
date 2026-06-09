@@ -1,7 +1,8 @@
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 // Note that now there are two experimenters, so the
 // experimenters header has changed to double brackets

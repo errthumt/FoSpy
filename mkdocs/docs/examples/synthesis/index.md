@@ -7,13 +7,11 @@ Each file on this page was generated at the corresponding checkpoint in the [wal
 ## Initial Synthesis (FOS)
 
 ```fos
-name: TE001
-// This comment will stay attached to the date when saving (until comments are
-// cleared)
-date: 03-11-2026
-// ! Comments starting with a ! do not get read from the file.
-internal_project_ID: Ba2-TM5-Pn6
-internal_project_description: Unique Clathrate
+fos_id: TE001
+fos_type: synthesis
+description: My First Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/Ba2-TM5-Sb6
 
 [Experimenters]
 name: Travis Errthum
@@ -260,10 +258,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ```json
 {
     "metadata": {
-        "name": "TE001",
-        "date": "03-11-2026",
-        "internal_project_ID": "Ba2-TM5-Pn6",
-        "internal_project_description": "Unique Clathrate"
+        "fos_id": "TE001",
+        "fos_type": "synthesis",
+        "description": "My First Synthesis",
+        "group_id": "kovnir-0000-0003-1152-1912",
+        "project_id": "travis5672/clathrates/Ba2-TM5-Sb6"
     },
     "experimenters": [
         {
@@ -497,12 +496,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 1
 
 ```fos
-name: TE001
-// This comment will stay attached to the date when saving (until comments are
-// cleared)
-date: 03-11-2026
-internal_project_ID: Ba2-TM5-Pn6
-internal_project_description: Unique Clathrate
+fos_id: TE001
+fos_type: synthesis
+description: My First Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/Ba2-TM5-Sb6
 
 [Experimenters]
 name: Travis Errthum
@@ -744,10 +742,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 2
 
 ```fos
-name: TE001
-date: 03-11-2026
-internal_project_ID: Ba2-TM5-Pn6
-internal_project_description: Unique Clathrate
+fos_id: TE001
+fos_type: synthesis
+description: My First Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/Ba2-TM5-Sb6
 
 [Experimenters]
 name: Travis Errthum
@@ -990,10 +989,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 3
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 [Experimenters]
 name: Travis Errthum
@@ -1238,10 +1238,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 4
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 // Note that now there are two experimenters, so the
 // experimenters header has changed to double brackets
@@ -1489,10 +1490,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 5
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 // Note that there are now multiple experimenters in this block,
 // So the header now has double brackets
@@ -1747,10 +1749,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 6
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 [[Experimenters]]
 name: Travis Errthum
@@ -2005,10 +2008,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 8
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 [[Experimenters]]
 name: Travis Errthum
@@ -2276,10 +2280,11 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 ## Checkpoint 9
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 [[Experimenters]]
 name: Travis Errthum
@@ -2442,10 +2447,11 @@ path: ..\templates
 ## Checkpoint 10
 
 ```fos
-name: TE002
-date: 05-17-2026
-internal_project_ID: Arsenide 28+d clathrates
-internal_project_description: Unique Clathrate
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
 
 [Rename]
 materials: reagents

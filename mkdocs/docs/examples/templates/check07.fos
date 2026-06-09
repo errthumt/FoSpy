@@ -1,4 +1,5 @@
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]

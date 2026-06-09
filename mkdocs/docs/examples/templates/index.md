@@ -7,7 +7,8 @@ Each file on this page was generated at the corresponding checkpoint in the [wal
 ## Initial Templates (FOS)
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]
@@ -51,7 +52,8 @@ path: .
 ## Checkpoint 1
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]
@@ -94,7 +96,8 @@ path: .
 ## Checkpoint 6
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]
@@ -151,7 +154,8 @@ path: .
 ## Checkpoint 7
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]
@@ -230,7 +234,8 @@ path: .
 ## Checkpoint 9
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]
@@ -418,7 +423,8 @@ path: .
 ## Checkpoint 10
 
 ```fos
-name: Travis's Templates
+fos_id: Travis's Templates
+fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters]]

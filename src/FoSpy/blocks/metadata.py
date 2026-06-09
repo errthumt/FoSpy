@@ -1,32 +1,34 @@
-from FoSpy.blocks.blocks import ListBlock
+from .synthesis import Synthesis
+from .blocks import (
+    SingleBlock, ListBlock
+)
+from .files import FileBlock
+from .template import TemplateSet
 
-from .blocks import SingleBlock
 from ._blockUtils import _calc_routine
-from .template import TemplateBlock
 
 from .._debug import Debug
 _debug = Debug()
 
 class MetaData(SingleBlock):
     """
-    Represents metadata for a synthesis.
+    Represents metadata for a FOS-formatted file.
 
     Any key:value pairs at the top of a FOS file will automatically be assigned
     to metadata
     """
-    pass
-
-class TemplateMeta(SingleBlock):
-    """
-    Represents metadata for a set of templates loaded from a FOS file.
-
-    Required metadata for a template file may be different than required
-    metadata for a synthesis file.
-
-    Any key:value pairs at the top of a FOS file will automatically be assigned
-    to metadata
-    """
-    pass
+    dispatch = {}
+    @classmethod
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        t = blockDict.get("fos_type","").lower()
+        subclass = cls.dispatch.get(t,(cls,FileBlock))[0]
+        return subclass(blockDict, _dispatched=True, **kwargs)
+    
+MetaData.dispatch["templates"] = (MetaData, TemplateSet)
+    
+class SynthesisMeta(MetaData):
+    dispatch = {}
+MetaData.dispatch["synthesis"] = (SynthesisMeta, Synthesis)
 
 class Reaction(SingleBlock):
     """
@@ -74,8 +76,4 @@ class LabConditions(SingleBlock):
 class Equipment(SingleBlock):
     pass
 
-class GasFlow(SingleBlock):
-    pass
-
 EquipmentList = ListBlock.Simple(Equipment)
-FlowList = ListBlock.Simple(GasFlow)

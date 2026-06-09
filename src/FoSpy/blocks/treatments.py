@@ -252,3 +252,10 @@ A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
 [`Treatment` objects][FoSpy.blocks.treatments.Treatment].
 """
 
+
+class GasFlow(SingleBlock):
+    pass
+
+
+FlowList = ListBlock.Simple(GasFlow)
+
