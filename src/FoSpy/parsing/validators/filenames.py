@@ -1,10 +1,19 @@
 import re
 from ..._debug import Debug
+from pathlib import Path
 _debug = Debug()
 _debug.on = True
 
 # Allowed filename characters (no slashes)
 FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
+
+basePath = type(Path(""))
+
+class PathPosix(basePath):
+    def serialize(self, *args, **kwargs):
+        return self.as_posix()
+
+    
 
 
 def file_name(name: str, sourceDict={}) -> str:

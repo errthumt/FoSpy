@@ -138,7 +138,7 @@ functions."""
 optional_keys = {
     b.Attachment: {
         "embedded": list,
-        "path": pathlib.Path
+        "path": validators.filenames.PathPosix
     }, 
     b.SingleBlock: {
         "rename": validators.rename.rename_dict
