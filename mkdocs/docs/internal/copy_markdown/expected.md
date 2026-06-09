@@ -112,7 +112,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| file_name | [`validators.filenames.file_name`][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( ` \ / : * ? " < > \| `). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. | 
+| file_name | [`validators.filenames.file_name`][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. |
 | extension | [`validators.filenames.file_extension`][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
 
 ##### Additional Requirements
@@ -138,7 +138,7 @@ The first matching property found will be used and the remainder will be discard
 
 #### Attachment Method Subclasses
 
-Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for \[`PathFile`\][FoSpy.blocks.PathFile.\_get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas \[`EmbeddedFile`\][FoSpy.blocks.EmbeddedFile.\_get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
+Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`][FoSpy.blocks.PathFile._get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`][FoSpy.blocks.EmbeddedFile._get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
