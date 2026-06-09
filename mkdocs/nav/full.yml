@@ -5,7 +5,11 @@ nav:
   - Full Example Script: examples/API_example/full.md
   - Synthesis Files: examples/synthesis/index.md
   - Template Files: examples/templates/index.md
-- Expected Properties: expected/index.md
+- Guides:
+  - FOS Syntax: guides/syntax.md
+  - Expected Properties: expected/index.md
+  - Attachments: guides/attachments.md
+  - Group File Management: guides/group.md
 - Block Modules:
   - What is a Block?: blocks/index.md
   - attachments: blocks/attachments.md
@@ -52,4 +56,4 @@ nav:
   - plotting:
     - EmbeddedCIF: full/plotting/EmbeddedCIF.md
 - For Devs: internal/index.md
-- PyPI: https://pypi.org/project/FoSpy
+- Install with PyPI: https://pypi.org/project/FoSpy

@@ -115,19 +115,14 @@ In addition to the required properties above, all `Attachment` objects must be c
 - embedded
 - path
 
-The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is:
-
-- [Embedded Files][blockdocs-EmbeddedFile] contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [initial synthesis file](../examples/synthesis/index.md#initial-synthesis-fos) for an example.
-- [Path Files][blockdocs-PathFile] contain a "path" property with a file location relative to the `FileBlock` input file (the JSON or FOS-formatted file). A lone `.` character refers to the folder containing the `FileBlock` input. See the CIF attached to the [initial templates file](../examples/templates/index.md#initial-templates-fos) for an example.
-  - The "path" property can use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after checkpoint 9](../examples/synthesis/index.md#checkpoint-9) for an example.
-  - By default, attached path files will track their original location and update their relative path when transferred to another `FileBlock`. There is a method, [`track_attachments`](../blocks/blocks.md#FoSpy.blocks.blocks.Block.track_attachments), that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
+The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the [attachments guide](../guides/attachments.md) for more information
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. In the FOS format, this uses a special syntax: <br><pre><code>embedded: {{{<br>\<Embedded ASCII><br>#################### END FOS EMBED }}}</code></pre> |
-| path | `pathlib.Path` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`" |
+| embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. |
+| path | `pathlib.Path` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`". See [attachments guide](../guides/attachments.md) for more information. |
 
 #### Attachment Method Subclasses
 
