@@ -104,6 +104,8 @@ ______________________________________________________________________
 
 ### `Attachment`
 
+[Class Documentation][blockdocs-Attachment]
+
 **[Subclass of `SingleBlock`](#singleblock)**
 
 #### Required properties
@@ -114,6 +116,7 @@ ______________________________________________________________________
 | extension | [`validators.filenames.file_extension`][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
 
 ##### Additional Requirements
+
 In addition to the required properties above, all `Attachment` objects must be constructed with one of the following optional properties:
 
 - embedded
@@ -130,12 +133,12 @@ The first matching property found will be used and the remainder will be discard
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. In the FOS format, this uses a special syntax: <br><pre><code>embedded: {{{<br><Embedded ASCII\><br>#################### END FOS EMBED }}}</code></pre> |
+| embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. In the FOS format, this uses a special syntax: <br><pre><code>embedded: {{{<br>\<Embedded ASCII><br>#################### END FOS EMBED }}}</code></pre> |
 | path | `pathlib.Path` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`" |
 
 #### Attachment Method Subclasses
 
-Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`][FoSpy.blocks.PathFile._get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`][FoSpy.blocks.EmbeddedFile._get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
+Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for \[`PathFile`\][FoSpy.blocks.PathFile.\_get_filepath] simply returns an absolute filepath resolved from the value in its `path` attribute, whereas \[`EmbeddedFile`\][FoSpy.blocks.EmbeddedFile.\_get_filepath] objects create a temporary file to print their embedded lines to before returning its filepath.
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
@@ -184,6 +187,17 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+### `FileBlock`
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+#### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| metadata | [`MetaData`][blockdocs-MetaData] | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
+
+
 ### `Material`
 
 [Class Documentation][blockdocs-Material]
@@ -223,8 +237,9 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| name | `str` | Identifiable name for the synthesis or sample|
-| date | `str` | What date the synthesis was started|
+| fos_id | `str` | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#fileblock-method-subclasses) files:** it is for convenience. |
+| fos_type | `str` | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` |
+| description | `str` | A brief description of the intent for the file (characteristic methods, target products, template category, etc.).
 
 ______________________________________________________________________
 
@@ -302,9 +317,9 @@ If all three are provided, the last one found during reading will be discarded a
 
 The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:
 
-- `RampNoRate`: overrides [`get_rate()`][FoSpy.blocks.RampNoRate.get_rate]
-- `RampNoTemp`: overrides [`get_temp()`][FoSpy.blocks.RampNoRate.get_temp]
-- `RampNoTime`: overrides [`get_time()`][FoSpy.blocks.RampNoRate.get_time]
+- `RampNoRate`: overrides [`get_rate()`][FoSpy.blocks.treatments.RampNoRate.get_rate]
+- `RampNoTemp`: overrides [`get_temp()`][FoSpy.blocks.treatments.RampNoRate.get_temp]
+- `RampNoTime`: overrides [`get_time()`][FoSpy.blocks.treatments.RampNoRate.get_time]
 
 ______________________________________________________________________
 
@@ -349,9 +364,8 @@ These subclasses don't currently have any additional required properties but wil
 - `GasFlow`: For specifying gas flow rates during an annealing treatment (to be expanded).
 - `LabConditions`: For specifying laboratory conditions during the synthesis (to be expanded).
 - `Equipment`: For specifying specialized laboratory equipment used in the synthesis (to be expanded).
-- `CSVdata`: Placeholder for planned features of inserting CSV data as dataframes
-- `TraceData`: Placeholder for planned features for plottable 2D dataframes
-- `FileBlock`: Subclasses of `FileBlock` are intended to be the main/top-level block of a FOS file (e.g., `Synthesis`, `TemplateSet`).
+- `CSVdata`: Placeholder for planned features with CSV data inserted as dataframes
+- `TraceData`: Placeholder for planned features with plottable 2D dataframes
 
 ______________________________________________________________________
 
@@ -359,13 +373,12 @@ ______________________________________________________________________
 
 [Class Documentation][blockdocs-Synthesis]
 
-**[Subclass of `FileBlock`](#singleblock)**
+**[Subclass of `FileBlock`](#fileblock)**
 
 #### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| metadata | `MetaData` | [Metadata for the synthesis file](#metadata) |
 | experimenters | `ExperimenterList` | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
 | reaction | `Reaction` | [General reaction information](#reaction) |
 | products | `ProductList` | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
@@ -382,6 +395,17 @@ ______________________________________________________________________
 | equipment | `EquipmentList` | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
 
 ______________________________________________________________________
+
+### `SynthesisMeta`
+
+**[Subclass of `MetaData`](#metadata)**
+
+#### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| group_id | `str` | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. |
+| project_id| `str` | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* |
 
 ### `TemplateBlock`
 
@@ -401,22 +425,7 @@ ______________________________________________________________________
 
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 
-- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`][FoSpy.blocks.SingleBlock.reflex] method and [`TemplateList`][FoSpy.blocks.TemplateList] construction.
-
-______________________________________________________________________
-
-### `TemplateMeta`
-
-[Class Documentation][blockdocs-TemplateMeta]
-
-**[Subclass of `SingleBlock`](#)**
-
-#### Required properties
-
-| Property | Validation Routine or Class | Description |
-|---------|-----------------------------|-------------|
-| name | `str` | Identifiable name for the set of templates stored in a Template FOS file.|
-| description | `str` | Additional information about the set of templates.|
+- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`][FoSpy.blocks.blocks.SingleBlock.reflex] method and [`TemplateList`][FoSpy.blocks.templates.TemplateList] construction.
 
 ______________________________________________________________________
 
@@ -424,13 +433,7 @@ ______________________________________________________________________
 
 [Class Documentation][blockdocs-TemplateSet]
 
-**[Subclass of `FileBlock`](#)**
-
-#### Required properties
-
-| Property | Validation Routine or Class | Description |
-|---------|-----------------------------|-------------|
-| metadata | `TemplateMeta` | Meta information for the set of templates stored in a Template FOS file. |
+**[Subclass of `FileBlock`](#fileblock)**
 
 #### Optional properties
 
