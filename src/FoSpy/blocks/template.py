@@ -129,9 +129,3 @@ class FlexTemplate(TemplateBlock):
     @classmethod
     def reflex(cls):
         return cls._baseReq.reflex()
-    
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""

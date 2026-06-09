@@ -298,6 +298,14 @@ If all three are provided, the last one found during reading will be discarded a
 | time_unit | `validators.units.FOSUnit.enforce_dims("[time]")` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 | rate_unit | `validators.units.temp_rate_unit` | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time.|
 
+#### Ramp Method Subclasses
+
+The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:
+
+- `RampNoRate`: overrides [`get_rate()`][FoSpy.blocks.RampNoRate.get_rate]
+- `RampNoTemp`: overrides [`get_temp()`][FoSpy.blocks.RampNoRate.get_temp]
+- `RampNoTime`: overrides [`get_time()`][FoSpy.blocks.RampNoRate.get_time]
+
 ______________________________________________________________________
 
 ### `Reaction`
@@ -341,6 +349,8 @@ These subclasses don't currently have any additional required properties but wil
 - `GasFlow`: For specifying gas flow rates during an annealing treatment (to be expanded).
 - `LabConditions`: For specifying laboratory conditions during the synthesis (to be expanded).
 - `Equipment`: For specifying specialized laboratory equipment used in the synthesis (to be expanded).
+- `CSVdata`: Placeholder for planned features of inserting CSV data as dataframes
+- `TraceData`: Placeholder for planned features for plottable 2D dataframes
 - `FileBlock`: Subclasses of `FileBlock` are intended to be the main/top-level block of a FOS file (e.g., `Synthesis`, `TemplateSet`).
 
 ______________________________________________________________________
@@ -386,6 +396,12 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | template_name | `str` | An identifiable name for the template. |
+
+#### TemplateBlock Method Subclasses
+
+These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
+
+- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`][FoSpy.blocks.SingleBlock.reflex] method and [`TemplateList`][FoSpy.blocks.TemplateList] construction.
 
 ______________________________________________________________________
 

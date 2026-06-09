@@ -252,8 +252,3 @@ A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
 [`Treatment` objects][FoSpy.blocks.treatments.Treatment].
 """
 
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""

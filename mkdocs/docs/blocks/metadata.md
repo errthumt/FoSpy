@@ -27,6 +27,24 @@ their own comment metadata.
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Equipment }
+### `Equipment`
+::: FoSpy.blocks.metadata.Equipment
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-EquipmentList }
+### `EquipmentList`
+::: FoSpy.blocks.metadata.EquipmentList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-Experimenter }
 ### `Experimenter`
 ::: FoSpy.blocks.metadata.Experimenter
@@ -39,6 +57,33 @@ their own comment metadata.
 [](){ #blockdocs-ExperimenterList }
 ### `ExperimenterList`
 ::: FoSpy.blocks.metadata.ExperimenterList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-FlowList }
+### `FlowList`
+::: FoSpy.blocks.metadata.FlowList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-GasFlow }
+### `GasFlow`
+::: FoSpy.blocks.metadata.GasFlow
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-LabConditions }
+### `LabConditions`
+::: FoSpy.blocks.metadata.LabConditions
     options:
         show_if_no_docstring: true
         inherited_members: true

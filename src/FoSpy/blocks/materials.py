@@ -83,8 +83,3 @@ class MaterialList(ListBlock):
             _debug.msg(f"Calculated {label} weight percent: {pct:.2f}% for {mat.name}")
             mat.add_calc_comment("amount",comment, f"{label}_pct")
 
-from ._blockUtils import _get_block_classes
-import sys
-__block_classes__ = _get_block_classes(sys.modules[__name__])
-"""List of all [`Block`][FoSpy.blocks.blocks.Block] classes defined in this module.
-Used for generating documentation site."""
