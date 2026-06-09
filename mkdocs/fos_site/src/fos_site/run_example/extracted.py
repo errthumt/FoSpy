@@ -56,9 +56,9 @@ def main():
 
 
     # change some metadata for my synthesis
-    my_meta.name = "TE002"
-    my_meta.date = "05-17-2026"
-    my_meta.internal_project_ID = "Arsenide 28+d clathrates"
+    my_meta.fos_id = "TE002"
+    my_meta.description = "My Second Synthesis"
+    my_meta.project_id = "travis5672/clathrates/As28+d"
     my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 
     my_synthesis.products = [{

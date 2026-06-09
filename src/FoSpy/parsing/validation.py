@@ -1,59 +1,7 @@
 from .._debug import Debug
 _debug = Debug()
 
-# from ..blocks.blocks import (
-#     b.ListBlock,
-#     SingleBlock,
-#     SubContainer,
-# )
-
-# from ..blocks.attachments import (
-#     Attachment,
-#     b.EmbeddedFile,
-#     b.CifList,
-#     CIFFile
-# )
-
-# from ..blocks.materials import (
-#     b.Material,
-#     b.MaterialList,
-#     TemplateBlock,
-#     TemplateList,
-# )
-
-# from ..blocks.metadata import (
-#     b.Experimenter,
-#     MetaData,
-#     Product,
-#     Reaction,
-#     TemplateMeta,
-#     b.ExperimenterList,
-#     ProductList
-# )
-
-# from ..blocks.synthesis import (
-#     Synthesis,
-# )
-
-# from ..blocks.template import (
-#     TemplateSet,
-# )
-
-# from ..blocks.treatments import (
-#     AnnealProgram,
-#     b.AnnealSection,
-#     b.Annealing,
-#     Dwell,
-#     Quench,
-#     Ramp,
-#     b.Treatment,
-#     b.TreatmentList
-# )
-from ..blocks._containers import (
-    SubContainer,
-    SimpleWrapper
-)
-
+from ..blocks._containers import SubContainer
 from .. import blocks as b
 
 
@@ -93,8 +41,11 @@ required_keys = {
             "ext" : SubContainer
     },
 
+    b.FileBlock: {
+        "metadata" : b.MetaData
+    },
+
     b.Synthesis: {
-        "metadata" : b.MetaData,
         "experimenters": b.ExperimenterList,
         "reaction" : b.Reaction,
         "products": b.ProductList,
@@ -102,22 +53,19 @@ required_keys = {
         "treatments" : b.TreatmentList
     },
 
-    b.TemplateSet: {
-        "metadata" : b.TemplateMeta
-    },
-
-    b.TemplateMeta: {
-        "name" : str,
-        "description" : str
-    },
-
     b.TemplateBlock: {
         "template_name" : str
     },
 
     b.MetaData: {
-        "name": str,
-        "date": str
+        "fos_id": str,
+        "fos_type": str,
+        "description": str
+    },
+
+    b.SynthesisMeta: {
+        "group_id": str,
+        "project_id": str
     },
 
     b.Experimenter: {

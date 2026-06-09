@@ -63,24 +63,6 @@ their own comment metadata.
         summary:
            functions: true
 ---
-[](){ #blockdocs-FlowList }
-### `FlowList`
-::: FoSpy.blocks.metadata.FlowList
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
-[](){ #blockdocs-GasFlow }
-### `GasFlow`
-::: FoSpy.blocks.metadata.GasFlow
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
 [](){ #blockdocs-LabConditions }
 ### `LabConditions`
 ::: FoSpy.blocks.metadata.LabConditions
@@ -126,9 +108,9 @@ their own comment metadata.
         summary:
            functions: true
 ---
-[](){ #blockdocs-TemplateMeta }
-### `TemplateMeta`
-::: FoSpy.blocks.metadata.TemplateMeta
+[](){ #blockdocs-SynthesisMeta }
+### `SynthesisMeta`
+::: FoSpy.blocks.metadata.SynthesisMeta
     options:
         show_if_no_docstring: true
         inherited_members: true

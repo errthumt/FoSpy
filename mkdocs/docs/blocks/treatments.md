@@ -63,6 +63,24 @@ their own comment metadata.
         summary:
            functions: true
 ---
+[](){ #blockdocs-FlowList }
+### `FlowList`
+::: FoSpy.blocks.treatments.FlowList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-GasFlow }
+### `GasFlow`
+::: FoSpy.blocks.treatments.GasFlow
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-Quench }
 ### `Quench`
 ::: FoSpy.blocks.treatments.Quench

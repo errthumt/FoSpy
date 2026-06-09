@@ -1,9 +1,9 @@
 import os
-import starfile, json
+import starfile, json #type: ignore
 from pandas import DataFrame
 from pathlib import Path
 
-from dict2star.blocks import encode_blocks
+from dict2star.blocks import encode_blocks #type: ignore  
 
 # test
 

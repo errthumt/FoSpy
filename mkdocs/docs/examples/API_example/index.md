@@ -129,9 +129,9 @@ Here I change some of the metadata and reaction information for my synthesis. Ce
 Note that `my_synthesis.products` is supposed to be a list of `Product` blocks, but because it is automatically passed to the corresponding validator when I reassign it, I can assign it to a dictionary, and let the validator construct the dictionary into a `Product` on the back end.
 ```python
 # change some metadata for my synthesis
-my_meta.name = "TE002"
-my_meta.date = "05-17-2026"
-my_meta.internal_project_ID = "Arsenide 28+d clathrates"
+my_meta.fos_id = "TE002"
+my_meta.description = "My Second Synthesis"
+my_meta.project_id = "travis5672/clathrates/As28+d"
 my_reaction.nominal_formula = "Ba8Cu13Zn11As28.5"
 
 my_synthesis.products = [{
