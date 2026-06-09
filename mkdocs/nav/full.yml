@@ -38,6 +38,8 @@ nav:
     - synthesis: full/blocks/synthesis.md
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
+  - config:
+    - _load: full/config/_load.md
   - json:
     - utils: full/json/utils.md
   - parsing:

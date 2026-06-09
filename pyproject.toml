@@ -46,4 +46,12 @@ source="vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "_version.py"
 
+[tool.hatch.build]
+include = [
+    "src/FoSpy/config/*.json"
+]
+exclude = [
+    "src/FoSpy/config/user.json"
+]
+
 
