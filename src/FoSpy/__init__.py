@@ -6,6 +6,8 @@ from . import core
 from . import json
 from . import parsing
 from . import plotting
+from . import config
+from .config import values as cfg
 
 __all__ = [
     "Synthesis",
@@ -16,4 +18,6 @@ __all__ = [
     "json",
     "parsing",
     "plotting",
+    "config",
+    "cfg"
 ]
