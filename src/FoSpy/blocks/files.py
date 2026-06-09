@@ -44,6 +44,7 @@ class FileBlock(SingleBlock):
 
     @classmethod
     def fromFile(cls, filepath):
+        from .metadata import MetaData
         abspath = os.path.abspath(filepath)
         pathstr = str(abspath)
         try:
@@ -60,7 +61,15 @@ class FileBlock(SingleBlock):
             raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
 
         blockDict = ext_map[ext](abspath)
-        return cls.dispatch_subclass(blockDict, _sourceFile = abspath)
+        if "metadata" not in blockDict:
+            raise ValueError(f"Could not find metadata block in file {abspath}")
+        typ = blockDict["metadata"].get("fos_type")
+        subcls = MetaData.dispatch.get(typ, ("", cls))[1]
+
+        if not issubclass(subcls, cls):
+            raise ValueError(f"Cannot construct {cls.__name__} from file '{abspath}' with incompatible fos_type '{typ}'.")
+
+        return subcls.dispatch_subclass(blockDict, _sourceFile = abspath)
 
     def save(self, filepath:str=None, json_indent=4, **kwargs):
         """
