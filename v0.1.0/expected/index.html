@@ -11,10 +11,10 @@
         <link rel="canonical" href="https://errthumt.github.io/FoSpy/v0.1.0/expected/">
       
       
-        <link rel="prev" href="../examples/templates/">
+        <link rel="prev" href="../guides/syntax/">
       
       
-        <link rel="next" href="../blocks/">
+        <link rel="next" href="../guides/attachments/">
       
       
         
@@ -480,6 +480,83 @@
     
       
       
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOS Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
   
   
     
@@ -1345,6 +1422,70 @@
     </ul>
   
 </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/attachments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attachments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/group/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Group File Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -2838,7 +2979,7 @@
   <span class="md-ellipsis">
     
   
-    PyPI
+    Install with PyPI
   
 
     
@@ -3834,13 +3975,7 @@
 <li>embedded</li>
 <li>path</li>
 </ul>
-<p>The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is:</p>
-<ul>
-<li><a class="autorefs autorefs-internal" href="../blocks/attachments/#embeddedfile">Embedded Files</a> contain an "embedded" property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the <a href="../examples/synthesis/#initial-synthesis-fos">initial synthesis file</a> for an example.</li>
-<li><a class="autorefs autorefs-internal" href="../blocks/attachments/#pathfile">Path Files</a> contain a "path" property with a file location relative to the <code>FileBlock</code> input file (the JSON or FOS-formatted file). A lone <code>.</code> character refers to the folder containing the <code>FileBlock</code> input. See the CIF attached to the <a href="../examples/templates/#initial-templates-fos">initial templates file</a> for an example.</li>
-<li>The "path" property can use "<code>..</code>" characters to navigate upward in relative filepaths. Refer to the <a href="../examples/synthesis/#checkpoint-9">synthesis file after checkpoint 9</a> for an example.</li>
-<li>By default, attached path files will track their original location and update their relative path when transferred to another <code>FileBlock</code>. There is a method, <a href="../blocks/blocks/#FoSpy.blocks.blocks.Block.track_attachments"><code>track_attachments</code></a>, that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.</li>
-</ul>
+<p>The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the <a href="../guides/attachments/">attachments guide</a> for more information</p>
 <h4 id="optional-properties_1">Optional properties</h4>
 <table>
 <thead>
@@ -3854,12 +3989,12 @@
 <tr>
 <td>embedded</td>
 <td><code>list</code></td>
-<td>A list of raw utf-8 line strings copied from the embedded file. In the FOS format, this uses a special syntax: <br><pre><code>embedded: {{{<br>\<Embedded ASCII><br>#################### END FOS EMBED }}}</code></pre></td>
+<td>A list of raw utf-8 line strings copied from the embedded file. See <a href="../guides/attachments/">attachments guide</a> for syntax.</td>
 </tr>
 <tr>
 <td>path</td>
 <td><code>pathlib.Path</code></td>
-<td>Instead of directly embedding contents, refers to a relative path from the folder containing the parent <code>FileBlock</code>. Can use relative characters like "<code>.</code>" and "<code>..</code>"</td>
+<td>Instead of directly embedding contents, refers to a relative path from the folder containing the parent <code>FileBlock</code>. Can use relative characters like "<code>.</code>" and "<code>..</code>". See <a href="../guides/attachments/">attachments guide</a> for more information.</td>
 </tr>
 </tbody>
 </table>

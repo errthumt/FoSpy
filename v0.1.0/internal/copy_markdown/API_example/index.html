@@ -480,6 +480,81 @@
   
   
   
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOS Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
       <a href="../../../expected/" class="md-nav__link">
         
@@ -497,6 +572,70 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/attachments/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attachments
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../guides/group/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Group File Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1989,7 +2128,7 @@
   <span class="md-ellipsis">
     
   
-    PyPI
+    Install with PyPI
   
 
     
@@ -2401,109 +2540,106 @@
 </span><span id="__span-0-356"><a id="__codelineno-0-356" name="__codelineno-0-356" href="#__codelineno-0-356"></a><span class="gu">## Managing Attached Files</span>
 </span><span id="__span-0-357"><a id="__codelineno-0-357" name="__codelineno-0-357" href="#__codelineno-0-357"></a>Attached files are blocks just like every other section, but they contain and/or point to raw information from another file. Files can be attached in a few different ways:
 </span><span id="__span-0-358"><a id="__codelineno-0-358" name="__codelineno-0-358" href="#__codelineno-0-358"></a>
-</span><span id="__span-0-359"><a id="__codelineno-0-359" name="__codelineno-0-359" href="#__codelineno-0-359"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Embedded Files</span>][<span class="nl">blockdocs-EmbeddedFile</span>] contain an &quot;embedded&quot; property to write raw lines of utf-8 formatted text directly in the FOS format. See the CIF attached to the [<span class="nt">initial synthesis file</span>](<span class="na">../synthesis/index.md#initial-synthesis-fos</span>) for an example.
-</span><span id="__span-0-360"><a id="__codelineno-0-360" name="__codelineno-0-360" href="#__codelineno-0-360"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Path Files</span>][<span class="nl">blockdocs-PathFile</span>] contain a &quot;path&quot; property with a file location relative to the <span class="sb">`FileBlock`</span> input file (the JSON or FOS-formatted file). See the CIF attached to the [<span class="nt">initial templates file</span>](<span class="na">../templates/index.md#initial-templates-fos</span>) for an example.
-</span><span id="__span-0-361"><a id="__codelineno-0-361" name="__codelineno-0-361" href="#__codelineno-0-361"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>The &quot;path&quot; property can use &quot;..&quot; characters to navigate upward in relative filepaths. Refer to the [<span class="nt">synthesis file after checkpoint 9</span>](<span class="na">../synthesis/index.md#checkpoint-9</span>) for an example.
-</span><span id="__span-0-362"><a id="__codelineno-0-362" name="__codelineno-0-362" href="#__codelineno-0-362"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span>By default, attached path files will track their original location and update their relative path when transferred to another <span class="sb">`FileBlock`</span>. There is a method, [<span class="sb">`track_attachments`</span>](../../blocks/blocks.md#FoSpy.blocks.blocks.Block.track_attachments), that allows configuration on if files should be copied and/or overwritten when transferred, or if the user should be prompted for a decision each time.
-</span><span id="__span-0-363"><a id="__codelineno-0-363" name="__codelineno-0-363" href="#__codelineno-0-363"></a>
-</span><span id="__span-0-364"><a id="__codelineno-0-364" name="__codelineno-0-364" href="#__codelineno-0-364"></a><span class="sb">```python</span>
-</span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365" href="#__codelineno-0-365"></a><span class="c1"># Copying Phil&#39;s cif from my templates into my synthesis.</span>
-</span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366" href="#__codelineno-0-366"></a><span class="n">py618</span> <span class="o">=</span> <span class="n">cif_temps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367" href="#__codelineno-0-367"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">py618</span><span class="p">)</span>
-</span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368" href="#__codelineno-0-368"></a>
-</span><span id="__span-0-369"><a id="__codelineno-0-369" name="__codelineno-0-369" href="#__codelineno-0-369"></a><span class="c1"># copying the Ba2Zn5Sb6 cif from my synthesis to my templates</span>
-</span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370" href="#__codelineno-0-370"></a><span class="n">Ba2Zn5Sb6</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-0-371"><a id="__codelineno-0-371" name="__codelineno-0-371" href="#__codelineno-0-371"></a><span class="n">cif_temps</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Ba2Zn5Sb6</span><span class="p">)</span>
-</span><span id="__span-0-372"><a id="__codelineno-0-372" name="__codelineno-0-372" href="#__codelineno-0-372"></a>
-</span><span id="__span-0-373"><a id="__codelineno-0-373" name="__codelineno-0-373" href="#__codelineno-0-373"></a><span class="c1"># removing the Ba2Zn5Sb6 from my synthesis because it&#39;s not applicable for this</span>
-</span><span id="__span-0-374"><a id="__codelineno-0-374" name="__codelineno-0-374" href="#__codelineno-0-374"></a><span class="c1"># sample.</span>
-</span><span id="__span-0-375"><a id="__codelineno-0-375" name="__codelineno-0-375" href="#__codelineno-0-375"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">remove_any</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;Ba2Zn5Sb6_ICSD&quot;</span><span class="p">)</span>
-</span><span id="__span-0-376"><a id="__codelineno-0-376" name="__codelineno-0-376" href="#__codelineno-0-376"></a>
-</span><span id="__span-0-377"><a id="__codelineno-0-377" name="__codelineno-0-377" href="#__codelineno-0-377"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check09.fos&quot;</span><span class="p">)</span>
-</span><span id="__span-0-378"><a id="__codelineno-0-378" name="__codelineno-0-378" href="#__codelineno-0-378"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check09.fos&quot;</span><span class="p">)</span>
-</span><span id="__span-0-379"><a id="__codelineno-0-379" name="__codelineno-0-379" href="#__codelineno-0-379"></a><span class="sb">```</span>
+</span><span id="__span-0-359"><a id="__codelineno-0-359" name="__codelineno-0-359" href="#__codelineno-0-359"></a>
+</span><span id="__span-0-360"><a id="__codelineno-0-360" name="__codelineno-0-360" href="#__codelineno-0-360"></a>
+</span><span id="__span-0-361"><a id="__codelineno-0-361" name="__codelineno-0-361" href="#__codelineno-0-361"></a><span class="sb">```python</span>
+</span><span id="__span-0-362"><a id="__codelineno-0-362" name="__codelineno-0-362" href="#__codelineno-0-362"></a><span class="c1"># Copying Phil&#39;s cif from my templates into my synthesis.</span>
+</span><span id="__span-0-363"><a id="__codelineno-0-363" name="__codelineno-0-363" href="#__codelineno-0-363"></a><span class="n">py618</span> <span class="o">=</span> <span class="n">cif_temps</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="__span-0-364"><a id="__codelineno-0-364" name="__codelineno-0-364" href="#__codelineno-0-364"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">py618</span><span class="p">)</span>
+</span><span id="__span-0-365"><a id="__codelineno-0-365" name="__codelineno-0-365" href="#__codelineno-0-365"></a>
+</span><span id="__span-0-366"><a id="__codelineno-0-366" name="__codelineno-0-366" href="#__codelineno-0-366"></a><span class="c1"># copying the Ba2Zn5Sb6 cif from my synthesis to my templates</span>
+</span><span id="__span-0-367"><a id="__codelineno-0-367" name="__codelineno-0-367" href="#__codelineno-0-367"></a><span class="n">Ba2Zn5Sb6</span> <span class="o">=</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-0-368"><a id="__codelineno-0-368" name="__codelineno-0-368" href="#__codelineno-0-368"></a><span class="n">cif_temps</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">Ba2Zn5Sb6</span><span class="p">)</span>
+</span><span id="__span-0-369"><a id="__codelineno-0-369" name="__codelineno-0-369" href="#__codelineno-0-369"></a>
+</span><span id="__span-0-370"><a id="__codelineno-0-370" name="__codelineno-0-370" href="#__codelineno-0-370"></a><span class="c1"># removing the Ba2Zn5Sb6 from my synthesis because it&#39;s not applicable for this</span>
+</span><span id="__span-0-371"><a id="__codelineno-0-371" name="__codelineno-0-371" href="#__codelineno-0-371"></a><span class="c1"># sample.</span>
+</span><span id="__span-0-372"><a id="__codelineno-0-372" name="__codelineno-0-372" href="#__codelineno-0-372"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="o">.</span><span class="n">remove_any</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;Ba2Zn5Sb6_ICSD&quot;</span><span class="p">)</span>
+</span><span id="__span-0-373"><a id="__codelineno-0-373" name="__codelineno-0-373" href="#__codelineno-0-373"></a>
+</span><span id="__span-0-374"><a id="__codelineno-0-374" name="__codelineno-0-374" href="#__codelineno-0-374"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check09.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-0-375"><a id="__codelineno-0-375" name="__codelineno-0-375" href="#__codelineno-0-375"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check09.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-0-376"><a id="__codelineno-0-376" name="__codelineno-0-376" href="#__codelineno-0-376"></a><span class="sb">```</span>
+</span><span id="__span-0-377"><a id="__codelineno-0-377" name="__codelineno-0-377" href="#__codelineno-0-377"></a>
+</span><span id="__span-0-378"><a id="__codelineno-0-378" name="__codelineno-0-378" href="#__codelineno-0-378"></a><span class="gu">### Checkpoint 9</span>
+</span><span id="__span-0-379"><a id="__codelineno-0-379" name="__codelineno-0-379" href="#__codelineno-0-379"></a>[<span class="nt">Updated Synthesis</span>](<span class="na">../synthesis/index.md#checkpoint-9</span>) | [<span class="nt">Updated Templates</span>](<span class="na">../templates/index.md#checkpoint-9</span>)
 </span><span id="__span-0-380"><a id="__codelineno-0-380" name="__codelineno-0-380" href="#__codelineno-0-380"></a>
-</span><span id="__span-0-381"><a id="__codelineno-0-381" name="__codelineno-0-381" href="#__codelineno-0-381"></a><span class="gu">### Checkpoint 9</span>
-</span><span id="__span-0-382"><a id="__codelineno-0-382" name="__codelineno-0-382" href="#__codelineno-0-382"></a>[<span class="nt">Updated Synthesis</span>](<span class="na">../synthesis/index.md#checkpoint-9</span>) | [<span class="nt">Updated Templates</span>](<span class="na">../templates/index.md#checkpoint-9</span>)
+</span><span id="__span-0-381"><a id="__codelineno-0-381" name="__codelineno-0-381" href="#__codelineno-0-381"></a><span class="gu">## Calculation Routines</span>
+</span><span id="__span-0-382"><a id="__codelineno-0-382" name="__codelineno-0-382" href="#__codelineno-0-382"></a>There is the capability to add &quot;calculation_routines&quot; to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. 
 </span><span id="__span-0-383"><a id="__codelineno-0-383" name="__codelineno-0-383" href="#__codelineno-0-383"></a>
-</span><span id="__span-0-384"><a id="__codelineno-0-384" name="__codelineno-0-384" href="#__codelineno-0-384"></a><span class="gu">## Calculation Routines</span>
-</span><span id="__span-0-385"><a id="__codelineno-0-385" name="__codelineno-0-385" href="#__codelineno-0-385"></a>There is the capability to add &quot;calculation_routines&quot; to be executed when saving the file. This schedules commands to be run right before saving, so that calculated values are correct for the current state of the synthesis. Here, I schedule a calculation routine that will add a comment with weight percent above the ratio of every material with matching type. 
-</span><span id="__span-0-386"><a id="__codelineno-0-386" name="__codelineno-0-386" href="#__codelineno-0-386"></a>
-</span><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387" href="#__codelineno-0-387"></a>Since calculated comments are for user convenience and contain redundant information (which might inadvertently conflict with other changes), they are given a special syntax so that they are stored when <span class="ge">*saving*</span> a FOS file, but not read when <span class="ge">*loading*</span> a FOS file. They can be overwritten at any time with a new updated value.
-</span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388" href="#__codelineno-0-388"></a><span class="sb">```python</span>
-</span><span id="__span-0-389"><a id="__codelineno-0-389" name="__codelineno-0-389" href="#__codelineno-0-389"></a><span class="c1"># Every material gets a weight percent comment added above their ratio</span>
-</span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390" href="#__codelineno-0-390"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;reagents.add_weight_pcts&quot;</span><span class="p">)</span>
-</span><span id="__span-0-391"><a id="__codelineno-0-391" name="__codelineno-0-391" href="#__codelineno-0-391"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">reagents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;Weight percents were calculated automatically when saving.&quot;</span><span class="p">)</span>
-</span><span id="__span-0-392"><a id="__codelineno-0-392" name="__codelineno-0-392" href="#__codelineno-0-392"></a>
-</span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393" href="#__codelineno-0-393"></a><span class="c1"># Every anneal treatment gets missing rate parameter comment.</span>
-</span><span id="__span-0-394"><a id="__codelineno-0-394" name="__codelineno-0-394" href="#__codelineno-0-394"></a><span class="k">for</span> <span class="n">anneal</span> <span class="ow">in</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_any</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">):</span>
-</span><span id="__span-0-395"><a id="__codelineno-0-395" name="__codelineno-0-395" href="#__codelineno-0-395"></a>    <span class="n">anneal</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;program.add_all_missing_parameters&quot;</span><span class="p">)</span>
-</span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396" href="#__codelineno-0-396"></a>
-</span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397" href="#__codelineno-0-397"></a><span class="sb">```</span>
+</span><span id="__span-0-384"><a id="__codelineno-0-384" name="__codelineno-0-384" href="#__codelineno-0-384"></a>Since calculated comments are for user convenience and contain redundant information (which might inadvertently conflict with other changes), they are given a special syntax so that they are stored when <span class="ge">*saving*</span> a FOS file, but not read when <span class="ge">*loading*</span> a FOS file. They can be overwritten at any time with a new updated value.
+</span><span id="__span-0-385"><a id="__codelineno-0-385" name="__codelineno-0-385" href="#__codelineno-0-385"></a><span class="sb">```python</span>
+</span><span id="__span-0-386"><a id="__codelineno-0-386" name="__codelineno-0-386" href="#__codelineno-0-386"></a><span class="c1"># Every material gets a weight percent comment added above their ratio</span>
+</span><span id="__span-0-387"><a id="__codelineno-0-387" name="__codelineno-0-387" href="#__codelineno-0-387"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;reagents.add_weight_pcts&quot;</span><span class="p">)</span>
+</span><span id="__span-0-388"><a id="__codelineno-0-388" name="__codelineno-0-388" href="#__codelineno-0-388"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">reagents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">amount</span><span class="o">.</span><span class="n">add_comments</span><span class="p">(</span><span class="s2">&quot;Weight percents were calculated automatically when saving.&quot;</span><span class="p">)</span>
+</span><span id="__span-0-389"><a id="__codelineno-0-389" name="__codelineno-0-389" href="#__codelineno-0-389"></a>
+</span><span id="__span-0-390"><a id="__codelineno-0-390" name="__codelineno-0-390" href="#__codelineno-0-390"></a><span class="c1"># Every anneal treatment gets missing rate parameter comment.</span>
+</span><span id="__span-0-391"><a id="__codelineno-0-391" name="__codelineno-0-391" href="#__codelineno-0-391"></a><span class="k">for</span> <span class="n">anneal</span> <span class="ow">in</span> <span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_any</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">):</span>
+</span><span id="__span-0-392"><a id="__codelineno-0-392" name="__codelineno-0-392" href="#__codelineno-0-392"></a>    <span class="n">anneal</span><span class="o">.</span><span class="n">add_calc_routine</span><span class="p">(</span><span class="s2">&quot;program.add_all_missing_parameters&quot;</span><span class="p">)</span>
+</span><span id="__span-0-393"><a id="__codelineno-0-393" name="__codelineno-0-393" href="#__codelineno-0-393"></a>
+</span><span id="__span-0-394"><a id="__codelineno-0-394" name="__codelineno-0-394" href="#__codelineno-0-394"></a><span class="sb">```</span>
+</span><span id="__span-0-395"><a id="__codelineno-0-395" name="__codelineno-0-395" href="#__codelineno-0-395"></a>
+</span><span id="__span-0-396"><a id="__codelineno-0-396" name="__codelineno-0-396" href="#__codelineno-0-396"></a><span class="gu">## Cleaning Up</span>
+</span><span id="__span-0-397"><a id="__codelineno-0-397" name="__codelineno-0-397" href="#__codelineno-0-397"></a>All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn&#39;t matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
 </span><span id="__span-0-398"><a id="__codelineno-0-398" name="__codelineno-0-398" href="#__codelineno-0-398"></a>
-</span><span id="__span-0-399"><a id="__codelineno-0-399" name="__codelineno-0-399" href="#__codelineno-0-399"></a><span class="gu">## Cleaning Up</span>
-</span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400" href="#__codelineno-0-400"></a>All of the information in my new synthesis is now stored, and all the changes to my templates are now stored. But in the process, some of the information has been moved around or tacked on in ways that will make the FOS file hard to read in plain text. This doesn&#39;t matter for programs that are loading, editing, and saving files many files directly, but we can also clean up some things so that the file is easy to read:
-</span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401" href="#__codelineno-0-401"></a>
-</span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402" href="#__codelineno-0-402"></a><span class="k">*</span><span class="w"> </span>Reconfigure <span class="sb">`my_synthesis`</span> so that it keeps its own copy of the PY618 CIF file instead of tracking the one in the templates folder.
-</span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403" href="#__codelineno-0-403"></a><span class="k">*</span><span class="w"> </span>Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
-</span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404" href="#__codelineno-0-404"></a><span class="k">*</span><span class="w"> </span>Set some specific positions for certain blocks for better organization.
-</span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a><span class="k">*</span><span class="w"> </span>Set the generic templates block to use the &quot;explicit&quot; key:value syntax for all of its templates.
-</span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406" href="#__codelineno-0-406"></a><span class="k">*</span><span class="w"> </span>Set the synthesis materials block to use the &quot;looped&quot; syntax where all the keys are specified at the beginning of the block.
-</span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407" href="#__codelineno-0-407"></a><span class="sb">```python</span>
-</span><span id="__span-0-408"><a id="__codelineno-0-408" name="__codelineno-0-408" href="#__codelineno-0-408"></a><span class="c1"># Reconfigure my_synthesis to copy attachments if location is changed,</span>
-</span><span id="__span-0-409"><a id="__codelineno-0-409" name="__codelineno-0-409" href="#__codelineno-0-409"></a><span class="c1"># instead of updating path to the original location.</span>
-</span><span id="__span-0-410"><a id="__codelineno-0-410" name="__codelineno-0-410" href="#__codelineno-0-410"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">track_attachments</span><span class="p">(</span><span class="n">new_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-411"><a id="__codelineno-0-411" name="__codelineno-0-411" href="#__codelineno-0-411"></a><span class="c1"># Path used to be &quot;..\templates&quot; (which resolves to example\templates)</span>
-</span><span id="__span-0-412"><a id="__codelineno-0-412" name="__codelineno-0-412" href="#__codelineno-0-412"></a><span class="c1"># New path is &quot;.&quot; (which resolves to example\synthesis)</span>
-</span><span id="__span-0-413"><a id="__codelineno-0-413" name="__codelineno-0-413" href="#__codelineno-0-413"></a><span class="c1"># With new config, a new CIF will be copied to the new location when saving</span>
-</span><span id="__span-0-414"><a id="__codelineno-0-414" name="__codelineno-0-414" href="#__codelineno-0-414"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
-</span><span id="__span-0-415"><a id="__codelineno-0-415" name="__codelineno-0-415" href="#__codelineno-0-415"></a>
-</span><span id="__span-0-416"><a id="__codelineno-0-416" name="__codelineno-0-416" href="#__codelineno-0-416"></a>
-</span><span id="__span-0-417"><a id="__codelineno-0-417" name="__codelineno-0-417" href="#__codelineno-0-417"></a><span class="c1"># some reordering stuff to make the final printout more consistent.</span>
-</span><span id="__span-0-418"><a id="__codelineno-0-418" name="__codelineno-0-418" href="#__codelineno-0-418"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
-</span><span id="__span-0-419"><a id="__codelineno-0-419" name="__codelineno-0-419" href="#__codelineno-0-419"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;generic&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-</span><span id="__span-0-420"><a id="__codelineno-0-420" name="__codelineno-0-420" href="#__codelineno-0-420"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;anneal_sections&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-</span><span id="__span-0-421"><a id="__codelineno-0-421" name="__codelineno-0-421" href="#__codelineno-0-421"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">generic</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;explicit&quot;</span><span class="p">)</span>
-</span><span id="__span-0-422"><a id="__codelineno-0-422" name="__codelineno-0-422" href="#__codelineno-0-422"></a>
-</span><span id="__span-0-423"><a id="__codelineno-0-423" name="__codelineno-0-423" href="#__codelineno-0-423"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
-</span><span id="__span-0-424"><a id="__codelineno-0-424" name="__codelineno-0-424" href="#__codelineno-0-424"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;reagents&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-</span><span id="__span-0-425"><a id="__codelineno-0-425" name="__codelineno-0-425" href="#__codelineno-0-425"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;looped&quot;</span><span class="p">)</span>
+</span><span id="__span-0-399"><a id="__codelineno-0-399" name="__codelineno-0-399" href="#__codelineno-0-399"></a><span class="k">*</span><span class="w"> </span>Reconfigure <span class="sb">`my_synthesis`</span> so that it keeps its own copy of the PY618 CIF file instead of tracking the one in the templates folder.
+</span><span id="__span-0-400"><a id="__codelineno-0-400" name="__codelineno-0-400" href="#__codelineno-0-400"></a><span class="k">*</span><span class="w"> </span>Rearrange the blocks to the default order so that the CIFS are at the bottom of the file.
+</span><span id="__span-0-401"><a id="__codelineno-0-401" name="__codelineno-0-401" href="#__codelineno-0-401"></a><span class="k">*</span><span class="w"> </span>Set some specific positions for certain blocks for better organization.
+</span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402" href="#__codelineno-0-402"></a><span class="k">*</span><span class="w"> </span>Set the generic templates block to use the &quot;explicit&quot; key:value syntax for all of its templates.
+</span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403" href="#__codelineno-0-403"></a><span class="k">*</span><span class="w"> </span>Set the synthesis materials block to use the &quot;looped&quot; syntax where all the keys are specified at the beginning of the block.
+</span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404" href="#__codelineno-0-404"></a><span class="sb">```python</span>
+</span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a><span class="c1"># Reconfigure my_synthesis to copy attachments if location is changed,</span>
+</span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406" href="#__codelineno-0-406"></a><span class="c1"># instead of updating path to the original location.</span>
+</span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407" href="#__codelineno-0-407"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">track_attachments</span><span class="p">(</span><span class="n">new_copy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-408"><a id="__codelineno-0-408" name="__codelineno-0-408" href="#__codelineno-0-408"></a><span class="c1"># Path used to be &quot;..\templates&quot; (which resolves to example\templates)</span>
+</span><span id="__span-0-409"><a id="__codelineno-0-409" name="__codelineno-0-409" href="#__codelineno-0-409"></a><span class="c1"># New path is &quot;.&quot; (which resolves to example\synthesis)</span>
+</span><span id="__span-0-410"><a id="__codelineno-0-410" name="__codelineno-0-410" href="#__codelineno-0-410"></a><span class="c1"># With new config, a new CIF will be copied to the new location when saving</span>
+</span><span id="__span-0-411"><a id="__codelineno-0-411" name="__codelineno-0-411" href="#__codelineno-0-411"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+</span><span id="__span-0-412"><a id="__codelineno-0-412" name="__codelineno-0-412" href="#__codelineno-0-412"></a>
+</span><span id="__span-0-413"><a id="__codelineno-0-413" name="__codelineno-0-413" href="#__codelineno-0-413"></a>
+</span><span id="__span-0-414"><a id="__codelineno-0-414" name="__codelineno-0-414" href="#__codelineno-0-414"></a><span class="c1"># some reordering stuff to make the final printout more consistent.</span>
+</span><span id="__span-0-415"><a id="__codelineno-0-415" name="__codelineno-0-415" href="#__codelineno-0-415"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
+</span><span id="__span-0-416"><a id="__codelineno-0-416" name="__codelineno-0-416" href="#__codelineno-0-416"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;generic&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span><span id="__span-0-417"><a id="__codelineno-0-417" name="__codelineno-0-417" href="#__codelineno-0-417"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;anneal_sections&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-0-418"><a id="__codelineno-0-418" name="__codelineno-0-418" href="#__codelineno-0-418"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">generic</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;explicit&quot;</span><span class="p">)</span>
+</span><span id="__span-0-419"><a id="__codelineno-0-419" name="__codelineno-0-419" href="#__codelineno-0-419"></a>
+</span><span id="__span-0-420"><a id="__codelineno-0-420" name="__codelineno-0-420" href="#__codelineno-0-420"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">default_key_order</span><span class="p">()</span>
+</span><span id="__span-0-421"><a id="__codelineno-0-421" name="__codelineno-0-421" href="#__codelineno-0-421"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">key_to_idx</span><span class="p">(</span><span class="s2">&quot;reagents&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-0-422"><a id="__codelineno-0-422" name="__codelineno-0-422" href="#__codelineno-0-422"></a><span class="n">my_mats</span><span class="o">.</span><span class="n">set_list_type</span><span class="p">(</span><span class="s2">&quot;looped&quot;</span><span class="p">)</span>
+</span><span id="__span-0-423"><a id="__codelineno-0-423" name="__codelineno-0-423" href="#__codelineno-0-423"></a>
+</span><span id="__span-0-424"><a id="__codelineno-0-424" name="__codelineno-0-424" href="#__codelineno-0-424"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check10.fos&quot;</span><span class="p">)</span>
+</span><span id="__span-0-425"><a id="__codelineno-0-425" name="__codelineno-0-425" href="#__codelineno-0-425"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check10.fos&quot;</span><span class="p">)</span>
 </span><span id="__span-0-426"><a id="__codelineno-0-426" name="__codelineno-0-426" href="#__codelineno-0-426"></a>
-</span><span id="__span-0-427"><a id="__codelineno-0-427" name="__codelineno-0-427" href="#__codelineno-0-427"></a><span class="n">my_templates</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;templates/check10.fos&quot;</span><span class="p">)</span>
-</span><span id="__span-0-428"><a id="__codelineno-0-428" name="__codelineno-0-428" href="#__codelineno-0-428"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;synthesis/check10.fos&quot;</span><span class="p">)</span>
-</span><span id="__span-0-429"><a id="__codelineno-0-429" name="__codelineno-0-429" href="#__codelineno-0-429"></a>
-</span><span id="__span-0-430"><a id="__codelineno-0-430" name="__codelineno-0-430" href="#__codelineno-0-430"></a><span class="c1"># Silence all debugs except the one used for checking equality.</span>
-</span><span id="__span-0-431"><a id="__codelineno-0-431" name="__codelineno-0-431" href="#__codelineno-0-431"></a><span class="n">all_debugs_off</span><span class="p">(</span><span class="n">soundoff</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-432"><a id="__codelineno-0-432" name="__codelineno-0-432" href="#__codelineno-0-432"></a><span class="n">db</span><span class="o">.</span><span class="n">_debug</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433" href="#__codelineno-0-433"></a>
-</span><span id="__span-0-434"><a id="__codelineno-0-434" name="__codelineno-0-434" href="#__codelineno-0-434"></a><span class="c1"># Check to see if the saved file matches the current python object.</span>
-</span><span id="__span-0-435"><a id="__codelineno-0-435" name="__codelineno-0-435" href="#__codelineno-0-435"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis matches: </span><span class="si">{</span><span class="n">my_synthesis</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-436"><a id="__codelineno-0-436" name="__codelineno-0-436" href="#__codelineno-0-436"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates match:   </span><span class="si">{</span><span class="n">my_templates</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437" href="#__codelineno-0-437"></a><span class="sb">```</span>
+</span><span id="__span-0-427"><a id="__codelineno-0-427" name="__codelineno-0-427" href="#__codelineno-0-427"></a><span class="c1"># Silence all debugs except the one used for checking equality.</span>
+</span><span id="__span-0-428"><a id="__codelineno-0-428" name="__codelineno-0-428" href="#__codelineno-0-428"></a><span class="n">all_debugs_off</span><span class="p">(</span><span class="n">soundoff</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-429"><a id="__codelineno-0-429" name="__codelineno-0-429" href="#__codelineno-0-429"></a><span class="n">db</span><span class="o">.</span><span class="n">_debug</span><span class="o">.</span><span class="n">on</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-0-430"><a id="__codelineno-0-430" name="__codelineno-0-430" href="#__codelineno-0-430"></a>
+</span><span id="__span-0-431"><a id="__codelineno-0-431" name="__codelineno-0-431" href="#__codelineno-0-431"></a><span class="c1"># Check to see if the saved file matches the current python object.</span>
+</span><span id="__span-0-432"><a id="__codelineno-0-432" name="__codelineno-0-432" href="#__codelineno-0-432"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Synthesis matches: </span><span class="si">{</span><span class="n">my_synthesis</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-433"><a id="__codelineno-0-433" name="__codelineno-0-433" href="#__codelineno-0-433"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Templates match:   </span><span class="si">{</span><span class="n">my_templates</span><span class="o">.</span><span class="n">matches_file</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-434"><a id="__codelineno-0-434" name="__codelineno-0-434" href="#__codelineno-0-434"></a><span class="sb">```</span>
+</span><span id="__span-0-435"><a id="__codelineno-0-435" name="__codelineno-0-435" href="#__codelineno-0-435"></a>
+</span><span id="__span-0-436"><a id="__codelineno-0-436" name="__codelineno-0-436" href="#__codelineno-0-436"></a><span class="gu">### Checkpoint 10 (Finished)</span>
+</span><span id="__span-0-437"><a id="__codelineno-0-437" name="__codelineno-0-437" href="#__codelineno-0-437"></a>[<span class="nt">Finalized Synthesis</span>](<span class="na">../synthesis/index.md#checkpoint-10</span>) | [<span class="nt">Finalized Templates</span>](<span class="na">../templates/index.md#checkpoint-10</span>)
 </span><span id="__span-0-438"><a id="__codelineno-0-438" name="__codelineno-0-438" href="#__codelineno-0-438"></a>
-</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439" href="#__codelineno-0-439"></a><span class="gu">### Checkpoint 10 (Finished)</span>
-</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440" href="#__codelineno-0-440"></a>[<span class="nt">Finalized Synthesis</span>](<span class="na">../synthesis/index.md#checkpoint-10</span>) | [<span class="nt">Finalized Templates</span>](<span class="na">../templates/index.md#checkpoint-10</span>)
+</span><span id="__span-0-439"><a id="__codelineno-0-439" name="__codelineno-0-439" href="#__codelineno-0-439"></a><span class="gu">## Bonus: Generating Figures</span>
+</span><span id="__span-0-440"><a id="__codelineno-0-440" name="__codelineno-0-440" href="#__codelineno-0-440"></a>There are features being developed that allow generating useful figures from the information loaded in a FOS file. Currently we have two figures:
 </span><span id="__span-0-441"><a id="__codelineno-0-441" name="__codelineno-0-441" href="#__codelineno-0-441"></a>
-</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442" href="#__codelineno-0-442"></a><span class="gu">## Bonus: Generating Figures</span>
-</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443" href="#__codelineno-0-443"></a>There are features being developed that allow generating useful figures from the information loaded in a FOS file. Currently we have two figures:
-</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444" href="#__codelineno-0-444"></a>
-</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445" href="#__codelineno-0-445"></a><span class="gu">### Simulating Powder Patterns</span>
-</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446" href="#__codelineno-0-446"></a><span class="sb">```python</span>
-</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447" href="#__codelineno-0-447"></a><span class="c1"># optional: figure</span>
-</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448" href="#__codelineno-0-448"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quick_pattern</span><span class="p">(</span><span class="n">subprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449" href="#__codelineno-0-449"></a><span class="sb">```</span>
+</span><span id="__span-0-442"><a id="__codelineno-0-442" name="__codelineno-0-442" href="#__codelineno-0-442"></a><span class="gu">### Simulating Powder Patterns</span>
+</span><span id="__span-0-443"><a id="__codelineno-0-443" name="__codelineno-0-443" href="#__codelineno-0-443"></a><span class="sb">```python</span>
+</span><span id="__span-0-444"><a id="__codelineno-0-444" name="__codelineno-0-444" href="#__codelineno-0-444"></a><span class="c1"># optional: figure</span>
+</span><span id="__span-0-445"><a id="__codelineno-0-445" name="__codelineno-0-445" href="#__codelineno-0-445"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">cifs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quick_pattern</span><span class="p">(</span><span class="n">subprocess</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-446"><a id="__codelineno-0-446" name="__codelineno-0-446" href="#__codelineno-0-446"></a><span class="sb">```</span>
+</span><span id="__span-0-447"><a id="__codelineno-0-447" name="__codelineno-0-447" href="#__codelineno-0-447"></a>
+</span><span id="__span-0-448"><a id="__codelineno-0-448" name="__codelineno-0-448" href="#__codelineno-0-448"></a>Simulates powder diffraction data for the embedded CIF
+</span><span id="__span-0-449"><a id="__codelineno-0-449" name="__codelineno-0-449" href="#__codelineno-0-449"></a>![<span class="nt">simulated powder pattern</span>](<span class="na">./assets/PXRD.png</span>)
 </span><span id="__span-0-450"><a id="__codelineno-0-450" name="__codelineno-0-450" href="#__codelineno-0-450"></a>
-</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451" href="#__codelineno-0-451"></a>Simulates powder diffraction data for the embedded CIF
-</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452" href="#__codelineno-0-452"></a>![<span class="nt">simulated powder pattern</span>](<span class="na">./assets/PXRD.png</span>)
-</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453" href="#__codelineno-0-453"></a>
-</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454" href="#__codelineno-0-454"></a><span class="gu">### Annealing Diagrams</span>
-</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455" href="#__codelineno-0-455"></a><span class="sb">```python</span>
-</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456" href="#__codelineno-0-456"></a><span class="c1"># optional: figure</span>
-</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457" href="#__codelineno-0-457"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show_plot</span><span class="p">()</span>
-</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458" href="#__codelineno-0-458"></a><span class="sb">```</span>
-</span><span id="__span-0-459"><a id="__codelineno-0-459" name="__codelineno-0-459" href="#__codelineno-0-459"></a>
-</span><span id="__span-0-460"><a id="__codelineno-0-460" name="__codelineno-0-460" href="#__codelineno-0-460"></a>Generates a temperature diagram for the annealing program.
-</span><span id="__span-0-461"><a id="__codelineno-0-461" name="__codelineno-0-461" href="#__codelineno-0-461"></a>![<span class="nt">annealing diagram</span>](<span class="na">./assets/anneal.png</span>)
+</span><span id="__span-0-451"><a id="__codelineno-0-451" name="__codelineno-0-451" href="#__codelineno-0-451"></a><span class="gu">### Annealing Diagrams</span>
+</span><span id="__span-0-452"><a id="__codelineno-0-452" name="__codelineno-0-452" href="#__codelineno-0-452"></a><span class="sb">```python</span>
+</span><span id="__span-0-453"><a id="__codelineno-0-453" name="__codelineno-0-453" href="#__codelineno-0-453"></a><span class="c1"># optional: figure</span>
+</span><span id="__span-0-454"><a id="__codelineno-0-454" name="__codelineno-0-454" href="#__codelineno-0-454"></a><span class="n">my_synthesis</span><span class="o">.</span><span class="n">treatments</span><span class="o">.</span><span class="n">get_first</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;anneal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show_plot</span><span class="p">()</span>
+</span><span id="__span-0-455"><a id="__codelineno-0-455" name="__codelineno-0-455" href="#__codelineno-0-455"></a><span class="sb">```</span>
+</span><span id="__span-0-456"><a id="__codelineno-0-456" name="__codelineno-0-456" href="#__codelineno-0-456"></a>
+</span><span id="__span-0-457"><a id="__codelineno-0-457" name="__codelineno-0-457" href="#__codelineno-0-457"></a>Generates a temperature diagram for the annealing program.
+</span><span id="__span-0-458"><a id="__codelineno-0-458" name="__codelineno-0-458" href="#__codelineno-0-458"></a>![<span class="nt">annealing diagram</span>](<span class="na">./assets/anneal.png</span>)
 </span></code></pre></div>
 
 
