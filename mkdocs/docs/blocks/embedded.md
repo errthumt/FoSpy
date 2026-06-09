@@ -26,21 +26,6 @@ their own comment metadata.
 
 ## Block Types in this Module
 
----
-[](){ #blockdocs-EmbeddedCIF }
-### `EmbeddedCIF`
-::: FoSpy.blocks.embedded.EmbeddedCIF
+::: FoSpy.blocks.embedded
     options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
-[](){ #blockdocs-EmbeddedFile }
-### `EmbeddedFile`
-::: FoSpy.blocks.embedded.EmbeddedFile
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
+        members: true

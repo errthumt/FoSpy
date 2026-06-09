@@ -17,7 +17,6 @@ for name in sorted(names):
     module = importlib.import_module(f"{__name__}.{name}")
     
     module.__block_classes__ = _get_block_classes(module)
-    _debug.msg(f"Block classes found in {module.__name__}:\n{module.__block_classes__}")
 
     for cls_name in module.__block_classes__:
         __all__.append(cls_name)

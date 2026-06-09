@@ -160,7 +160,7 @@ def get_heading_tokens(heading_text, tok):
         level=tok.level,      # same level as the original heading
         children=None,
         content="",
-        markup="##",
+        markup="###",
         info="",
         meta={},
         block=True,
@@ -210,7 +210,7 @@ def get_heading_tokens(heading_text, tok):
         level=tok.level,
         children=None,
         content="",
-        markup="##",
+        markup="###",
         info="",
         meta={},
         block=True,
@@ -321,8 +321,11 @@ def extract_property_tables(tokens):
     """
     current_class = None
     current_section = None
+    method_blocks = get_method_blocks()
+    extra_method_blocks = []
     tables = {}
     tables_start = False
+    reading_method_blocks = False
     i = 0
     while i < len(tokens):
         tok = tokens[i]
@@ -335,6 +338,35 @@ def extract_property_tables(tokens):
         elif not tables_start:
             i+=1
             continue
+
+        if tok.type == "heading_open" and tok.tag == "h4":
+            inline = tokens[i + 1]
+            text = inline.content.lower()
+            if "method subclasses" in text:
+                reading_method_blocks = True
+                i += 2
+                continue
+
+        if reading_method_blocks:
+            if tok.type == "heading_open" and int(tok.tag[1:]) <= 4:
+                reading_method_blocks = False
+                continue
+
+            if tok.type == "list_item_open":
+                inline = tokens[i + 2]
+                if hasattr(inline, "children") and len(inline.children) > 0:
+                    code_inline = inline.children[0]
+                    if code_inline.type == "code_inline" and " " not in code_inline.content:
+                        method_block = code_inline.content
+                        if method_block in method_blocks:
+                            print(f"Found expected method block: {method_block}")
+                            idx = method_blocks.index(method_block)
+                            method_blocks.pop(idx)
+                        else:
+                            print(f"Found unexpected method block: {method_block}")
+                            extra_method_blocks.append(method_block)
+                i += 3
+                continue
 
         # Detect class header: ## `Annealing`
         if tok.type == "heading_open" and tok.tag == "h3":
@@ -378,7 +410,7 @@ def extract_property_tables(tokens):
 
         i += 1
 
-    return tables
+    return tables, {"missing_method_blocks": method_blocks, "extra_method_blocks": extra_method_blocks}
 
 
 def process_markdown(md_path: Path, diffs={}, temp_path:Path=None):
@@ -490,10 +522,31 @@ def diff_property_tables(extracted_tables):
 def get_table_diffs(md_path: Path):
     md_text = md_path.read_text(encoding="utf-8")
     tokens = parse_markdown(md_text, tables=True)
-    extracted_tables = extract_property_tables(tokens)
+    extracted_tables, method_block_diffs = extract_property_tables(tokens)
 
     #from pprint import pp
     #pp(extracted_tables)
 
     diffs = diff_property_tables(extracted_tables)
+    diffs.update(method_block_diffs)
     return diffs
+
+def get_method_blocks():
+    from FoSpy.blocks import __all__, SingleBlock
+    from FoSpy import blocks
+    from FoSpy.parsing.validation import required_keys, optional_keys
+
+    validated_blocks = []
+    nonvalidated_blocks = []
+
+    for keyDict in (required_keys, optional_keys):
+        for block in keyDict.keys():
+            validated_blocks.append(block.__name__)
+
+    for module_string in __all__:
+        block_class = getattr(blocks, module_string)
+        if module_string not in validated_blocks and issubclass(block_class, SingleBlock):
+            nonvalidated_blocks.append(module_string)
+
+    return nonvalidated_blocks
+
