@@ -7,7 +7,7 @@ import tempfile, json
 from pathlib import Path
 import json
 
-def run(filepath=None, map_name=None, make_new=False, new_missing=False, new_default=False):
+def run(filepath=None, map_name=None, make_new=False, new_missing=False, new_default=False, open_result=False):
     if filepath is None:
         filepath = file_prompt(
             title="Select a .json input file to be mapped.",
@@ -41,4 +41,4 @@ def run(filepath=None, map_name=None, make_new=False, new_missing=False, new_def
         with open(tmp_path, "w") as f:
             json.dump(mapped_dict, f, indent=4)
 
-        load_test.run(str(tmp_path))
+        load_test.run(str(tmp_path), open_result=open_result)
