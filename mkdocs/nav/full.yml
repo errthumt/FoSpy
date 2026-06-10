@@ -28,10 +28,12 @@ nav:
   - _errors: full/_errors.md
   - core: full/core.md
   - _dev:
-    - _utils: full/_dev/_utils.md
-    - load_test: full/_dev/load_test.md
-    - map_test: full/_dev/map_test.md
-    - test_cli: full/_dev/test_cli.md
+    - testing:
+      - _utils: full/_dev/testing/_utils.md
+      - cli: full/_dev/testing/cli.md
+      - load_test: full/_dev/testing/load_test.md
+      - map_test: full/_dev/testing/map_test.md
+      - ui: full/_dev/testing/ui.md
   - blocks:
     - _blockUtils: full/blocks/_blockUtils.md
     - _containers: full/blocks/_containers.md
