@@ -24,20 +24,39 @@ TESTS = {
 
 import questionary
 
-def main():
+from ..config import values as cfg, save as cfg_save
+from ._utils import run_interactive_batch
+dev_cfg = cfg.DEV
+
+def main(branch_batch=None):
     advanced = False
 
     while True:
         toggle_label = "[x] Advanced options" if advanced else "[ ] Advanced options"
+
+        
+        current_branch = dev_cfg.branch
+        next_branch = "main" if current_branch == "dev" else "dev"
+
+        branch_label = f"--Switch to {next_branch} branch (currently on {current_branch})--"
+
 
         choice = questionary.select(
             "Select a test to run:",
             choices=list(TESTS.keys()) + [
                 questionary.Separator(),
                 toggle_label,
-                "Quit"
+                "Quit",
+                questionary.Separator(),
+                branch_label
             ]
         ).ask()
+
+        if choice == branch_label:
+            run_interactive_batch(branch_batch)
+            dev_cfg.branch = next_branch
+            cfg_save(prompt=False)
+            continue
 
         if choice == toggle_label:
             advanced = not advanced

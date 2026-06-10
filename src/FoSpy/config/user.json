@@ -1,7 +1,8 @@
 {
-    "hello": {
-        "world": 1
+    "DEV": {
+        "branch": "dev"
     },
+    "foo": "bar",
     "json_maps": {
         "default": "jill",
         "jill": {
@@ -99,5 +100,7 @@
             }
         }
     },
-    "foo": "bar"
+    "hello": {
+        "world": 1
+    }
 }
