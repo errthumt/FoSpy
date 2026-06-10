@@ -1,5 +1,4 @@
 {
-    "foo": "bar",
     "json_maps": {
         "default": "jill",
         "jill": {
@@ -99,5 +98,6 @@
     },
     "hello": {
         "world": 1
-    }
+    },
+    "foo": "bar"
 }

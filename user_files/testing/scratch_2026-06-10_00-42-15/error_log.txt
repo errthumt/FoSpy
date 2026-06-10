@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\travi\FoSpy\src\FoSpy\_dev\testing\load_test.py", line 35, in run
+    my_synthesis = Synthesis.fromFile(filepath)
+  File "C:\Users\travi\FoSpy\src\FoSpy\blocks\files.py", line 64, in fromFile
+    blockDict = ext_map[ext](abspath)
+  File "C:\Users\travi\FoSpy\src\FoSpy\parsing\read.py", line 84, in dict_from_file
+    blockDict = create_single_block_dict(lines)
+  File "C:\Users\travi\FoSpy\src\FoSpy\parsing\read.py", line 152, in create_single_block_dict
+    raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
+SyntaxError: Failed to parse key: value pair from line: 'initial_mass:'

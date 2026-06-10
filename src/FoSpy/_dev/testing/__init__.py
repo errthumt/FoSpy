@@ -1,5 +1,3 @@
-import questionary
-
 from . import (
     load_test,
     map_test
@@ -22,13 +20,15 @@ TESTS = {
     )
 }
 
-import questionary
+def main(test=None, args=None):
+    import questionary
 
-from ..config import values as cfg, save as cfg_save
-from ._utils import run_interactive_batch
-dev_cfg = cfg.DEV
+    from ...config import values as cfg, save as cfg_save
+    from ._utils import run_interactive_batch
+    dev_cfg = cfg.DEV
+    branch_batch = dev_cfg.branch_batch_path
 
-def main(branch_batch=None):
+
     advanced = False
 
     while True:
@@ -68,7 +68,7 @@ def main(branch_batch=None):
         test, options = TESTS[choice]
 
         if advanced:
-            args = get_test_options(options, choice)
+            args = _get_test_options(options, choice)
             if args == None:
                 continue
             elif not args:
@@ -77,7 +77,8 @@ def main(branch_batch=None):
         else:
             test.run()
 
-def get_test_options(options, choice_name):
+def _get_test_options(options, choice_name):
+    import questionary
     args = {o:v for o,v in options.values()}
     print(args)
 
@@ -131,5 +132,3 @@ def get_test_options(options, choice_name):
         choice = all_labels.get(choice, None)
         print(choice)
         args = updates.get(choice, lambda args, choice: args)(args, choice)
-
-
