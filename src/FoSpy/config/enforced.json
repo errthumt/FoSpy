@@ -9,6 +9,11 @@
             ["bool", "str:prompt"],
             [],
             "Boolean or 'prompt'"
+        ],
+        "ignore": [
+            ["bool"],
+            [],
+            "Boolean"
         ]
     },
     "maps": {

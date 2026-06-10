@@ -108,52 +108,54 @@ class PathFile(Attachment):
         return self._filepath.is_file() if self._filepath is not None else False
     
     def refresh(self, new_copy="prompt",overwrite="prompt", **kwargs):
-        if self._filepath is None:
-            self._get_filepath(rf_new_copy=new_copy, rf_overwrite=overwrite, **kwargs)
-            return
-        if not self.exists():
-            raise ValueError(f"Cannot find file at last known location of attachment: {self._filepath}")
-        
-        if new_copy != "prompt" and not isinstance(new_copy, bool):
-            raise ValueError("new_copy must be a boolean or 'prompt'")
-        
-        if overwrite != "prompt" and not isinstance(overwrite, bool):
-            raise ValueError("overwrite must be a boolean or 'prompt'")
+        from .. import cfg
+        try:
+            if self._filepath is None:
+                self._get_filepath(rf_new_copy=new_copy, rf_overwrite=overwrite, **kwargs)
+                return
+            if not self.exists():
+                raise ValueError(f"Cannot find file at last known location of attachment: {self._filepath}")
 
-        new_path = self._get_abspath()
-        if self._filepath != new_path:
-            printmsg = f"Attachment file path has changed: {self._filepath} -> {new_path}"
-            prompted=False
-            if new_copy == "prompt":
-                print(printmsg)
-                prompted=True
-            
-            if new_copy == "prompt":
-                new_copy = input("You can copy the file to the new location, "
-                                 "or modify the path value to match the old location. "
-                                 "Copy? (y/n): ").lower() == "y"
+            new_path = self._get_abspath()
+            if self._filepath != new_path:
+                printmsg = f"Attachment file path has changed: {self._filepath} -> {new_path}"
+                prompted=False
+                if new_copy == "prompt":
+                    print(printmsg)
+                    prompted=True
                 
-            if new_copy:
-                if new_path.is_file() and overwrite == "prompt":
-                    if not prompted:
-                        print(printmsg)
-                    overwrite = input("File already exists at new location. "
-                                      "Overwrite? (y/n): ").lower() == "y"
-                if overwrite or not new_path.is_file():
-                    import shutil
-                    shutil.copyfile(self._filepath, new_path)
-                    self._filepath = new_path
+                if new_copy == "prompt":
+                    new_copy = input("You can copy the file to the new location, "
+                                    "or modify the path value to match the old location. "
+                                    "Copy? (y/n): ").lower() == "y"
+                    
+                if new_copy:
+                    if new_path.is_file() and overwrite == "prompt":
+                        if not prompted:
+                            print(printmsg)
+                        overwrite = input("File already exists at new location. "
+                                        "Overwrite? (y/n): ").lower() == "y"
+                    if overwrite or not new_path.is_file():
+                        import shutil
+                        shutil.copyfile(self._filepath, new_path)
+                        self._filepath = new_path
 
+                else:
+                    new_path = self._filepath.parent.relative_to(self._get_filedir(),walk_up=True)
+                    self.path = str(new_path)
+
+            checkpath = self._get_abspath()
+            check = checkpath.is_file()
+            if not check:  
+                raise ValueError(f"Could not successfully refresh attachment to location: {checkpath}.")
+            
+            self._filepath = checkpath
+
+        except Exception as e:
+            if not cfg.track_attachments.ignore:
+                raise e
             else:
-                new_path = self._filepath.parent.relative_to(self._get_filedir(),walk_up=True)
-                self.path = str(new_path)
-
-        checkpath = self._get_abspath()
-        check = checkpath.is_file()
-        if not check:  
-            raise ValueError(f"Could not successfully refresh attachment to location: {checkpath}.")
-        
-        self._filepath = checkpath
+                _debug.msg(f"Could not refresh attachment: {e}. Configured to ignore.")
 
     
     def _get_filepath(self, rf_new_copy=False, rf_overwrite=False, **kwargs):
