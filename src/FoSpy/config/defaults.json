@@ -8,6 +8,6 @@
     },
     "DEV": {
         "branch": "main",
-        "repo": "FoSpy"
+        "repo": "../FoSpy"
     }
 }
