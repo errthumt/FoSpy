@@ -31,18 +31,11 @@ powershell -NoProfile -Command ^
 
 REM --- Shortcut: Toggle Branch ---
 powershell -NoProfile -Command ^
-  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Toggle Branch.lnk');" ^
+  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Dev Testing.lnk');" ^
   "$s.TargetPath='%TARGET_DIR%\FoSpy_toggle_branch.bat';" ^
   "$s.WorkingDirectory='%TARGET_DIR%';" ^
   "$s.Save()"
 
-REM --- Shortcut: Test Loader (Python script) ---
-powershell -NoProfile -Command ^
-  "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Test Loader.lnk');" ^
-  "$s.TargetPath='%TARGET_DIR%\FoSpy\venv\Scripts\python.exe';" ^
-  "$s.Arguments='""%TARGET_DIR%\FoSpy_test_load.py""';" ^
-  "$s.WorkingDirectory='%TARGET_DIR%';" ^
-  "$s.Save()"
 
 echo Shortcuts created.
 

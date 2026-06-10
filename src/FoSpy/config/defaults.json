@@ -5,5 +5,8 @@
     },
     "maps": {
         "default": ""
+    },
+    "DEV": {
+        "branch": "main"
     }
 }
