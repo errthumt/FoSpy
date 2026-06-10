@@ -80,7 +80,7 @@ python314\python -m venv FoSpy\venv
 echo Installing FoSpy to virtual environment...
 cd FoSpy
 call venv\Scripts\activate
-pip install -e .
+pip install -e .[all]
 
 git checkout main
 
