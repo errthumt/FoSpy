@@ -47,8 +47,6 @@ db.DEBUG_WIDTH = 120
 from FoSpy.blocks.blocks import _debug as block_debug
 block_debug.on = True
 
-from FoSpy import cfg
-cfg.track_attachments.new_copy = "prompt"
 ```
 
 ## Opening and saving FOS files

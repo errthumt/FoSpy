@@ -10,6 +10,7 @@ nav:
   - Expected Properties: expected/index.md
   - Attachments: guides/attachments.md
   - Group File Management: guides/group.md
+  - User Configuration: guides/config.md
 - Block Modules:
   - What is a Block?: blocks/index.md
   - attachments: blocks/attachments.md
@@ -26,6 +27,11 @@ nav:
   - _debug: full/_debug.md
   - _errors: full/_errors.md
   - core: full/core.md
+  - _dev:
+    - _utils: full/_dev/_utils.md
+    - load_test: full/_dev/load_test.md
+    - map_test: full/_dev/map_test.md
+    - test_cli: full/_dev/test_cli.md
   - blocks:
     - _blockUtils: full/blocks/_blockUtils.md
     - _containers: full/blocks/_containers.md
@@ -39,8 +45,10 @@ nav:
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
   - config:
+    - _enforce: full/config/_enforce.md
     - _load: full/config/_load.md
   - json:
+    - core: full/json/core.md
     - utils: full/json/utils.md
   - parsing:
     - format_fos: full/parsing/format_fos.md
