@@ -45,7 +45,6 @@ structure_comments: [;;;
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -61,7 +60,7 @@ structure_comments: [;;;
     mol ratio
     // Similar to headers, single brackets mean there is only one group,
     // in this case for treatments of Barium
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -77,7 +76,6 @@ structure_comments: [;;;
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -89,7 +87,6 @@ structure_comments: [;;;
     Ar (g)
     6.0
     mol ratio
-    []
 
     
 

@@ -43,7 +43,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -55,7 +54,7 @@ group Cmcm]
     Ar (g)
     2.0
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -71,7 +70,6 @@ group Cmcm]
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -83,7 +81,6 @@ group Cmcm]
     Ar (g)
     6.0
     mol ratio
-    []
 
 [[Treatments]]
 :type

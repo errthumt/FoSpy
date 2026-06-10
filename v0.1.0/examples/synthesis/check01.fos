@@ -42,7 +42,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -57,7 +56,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     mol ratio
     // Similar to headers, single brackets mean there is only one group,
     // in this case for treatments of Barium
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -73,7 +72,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -85,7 +83,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     6.0
     mol ratio
-    []
 
 // This is a comment on the treatments block
 [[Treatments]]

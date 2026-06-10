@@ -68,7 +68,6 @@ purity: 0.995
 env: Ar (g)
 amount: 11
 amount_unit: mol ratio
-treatments: []
 
 name: Copper
 type: reagent
@@ -80,7 +79,6 @@ env: Ar (g)
 amount: 13
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 name: Arsenic
 type: reagent

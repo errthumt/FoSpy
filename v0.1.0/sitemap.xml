@@ -65,6 +65,14 @@
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/__init__/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/_debug/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
@@ -74,6 +82,14 @@
     </url>
     <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/core/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/_dev/__init__/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/_dev/testing/__init__/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
@@ -94,6 +110,10 @@
     </url>
     <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/_dev/testing/ui/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/blocks/__init__/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
@@ -141,6 +161,10 @@
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/config/__init__/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/config/_enforce/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
@@ -149,11 +173,19 @@
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/json/__init__/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/json/core/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/json/utils/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/parsing/__init__/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
@@ -181,6 +213,10 @@
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/parsing/validators/__init__/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/parsing/validators/filenames/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
@@ -202,6 +238,10 @@
     </url>
     <url>
          <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/plotting/EmbeddedCIF/</loc>
+         <lastmod>2026-06-10</lastmod>
+    </url>
+    <url>
+         <loc>https://errthumt.github.io/FoSpy/v0.1.0/full/plotting/__init__/</loc>
          <lastmod>2026-06-10</lastmod>
     </url>
     <url>

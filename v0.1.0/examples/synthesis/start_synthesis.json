@@ -63,8 +63,7 @@
             "purity": "0.995",
             "env": "Ar (g)",
             "amount": "5.0",
-            "amount_unit": "mol ratio",
-            "treatments": []
+            "amount_unit": "mol ratio"
         },
         {
             "name": "Antimony",
@@ -76,8 +75,7 @@
             "purity": "0.999",
             "env": "Ar (g)",
             "amount": "6.0",
-            "amount_unit": "mol ratio",
-            "treatments": []
+            "amount_unit": "mol ratio"
         }
     ],
     "treatments": [
