@@ -3,6 +3,7 @@ import types
 import sys
 import os
 from . import _load as load
+from ._enforce import enforce_config
 
 module = sys.modules[__name__]
 
@@ -122,6 +123,7 @@ class NestedConfig(types.ModuleType):
         self.__package__ = parent_name
         self.__file__ = __file__
         self.__all__ = []
+        self._enforced = {}
         for key, val in config_dict.items():
             setattr(self, key, val)
 
@@ -133,6 +135,15 @@ class NestedConfig(types.ModuleType):
     
     def __setattr__(self, key, val):
         # Convert dicts to nested modules automatically
+        if not key.startswith("_"):
+            if key in self._enforced:
+                goodchecks, badchecks, hint=self._enforced[key]
+                if (
+                    not any(check(val) for check in goodchecks) or
+                    any(check(val) for check in badchecks)
+                ):
+                    raise ValueError(f"Error setting config value '{key}': {hint}")
+
         if isinstance(val, dict):
             val = NestedConfig(val, key, parent_name=self.__name__)
         if not key.startswith("_"):
@@ -173,3 +184,4 @@ sys.modules[values.__name__] = values
 
 __all__ = ["values"]
 
+enforce_config()

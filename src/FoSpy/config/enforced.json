@@ -1,0 +1,21 @@
+{
+    "track_attachments": {
+        "new_copy": [
+            ["bool", "str:prompt"],
+            [],
+            "Boolean or 'prompt'"
+        ],
+        "overwrite": [
+            ["bool", "str:prompt"],
+            [],
+            "Boolean or 'prompt'"
+        ]
+    },
+    "maps": {
+        "default": [
+            ["str"],
+            ["str:default"], 
+            "Default map must be a string referring to an existing map."
+        ]
+    }
+}
