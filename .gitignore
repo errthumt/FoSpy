@@ -8,6 +8,7 @@ __pycache__/
 
 dist_venv/
 mkdocs/site/
+src/FoSpy/config/user.json
 
 # hatchling dynamic versioning
 _version.py
