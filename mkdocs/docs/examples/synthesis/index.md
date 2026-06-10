@@ -54,7 +54,6 @@ structure_comments: [;;;
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -70,7 +69,7 @@ structure_comments: [;;;
     mol ratio
     // Similar to headers, single brackets mean there is only one group,
     // in this case for treatments of Barium
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -86,7 +85,6 @@ structure_comments: [;;;
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -98,7 +96,6 @@ structure_comments: [;;;
     Ar (g)
     6.0
     mol ratio
-    []
 
     
 
@@ -324,8 +321,7 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
             "purity": "0.995",
             "env": "Ar (g)",
             "amount": "5.0",
-            "amount_unit": "mol ratio",
-            "treatments": []
+            "amount_unit": "mol ratio"
         },
         {
             "name": "Antimony",
@@ -337,8 +333,7 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
             "purity": "0.999",
             "env": "Ar (g)",
             "amount": "6.0",
-            "amount_unit": "mol ratio",
-            "treatments": []
+            "amount_unit": "mol ratio"
         }
     ],
     "treatments": [
@@ -543,7 +538,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -558,7 +552,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     mol ratio
     // Similar to headers, single brackets mean there is only one group,
     // in this case for treatments of Barium
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -574,7 +568,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -586,7 +579,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     6.0
     mol ratio
-    []
 
 // This is a comment on the treatments block
 [[Treatments]]
@@ -790,7 +782,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -802,7 +793,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     2.0
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -818,7 +809,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -830,7 +820,6 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     Ar (g)
     6.0
     mol ratio
-    []
 
 [[Treatments]]
 :type
@@ -1039,7 +1028,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -1051,7 +1039,7 @@ group Cmcm]
     Ar (g)
     2.0
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -1067,7 +1055,6 @@ group Cmcm]
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -1079,7 +1066,6 @@ group Cmcm]
     Ar (g)
     6.0
     mol ratio
-    []
 
 [[Treatments]]
 :type
@@ -1294,7 +1280,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -1306,7 +1291,7 @@ group Cmcm]
     Ar (g)
     2.0
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -1322,7 +1307,6 @@ group Cmcm]
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -1334,7 +1318,6 @@ group Cmcm]
     Ar (g)
     6.0
     mol ratio
-    []
 
 [[Treatments]]
 :type
@@ -1553,7 +1536,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -1565,7 +1547,7 @@ group Cmcm]
     Ar (g)
     2.0
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -1581,7 +1563,6 @@ group Cmcm]
     Ar (g)
     5.0
     mol ratio
-    []
 
     Antimony
     reagent
@@ -1593,7 +1574,6 @@ group Cmcm]
     Ar (g)
     6.0
     mol ratio
-    []
 
 [[Treatments]]
 :type
@@ -1824,7 +1804,6 @@ purity: 0.995
 env: Ar (g)
 amount: 11
 amount_unit: mol ratio
-treatments: []
 
 name: Copper
 type: reagent
@@ -1836,7 +1815,6 @@ env: Ar (g)
 amount: 13
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 name: Arsenic
 type: reagent
@@ -2083,7 +2061,6 @@ purity: 0.995
 env: Ar (g)
 amount: 11
 amount_unit: mol ratio
-treatments: []
 
 name: Copper
 type: reagent
@@ -2095,7 +2072,6 @@ env: Ar (g)
 amount: 13
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 name: Arsenic
 type: reagent
@@ -2355,7 +2331,6 @@ purity: 0.995
 env: Ar (g)
 amount: 11
 amount_unit: mol ratio
-treatments: []
 
 name: Copper
 type: reagent
@@ -2367,7 +2342,6 @@ env: Ar (g)
 amount: 13
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 name: Arsenic
 type: reagent
@@ -2509,7 +2483,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -2523,7 +2496,7 @@ group Cmcm]
     // ! Total weight percent: 22.99%
     8
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -2540,7 +2513,6 @@ group Cmcm]
     // ! Total weight percent: 15.05%
     11
     mol ratio
-    []
 
     Copper
     reagent
@@ -2553,7 +2525,6 @@ group Cmcm]
     // ! Total weight percent: 17.29%
     13
     mol ratio
-    []
 
     Arsenic
     reagent
@@ -2566,7 +2537,7 @@ group Cmcm]
     // ! Total weight percent: 44.68%
     28.5
     mol ratio
-    [
+    treatments: [
         type: Grinding
         repeats: 1
         observations: ground lumps into powder for weighing and homogenization

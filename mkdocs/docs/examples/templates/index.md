@@ -141,7 +141,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8
@@ -199,7 +198,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 [Treatments]
 template_name: Empty Anneal Template
@@ -279,7 +277,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 [Treatments]
 template_name: Empty Anneal Template
@@ -468,7 +465,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-treatments: []
 
 [Treatments]
 template_name: Empty Anneal Template

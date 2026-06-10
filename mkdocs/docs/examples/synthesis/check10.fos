@@ -55,7 +55,6 @@ group Cmcm]
 :env
 :amount
 :amount_unit
-:treatments
 
     Barium
     reagent
@@ -69,7 +68,7 @@ group Cmcm]
     // ! Total weight percent: 22.99%
     8
     mol ratio
-    [
+    treatments: [
         type: cutting
         repeats: 1
         observations: smaller pieces improve homogenization
@@ -86,7 +85,6 @@ group Cmcm]
     // ! Total weight percent: 15.05%
     11
     mol ratio
-    []
 
     Copper
     reagent
@@ -99,7 +97,6 @@ group Cmcm]
     // ! Total weight percent: 17.29%
     13
     mol ratio
-    []
 
     Arsenic
     reagent
@@ -112,7 +109,7 @@ group Cmcm]
     // ! Total weight percent: 44.68%
     28.5
     mol ratio
-    [
+    treatments: [
         type: Grinding
         repeats: 1
         observations: ground lumps into powder for weighing and homogenization
