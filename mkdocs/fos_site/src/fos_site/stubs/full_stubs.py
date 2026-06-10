@@ -20,6 +20,8 @@ def module_path_from_file(py_file: Path) -> str:
     """
     rel = py_file.relative_to(SOURCE_ROOT)
     parts = rel.with_suffix("").parts
+    if parts[-1] == "__init__":
+        parts = parts[:-1]
     return ".".join((PACKAGE_ROOT, *parts))
 
 
@@ -53,7 +55,7 @@ def make_stubs():
     for py_file in SOURCE_ROOT.rglob("*.py"):
 
         if py_file.name == "__init__.py":
-            continue
+            pass#continue
 
         dotted = module_path_from_file(py_file)
 
