@@ -80,7 +80,9 @@ import sys
 import os
 import msvcrt  # Windows-only for single-key input
 
-REPO_PATH = os.path.join(os.path.dirname(__file__), "FoSpy")
+from ...config import values as cfg
+
+REPO_PATH = os.path.abspath(cfg.DEV.repo)
 
 def run_git(*args):
     """Run a git command and stream output live."""
@@ -119,8 +121,6 @@ def choice_prompt(message):
 
 def toggle_branches():
     from ...config import values as cfg, save as cfg_save
-    # Navigate to repo (Python equivalent)
-    os.chdir(REPO_PATH)
 
     # Detect current branch
     current = get_current_branch()

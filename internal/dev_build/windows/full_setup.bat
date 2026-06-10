@@ -32,7 +32,7 @@ powershell -NoProfile -Command ^
 REM --- Shortcut: Toggle Branch ---
 powershell -NoProfile -Command ^
   "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('%START_MENU%\FoSpy - Dev Testing.lnk');" ^
-  "$s.TargetPath='%TARGET_DIR%\FoSpy_def_test.bat';" ^
+  "$s.TargetPath='%TARGET_DIR%\FoSpy_dev_test.bat';" ^
   "$s.WorkingDirectory='%TARGET_DIR%';" ^
   "$s.Save()"
 
