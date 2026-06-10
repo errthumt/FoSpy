@@ -119,8 +119,8 @@ ______________________________________________________________________
 
 In addition to the required properties above, all `Attachment` objects must be constructed with one of the following optional properties:
 
-- embedded
-- path
+- `embedded`
+- `path`
 
 The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the [attachments guide](../guides/attachments.md) for more information
 
@@ -374,6 +374,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
+| metadata | [`SynthesisMeta`][blockdocs-SynthesisMeta] | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
 | experimenters | `ExperimenterList` | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
 | reaction | `Reaction` | [General reaction information](#reaction) |
 | products | `ProductList` | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
