@@ -10,3 +10,7 @@ def get_user_file():
         with open(file, "w") as f:
             f.write("{}")
     return file
+
+def get_enforced_file():
+    file = pkg_resources.files(__package__).joinpath("enforced.json")
+    return file
