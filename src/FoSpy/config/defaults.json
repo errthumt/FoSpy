@@ -8,6 +8,6 @@
     },
     "DEV": {
         "branch": "main",
-        "branch_batch_path": "FoSpy_toggle_branch.bat"
+        "repo": "FoSpy"
     }
 }

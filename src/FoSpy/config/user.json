@@ -1,4 +1,7 @@
 {
+    "DEV": {
+        "repo": "."
+    },
     "json_maps": {
         "default": "jill",
         "jill": {
