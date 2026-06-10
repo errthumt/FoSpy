@@ -20,115 +20,33 @@ TESTS = {
     )
 }
 
-def main(test=None, args=None):
-    import questionary
+REGISTRY = { t.__name__: t for (t,_) in TESTS.values() }
+REV_REGISTRY = { v:k for k,v in REGISTRY.items() }
 
-    from ...config import values as cfg, save as cfg_save
-    from ._utils import run_interactive_batch
-    dev_cfg = cfg.DEV
-    branch_batch = dev_cfg.branch_batch_path
+def main(test=None, **args):
+    from .ui import get_test, get_options
+    
+    if test is None:
+        while get_test(**args):
+            pass
+        return False
 
-
-    advanced = False
-
-    while True:
-        toggle_label = "[x] Advanced options" if advanced else "[ ] Advanced options"
-
+    else:
+        test = REGISTRY.get(test, None)
+        if test is None:
+            raise ValueError(f"Unknown test name {test}")
         
-        current_branch = dev_cfg.branch
-        next_branch = "main" if current_branch == "dev" else "dev"
+        for name, (t, options) in TESTS.items():
+            if test == t:
+                if not args:
+                    args = get_options(options, name)
+                    if args is None:
+                        return True
+                    elif not args:
+                        return False
 
-        branch_label = f"--Switch to {next_branch} branch (currently on {current_branch})--"
+                return test.run(**args)
 
-
-        choice = questionary.select(
-            "Select a test to run:",
-            choices=list(TESTS.keys()) + [
-                questionary.Separator(),
-                toggle_label,
-                "Quit",
-                questionary.Separator(),
-                branch_label
-            ]
-        ).ask()
-
-        if choice == branch_label:
-            run_interactive_batch(branch_batch)
-            dev_cfg.branch = next_branch
-            cfg_save(prompt=False)
-            continue
-
-        if choice == toggle_label:
-            advanced = not advanced
-            continue
-
-        if choice == "Quit":
-            return
-
-        test, options = TESTS[choice]
-
-        if advanced:
-            args = _get_test_options(options, choice)
-            if args == None:
-                continue
-            elif not args:
-                return
-            test.run(**args)
-        else:
-            test.run()
-
-def _get_test_options(options, choice_name):
-    import questionary
-    args = {o:v for o,v in options.values()}
-    print(args)
-
-    bools = [k for k,v in [(k,v[1]) for k,v in options.items()] if isinstance(v, bool)]
-    strings = [k for k,v in [(k,v[1]) for k,v in options.items()] if isinstance(v, str)]
-
-    toggles = { o:(f"[ ] {o}", f"[x] {o}") for o in bools }
-
-    def update_string(args, choice):
-        opt = options[choice][0]
-        print(args[opt])
-        args[opt] = questionary.text(f"{choice} (current: {args[opt]}): ").ask()
-        print(args[opt])
-        return args
-    
-    def update_bool(args, choice):
-        opt = options[choice][0]
-        print(args[opt])
-        args[opt] = not args[opt]
-        print(args[opt])
-        return args
-    
-    exits = {
-        "Run Test": lambda args: args,
-        "Back": lambda args: None,
-        "Quit": lambda args: False
-    }
-
-    while True:
-        toggle_labels = { toggles[o][1] if args[options[o][0]] else toggles[o][0] : o for o in bools }
-        string_labels = { f"{o}: ({args[options[o][0]]})" : o for o in strings }
-
-        all_labels = {**toggle_labels, **string_labels}
+        raise ValueError(f"Could not find arguments for {test.__name__}")
 
 
-        updates = {**{choice:update_bool for choice in toggle_labels.values()},
-                   **{choice:update_string for choice in string_labels.values()}}
-
-        choice = questionary.select(
-            f"Additional Options for Test: {choice_name}",
-            choices=[
-                *all_labels,
-                questionary.Separator(),
-                *exits
-            ]
-        ).ask()
-
-        if choice in exits:
-            return exits[choice](args)
-
-        choice = all_labels.get(choice, None)
-        print(choice)
-        args = updates.get(choice, lambda args, choice: args)(args, choice)

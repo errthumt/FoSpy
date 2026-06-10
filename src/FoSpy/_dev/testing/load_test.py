@@ -49,3 +49,5 @@ def run(filepath=None, open_result=False):
     if open_result:
         from ._utils import open_file
         open_file(outdir)
+
+    return True

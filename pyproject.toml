@@ -59,6 +59,6 @@ exclude = [
 ]
 
 [project.scripts]
-fos-dev-test = "FoSpy._dev.test_cli:main"
+fos-dev-test = "FoSpy._dev.testing.cli:main"
 
 

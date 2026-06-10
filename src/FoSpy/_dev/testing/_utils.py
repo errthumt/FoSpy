@@ -135,14 +135,14 @@ def toggle_branches():
         print(f'You are on branch "{current}", which is not main or dev.')
         print("Aborting to avoid accidental switching.")
         input("Press any key to continue...")
-        return
+        return True
 
     print(f"Switching from {current} to {target}\n")
 
     # Confirm
     if not choice_prompt("Proceed with branch toggle"):
         print("Aborted by user.")
-        return
+        return True
 
     print("\nRestoring working directory...")
     run_git("restore", ".")
@@ -151,7 +151,7 @@ def toggle_branches():
     if run_git("switch", target) != 0:
         print("Failed to switch branches.")
         input("Press any key to continue...")
-        return
+        return True
 
     print("Pulling latest changes...")
     run_git("pull")
@@ -161,4 +161,6 @@ def toggle_branches():
 
     print("\nBranch toggle complete.")
     input("Press any key to continue...")
+
+    return True
 

@@ -42,3 +42,5 @@ def run(filepath=None, map_name=None, make_new=False, new_missing=False, new_def
             json.dump(mapped_dict, f, indent=4)
 
         load_test.run(str(tmp_path), open_result=open_result)
+
+    return True
