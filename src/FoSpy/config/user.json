@@ -1,7 +1,4 @@
 {
-    "DEV": {
-        "branch": "dev"
-    },
     "foo": "bar",
     "json_maps": {
         "default": "jill",

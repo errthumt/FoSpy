@@ -67,10 +67,13 @@ def run_interactive_batch(path=None):
     # Main loop: read user input and send to batch file
     try:
         while proc.poll() is None:
-            user_input = input()
-            proc.stdin.write(user_input + "\n")
-            proc.stdin.flush()
+            try:
+                user_input = input()
+                proc.stdin.write(user_input + "\n")
+            except OSError:
+                raise KeyboardInterrupt
     except KeyboardInterrupt:
         proc.terminate()
+    
 
 
