@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\travi\FoSpy\src\FoSpy\_dev\load_test.py", line 36, in run
-    my_synthesis = Synthesis.fromFile(filepath)
-  File "C:\Users\travi\FoSpy\src\FoSpy\blocks\files.py", line 70, in fromFile
-    raise ValueError(f"Could not find fos_type in metadata block in file {abspath}")
-ValueError: Could not find fos_type in metadata block in file C:\Users\travi\AppData\Local\Temp\tmpjj5dminf\eln_data_maptest.json
