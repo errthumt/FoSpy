@@ -7,7 +7,7 @@ def get_test(**args):
 
     cfg.DEV.branch = get_current_branch()
 
-    show_advanced = args is None
+    show_advanced = args == {}
     advanced = False
 
     while True:
