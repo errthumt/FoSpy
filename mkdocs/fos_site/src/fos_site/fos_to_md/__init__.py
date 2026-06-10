@@ -4,6 +4,8 @@ EXAMPLE_DIR = Path("mkdocs/docs/examples")
 SYN_DIR = EXAMPLE_DIR / "synthesis"
 TPL_DIR = EXAMPLE_DIR / "templates"
 
+PYPI_RM = EXAMPLE_DIR / "../../../PyPI/readme.md"
+
 # Files to include at the top of each index
 SYN_INIT_FILES = [
     ("Initial Synthesis (FOS)", SYN_DIR / "start_synthesis.fos"),
@@ -16,7 +18,7 @@ TPL_INIT_FILES = [
 
 
 def generate_fos_pages():
-    from .helpers import generate_index
+    from .helpers import generate_index, copy_fos_to_PyPI
     from .._utils import ch2repo
     ch2repo()
     generate_index(
@@ -34,5 +36,14 @@ def generate_fos_pages():
     )
 
     print("All example pages generated successfully.")
+
+    print("Copying truncated example FOS to PyPI readme...")
+
+    copy_fos_to_PyPI(fos_path=SYN_INIT_FILES[0][1], pypi_path=PYPI_RM)
+
+    print("FOS copied to PyPI readme successfully.")
+
+
+
 
 
