@@ -85,14 +85,17 @@ def build_property_dict(data, key_map, current={}):
     property_dict = current
     if isinstance(key_map, str):
         if isinstance(data, (dict, list)):
+            print()
             warn(f"Structure mismatch: dict or list values can be mapped to string keys, "
                  f"but you may have intended to use a nested mapping for: key_map={key_map}, data={data}.", stacklevel=4)
         if key_map in property_dict:
+            print()
             warn(f"Key '{key_map}' was already mapped. Overwriting the existing value.", stacklevel=4)
         property_dict[key_map] = data
         return property_dict
     if isinstance(key_map, dict):
         if not isinstance(data, dict):
+            print()
             warn(f"Structure mismatch: cannot map a non-dictionary to a dictionary. Skipping the mapping: "
                  f"key_map={key_map}, data={data}.", stacklevel=4)
             return property_dict
@@ -101,10 +104,12 @@ def build_property_dict(data, key_map, current={}):
             property_dict = build_property_dict(value, map_value, current=property_dict)
     elif isinstance(key_map, list):
         if not isinstance(data, list):
+            print()
             warn(f"Structure mismatch: cannot map a list to a non-list. Skipping the mapping: "
                  f"key_map={key_map}, data={data}.", stacklevel=4)
             return property_dict
         elif len(data) != len(key_map):
+            print()
             warn(f"List length mismatch: expected {len(key_map)}, got {len(data)}. Keys will be mapped up to the length of the shorter list.", stacklevel=4)
         
         for key, value in zip(key_map, data):
@@ -113,8 +118,10 @@ def build_property_dict(data, key_map, current={}):
     
     else:
         if key_map is None:
+            print()
             warn(f"Skipped: No key mapped for:\n{data}", stacklevel=4)
         else:
+            print()
             warn(f"Invalid key_map type: {type(key_map).__name__}. Expected str, dict, or list. Skipping this mapping.", stacklevel=4)
     
     return property_dict

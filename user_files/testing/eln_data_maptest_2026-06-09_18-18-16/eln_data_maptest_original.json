@@ -1,0 +1,92 @@
+{
+    "experimenters": [
+        {
+            "name": "Jill",
+            "affiliation": "Drexel"
+        }
+    ],
+    "reaction": {
+        "nominal_formula": "H2O",
+        "nominal_mass": 1.0,
+        "nominal_mass_units": "g",
+        "duration": 20.0,
+        "duration_unit": "min",
+        "duration_format": "20:00",
+        "start_time": "14:00",
+        "end_time": "15:00",
+        "product_mass": 0.0987,
+        "product_mass_unit": "g",
+        "product_color": "green",
+        "product_structure": "body-centered cubic"
+    },
+    "treatments": [
+        {
+            "type": "anneal",
+            "repeats": "1",
+            "observations": "I made a new material",
+            "program": [
+                {
+                    "type": "ramp",
+                    "temp": 777.0,
+                    "temp_unit": "C",
+                    "rate": 5.0,
+                    "rate_unit": "C/min"
+                }
+            ],
+            "gas_flow": [
+                {
+                    "name": "Argon",
+                    "flow": 10.0,
+                    "flow_unit": "%"
+                },
+                {
+                    "name": "Hydrogen",
+                    "flow": 0.2,
+                    "flow_unit": "%"
+                },
+                {
+                    "name": "Ammonia",
+                    "flow": 0.3,
+                    "flow_unit": "%"
+                }
+            ]
+        }
+    ],
+    "materials": [
+        {
+            "type": "precursor",
+            "formula": "H2O",
+            "supplier": "Philadelphia Water Works",
+            "cas": "7732-18-5",
+            "form": "liquid",
+            "env": "ambient",
+            "amount": "500",
+            "amount_unit": "mL",
+            "name": "Generic Precursor",
+            "color": "Blue?",
+            "mass": 0.06,
+            "mass_unit": "g",
+            "structure": "crystal"
+        }
+    ],
+    "metadata": {
+        "video_id": "AUTO_GENERATED_VIDEO_ID",
+        "process_name": "Ammonolysis - AUTO",
+        "name": "Sample 001",
+        "date": "05-27-2026"
+    },
+    "laboratory": {
+        "temp": 22.0,
+        "temp_unit": "C",
+        "humidity": 25.0,
+        "humidity_unit": "%"
+    },
+    "equipment": [
+        {
+            "initial_mass": 3.58,
+            "initial_mass_unit": "g",
+            "final_mass": 3.58,
+            "final_mass_unit": "g"
+        }
+    ]
+}

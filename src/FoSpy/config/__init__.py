@@ -143,12 +143,12 @@ class NestedConfig(types.ModuleType):
                     any(check(val) for check in badchecks)
                 ):
                     raise ValueError(f"Error setting config value '{key}': {hint}")
-
-        if isinstance(val, dict):
-            val = NestedConfig(val, key, parent_name=self.__name__)
-        if not key.startswith("_"):
             if key not in self.__all__:
                 self.__all__.append(key)
+
+            if isinstance(val, dict):
+                val = NestedConfig(val, key, parent_name=self.__name__)
+
         super().__setattr__(key, val)
 
     def __iter__(self):

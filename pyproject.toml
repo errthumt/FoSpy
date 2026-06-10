@@ -26,6 +26,10 @@ dynamic = [
     "version"
 ]
 
+[project.optional-dependencies]
+DEV = ["questionary"]
+all = ["questionary"]
+
 [project.urls]
 Homepage = "https://github.com/errthumt/FoSpy"
 Issues = "https://github.com/errthumt/FoSpy/issues"
@@ -53,5 +57,8 @@ include = [
 exclude = [
     "src/FoSpy/config/user.json"
 ]
+
+[project.scripts]
+fos-dev-test = "FoSpy._dev.test_cli:main"
 
 

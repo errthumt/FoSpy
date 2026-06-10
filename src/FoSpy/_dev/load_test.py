@@ -8,10 +8,9 @@ from .. import Synthesis
 from ._utils import file_prompt
 
 
-def run(filepath=None):
-    print(filepath)
+def run(filepath=None, open_result=False):
     if filepath is None:
-        print("No file selected.")
+        print("\nNo file selected. Opening Prompt...")
         filepath = file_prompt()
 
     # --- Build output directory ---
@@ -37,7 +36,7 @@ def run(filepath=None):
         my_synthesis.save(fos_out)
         my_synthesis.save(json_out)
 
-        print("Processing complete.")
+        print("\nProcessing complete.")
         print(f"Original copied to: {original_copy}")
         print(f"Saved: {fos_out}")
         print(f"Saved: {json_out}")
@@ -45,4 +44,8 @@ def run(filepath=None):
     except Exception:
         with open(error_log, "w", encoding="utf-8") as f:
             f.write(traceback.format_exc())
-        print(f"An error occurred. See log:\n  {error_log}")
+        print(f"\nAn error occurred. See log:\n  {error_log}")
+
+    if open_result:
+        from ._utils import open_file
+        open_file(outdir)
