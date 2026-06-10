@@ -26,7 +26,7 @@ def map_to_fos(filepath=None, map_name=None):
                 filepath = filedialog.askopenfilename(title="Select a new .json map file.", filetypes=[("JSON files", "*.json")])
                 print(f"\nLoaded map file: {filepath}")
                 
-                get_missing = input("\nLoad missing values? (y/n): ").lower() == "y"
+                get_missing = input("\nLoad missing values? (y/n): ").lower().strip() == "y"
                 if get_missing:
                     missing_path = filedialog.askopenfilename(title="Select a .json missing values file.", filetypes=[("JSON files", "*.json")])
                     print(f"\nLoaded missing values file: {missing_path}")
@@ -80,7 +80,7 @@ def new_map(filepath, map_name=None, missing_path=None, save=None, set_default=F
     if save is None:
         save = input("\nThe new map is saved to the current session only. "
                      "Saving now will also save any other changes within this session. "
-                     "Save changes to config? (y/n): ").lower() == "y"
+                     "Save changes to config? (y/n): ").lower().strip() == "y"
     
     if save:
         cfg_save(prompt=False)
