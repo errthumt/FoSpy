@@ -166,7 +166,7 @@ optional_keys = {
 
     b.Material : {
         "purity" : validators.numbers.decimal_range("b.Material/purity","purity", 0, 1),
-        "treatments": b.ListBlock.Simple(b.Treatment)
+        "treatments": b.TreatmentList
     },
 
     b.Treatment: {
