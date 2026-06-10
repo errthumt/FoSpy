@@ -52,41 +52,27 @@ def get_test(**args):
             continue
 
         elif callable(selection):
-            return selection()
+            out = selection()
+            if out is None:
+                continue
+            return out
 
         else:
             return selection
 
-        
-
-# def _branch_toggle():
-#     from ...config import values as cfg, save as cfg_save
-#     dev_cfg = cfg.DEV
-#     batch = dev_cfg.branch_batch_path
-
-#     current_branch = dev_cfg.branch
-#     next_branch = "main" if current_branch == "dev" else "dev"
-#     def toggle():
-#         from ._utils import run_interactive_batch
-#         run_interactive_batch(batch)
-#         dev_cfg.branch = next_branch
-#         cfg_save(prompt=False)
-
-#     return f"[Switch to {next_branch} feature branch (currently on {current_branch})]", toggle
 
 def _get_opts_and_run(test, options, choice_name):
     def func():
-        args = _get_test_options(options, choice_name)
+        args = get_options(options, choice_name)
         if not args:
             return args
         test.run(**args)
     
     return func
 
-def _get_test_options(options, choice_name):
+def get_options(options, choice_name):
     import questionary
     args = {o:v for o,v in options.values()}
-    print(args)
 
     bools = [k for k,v in [(k,v[1]) for k,v in options.items()] if isinstance(v, bool)]
     strings = [k for k,v in [(k,v[1]) for k,v in options.items()] if isinstance(v, str)]
@@ -95,16 +81,16 @@ def _get_test_options(options, choice_name):
 
     def update_string(args, choice):
         opt = options[choice][0]
-        print(args[opt])
+
         args[opt] = questionary.text(f"{choice} (current: {args[opt]}): ").ask()
-        print(args[opt])
+
         return args
     
     def update_bool(args, choice):
         opt = options[choice][0]
-        print(args[opt])
+
         args[opt] = not args[opt]
-        print(args[opt])
+
         return args
     
     exits = {
