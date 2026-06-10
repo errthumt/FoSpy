@@ -84,7 +84,7 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | program | `AnnealProgram` | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) |
-| start_temp | `validators.numbers.positive_decimal` | The initial temperature of the annealing profile |
+| start_temp | `validators.numbers.positive_decimal` | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | start_temp_unit | `validators.units.FOSTempUnit` | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs)|
 
 #### Optional properties
@@ -122,7 +122,7 @@ The first matching property found will be used and the remainder will be discard
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. |
-| path | `pathlib.Path` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`". See [attachments guide](../guides/attachments.md) for more information. |
+| path | `validators.filenames.PathPosix` | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS |
 
 #### Attachment Method Subclasses
 
@@ -149,7 +149,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| time | `validators.numbers.positive_decimal` | How long the temperature was kept constant in this section. |
+| time | `validators.numbers.positive_decimal` | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | time_unit | `validators.units.FOSUnit.enforce_dims('[time]')` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 
 ______________________________________________________________________
@@ -203,7 +203,7 @@ ______________________________________________________________________
 | cas | `str` | CAS ID. May be "unknown"|
 | form | `str` | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments).|
 | env | `str` | What environment the material is stored in. (e.g., ambient, Ar(g))|
-| amount | `validators.numbers.positive_decimal` | Amount that was used. |
+| amount | `validators.numbers.positive_decimal` | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | amount_unit | `str` | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters.|
 
 #### Optional properties
@@ -211,7 +211,7 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | purity | `validators.numbers.decimal_range` | 0 < purity \<= 1|
-| treatments | `ListBlock.Simple(Treatment)` | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis.|
+| treatments | `TreatmentList` | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. |
 
 ______________________________________________________________________
 
@@ -251,9 +251,9 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| expected_amount | `validators.numbers.positive_decimal` | How much of the product was nominally expected to be obtained from the synthesis. |
+| expected_amount | `validators.numbers.positive_decimal` | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | expected_amount_unit | `validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
-| obtained_amount | `validators.numbers.positive_decimal` | How much of the product was actually obtained from the synthesis. |
+| obtained_amount | `validators.numbers.positive_decimal` | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | obtained_amount_unit | `validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
 | characterizations | `str` | Description of characterization methods used to determine/quantitate the product. |
 | structure_comments | `str` | General description on the structure of the product. |
@@ -294,9 +294,9 @@ If all three are provided, the last one found during reading will be discarded a
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| temp | `validators.numbers.positive_decimal` | The next temperature in the program |
-| time | `validators.numbers.positive_decimal` | How long it took to get from the last temperature to the new temperature. |
-| rate | `validators.numbers.any_decimal` | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative)|
+| temp | `validators.numbers.positive_decimal` | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| time | `validators.numbers.positive_decimal` | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| rate | `validators.numbers.any_decimal` | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | temp_unit | `validators.units.FOSTempUnit` | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) |
 | time_unit | `validators.units.FOSUnit.enforce_dims("[time]")` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 | rate_unit | `validators.units.temp_rate_unit` | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time.|
@@ -322,7 +322,7 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | nominal_formula | `ChemFormula` | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format |
-| nominal_amount | `validators.numbers.positive_decimal` | Total amount expected to be recovered from all participating reactants. |
+| nominal_amount | `validators.numbers.positive_decimal` | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | nominal_amount_unit | `validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 
 ______________________________________________________________________
@@ -465,7 +465,7 @@ When applicable, treatments are dispatched to subclasses based on the type value
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| recovered_amount | `validators.numbers.positive_decimal` | How much material was recovered after treatment |
+| recovered_amount | `validators.numbers.positive_decimal` | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | recovered_amount_unit | `validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 | start_time | `str` | What time the treatment was started |
 | end_time | `str` | What time the treatment was finished |
