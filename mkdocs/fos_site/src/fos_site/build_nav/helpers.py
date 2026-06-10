@@ -31,6 +31,10 @@ def build_full_nav(tree: dict) -> list:
         # if len(subnav) == 1 and isinstance(subnav[0], dict):
         #     nav_list.append({key: subnav[0]})
         # else:
+        if "__init__" in subnav[0]:
+            init = subnav.pop(0)
+            new_sub = {f"{key}/__init__": init["__init__"]}
+            subnav= [new_sub, *subnav]
         nav_list.append({key: subnav})
 
     return nav_list

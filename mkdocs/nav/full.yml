@@ -24,17 +24,21 @@ nav:
   - treatments: blocks/treatments.md
 - Full Documentation:
   - Full Docs Home: full/index.md
+  - __init__: full/__init__.md
   - _debug: full/_debug.md
   - _errors: full/_errors.md
   - core: full/core.md
   - _dev:
+    - _dev/__init__: full/_dev/__init__.md
     - testing:
+      - testing/__init__: full/_dev/testing/__init__.md
       - _utils: full/_dev/testing/_utils.md
       - cli: full/_dev/testing/cli.md
       - load_test: full/_dev/testing/load_test.md
       - map_test: full/_dev/testing/map_test.md
       - ui: full/_dev/testing/ui.md
   - blocks:
+    - blocks/__init__: full/blocks/__init__.md
     - _blockUtils: full/blocks/_blockUtils.md
     - _containers: full/blocks/_containers.md
     - attachments: full/blocks/attachments.md
@@ -47,12 +51,15 @@ nav:
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
   - config:
+    - config/__init__: full/config/__init__.md
     - _enforce: full/config/_enforce.md
     - _load: full/config/_load.md
   - json:
+    - json/__init__: full/json/__init__.md
     - core: full/json/core.md
     - utils: full/json/utils.md
   - parsing:
+    - parsing/__init__: full/parsing/__init__.md
     - format_fos: full/parsing/format_fos.md
     - read: full/parsing/read.md
     - regex: full/parsing/regex.md
@@ -60,6 +67,7 @@ nav:
     - validation: full/parsing/validation.md
     - write: full/parsing/write.md
     - validators:
+      - validators/__init__: full/parsing/validators/__init__.md
       - filenames: full/parsing/validators/filenames.md
       - material: full/parsing/validators/material.md
       - numbers: full/parsing/validators/numbers.md
@@ -67,5 +75,6 @@ nav:
       - units: full/parsing/validators/units.md
   - plotting:
     - EmbeddedCIF: full/plotting/EmbeddedCIF.md
+    - __init__: full/plotting/__init__.md
 - For Devs: internal/index.md
 - Install with PyPI: https://pypi.org/project/FoSpy
