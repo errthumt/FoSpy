@@ -46,6 +46,7 @@ required_keys = {
     },
 
     b.Synthesis: {
+        "metadata" : b.SynthesisMeta,
         "experimenters": b.ExperimenterList,
         "reaction" : b.Reaction,
         "products": b.ProductList,
