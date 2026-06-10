@@ -37,7 +37,7 @@ def get_test(**args):
             advanced_label = "[x] Advanced options" if advanced else "[ ] Advanced options"
             choices[advanced_label] = "toggle_advanced"
 
-        choices["Quit"] = False
+        choices["[Quit]"] = False
         choices[branch_label] = toggle_branches
 
         label = questionary.select(
@@ -94,9 +94,9 @@ def get_options(options, choice_name):
         return args
     
     exits = {
-        "Run Test": lambda args: args,
-        "Back": lambda args: None,
-        "Quit": lambda args: False
+        "[Run Test]": lambda args: args,
+        "[Back]": lambda args: None,
+        "[Quit]": lambda args: False
     }
 
     while True:
