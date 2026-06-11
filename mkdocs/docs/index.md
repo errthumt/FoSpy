@@ -1,5 +1,5 @@
 # FoSpy
-An API for opening, editing, and saving Files of Synthesis (*.fos)
+A framework for opening, editing, and saving Files of Synthesis (*.fos)
 
 ## Survey: Try Making Your Own FOS
 

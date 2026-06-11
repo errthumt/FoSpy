@@ -1,6 +1,6 @@
 # Setting Up a Dev Environment for FoSpy
 
-This page is a guide on how to set up a Python environment for in-progress testing of the FOS API. This can be for code collaborators or for users who want the most recent changes in the package to be reflected whenever they are testing their FOS files.
+This page is a guide on how to set up a Python environment for in-progress testing of the FOS framework. This can be for code collaborators or for users who want the most recent changes in the package to be reflected whenever they are testing their FOS files.
 
 ## Easy Install for Windows
 
