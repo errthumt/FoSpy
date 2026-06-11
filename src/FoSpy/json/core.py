@@ -56,7 +56,7 @@ def map_to_fos(filepath=None, map_name=None):
 
 
 def new_map(filepath, map_name=None, missing_path=None, save=None, set_default=False):
-    from ..config import save as cfg_save, values as cfg
+    from ..config import save_all as cfg_save, values as cfg
     import json
     import os
     maps = cfg.json_maps
