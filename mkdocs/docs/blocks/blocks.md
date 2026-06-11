@@ -2,8 +2,8 @@
 
 This site only contains documentation for the
 [`Block`][FoSpy.blocks.blocks.Block] subclasses defined in this
-module, not the entire module API. For a complete reference of
-all functions, classes, and variables, see the [full API
+module. For a complete reference of
+all functions, classes, and variables, see the [full
 documentation](../full/index.md).
 
 ## Methods attached to any object

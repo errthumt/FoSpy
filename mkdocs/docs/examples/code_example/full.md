@@ -1,6 +1,6 @@
 # Full Example Script
 
-Uninterrupted code extracted from the [API example walkthrough](./index.md).
+Uninterrupted code extracted from the [code example](./index.md).
 
 ```python
 def main():

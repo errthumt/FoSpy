@@ -1,8 +1,8 @@
 nav:
 - Home: index.md
-- API Example:
-  - API Walkthrough: examples/API_example/index.md
-  - Full Example Script: examples/API_example/full.md
+- Code Example:
+  - Example Walkthrough: examples/code_example/index.md
+  - Full Example Script: examples/code_example/full.md
   - Synthesis Files: examples/synthesis/index.md
   - Template Files: examples/templates/index.md
 - Guides:

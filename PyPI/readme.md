@@ -1,5 +1,5 @@
 # FoSpy
-A package for opening, editing, and saving Files of Synthesis (*.fos)
+A framework for opening, editing, and saving Files of Synthesis (*.fos)
 * [Main Github](https://github.com/errthumt/FoSpy)
 * [GUI Proof of Concept](https://github.com/errthumt/CyFoS-alpha)
   * FOS syntax for the GUI alpha is an earlier iteration and may no longer be in use.

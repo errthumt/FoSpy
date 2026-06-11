@@ -1,6 +1,6 @@
 # Template Examples
 
-Each file on this page was generated at the corresponding checkpoint in the [walkthrough](../API_example/index.md) script.
+Each file on this page was generated at the corresponding checkpoint in the [walkthrough](../code_example/index.md) script.
 
 ---
 

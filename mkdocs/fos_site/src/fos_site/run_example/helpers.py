@@ -34,7 +34,7 @@ def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
 
     md_script = (
         "# Full Example Script\n\n"
-        "Uninterrupted code extracted from the [API example walkthrough](./index.md).\n\n"
+        "Uninterrupted code extracted from the [code example](./index.md).\n\n"
         "```python\n"
         f"{final_script}"
         "```"
