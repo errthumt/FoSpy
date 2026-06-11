@@ -14,30 +14,27 @@ _debug = Debug()
 
 def _add_comments_to_parent(attr_name):
     """
-    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
-    attribute as `add_comments(self_attr, *comments)`. Mutates the parent
-    `SingleBlock`'s comments metadata under the assigned attribute name.
+    Generate an attachable method to add comments to a parent block.
 
-    Example:
-        ```
-        my_synthesis.materials.add_comments("A comment on the materials header")
-        my_synthesis._meta.comments
-        # returns: 
-        #       {"materials":
-        #           [
-        #               "an older comment", 
-        #               "A comment on the materials header"
-        #           ]
-        #       }
-        ```
-        
-    Args:
-        *comments (str):
-            Comments to attach to the assigned attribute name in
-            the parent block's metadata. Comments are printed above
-            their attached attribute when saving in the FOS format.
+    Returned function is attachable to any attribute-bound
+    [`Block`][FoSpy.blocks.blocks.Block] instance [as `add_comments(self,
+    *comments)`][FoSpy.blocks.blocks.Block.add_comments].
+
+    Returns:
+        (function): `func(self_attr, *comments)`
     """
     def func(self_attr, *comments):
+        """
+        Attach comments to self in the parent block.
+
+        Mutates the parent block's comments metadata under the assigned attribute name.
+
+        Args:
+            *comments (str):
+                Comments to attach to the assigned attribute name in
+                the parent block's metadata. Comments are printed above
+                their attached attribute when saving in the FOS format.
+        """
         parent_comments = self_attr._parent_block._meta.comments
         parent_comments.setdefault(attr_name,[])
         for comment in comments:
@@ -47,21 +44,21 @@ def _add_comments_to_parent(attr_name):
 
 def _clear_comments_from_parent(attr_name):
     """
-    Method attached to any [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock]
-    attribute as `clear_comments(self_attr)`. Clears the parent
-    `SingleBlock`'s comments metadata under the assigned attribute name.
+    Generate an attachable method to clear comments from a parent block.
 
-    Example:
-        ```
-        my_synthesis._meta.comments["materials"]
-        # returns ["This comment was read from a FOS file"]
+    Returned function is attachable to any attribute-bound
+    [`Block`][FoSpy.blocks.blocks.Block] instance [as
+    `clear_comments(self)`][FoSpy.blocks.blocks.Block.clear_comments].
 
-        my_synthesis.materials.clear_comments()
-        my_synthesis._meta.comments["materials"]
-        # now returns []
-        ```
+    Returns:
+        (function): `func(self_attr)`
     """
     def func(self_attr):
+        """
+        Remove comments attached to self in the parent block.
+
+        Clears parent block's comments metadata under the assigned attribute name.
+        """
         parent_comments = self_attr._parent_block._meta.comments
         parent_comments[attr_name] = []
     return func
@@ -91,14 +88,66 @@ class Block:
                 blk = None
         raise FileBlockNotFoundError("Could not find a FileBlock containing the current object")
     
+    def add_comments(self, *comments):
+        """
+        Attach comments to self in the parent block.
+
+        Mutates the parent block's comments metadata under the assigned
+        attribute name.
+
+        Args:
+            *comments (str):
+                Comments to attach to the assigned attribute name in
+                the parent block's metadata. Comments are printed above
+                their attached attribute when saving in the FOS format.
+
+        Example:
+            ```
+            >>> my_synthesis.materials.add_comments("A comment on the materials header")
+            >>> my_synthesis._meta.comments 
+            {"materials":
+                [
+                    "an older comment", 
+                    "A comment on the materials header"
+                ]
+            }
+            ```
+        """
+        # placeholder. Method is injected by _add_comments_to_parent when this
+        # block is assigned as an attribute of another block
+        return
+    
+    def clear_comments(self_attr):
+        """
+        Remove comments attached to self in the parent block.
+
+        Clears parent block's comments metadata under the assigned attribute name.
+
+        Example:
+            ```
+            >>> my_synthesis._meta.comments["materials"]
+            ["This comment was read from a FOS file"]
+
+            >>> my_synthesis.materials.clear_comments()
+            >>> my_synthesis._meta.comments["materials"]
+            []
+            ```
+        """
+        # placeholder. Method is injected by _clear_comments_from_parent when this
+        # block is assigned as an attribute of another block
+        return
+    
     def find_tempdir(self):
         """
         Find the parent file object's temporary directory.
 
         Finds the temporary directory created by the
         [`FileBlock`][FoSpy.blocks.files.FileBlock] instance containing this
-        block as one of its attributes. Returns a `tempfile.TemporaryDirectory`
-        object.
+        block as one of its attributes. 
+        
+        Returns:
+            tempdir (tempfile.TemporaryDirectory):
+                The temporary directory created by the parent file object
         """
         fileblock = self.find_fileblock()
         if hasattr(fileblock, "_tempdir"):
@@ -276,9 +325,12 @@ class SingleBlock(Block):
         override parent classes when applicable.
 
         Returns:
-            a dict mapping required keys to validation routines. Routines may be
-            a class constructor or a func taking one arg. Example:
+            merged (dict):
+                Maps required keys to validation routines. Routines may be
+                a class constructor or a func taking one arg.
+        Example:
             ``` 
+            >>> SingleBlock.build_req_validators()
             {
                 "name": str,
                 "type": str,
@@ -343,7 +395,7 @@ class SingleBlock(Block):
         adds any optional key overrides added by key$alias syntax.
 
         Returns:
-            a dict mapping expected keys to validation routines.
+            vals (dict): maps expected keys to validation routines.
         """
         vals = self._rename_validators(self.build_validators())
         if hasattr(self, "_key_overrides"):
@@ -598,7 +650,7 @@ class SingleBlock(Block):
                 f"has no attribute {name!r}."
             )
 
-    def __eq__(self, other, suppress_routine_paths=False):
+    def __eq__(self, other, suppress_routine_paths:bool=False):
         """
         Check equality of two `SingleBlock` objects.
          
@@ -730,7 +782,7 @@ class SingleBlock(Block):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
         
-    def serialize(self, keepListType=False, shallow=False, clean=False):
+    def serialize(self, keepListType:bool=False, shallow:bool=False, clean:bool=False):
         """
         Return a recursively serialized `dict` representation of `self`.
 
@@ -872,7 +924,7 @@ class SingleBlock(Block):
 
         return out
     
-    def to_json(self, filepath=None, clean=True, indent=4, **kwargs):
+    def to_json(self, filepath=None, clean:bool=True, indent:int=4, **kwargs):
         """
         Converts `self` into a JSON-formatted string or file.
 
@@ -880,7 +932,7 @@ class SingleBlock(Block):
         returns as a JSON-formatted string or saves to a JSON file.
 
         Args:
-            filepath:
+            filepath (pathlike):
                 JSON file save destination. If `None`, returns JSON-formatted
                 string instead.
 
@@ -892,7 +944,7 @@ class SingleBlock(Block):
             indent:
                 `indent` value passed to `json.dump` for file saving.
 
-            **kwargs:
+            **kwargs (any):
                 other arguments passed to `json.dump` for file saving.
         """
         import json
@@ -1010,13 +1062,14 @@ class SingleBlock(Block):
             path:
                 a relative path string that can be resolved into a
                 `_calc_routine()`-decorated function
-            kwargs:
+            **kwargs (any):
                 optional key word arguments to be passed to the function at
                 path.
 
         Raises:
-            TypeError: the attr or method at path is not registered as a
-            calc_routine
+            TypeError:
+                the attr or method at path is not registered as a
+                _calc_routine
 
         Example:
         ```
@@ -1040,7 +1093,7 @@ class SingleBlock(Block):
 
         self._calc_routines.append(wrapped)
 
-    def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
+    def list_avail_routines(self, recursive:bool=False, prefix:str="", abbreviated:bool=False):
         """
         Lists all calc routines available to be added to `self._calc_routines`.
 
@@ -1060,7 +1113,10 @@ class SingleBlock(Block):
                 `self.add_calc_routine()`
 
         Returns:
-            list of strings
+            routines (list): 
+                list of strings describing _calc_routine-decorated methods.
+                Non-abbreviated calc routine strings can be passed directly to
+                `self.add_calc_routine()`
 
         Example:
         ```
@@ -1103,7 +1159,7 @@ class SingleBlock(Block):
 
         return routines
     
-    def add_all_calc_routines(self, recursive=False):
+    def add_all_calc_routines(self, recursive:bool=False):
         """
         Schedule all available calculation routines.
 
@@ -1170,7 +1226,7 @@ class SingleBlock(Block):
         self._key_order = new_order
         self._meta_to_front()
 
-    def default_key_order(self, deep=False):
+    def default_key_order(self, deep:bool=False):
         """
         Set to default attribute order for serialization.
 
