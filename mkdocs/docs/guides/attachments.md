@@ -1,6 +1,6 @@
 # Attaching Files to the FOS Format
 
-Non-FOS files can be attached to a FOS in a number of different ways. Attached files are tracked by the [`FileBlock`][blockdocs-FileBlock] they are contained within, and maintained in a way that they can be read and written to by commands within the `FoSpy` API or other imported packages.
+Non-FOS files can be attached to a FOS in a number of different ways. Attached files are tracked by the [`FileBlock`][blockdocs-FileBlock] they are contained within, and maintained in a way that they can be read and written to by commands within the `FoSpy` framework or other imported packages.
 
 The class for an attached file is a hybridized subclass of an [attachment type](#attachment-types) and a [file type](#file-types) subclass. The **attachment type** provides the context methods for accessing and modifying the attached file, whereas the **file type** provides methods unique to that file extension (like plotting a CSV or theoretical pattern from a CIF).
 
@@ -17,7 +17,7 @@ After validating for [required keys](../expected/index.md#attachment), the metho
 
 Expected property: `embedded` | Class: [`EmbeddedFile`][blockdocs-EmbeddedFile]
 
-The `embedded` property of an embedded file contains a list of raw lines of utf-8 formatted text read directly from the FOS format. An example for the synax of this can be found in the CIF attached to the [initial synthesis file](../examples/synthesis/index.md#initial-synthesis-fos) in the API example.
+The `embedded` property of an embedded file contains a list of raw lines of utf-8 formatted text read directly from the FOS format. An example for the synax of this can be found in the CIF attached to the [initial synthesis file](../examples/synthesis/index.md#initial-synthesis-fos) in the example walkthrough.
 
 When [`_get_filepath()`](../blocks/attachments.md#FoSpy.blocks.attachments.EmbeddedFile._get_filepath) is called for the first time, embedded files obtain a temporary directory path from their containing `FileBlock` and copy the embedded lines to a file at that path. Any future calls to `_get_filepath()` return the written location. Temporary directories are cleaned up and removed by `FileBlock`s at the end of runtime.
 
@@ -27,7 +27,7 @@ Expected property: `path` | Class: [`PathFile`][blockdocs-PathFile]
 
 The `path` property of a path file contains a folder location relative to the `FileBlock` input file (the JSON or FOS-formatted file) See the CIF attached to the [initial templates file](../examples/templates/index.md#initial-templates-fos) for an example.
 
-- The `path` property can use "`.`" to refer to the same folder as the `FileBlock`, or use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after API checkpoint 9](../examples/synthesis/index.md#checkpoint-9) for one example.
+- The `path` property can use "`.`" to refer to the same folder as the `FileBlock`, or use "`..`" characters to navigate upward in relative filepaths. Refer to the [synthesis file after example checkpoint 9](../examples/synthesis/index.md#checkpoint-9) for one example.
 
 #### Path Examples
 

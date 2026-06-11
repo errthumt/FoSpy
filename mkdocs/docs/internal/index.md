@@ -1,7 +1,7 @@
 # Internal
 Internal links for FoSpy development
 
-* [Full API Example](../examples/code_example/index.md)
+* [Code Example Walkthrough](../examples/code_example/index.md)
     * A copy-friendly version for LLM prompts can be found [here](copy_markdown/code_example.md)
 * [Expected Property Documentation](../expected/index.md)
     * A copy-friendly version for LLM prompts can be found [here](./copy_markdown/expected.md)
