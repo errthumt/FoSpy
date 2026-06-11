@@ -10,7 +10,7 @@ module = sys.modules[__name__]
 DEFAULT_FILE = load.get_default_file()
 USER_FILE = load.get_user_file()
 
-def save(filepath=None, prompt=True):
+def save_all(filepath=None, prompt=True):
     if (filepath is None and 
         prompt and 
         input("WARNING: Saving the config will overwrite the existing user config "

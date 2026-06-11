@@ -120,7 +120,7 @@ def choice_prompt(message):
 
 
 def toggle_branches():
-    from ...config import values as cfg, save as cfg_save
+    from ...config import values as cfg, save_all as cfg_save
 
     # Detect current branch
     current = get_current_branch()
