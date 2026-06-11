@@ -333,7 +333,7 @@
   <span class="md-ellipsis">
     
   
-    API Example
+    Code Example
   
 
     
@@ -349,7 +349,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API Example
+    Code Example
   
 
           </label>
@@ -362,14 +362,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/API_example/" class="md-nav__link">
+      <a href="../../../examples/code_example/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Walkthrough
+    Example Walkthrough
   
 
     
@@ -390,7 +390,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/API_example/full/" class="md-nav__link">
+      <a href="../../../examples/code_example/full/" class="md-nav__link">
         
   
   
@@ -2871,13 +2871,13 @@
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
 </span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="gu">### `TemplateList`s</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="sb">`TemplateList`</span> is a unique subclass of <span class="sb">`ListBlock`</span> used for storing [<span class="sb">`TemplateBlock`</span> subclass objects](#templateblock). <span class="sb">`TemplateList`</span> has a class method <span class="sb">`Simple()`</span> similar to <span class="sb">`ListBlock`</span>&#39;s method, but instead of full objects (e.g. <span class="sb">`Material`</span>), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for <span class="sb">`TemplateList`</span> entries can be found in the [<span class="nt">API script example</span>](<span class="na">../examples/templates/index.md</span>).
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="sb">`TemplateList`</span> is a unique subclass of <span class="sb">`ListBlock`</span> used for storing [<span class="sb">`TemplateBlock`</span> subclass objects](#templateblock). <span class="sb">`TemplateList`</span> has a class method <span class="sb">`Simple()`</span> similar to <span class="sb">`ListBlock`</span>&#39;s method, but instead of full objects (e.g. <span class="sb">`Material`</span>), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for <span class="sb">`TemplateList`</span> entries can be found in the [<span class="nt">code example walkthrough</span>](<span class="na">../examples/templates/index.md</span>).
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="gu">## Modifying Property Validation at Runtime</span>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
 </span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>The intent of the FOS is to be as flexible as possible while still enforcing standards for fully capturing a synthetic method. However, it may be necessary for private or niche applications to modify standards to match your own synthesis. This can be done by mutating the dictionaries in <span class="sb">`FoSpy.parsing.validation`</span> at the start of your script. The example below creates a new block type with its own expected properties, and then adds it as an optional top-level block for a synthesis file.
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>These modifications should be reserved for very unique and isolated cases. If you are modifying standards in a significant way, or such that may be applicable for other researchers, consider reaching out to <span class="sb">`FoSpy`</span> developers or creating a fork of the API.
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>These modifications should be reserved for very unique and isolated cases. If you are modifying standards in a significant way, or such that may be applicable for other researchers, consider reaching out to <span class="sb">`FoSpy`</span> developers or creating a fork of the [<span class="nt">GitHub</span>](<span class="na">https://github.com/errthumt/FoSpy</span>).
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="gu">### Python</span>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
@@ -3141,7 +3141,7 @@
 </span><span id="__span-0-288"><a id="__codelineno-0-288" name="__codelineno-0-288" href="#__codelineno-0-288"></a><span class="k">-</span><span class="w"> </span><span class="sb">`time`</span>
 </span><span id="__span-0-289"><a id="__codelineno-0-289" name="__codelineno-0-289" href="#__codelineno-0-289"></a><span class="k">-</span><span class="w"> </span><span class="sb">`rate`</span>
 </span><span id="__span-0-290"><a id="__codelineno-0-290" name="__codelineno-0-290" href="#__codelineno-0-290"></a>
-</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291" href="#__codelineno-0-291"></a>If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [<span class="nt">dipatched</span>](<span class="na">#dispatching-subclasses</span>) to a <span class="sb">`Ramp`</span> subclass with a &quot;retrieval&quot; method for calculating the missing property (e.g., <span class="sb">`get_temp()`</span>, <span class="sb">`get_time()`</span>, or <span class="sb">`get_rate()`</span>) When working with <span class="sb">`Ramp`</span> objects in the API, it is best practice to always use the &quot;retrieval&quot; methods. For subclasses that <span class="ge">*do*</span> have the desired property, retrieval methods default to returning it directly.
+</span><span id="__span-0-291"><a id="__codelineno-0-291" name="__codelineno-0-291" href="#__codelineno-0-291"></a>If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [<span class="nt">dipatched</span>](<span class="na">#dispatching-subclasses</span>) to a <span class="sb">`Ramp`</span> subclass with a &quot;retrieval&quot; method for calculating the missing property (e.g., <span class="sb">`get_temp()`</span>, <span class="sb">`get_time()`</span>, or <span class="sb">`get_rate()`</span>) When working with <span class="sb">`Ramp`</span> objects in the FoSpy framework, it is best practice to always use the &quot;retrieval&quot; methods. For subclasses that <span class="ge">*do*</span> have the desired property, retrieval methods default to returning it directly.
 </span><span id="__span-0-292"><a id="__codelineno-0-292" name="__codelineno-0-292" href="#__codelineno-0-292"></a>
 </span><span id="__span-0-293"><a id="__codelineno-0-293" name="__codelineno-0-293" href="#__codelineno-0-293"></a><span class="gu">#### Optional properties</span>
 </span><span id="__span-0-294"><a id="__codelineno-0-294" name="__codelineno-0-294" href="#__codelineno-0-294"></a>
@@ -3196,7 +3196,7 @@
 </span><span id="__span-0-343"><a id="__codelineno-0-343" name="__codelineno-0-343" href="#__codelineno-0-343"></a>
 </span><span id="__span-0-344"><a id="__codelineno-0-344" name="__codelineno-0-344" href="#__codelineno-0-344"></a>| Property | Validation Routine or Class | Description |
 </span><span id="__span-0-345"><a id="__codelineno-0-345" name="__codelineno-0-345" href="#__codelineno-0-345"></a>|---------|-----------------------------|-------------|
-</span><span id="__span-0-346"><a id="__codelineno-0-346" name="__codelineno-0-346" href="#__codelineno-0-346"></a>| rename | <span class="sb">`validators.rename.rename_dict`</span> | A dictionary of old_name:new_name pairs for renaming properties within the <span class="sb">`SingleBlock`</span> subclass while keeping them in sync with their validators. Refer to the [<span class="nt">API script example</span>](<span class="na">../examples/API_example/index.md</span>) for usage.|
+</span><span id="__span-0-346"><a id="__codelineno-0-346" name="__codelineno-0-346" href="#__codelineno-0-346"></a>| rename | <span class="sb">`validators.rename.rename_dict`</span> | A dictionary of old_name:new_name pairs for renaming properties within the <span class="sb">`SingleBlock`</span> subclass while keeping them in sync with their validators. Refer to the [<span class="nt">code example walkthrough</span>](<span class="na">../examples/code_example/index.md</span>) for usage.|
 </span><span id="__span-0-347"><a id="__codelineno-0-347" name="__codelineno-0-347" href="#__codelineno-0-347"></a>
 </span><span id="__span-0-348"><a id="__codelineno-0-348" name="__codelineno-0-348" href="#__codelineno-0-348"></a><span class="gu">#### SingleBlock Method Subclasses</span>
 </span><span id="__span-0-349"><a id="__codelineno-0-349" name="__codelineno-0-349" href="#__codelineno-0-349"></a>
@@ -3255,7 +3255,7 @@
 </span><span id="__span-0-402"><a id="__codelineno-0-402" name="__codelineno-0-402" href="#__codelineno-0-402"></a>
 </span><span id="__span-0-403"><a id="__codelineno-0-403" name="__codelineno-0-403" href="#__codelineno-0-403"></a><span class="gs">**[Subclass of `SingleBlock`](#singleblock)**</span>
 </span><span id="__span-0-404"><a id="__codelineno-0-404" name="__codelineno-0-404" href="#__codelineno-0-404"></a>
-</span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a><span class="sb">`TemplateBlock`</span> is used to make hybridized subclasses of other <span class="sb">`SingleBlock`</span> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <span class="sb">`fill()`</span> method. Refer to the [<span class="nt">API script example</span>](<span class="na">../examples/API_example/index.md</span>) for some uses of templates.
+</span><span id="__span-0-405"><a id="__codelineno-0-405" name="__codelineno-0-405" href="#__codelineno-0-405"></a><span class="sb">`TemplateBlock`</span> is used to make hybridized subclasses of other <span class="sb">`SingleBlock`</span> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <span class="sb">`fill()`</span> method. Refer to the [<span class="nt">code example walkthrough</span>](<span class="na">../examples/code_example/index.md</span>) for some uses of templates.
 </span><span id="__span-0-406"><a id="__codelineno-0-406" name="__codelineno-0-406" href="#__codelineno-0-406"></a>
 </span><span id="__span-0-407"><a id="__codelineno-0-407" name="__codelineno-0-407" href="#__codelineno-0-407"></a><span class="gu">#### Required properties</span>
 </span><span id="__span-0-408"><a id="__codelineno-0-408" name="__codelineno-0-408" href="#__codelineno-0-408"></a>

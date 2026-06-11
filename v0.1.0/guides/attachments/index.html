@@ -337,7 +337,7 @@
   <span class="md-ellipsis">
     
   
-    API Example
+    Code Example
   
 
     
@@ -353,7 +353,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API Example
+    Code Example
   
 
           </label>
@@ -366,14 +366,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/API_example/" class="md-nav__link">
+      <a href="../../examples/code_example/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Walkthrough
+    Example Walkthrough
   
 
     
@@ -394,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../examples/API_example/full/" class="md-nav__link">
+      <a href="../../examples/code_example/full/" class="md-nav__link">
         
   
   
@@ -3078,7 +3078,7 @@
 
 
 <h1 id="attaching-files-to-the-fos-format">Attaching Files to the FOS Format</h1>
-<p>Non-FOS files can be attached to a FOS in a number of different ways. Attached files are tracked by the <a class="autorefs autorefs-internal" href="../../blocks/files/#fileblock"><code>FileBlock</code></a> they are contained within, and maintained in a way that they can be read and written to by commands within the <code>FoSpy</code> API or other imported packages.</p>
+<p>Non-FOS files can be attached to a FOS in a number of different ways. Attached files are tracked by the <a class="autorefs autorefs-internal" href="../../blocks/files/#fileblock"><code>FileBlock</code></a> they are contained within, and maintained in a way that they can be read and written to by commands within the <code>FoSpy</code> framework or other imported packages.</p>
 <p>The class for an attached file is a hybridized subclass of an <a href="#attachment-types">attachment type</a> and a <a href="#file-types">file type</a> subclass. The <strong>attachment type</strong> provides the context methods for accessing and modifying the attached file, whereas the <strong>file type</strong> provides methods unique to that file extension (like plotting a CSV or theoretical pattern from a CIF).</p>
 <h2 id="attachment-types">Attachment Types</h2>
 <p>After validating for <a href="../../expected/#attachment">required keys</a>, the method of attachment for any given file is specified by the presence of an expected key. Once a matching key is found, any other "attachment type" keys are rejected as "redundant", and the attachment type is dispatched as one of the following:</p>
@@ -3102,13 +3102,13 @@
 </table>
 <h3 id="embedded-files">Embedded Files</h3>
 <p>Expected property: <code>embedded</code> | Class: <a class="autorefs autorefs-internal" href="../../blocks/attachments/#embeddedfile"><code>EmbeddedFile</code></a></p>
-<p>The <code>embedded</code> property of an embedded file contains a list of raw lines of utf-8 formatted text read directly from the FOS format. An example for the synax of this can be found in the CIF attached to the <a href="../../examples/synthesis/#initial-synthesis-fos">initial synthesis file</a> in the API example.</p>
+<p>The <code>embedded</code> property of an embedded file contains a list of raw lines of utf-8 formatted text read directly from the FOS format. An example for the synax of this can be found in the CIF attached to the <a href="../../examples/synthesis/#initial-synthesis-fos">initial synthesis file</a> in the example walkthrough.</p>
 <p>When <a href="../../blocks/attachments/#FoSpy.blocks.attachments.EmbeddedFile._get_filepath"><code>_get_filepath()</code></a> is called for the first time, embedded files obtain a temporary directory path from their containing <code>FileBlock</code> and copy the embedded lines to a file at that path. Any future calls to <code>_get_filepath()</code> return the written location. Temporary directories are cleaned up and removed by <code>FileBlock</code>s at the end of runtime.</p>
 <h3 id="path-files">Path Files</h3>
 <p>Expected property: <code>path</code> | Class: <a class="autorefs autorefs-internal" href="../../blocks/attachments/#pathfile"><code>PathFile</code></a></p>
 <p>The <code>path</code> property of a path file contains a folder location relative to the <code>FileBlock</code> input file (the JSON or FOS-formatted file) See the CIF attached to the <a href="../../examples/templates/#initial-templates-fos">initial templates file</a> for an example.</p>
 <ul>
-<li>The <code>path</code> property can use "<code>.</code>" to refer to the same folder as the <code>FileBlock</code>, or use "<code>..</code>" characters to navigate upward in relative filepaths. Refer to the <a href="../../examples/synthesis/#checkpoint-9">synthesis file after API checkpoint 9</a> for one example.</li>
+<li>The <code>path</code> property can use "<code>.</code>" to refer to the same folder as the <code>FileBlock</code>, or use "<code>..</code>" characters to navigate upward in relative filepaths. Refer to the <a href="../../examples/synthesis/#checkpoint-9">synthesis file after example checkpoint 9</a> for one example.</li>
 </ul>
 <h4 id="path-examples">Path Examples</h4>
 <p>For a synthesis file at <code>C://foo/my_synthesis.fos</code>:

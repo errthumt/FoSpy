@@ -337,7 +337,7 @@
   <span class="md-ellipsis">
     
   
-    API Example
+    Code Example
   
 
     
@@ -353,7 +353,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    API Example
+    Code Example
   
 
           </label>
@@ -366,14 +366,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/API_example/" class="md-nav__link">
+      <a href="../examples/code_example/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    API Walkthrough
+    Example Walkthrough
   
 
     
@@ -394,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/API_example/full/" class="md-nav__link">
+      <a href="../examples/code_example/full/" class="md-nav__link">
         
   
   
@@ -4515,10 +4515,10 @@
 <h2 id="listblock-and-simple-lists"><code>ListBlock</code> and Simple Lists</h2>
 <p><code>ListBlock</code> subclasses do not have required properties. Instead, they are a rich list of objects with a certain required <code>SingleBlock</code> subclass. Some <code>ListBlock</code> subclasses have their own methods and unique attributes. If a <code>ListBlock</code> is required for a given <code>SingleBlock</code> subclass but it doesn't need any method or attribute overrides, it can be instantiated with the class method <code>ListBlock.Simple(SingleBlockSubclass)</code> (referred to below as a "simple list").</p>
 <h3 id="templatelists"><code>TemplateList</code>s</h3>
-<p><code>TemplateList</code> is a unique subclass of <code>ListBlock</code> used for storing <a href="#templateblock"><code>TemplateBlock</code> subclass objects</a>. <code>TemplateList</code> has a class method <code>Simple()</code> similar to <code>ListBlock</code>'s method, but instead of full objects (e.g. <code>Material</code>), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for <code>TemplateList</code> entries can be found in the <a href="../examples/templates/">API script example</a>.</p>
+<p><code>TemplateList</code> is a unique subclass of <code>ListBlock</code> used for storing <a href="#templateblock"><code>TemplateBlock</code> subclass objects</a>. <code>TemplateList</code> has a class method <code>Simple()</code> similar to <code>ListBlock</code>'s method, but instead of full objects (e.g. <code>Material</code>), it generates hybridized templates with fields for any field-marked or missing properties. Some syntax for <code>TemplateList</code> entries can be found in the <a href="../examples/templates/">code example walkthrough</a>.</p>
 <h2 id="modifying-property-validation-at-runtime">Modifying Property Validation at Runtime</h2>
 <p>The intent of the FOS is to be as flexible as possible while still enforcing standards for fully capturing a synthetic method. However, it may be necessary for private or niche applications to modify standards to match your own synthesis. This can be done by mutating the dictionaries in <code>FoSpy.parsing.validation</code> at the start of your script. The example below creates a new block type with its own expected properties, and then adds it as an optional top-level block for a synthesis file.</p>
-<p>These modifications should be reserved for very unique and isolated cases. If you are modifying standards in a significant way, or such that may be applicable for other researchers, consider reaching out to <code>FoSpy</code> developers or creating a fork of the API.</p>
+<p>These modifications should be reserved for very unique and isolated cases. If you are modifying standards in a significant way, or such that may be applicable for other researchers, consider reaching out to <code>FoSpy</code> developers or creating a fork of the <a href="https://github.com/errthumt/FoSpy">GitHub</a>.</p>
 <h3 id="python">Python</h3>
 <div class="highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">FoSpy.parsing.validation</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vd</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">FoSpy.blocks</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -4995,7 +4995,7 @@
 <li><code>time</code></li>
 <li><code>rate</code></li>
 </ul>
-<p>If all three are provided, the last one found during reading will be discarded as redundant data, and the object is <a href="#dispatching-subclasses">dipatched</a> to a <code>Ramp</code> subclass with a "retrieval" method for calculating the missing property (e.g., <code>get_temp()</code>, <code>get_time()</code>, or <code>get_rate()</code>) When working with <code>Ramp</code> objects in the API, it is best practice to always use the "retrieval" methods. For subclasses that <em>do</em> have the desired property, retrieval methods default to returning it directly.</p>
+<p>If all three are provided, the last one found during reading will be discarded as redundant data, and the object is <a href="#dispatching-subclasses">dipatched</a> to a <code>Ramp</code> subclass with a "retrieval" method for calculating the missing property (e.g., <code>get_temp()</code>, <code>get_time()</code>, or <code>get_rate()</code>) When working with <code>Ramp</code> objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that <em>do</em> have the desired property, retrieval methods default to returning it directly.</p>
 <h4 id="optional-properties_5">Optional properties</h4>
 <table>
 <thead>
@@ -5110,7 +5110,7 @@
 <tr>
 <td>rename</td>
 <td><code>validators.rename.rename_dict</code></td>
-<td>A dictionary of old_name:new_name pairs for renaming properties within the <code>SingleBlock</code> subclass while keeping them in sync with their validators. Refer to the <a href="../examples/API_example/">API script example</a> for usage.</td>
+<td>A dictionary of old_name:new_name pairs for renaming properties within the <code>SingleBlock</code> subclass while keeping them in sync with their validators. Refer to the <a href="../examples/code_example/">code example walkthrough</a> for usage.</td>
 </tr>
 </tbody>
 </table>
@@ -5229,7 +5229,7 @@
 <h3 id="templateblock"><code>TemplateBlock</code></h3>
 <p><a class="autorefs autorefs-internal" href="../blocks/template/#templateblock">Class Documentation</a></p>
 <p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
-<p><code>TemplateBlock</code> is used to make hybridized subclasses of other <code>SingleBlock</code> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <code>fill()</code> method. Refer to the <a href="../examples/API_example/">API script example</a> for some uses of templates.</p>
+<p><code>TemplateBlock</code> is used to make hybridized subclasses of other <code>SingleBlock</code> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <code>fill()</code> method. Refer to the <a href="../examples/code_example/">code example walkthrough</a> for some uses of templates.</p>
 <h4 id="required-properties_15">Required properties</h4>
 <table>
 <thead>
