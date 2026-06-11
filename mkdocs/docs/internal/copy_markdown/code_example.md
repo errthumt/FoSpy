@@ -7,7 +7,7 @@ There is a copy button in the top right of the code block.
 ````markdown
 # Example Usage for FoSpy
 
-This page is an example of what a full API editing session might look like for Synthesis and Template files using the FOS format.
+This page is an example of what a full end-to-end editing session might look like for Synthesis and Template files using the FOS format.
 
 Most users won't want to write scripts like these for every synthesis, but given enough script capabilites, we can move toward automating synthesis file generation for many syntheses at once from a variety of inputs, ranging from a GUI application to AI-assisted transcription.
 
