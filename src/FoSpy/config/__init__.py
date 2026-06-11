@@ -11,14 +11,6 @@ DEFAULT_FILE = load.get_default_file()
 USER_FILE = load.get_user_file()
 
 def save_all(filepath=None, prompt=True):
-    if (filepath is None and 
-        prompt and 
-        input("WARNING: Saving the config will overwrite the existing user config "
-              "and restart the session. Consider exporting the current user "
-              "overrides with save(filepath) before saving.\n"
-              "Proceed with saving? (y/n): ").lower() != "y"):
-        return
-
     current = module.values.to_dict()
     defaults = _load_defaults()
 
@@ -26,6 +18,14 @@ def save_all(filepath=None, prompt=True):
         filepath = USER_FILE
     else:
         filepath = os.path.abspath(filepath)
+
+    if (filepath == USER_FILE and 
+        prompt and 
+        input("WARNING: Saving the config will overwrite the existing user config "
+              "and restart the session. Consider exporting the current user "
+              "overrides with save(filepath) before saving.\n"
+              "Proceed with saving? (y/n): ").lower() != "y"):
+        return
 
     with open(filepath, 'w') as f:
         json.dump(_extract_user(defaults, current), f, indent=4)
