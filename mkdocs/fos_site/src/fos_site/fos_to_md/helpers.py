@@ -9,7 +9,7 @@ def read_file_safely(path: Path) -> str:
 
 def write_header_and_preamble(f, title: str):
     f.write(f"# {title}\n\n")
-    f.write("Each file on this page was generated at the corresponding checkpoint in the [walkthrough](../API_example/index.md) script.\n\n")
+    f.write("Each file on this page was generated at the corresponding checkpoint in the [walkthrough](../code_example/index.md) script.\n\n")
     f.write("---\n\n")
 
 

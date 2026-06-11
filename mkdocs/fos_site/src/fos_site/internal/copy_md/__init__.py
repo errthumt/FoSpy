@@ -1,8 +1,8 @@
 
 MD_PATHS = {
-    "API Example" : (
-        "mkdocs/docs/examples/API_example/index.md",
-        "mkdocs/docs/internal/copy_markdown/API_example.md",
+    "Code Example" : (
+        "mkdocs/docs/examples/code_example/index.md",
+        "mkdocs/docs/internal/copy_markdown/code_example.md",
     ),
     "Expected Properties" : (
         "mkdocs/docs/expected/index.md",
