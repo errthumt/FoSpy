@@ -2308,10 +2308,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#FoSpy.config.save" class="md-nav__link">
+  <a href="#FoSpy.config.save_all" class="md-nav__link">
     <span class="md-ellipsis">
       
-        save
+        save_all
       
     </span>
   </a>
@@ -3510,10 +3510,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#FoSpy.config.save" class="md-nav__link">
+  <a href="#FoSpy.config.save_all" class="md-nav__link">
     <span class="md-ellipsis">
       
-        save
+        save_all
       
     </span>
   </a>
@@ -4550,12 +4550,12 @@ in a structure that can be merged back over <code>defaults</code> to recover <co
 <div class="doc doc-object doc-function">
 
 
-<h3 id="FoSpy.config.save" class="doc doc-heading">
-            <span class="doc doc-object-name doc-function-name">save</span>
+<h3 id="FoSpy.config.save_all" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">save_all</span>
 
 
 </h3>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">save</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">save_all</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
@@ -4584,22 +4584,22 @@ in a structure that can be merged back over <code>defaults</code> to recover <co
 <span class="normal"><a href="#__codelineno-0-31">31</a></span>
 <span class="normal"><a href="#__codelineno-0-32">32</a></span>
 <span class="normal"><a href="#__codelineno-0-33">33</a></span>
-<span class="normal"><a href="#__codelineno-0-34">34</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">filepath</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> 
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>        <span class="n">prompt</span> <span class="ow">and</span> 
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a>        <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;WARNING: Saving the config will overwrite the existing user config &quot;</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a>              <span class="s2">&quot;and restart the session. Consider exporting the current user &quot;</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>              <span class="s2">&quot;overrides with save(filepath) before saving.</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>              <span class="s2">&quot;Proceed with saving? (y/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">):</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="k">return</span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">save_all</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a>    <span class="n">current</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="n">defaults</span> <span class="o">=</span> <span class="n">_load_defaults</span><span class="p">()</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a>    <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>        <span class="n">filepath</span> <span class="o">=</span> <span class="n">USER_FILE</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="n">current</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="n">defaults</span> <span class="o">=</span> <span class="n">_load_defaults</span><span class="p">()</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>    <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>        <span class="n">filepath</span> <span class="o">=</span> <span class="n">USER_FILE</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="k">if</span> <span class="p">(</span><span class="n">filepath</span> <span class="o">==</span> <span class="n">USER_FILE</span> <span class="ow">and</span> 
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>        <span class="n">prompt</span> <span class="ow">and</span> 
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a>        <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;WARNING: Saving the config will overwrite the existing user config &quot;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a>              <span class="s2">&quot;and restart the session. Consider exporting the current user &quot;</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a>              <span class="s2">&quot;overrides with save(filepath) before saving.</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a>              <span class="s2">&quot;Proceed with saving? (y/n): &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;y&quot;</span><span class="p">):</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a>        <span class="k">return</span>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a>
 </span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a>        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">_extract_user</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">current</span><span class="p">),</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
