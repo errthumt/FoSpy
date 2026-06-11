@@ -161,6 +161,12 @@ jobs:
         run: |
           pip install mkdocs mkdocstrings mkdocstrings-python mkdocs-copy-markdown mkdocs-pygments pymdown-extensions black mike
 
+      - name: Install svu
+        run: |
+          echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
+          sudo apt update
+          sudo apt install svu
+
       - name: Install FoSpy
         run: |
           pip install -e .
@@ -181,7 +187,9 @@ jobs:
       - name: Deploy release branch to "latest" alias
         working-directory: mkdocs
         run: |
-          mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --push --allow-empty
+          mike deploy $(git describe --tags --abbrev=0) latest --update-aliases --allow-empty
+          mike deploy $(svu patch) incoming --update-aliases --allow-empty
+          git push origin gh-pages
 
   publish-to-pypi:
     name: Publish Release to PyPI
