@@ -10,5 +10,11 @@
     "DEV": {
         "branch": "main",
         "repo": "../FoSpy"
+    },
+    "diffraction": {
+        "default_engine": "cif2xrd",
+        "engine_parameters": {
+            "cif2xrd": {}
+        }
     }
 }
