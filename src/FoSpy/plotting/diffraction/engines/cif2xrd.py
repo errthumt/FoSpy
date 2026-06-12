@@ -1,0 +1,9 @@
+from cif2xrd.pattern import simPattern
+from ._base import CIF_engine
+
+class cif2xrd_engine(CIF_engine):
+    def __init__(self, cif_path, **kwargs):
+        self.sim = simPattern(cif_path, **kwargs)
+    def get_pattern(self, **kwargs):
+        self.sim.set_parameters(**kwargs)
+        return self._to_frame(self.sim.two_theta, self.sim.intensity)
