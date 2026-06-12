@@ -76,5 +76,16 @@ nav:
   - plotting:
     - EmbeddedCIF: full/plotting/EmbeddedCIF.md
     - __init__: full/plotting/__init__.md
+    - diffraction:
+      - engines:
+        - engines/__init__: full/plotting/diffraction/engines/__init__.md
+        - _base: full/plotting/diffraction/engines/_base.md
+        - cif2xrd: full/plotting/diffraction/engines/cif2xrd.md
+        - dans_diffraction: full/plotting/diffraction/engines/dans_diffraction.md
+        - pymatgen: full/plotting/diffraction/engines/pymatgen.md
+      - phase_match:
+        - phase_match/__init__: full/plotting/diffraction/phase_match/__init__.md
+        - _utils: full/plotting/diffraction/phase_match/_utils.md
+        - match: full/plotting/diffraction/phase_match/match.md
 - For Devs: internal/index.md
 - Install with PyPI: https://pypi.org/project/FoSpy
