@@ -6,6 +6,7 @@ if __name__ == "__main__":
     from FoSpy.plotting.diffraction.phase_match import PhaseMatcher
     from numpy import loadtxt
     from matplotlib import pyplot as plt
+    from pprint import pp
 
     from FoSpy import cfg
     cfg.diffraction.default_engine = "pymatgen"
@@ -23,6 +24,7 @@ if __name__ == "__main__":
     cif_dict = {cif.file_name():cif for cif in my_syn.cifs}
 
     matcher = PhaseMatcher(two_theta, intensity, cif_dict)
+    pp(matcher.frame)
     matcher.frame.plot()
     plt.show()
 
