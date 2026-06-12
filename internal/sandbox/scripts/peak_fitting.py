@@ -80,9 +80,6 @@ def plot_rows_as_sticks(df, row_indices, intensity_col, ax=None, **vline_kwargs)
     ax.vlines(xs, 0, ys, **vline_kwargs)
     return ax
 
-
-
-
 def merge_frames(x_name="two_theta",normalize=True,**frames:pd.DataFrame):
     # frames = {name1: frame1, name2: frame2}
     # assume all non x_name columns are "y" columns, but column names are unknown and not necessarily shared
