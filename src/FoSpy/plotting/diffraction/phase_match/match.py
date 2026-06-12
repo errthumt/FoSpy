@@ -1,24 +1,30 @@
 from scipy.signal import find_peaks
 import pandas as pd
 import numpy as np
+from ....config import values as cfg
 
-def unpack_peaks(data,*props, unwrap=True, **kwargs):
+def unpack_peaks(data,*props, unwrap=True):
+    peak_parameters = cfg.get("diffraction.find_peaks")
+
     if isinstance(data, tuple):
         x_list, properties = data
     else:
-        x_list, properties = find_peaks(data, **kwargs)
+        x_list, properties = find_peaks(data, **peak_parameters)
 
     out = [x_list]
     for prop in props:
         out.append(properties[prop])
 
     return out[0] if unwrap and len(out) == 1 else out
-def match_peaks(exp_data, sim_data, **kwargs):
-    kwargs.setdefault("prominence", (None, None))
+def match_peaks(exp_data, sim_peaks, match_width:float=None):
+    if match_width is None:
+        match_width = cfg.get("diffraction.match_peaks.match_width")
 
-    exp, l_bases, r_bases = unpack_peaks(exp_data, "left_bases", "right_bases", **kwargs)
-    sim = unpack_peaks(sim_data, **kwargs)
+    exp, widths = unpack_peaks(exp_data, "widths")
+    sim = sim_peaks
     
+    l_bases = [x - (width * match_width/2) for x, width in zip(exp, widths)]
+    r_bases = [x + (width * match_width/2) for x, width in zip(exp, widths)]
 
     matches = []
     found = []

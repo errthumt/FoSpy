@@ -7,6 +7,10 @@ if __name__ == "__main__":
     from numpy import loadtxt
     from matplotlib import pyplot as plt
     from pprint import pp
+    from FoSpy.config import values as cfg
+    from scipy.signal import find_peaks
+
+    X_LABEL = cfg.diffraction.x_label
 
     from FoSpy import cfg
     cfg.diffraction.default_engine = "pymatgen"
@@ -16,18 +20,27 @@ if __name__ == "__main__":
     EXP_PATH = ASSETS / "As_experimental.xy"
 
     two_theta, intensity = loadtxt(EXP_PATH, unpack=True)
+    intensity = intensity / max(intensity)
+
+    pp(find_peaks(intensity, prominence=0.01))
 
     my_syn = Synthesis.fromFile(FOS_PATH)
 
-    my_syn.cifs[0].quick_pattern()
+    # my_syn.cifs[0].quick_pattern()
 
     cif_dict = {cif.file_name():cif for cif in my_syn.cifs}
 
     matcher = PhaseMatcher(two_theta, intensity, cif_dict)
-    pp(matcher.frame)
-    matcher.frame.plot()
-    plt.show()
+    for name, frame in matcher.frames.items():
+        fig, ax = plt.subplots()
+        frame.plot(title=name, ax=ax)
 
+    # plt.show()
+
+    matches = matcher.match_peaks()
+    pp(matches)
+
+    matcher.match_plot('As')
 
 
     pass

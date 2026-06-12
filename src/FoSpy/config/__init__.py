@@ -165,12 +165,21 @@ class NestedConfig(types.ModuleType):
         return out
     
     def get(self, key, default=None):
+        if "." in key:
+            parent, children = key.split(".", 1)
+            return getattr(self, parent).get(children, default)
         val = getattr(self, key)
         if isinstance(val, NestedConfig):
             if val() == {}:
                 return default
             return val()
         return val
+    
+    def update(self, key, value):
+        if "." in key:
+            parent, children = key.split(".", 1)
+            return getattr(self, parent).update(children, value)
+        setattr(self, key, value)
     
     def __call__(self):
         return self.to_dict()

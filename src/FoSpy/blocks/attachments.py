@@ -181,22 +181,32 @@ class CIFFile(Attachment):
         super().__init__(blockDict,**kwargs)
         self._reserved.append("engine")
         self.engine = None
-    def get_pattern(self, engine_name=None):
-        from ..config import values as cfg
-        from ..plotting.diffraction.engines import ENGINES
-        if self.engine is None:
-            self.engine =self.new_engine(engine_name=engine_name)
+    def _get_engine(self, engine_name=None):
+        if engine_name is None:
+            if self.engine is None:
+                self.engine = self.new_engine()
+            engine = self.engine
+        else:
+            engine = self.new_engine(engine_name=engine_name)
 
-        return self.engine.get_pattern()
+        return engine
+
+    def get_pattern(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_pattern()
     
-    def new_engine(self, engine_name=None, **kwargs):
+    def get_peaks(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_peaks()
+    
+    def new_engine(self, engine_name=None):
         from ..config import values as cfg
         from ..plotting.diffraction.engines import ENGINES
         if engine_name is None:
-            engine_name = cfg.diffraction.default_engine
-        engine_parameters = cfg.diffraction.engine_parameters.get(engine_name,{}).copy()
-        engine_parameters.update(kwargs)
-        return ENGINES[engine_name](self._get_filepath(), **engine_parameters)
+            engine_name = cfg.get("diffraction.default_engine")
+        return ENGINES[engine_name](self._get_filepath())
 
     def quick_pattern(self,subprocess=False):
         from matplotlib import pyplot as plt
