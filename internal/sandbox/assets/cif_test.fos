@@ -1,0 +1,37 @@
+fos_id: TE001
+fos_type: synthesis
+// This comment will stay attached to the description when saving
+// (Until comments are cleared)
+description: My First Synthesis
+// ! Comments starting with a ! do not get read from the file.
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/Ba2-TM5-Sb6
+
+[Experimenters]
+name: Travis Errthum
+affiliation: Kovnir Group - Iowa State University
+orcid: 0009-0006-1937-5672
+
+// Single brackets on a header mean there is only one group
+[Reaction]
+nominal_formula: Ba2Zn5Sb6
+nominal_amount: 250.0
+nominal_amount_unit: mg
+
+[Products]
+
+
+// Double brackets on a header mean there are multiple similar groups
+[[Materials]]
+
+
+    
+
+// This is a comment on the treatments block
+[[Treatments]]
+
+
+[CIFs]
+file_name: As
+extension: .cif
+path: .

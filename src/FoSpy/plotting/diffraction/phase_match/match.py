@@ -59,7 +59,7 @@ def match_peaks(exp_data, sim_data, **kwargs):
     )
     return {"matches": matches, "missing": missing}
 
-def merge_frames(x_name="two_theta",normalize=True,**frames:pd.DataFrame):
+def merge_frames(x_name="two_theta",normalize=True,interpolate=True,**frames:pd.DataFrame):
     # frames = {name1: frame1, name2: frame2}
     # assume all non x_name columns are "y" columns, but column names are unknown and not necessarily shared
     # output: df with columns x_name, name1_y1, name1_y2, name2_y1, name2_y2
@@ -67,19 +67,18 @@ def merge_frames(x_name="two_theta",normalize=True,**frames:pd.DataFrame):
     x_cols = [df[x_name] for df in frames.values()]
     x_min = max(min(x) for x in x_cols)
     x_max = min(max(x) for x in x_cols)
-    x_step = max(np.mean(np.diff(x)) for x in x_cols)
+    x_step = max(np.mean(np.diff(x)) for x in x_cols) if interpolate else np.mean(np.diff(x_cols[0]))
 
     x_common = np.arange(x_min, x_max, x_step)
     base = pd.DataFrame({x_name:x_common})
     out = base.copy()
-    for name, df in frames.items():
+    for i, (name, df) in enumerate(frames.items()):
         merged = pd.merge(base, df, how="outer", on=x_name)
-        merged = (merged
-            .set_index(x_name)
-            .interpolate(method="linear")
-            .reindex(base[x_name])
-            .reset_index()
-        )
+        merged = merged.set_index(x_name)
+        if interpolate or i == 0:
+            merged = merged.interpolate(method="linear")
+
+        merged = merged.reindex(base[x_name],method=None if interpolate else "nearest").reset_index()
         for col in merged.columns:
             if col != x_name:
                 out[f"{col}_{name}"] = merged[col]
