@@ -1,7 +1,7 @@
 
 from ._base import CIF_engine
 
-class DansEngine(CIF_engine):
+class Engine(CIF_engine):
     def __init__(self, cif_path, **kwargs):
         import Dans_Diffraction as ddf
         self.xtl = ddf.Crystal(cif_path)

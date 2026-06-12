@@ -1,6 +1,7 @@
 from ._base import CIF_engine
+from ....config import values as cfg
 
-class pymatgen_engine(CIF_engine):
+class Engine(CIF_engine):
     def __init__(self, cif_path, **kwargs):
         from pymatgen.analysis.diffraction.xrd import XRDCalculator
         from pymatgen.core.structure import Structure
@@ -11,13 +12,13 @@ class pymatgen_engine(CIF_engine):
         import numpy as np
         from ....config import values as cfg
 
-        params = super().get_pattern(**kwargs)
-        
-        peaks = self.get_peaks(**kwargs)
+        pattern_config = cfg.get("diffraction.pattern_parameters")
+        pattern_config.update(kwargs)
 
-        step = params['two_theta_step']
-        tth_range = params['two_theta_range']
+        step = pattern_config.pop('two_theta_step')
+        tth_range = pattern_config['two_theta_range']
         
+        peaks = self.get_peaks(**pattern_config)
 
         two_theta = []
         intensity = []
@@ -37,13 +38,18 @@ class pymatgen_engine(CIF_engine):
                  reset_index())
         return frame
     
-    def get_peaks(self,**kwargs):
-        params = super().get_pattern(**kwargs)
-        tth_range = params['two_theta_range']
-        normalize = params['normalize']
+    def get_peaks(self,two_theta_range=None, normalize=None):
+        import numpy as np
+        from ....config import values as cfg
+
+        if two_theta_range is None:
+            two_theta_range = cfg.get("diffraction.pattern_parameters.two_theta_range")
+
+        if normalize is None:
+            normalize = cfg.get("diffraction.pattern_parameters.normalize")
 
 
-        pattern = self.sim.get_pattern(self.structure, two_theta_range=tth_range, scaled = False)
+        pattern = self.sim.get_pattern(self.structure, two_theta_range=two_theta_range, scaled = False)
 
         if normalize:
             pattern.y = pattern.y / max(pattern.y)

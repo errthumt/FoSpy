@@ -1,9 +1,7 @@
-from .cif2xrd import cif2xrd_engine
-from .dans_diffraction import DansEngine
-from .pymatgen import pymatgen_engine
+from . import cif2xrd, dans_diffraction, pymatgen
 
 ENGINES = {
-    "cif2xrd": cif2xrd_engine, 
-    "dans-diffraction": DansEngine,
-    "pymatgen": pymatgen_engine
+    "cif2xrd": cif2xrd.Engine, 
+    "dans-diffraction": dans_diffraction.Engine,
+    "pymatgen": pymatgen.Engine
 }
