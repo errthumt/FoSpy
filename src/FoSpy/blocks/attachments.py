@@ -177,22 +177,45 @@ class PathFile(Attachment):
 Attachment.dispatch["path"] = PathFile
 
 class CIFFile(Attachment):
-    def get_pattern(self,**kwargs):
-        from cif2xrd.pattern import simPattern
+    def __init__(self, blockDict, **kwargs):
+        super().__init__(blockDict,**kwargs)
+        self._reserved.append("engine")
+        self.engine = None
+    def get_pattern(self, engine_name=None):
+        from ..config import values as cfg
+        from ..plotting.diffraction.engines import ENGINES
+        if self.engine is None:
+            self.engine =self.new_engine(engine_name=engine_name)
 
-        sim = simPattern(cif_path=self._get_filepath(), **kwargs)
-
-        return sim.two_theta, sim.intensity
+        return self.engine.get_pattern()
     
-    def quick_pattern(self,subprocess=False, **kwargs):
-        import matplotlib.pyplot as plt
+    def new_engine(self, engine_name=None, **kwargs):
+        from ..config import values as cfg
+        from ..plotting.diffraction.engines import ENGINES
+        if engine_name is None:
+            engine_name = cfg.diffraction.default_engine
+        engine_parameters = cfg.diffraction.engine_parameters.get(engine_name,{}).copy()
+        engine_parameters.update(kwargs)
+        return ENGINES[engine_name](self._get_filepath(), **engine_parameters)
+
+    def quick_pattern(self,subprocess=False):
+        from matplotlib import pyplot as plt
         from ..plotting.EmbeddedCIF import _quick_pattern
-        two_theta, intensity = self.get_pattern(**kwargs)
+        
+        df = self.get_pattern()
+
+        fig, ax = plt.subplots()
+
+        x,y = df.columns[:2]
+
+        def show(df=df, ax=ax, x=x, y=y):
+            df.plot(ax=ax, x=x, y=y)
+            plt.show()
 
         if subprocess:
-            return self._subprocess(_quick_pattern,args=(two_theta, intensity))
+            return self._subprocess(show)
         
-        return _quick_pattern(two_theta, intensity)
+        return show()
 
 Attachment.extensions[".cif"] = CIFFile
 

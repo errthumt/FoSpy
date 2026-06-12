@@ -13,8 +13,14 @@
     },
     "diffraction": {
         "default_engine": "cif2xrd",
+        "x_label": "2theta (deg)",
         "engine_parameters": {
             "cif2xrd": {}
+        },
+        "pattern_parameters": {
+            "normalize": true,
+            "two_theta_range": [0, 90],
+            "two_theta_step": 0.01
         }
     }
 }
