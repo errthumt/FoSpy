@@ -1,14 +1,14 @@
 if __name__ == "__main__":
     import os
-    import sys
     from pathlib import Path
     from FoSpy import Synthesis
     from FoSpy.plotting.diffraction.phase_match import PhaseMatcher
     from numpy import loadtxt
     from matplotlib import pyplot as plt
-    from pprint import pp
     from FoSpy.config import values as cfg
-    from scipy.signal import find_peaks
+    from FoSpy.plotting.diffraction.phase_match.match import _debug
+    _debug.on = True
+
 
     X_LABEL = cfg.diffraction.x_label
 

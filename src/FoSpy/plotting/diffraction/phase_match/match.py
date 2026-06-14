@@ -2,8 +2,12 @@ from scipy.signal import find_peaks
 import pandas as pd
 import numpy as np
 from ....config import values as cfg
+from ...._debug import Debug
+_debug = Debug()
 
 def unpack_peaks(data,*props, unwrap=True, **peak_parameters):
+    _debug.msg("Peak Parameters")
+    _debug.pmsg(peak_parameters)
     if isinstance(data, tuple):
         x_list, properties = data
     else:
