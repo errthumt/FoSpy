@@ -36,7 +36,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots()
 
     # matcher.find_baseline(interactive=True)
-    matcher.find_peaks(interactive=True)
+    matcher.find_peaks(interactive='find')
 
     #matcher.frames['exp'].plot()
 

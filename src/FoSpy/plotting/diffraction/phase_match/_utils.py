@@ -75,3 +75,44 @@ def get_find_sliders(find_cfg, intensity_col):
         "type": "range", "label": "Plateau Size", "min": 0, "max": 200, "default": find_cfg["plateau_size"]
     },
 }
+
+from matplotlib.widgets import Slider, Button, CheckButtons
+
+START_Y = 0.1
+SLIDER_START_X = 0.70
+PADDING = 0.01
+CHECK_X      = SLIDER_START_X+PADDING
+CHECK_W      = 0.03
+SLIDER_X     = CHECK_X + CHECK_W + PADDING
+SLIDER_W     = 1.0 - SLIDER_X - PADDING
+LABEL_LSHIFT = (CHECK_W + 2*PADDING) / SLIDER_W
+ROW_H        = 0.03
+ROW_SPACING  = 0.05
+OK_BTN_CENTER= 0.85
+OK_BTN_W     = 0.20
+OK_BTN_H     = 0.05
+OK_BTN_X     = OK_BTN_CENTER - OK_BTN_W/2
+
+def new_slider(label, fig, spec, ypos, min_val, max_val, default, typ):
+    ax_check = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
+    check = CheckButtons(ax_check, [""], default is not None)
+
+    ax_slider = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
+    slider = Slider(ax_slider, label, min_val, max_val, valinit=max_val)
+
+    text_width = slider.valtext.get_window_extent().width
+    fig_width = fig.get_window_extent().width
+    text_width = text_width / fig_width
+
+    slider.ax.set_position([SLIDER_X, ypos, SLIDER_W-text_width, ROW_H])
+
+    if default is not None:
+        slider.set_val(default)
+    elif typ in ("min", "scalar"):
+        slider.set_val(min_val)
+    else:
+        slider.set_val(max_val)
+
+    return slider, check
+
+

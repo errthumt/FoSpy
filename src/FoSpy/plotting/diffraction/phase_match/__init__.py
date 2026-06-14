@@ -43,7 +43,19 @@ class PhaseMatcher:
         return matchsets
     
     def find_peaks(self, interactive=False):
-        self.find_baseline(interactive=False)
+        interactive_dict = {}
+
+        for option in ("baseline","find"):
+            if isinstance(interactive, bool):
+                interactive_dict[option] = interactive
+            elif isinstance(interactive, str):
+                interactive_dict[option] = option == interactive
+            elif isinstance(interactive, list):
+                interactive_dict[option] = option in interactive
+            else:
+                interactive_dict[option] = False
+
+        self.find_baseline(interactive=interactive_dict['baseline'])
         exp_corrected = self.frames['exp']['corrected'].to_numpy()
 
         from .match import unpack_peaks
@@ -51,7 +63,7 @@ class PhaseMatcher:
     
         find_cfg = self.find_cfg
         peaks, widths = unpack_peaks(exp_corrected, "widths",**find_cfg)
-        if not interactive:
+        if not interactive_dict['find']:
             return peaks, widths
         
         from matplotlib import pyplot as plt
@@ -64,27 +76,34 @@ class PhaseMatcher:
         # -------------------------------
         # Layout constants for UI elements
         # -------------------------------
-        CHECK_X      = 0.74
-        SLIDER_X     = 0.78
-        SLIDER_W     = 0.20
+        START_Y = 0.1
+        SLIDER_START_X = 0.70
+        PADDING = 0.01
+        CHECK_X      = SLIDER_START_X+PADDING
         CHECK_W      = 0.03
+        SLIDER_X     = CHECK_X + CHECK_W + PADDING
+        SLIDER_W     = 1.0 - SLIDER_X - PADDING
+        LABEL_LSHIFT = (CHECK_W + 2*PADDING) / SLIDER_W
         ROW_H        = 0.03
         ROW_SPACING  = 0.05
-        RIGHT_MARGIN = 0.75
+        OK_BTN_CENTER= 0.85
         OK_BTN_W     = 0.20
         OK_BTN_H     = 0.05
-        OK_BTN_X     = 0.78
-
-        ypos = 0.1
-
+        OK_BTN_X     = OK_BTN_CENTER - OK_BTN_W/2
+        
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.set_title("Peak Assignment for baseline-adjusted intensity")
-        plt.subplots_adjust(right=RIGHT_MARGIN)
+        plt.subplots_adjust(right=SLIDER_START_X, left=PADDING)
         self.frames['exp'].plot(ax=ax, y='corrected')
 
         slider_axes = {}
         sliders = {}
         checks = {}
+
+        ok_ax = fig.add_axes([OK_BTN_X, START_Y, OK_BTN_W, OK_BTN_H])
+        ok_button = Button(ok_ax, "OK")
+
+        ypos = START_Y + OK_BTN_H + ROW_SPACING
 
         for name, spec in slider_specs.items():
 
@@ -185,8 +204,7 @@ class PhaseMatcher:
             fig.canvas.draw_idle()
 
 
-        ok_ax = fig.add_axes([OK_BTN_X, ypos + ROW_SPACING, OK_BTN_W, OK_BTN_H])
-        ok_button = Button(ok_ax, "OK")
+        
 
         def accept(event):
             self.find_cfg = find_cfg
@@ -197,8 +215,17 @@ class PhaseMatcher:
         for check in checks.values():
             check.on_clicked(toggle_slider)
 
+        max_label_width = 0
         for s in sliders.values():
+            s.label.set_position((-LABEL_LSHIFT, .5))
+            label_width = s.label.get_window_extent().width
+            if label_width > max_label_width:
+                max_label_width = label_width
             s.on_changed(update)
+
+        fig_width = fig.get_window_extent().width
+        max_label_width = max_label_width / fig_width
+        plt.subplots_adjust(right=SLIDER_START_X - PADDING - max_label_width)
 
         update()
         plt.show()
