@@ -5,8 +5,9 @@ from ....config import values as cfg
 X_LABEL = cfg.diffraction.x_label
 class PhaseMatcher:
     def __init__(self, exp_2theta, exp_int, cif_dict):
-        from .match import merge_frames
+
         self.baseline_cfg = cfg.get("diffraction.baseline")
+        self.find_cfg = cfg.get("diffraction.find_peaks")
 
         frames = {'exp':DataFrame({X_LABEL:exp_2theta, "int":exp_int}).set_index(X_LABEL)}
         x_min=min(exp_2theta)
@@ -40,6 +41,170 @@ class PhaseMatcher:
             matchsets[name] = matches
 
         return matchsets
+    
+    def find_peaks(self, interactive=False):
+        self.find_baseline(interactive=False)
+        exp_corrected = self.frames['exp']['corrected'].to_numpy()
+
+        from .match import unpack_peaks
+
+    
+        find_cfg = self.find_cfg
+        peaks, widths = unpack_peaks(exp_corrected, "widths",**find_cfg)
+        if not interactive:
+            return peaks, widths
+        
+        from matplotlib import pyplot as plt
+        from matplotlib.widgets import Slider, Button, CheckButtons
+        from ._utils import plot_stick_at_x, rows_to_2th, get_find_sliders
+        exp_index = self.frames['exp'].index.to_numpy()
+
+        slider_specs = get_find_sliders(find_cfg, exp_corrected)
+
+        # -------------------------------
+        # Layout constants for UI elements
+        # -------------------------------
+        CHECK_X      = 0.74
+        SLIDER_X     = 0.78
+        SLIDER_W     = 0.20
+        CHECK_W      = 0.03
+        ROW_H        = 0.03
+        ROW_SPACING  = 0.05
+        RIGHT_MARGIN = 0.75
+        OK_BTN_W     = 0.20
+        OK_BTN_H     = 0.05
+        OK_BTN_X     = 0.78
+
+        ypos = 0.1
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_title("Peak Assignment for baseline-adjusted intensity")
+        plt.subplots_adjust(right=RIGHT_MARGIN)
+        self.frames['exp'].plot(ax=ax, y='corrected')
+
+        slider_axes = {}
+        sliders = {}
+        checks = {}
+
+        for name, spec in slider_specs.items():
+
+            if spec["type"] == "scalar":
+                # Checkbox
+                ax_check = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
+                checks[name] = CheckButtons(ax_check, [""], [spec["default"] is not None])
+
+                # Slider
+                ax_slider = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
+                init = spec["default"] if spec["default"] is not None else spec["min"]
+                sliders[name] = Slider(ax_slider, spec["label"], spec["min"], spec["max"], valinit=init)
+
+                if spec["default"] is None:
+                    sliders[name].ax.set_alpha(0.3)
+                    sliders[name].eventson = False
+
+                ypos += ROW_SPACING
+
+            elif spec["type"] == "range":
+                lo, hi = spec["default"] if spec["default"] else (None, None)
+
+                # --- MIN ---
+                ax_check_min = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
+                checks[name + "_min"] = CheckButtons(ax_check_min, [""], [lo is not None])
+
+                ax_slider_min = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
+                lo_init = lo if lo is not None else spec["min"]
+                sliders[name + "_min"] = Slider(
+                    ax_slider_min, spec["label"] + " (min)", spec["min"], spec["max"], valinit=lo_init
+                )
+
+                if lo is None:
+                    sliders[name + "_min"].ax.set_alpha(0.3)
+                    sliders[name + "_min"].eventson = False
+
+                ypos += ROW_SPACING
+
+                # --- MAX ---
+                ax_check_max = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
+                checks[name + "_max"] = CheckButtons(ax_check_max, [""], [hi is not None])
+
+                ax_slider_max = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
+                hi_init = hi if hi is not None else spec["max"]
+                sliders[name + "_max"] = Slider(
+                    ax_slider_max, spec["label"] + " (max)", spec["min"], spec["max"], valinit=hi_init
+                )
+
+                if hi is None:
+                    sliders[name + "_max"].ax.set_alpha(0.3)
+                    sliders[name + "_max"].eventson = False
+
+                ypos += ROW_SPACING
+
+
+        stick_lines = []
+
+        def update(val=None):
+            for name, spec in slider_specs.items():
+                if spec["type"] == "scalar":
+                    enabled = checks[name].get_status()[0]
+                    find_cfg[name] = sliders[name].val if enabled else None
+
+                elif spec["type"] == "range":
+                    lo_enabled = checks[name + "_min"].get_status()[0]
+                    hi_enabled = checks[name + "_max"].get_status()[0]
+
+                    lo = sliders[name + "_min"].val if lo_enabled else None
+                    hi = sliders[name + "_max"].val if hi_enabled else None
+
+                    find_cfg[name] = [lo, hi]
+
+            peaks, widths = unpack_peaks(exp_corrected, "widths", **find_cfg)
+
+            for line in stick_lines:
+                line.remove()
+            stick_lines.clear()
+
+            peaks_list = [int(x) for x in peaks]
+            peaks_2th = rows_to_2th(exp_index, peaks_list)
+
+            for x in peaks_2th:
+                stick_lines.append(
+                    plot_stick_at_x(x, exp_index, exp_corrected, ax=ax, color='b')
+                )
+
+            fig.canvas.draw_idle()
+
+
+        def toggle_slider(label):
+            for key, check in checks.items():
+                if check.eventson:
+                    enabled = check.get_status()[0]
+                    if key in sliders:
+                        sliders[key].eventson = enabled
+                        sliders[key].ax.set_alpha(1.0 if enabled else 0.3)
+                    break
+            fig.canvas.draw_idle()
+
+
+        ok_ax = fig.add_axes([OK_BTN_X, ypos + ROW_SPACING, OK_BTN_W, OK_BTN_H])
+        ok_button = Button(ok_ax, "OK")
+
+        def accept(event):
+            self.find_cfg = find_cfg
+            plt.close(fig)
+
+        ok_button.on_clicked(accept)
+
+        for check in checks.values():
+            check.on_clicked(toggle_slider)
+
+        for s in sliders.values():
+            s.on_changed(update)
+
+        update()
+        plt.show()
+
+
+
     
     def plot_matches(self, cif_name, ax=None, show=False):
         import numpy as np
