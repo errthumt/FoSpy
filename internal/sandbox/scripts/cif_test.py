@@ -22,8 +22,6 @@ if __name__ == "__main__":
     two_theta, intensity = loadtxt(EXP_PATH, unpack=True)
     intensity = intensity / max(intensity)
 
-    pp(find_peaks(intensity, prominence=0.01))
-
     my_syn = Synthesis.fromFile(FOS_PATH)
 
     # my_syn.cifs[0].quick_pattern()
@@ -31,16 +29,15 @@ if __name__ == "__main__":
     cif_dict = {cif.file_name():cif for cif in my_syn.cifs}
 
     matcher = PhaseMatcher(two_theta, intensity, cif_dict)
-    for name, frame in matcher.frames.items():
-        fig, ax = plt.subplots()
-        frame.plot(title=name, ax=ax)
+    # for name, frame in matcher.frames.items():
+    #     fig, ax = plt.subplots()
+    #     frame.plot(title=name, ax=ax)
 
-    # plt.show()
+    fig, ax = plt.subplots()
 
-    matches = matcher.match_peaks()
-    pp(matches)
+    matcher.find_baseline(interactive=True)
 
-    matcher.match_plot('As')
+    matcher.frames['exp'].plot()
 
-
+    plt.show()
     pass

@@ -22,6 +22,9 @@
             "two_theta_range": [0, 90],
             "two_theta_step": 0.01
         },
+        "baseline": {
+            "smoothing_lam": 1e6
+        },
         "match_peaks": {
             "match_width": 0.5
         },

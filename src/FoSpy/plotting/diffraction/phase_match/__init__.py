@@ -6,6 +6,8 @@ X_LABEL = cfg.diffraction.x_label
 class PhaseMatcher:
     def __init__(self, exp_2theta, exp_int, cif_dict):
         from .match import merge_frames
+        self.baseline_cfg = cfg.get("diffraction.baseline")
+
         frames = {'exp':DataFrame({X_LABEL:exp_2theta, "int":exp_int}).set_index(X_LABEL)}
         x_min=min(exp_2theta)
         x_max=max(exp_2theta)
@@ -39,7 +41,7 @@ class PhaseMatcher:
 
         return matchsets
     
-    def match_plot(self, cif_name):
+    def plot_matches(self, cif_name, ax=None, show=False):
         import numpy as np
         from matplotlib import pyplot as plt
         from ._utils import plot_stick_at_x
@@ -50,7 +52,10 @@ class PhaseMatcher:
         peaks_x = np.array([x for (x, y) in peak_list])
         peaks_y = np.array([y for (x, y) in peak_list])
 
-        fig, ax = plt.subplots()
+        if ax is None:
+            fig, ax = plt.gcf(), plt.gca()
+        else:
+            fig = ax.get_figure()
 
         self.frames['exp'].plot(ax=ax)
 
@@ -61,7 +66,91 @@ class PhaseMatcher:
         for missing in matchset['missing']:
             plot_stick_at_x(missing, peaks_x, peaks_y, ax=ax, color='r')
 
+        if show:
+            plt.show()
+
+        return fig, ax
+    
+    def find_baseline(self, interactive=False):
+        from pybaselines import Baseline
+
+        exp_frame = self.frames['exp']
+        fitter = Baseline()
+
+        lam = self.baseline_cfg['smoothing_lam']
+
+        exp_int = exp_frame['int']
+
+        def set_baseline(to_lam):
+            baseline, _ = fitter.arpls(
+                exp_frame['int'].to_numpy(),
+                lam=to_lam
+            )
+            exp_frame['baseline'] = baseline
+            exp_frame['corrected'] = exp_int - baseline
+
+            return baseline
+        
+        set_baseline(lam)
+
+        if not interactive:
+            return
+
+        from matplotlib import pyplot as plt
+        from matplotlib.widgets import Slider, Button
+        import numpy as np
+
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_title("Interactive Baseline Adjustment")
+
+        plt.subplots_adjust(bottom=0.25)
+
+        x = exp_frame.index
+
+        exp_line, = ax.plot(x, exp_frame['int'], label='Experimental')
+        base_line, = ax.plot(x, exp_frame['baseline'], label='Baseline')
+
+        ax.legend()
+
+        slider_ax = plt.axes([0.15, 0.10, 0.65, 0.03])
+
+        # Use log10(lambda) because lambda spans many orders of magnitude
+        loglam0 = np.log10(lam)
+
+        lam_slider = Slider(
+            slider_ax,
+            r'log$_{10}(\lambda)$',
+            2,      # 1e2
+            10,     # 1e10
+            valinit=loglam0,
+        )
+
+        button_ax = plt.axes([0.83, 0.08, 0.10, 0.06])
+        ok_button = Button(button_ax, 'OK')
+
+        def update(val):
+            lam = 10**lam_slider.val
+
+            baseline = set_baseline(lam)
+
+            base_line.set_ydata(baseline)
+
+            ax.relim()
+            ax.autoscale_view()
+
+            fig.canvas.draw_idle()
+
+        def accept(event):
+            self.baseline_cfg['smoothing_lam'] = 10**lam_slider.val
+            plt.close(fig)
+
+        lam_slider.on_changed(update)
+        ok_button.on_clicked(accept)
+
         plt.show()
+
+        return
+
 
 
         
