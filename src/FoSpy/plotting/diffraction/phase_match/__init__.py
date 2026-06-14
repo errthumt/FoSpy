@@ -67,7 +67,7 @@ class PhaseMatcher:
             return peaks, widths
         
         from matplotlib import pyplot as plt
-        from matplotlib.widgets import Slider, Button, CheckButtons
+        from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
         from ._utils import plot_stick_at_x, rows_to_2th, get_find_sliders
         exp_index = self.frames['exp'].index.to_numpy()
 
@@ -86,11 +86,10 @@ class PhaseMatcher:
         LABEL_LSHIFT = (CHECK_W + 2*PADDING) / SLIDER_W
         ROW_H        = 0.03
         ROW_SPACING  = 0.05
-        OK_BTN_CENTER= 0.85
+
         OK_BTN_W     = 0.20
         OK_BTN_H     = 0.05
-        OK_BTN_X     = OK_BTN_CENTER - OK_BTN_W/2
-        
+
         fig, ax = plt.subplots(figsize=(10, 6))
         ax.set_title("Peak Assignment for baseline-adjusted intensity")
         plt.subplots_adjust(right=SLIDER_START_X, left=PADDING)
@@ -99,67 +98,19 @@ class PhaseMatcher:
         slider_axes = {}
         sliders = {}
         checks = {}
-
-        ok_ax = fig.add_axes([OK_BTN_X, START_Y, OK_BTN_W, OK_BTN_H])
-        ok_button = Button(ok_ax, "OK")
-
-        ypos = START_Y + OK_BTN_H + ROW_SPACING
-
-        for name, spec in slider_specs.items():
-
-            if spec["type"] == "scalar":
-                # Checkbox
-                ax_check = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
-                checks[name] = CheckButtons(ax_check, [""], [spec["default"] is not None])
-
-                # Slider
-                ax_slider = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
-                init = spec["default"] if spec["default"] is not None else spec["min"]
-                sliders[name] = Slider(ax_slider, spec["label"], spec["min"], spec["max"], valinit=init)
-
-                if spec["default"] is None:
-                    sliders[name].ax.set_alpha(0.3)
-                    sliders[name].eventson = False
-
-                ypos += ROW_SPACING
-
-            elif spec["type"] == "range":
-                lo, hi = spec["default"] if spec["default"] else (None, None)
-
-                # --- MIN ---
-                ax_check_min = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
-                checks[name + "_min"] = CheckButtons(ax_check_min, [""], [lo is not None])
-
-                ax_slider_min = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
-                lo_init = lo if lo is not None else spec["min"]
-                sliders[name + "_min"] = Slider(
-                    ax_slider_min, spec["label"] + " (min)", spec["min"], spec["max"], valinit=lo_init
-                )
-
-                if lo is None:
-                    sliders[name + "_min"].ax.set_alpha(0.3)
-                    sliders[name + "_min"].eventson = False
-
-                ypos += ROW_SPACING
-
-                # --- MAX ---
-                ax_check_max = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
-                checks[name + "_max"] = CheckButtons(ax_check_max, [""], [hi is not None])
-
-                ax_slider_max = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
-                hi_init = hi if hi is not None else spec["max"]
-                sliders[name + "_max"] = Slider(
-                    ax_slider_max, spec["label"] + " (max)", spec["min"], spec["max"], valinit=hi_init
-                )
-
-                if hi is None:
-                    sliders[name + "_max"].ax.set_alpha(0.3)
-                    sliders[name + "_max"].eventson = False
-
-                ypos += ROW_SPACING
-
-
         stick_lines = []
+
+
+        def disable(slider):
+            slider.eventson = False
+            slider.active = False
+            slider.ax.set_alpha(0.3)
+
+
+        def enable(slider):
+            slider.eventson = True
+            slider.active = True
+            slider.ax.set_alpha(1.0)
 
         def update(val=None):
             for name, spec in slider_specs.items():
@@ -193,15 +144,100 @@ class PhaseMatcher:
             fig.canvas.draw_idle()
 
 
+        def new_slider(label, fig, spec, ypos, min_val, max_val, default, typ, slider_key):
+            ax_check = fig.add_axes([CHECK_X, ypos, CHECK_W, ROW_H])
+            check = CheckButtons(ax_check, [slider_key], [default is not None])
+            check.labels[0].set_visible(False)
+
+            ax_slider = fig.add_axes([SLIDER_X, ypos, SLIDER_W, ROW_H])
+            slider = Slider(ax_slider, label, min_val, max_val, valinit=max_val, dragging=False)
+            slider.valtext.set_text(f"{slider.val:.{spec.get('digits', 2)}f}")
+
+            text_width = slider.valtext.get_window_extent().width
+            fig_width = fig.get_window_extent().width
+            text_width = text_width / fig_width
+
+            tb_width = text_width+PADDING
+
+            ax_text = fig.add_axes([1.0-tb_width-PADDING, ypos, tb_width, ROW_H])
+            textbox = TextBox(ax_text, "", initial=slider.valtext.get_text())
+
+            slider.valtext.set_visible(False)
+
+            def update_slider(text, slider=slider, textbox=textbox, digits=spec.get("digits", 2)):
+                try:
+                    if not slider.eventson:
+                        raise ValueError
+                    slider.set_val(float(text))
+                    update()
+                except ValueError:
+                    textbox.set_val(f"{slider.val:.{digits}f}")
+
+            def update_textbox(val, textbox=textbox,digits=spec.get("digits", 2)):
+                textbox.set_val(f"{val:.{digits}f}")
+                update()
+
+
+
+            slider.ax.set_position([SLIDER_X, ypos, SLIDER_W-tb_width-PADDING, ROW_H])
+
+
+            if default is not None:
+                slider.set_val(default)
+            else:
+                disable(slider)
+                if typ in ("min", "scalar"):
+                    slider.set_val(min_val)
+                else:
+                    slider.set_val(max_val)
+            
+            ypos += ROW_SPACING
+
+            slider.on_changed(update_textbox)
+            textbox.on_submit(update_slider)
+
+            return slider, check, ypos
+        
+
+        ypos = START_Y + OK_BTN_H + ROW_SPACING
+
+        for name, spec in slider_specs.items():
+
+            if spec["type"] == "scalar":
+
+                sliders[name], checks[name], ypos = new_slider(
+                    spec["label"], fig, spec, ypos, spec["min"], 
+                    spec["max"], spec["default"], "scalar", name)
+
+
+            elif spec["type"] == "range":
+                lo, hi = spec["default"] if spec["default"] else (None, None)
+
+                lo_name = name + "_min"
+                lo_label =spec["label"] + " (min)"
+                sliders[lo_name], checks[lo_name], ypos = new_slider(
+                    lo_label, fig, spec, ypos, spec["min"], 
+                    spec["max"], lo, "min", lo_name)
+                
+                hi_name = name + "_max"
+                hi_label =spec["label"] + " (max)"
+                sliders[hi_name], checks[hi_name], ypos = new_slider(
+                    hi_label, fig, spec, ypos, spec["min"], 
+                    spec["max"], hi, "max", hi_name)
+
+
+
         def toggle_slider(label):
-            for key, check in checks.items():
-                if check.eventson:
-                    enabled = check.get_status()[0]
-                    if key in sliders:
-                        sliders[key].eventson = enabled
-                        sliders[key].ax.set_alpha(1.0 if enabled else 0.3)
-                    break
-            fig.canvas.draw_idle()
+            if label in sliders:
+                print(f"toggling {label}")
+                enabled = not sliders[label].eventson
+                if enabled:
+                    enable(sliders[label])
+                else:
+                    disable(sliders[label])
+            
+            update()
+
 
 
         
@@ -209,8 +245,6 @@ class PhaseMatcher:
         def accept(event):
             self.find_cfg = find_cfg
             plt.close(fig)
-
-        ok_button.on_clicked(accept)
 
         for check in checks.values():
             check.on_clicked(toggle_slider)
@@ -221,11 +255,17 @@ class PhaseMatcher:
             label_width = s.label.get_window_extent().width
             if label_width > max_label_width:
                 max_label_width = label_width
-            s.on_changed(update)
 
         fig_width = fig.get_window_extent().width
         max_label_width = max_label_width / fig_width
-        plt.subplots_adjust(right=SLIDER_START_X - PADDING - max_label_width)
+        full_margin = SLIDER_START_X - PADDING - max_label_width
+        plt.subplots_adjust(right=full_margin)
+
+        ok_center = (1+full_margin) / 2
+        ok_x = ok_center - OK_BTN_W/2
+        ok_ax = fig.add_axes([ok_x, START_Y, OK_BTN_W, OK_BTN_H])
+        ok_button = Button(ok_ax, "OK")
+        ok_button.on_clicked(accept)
 
         update()
         plt.show()
