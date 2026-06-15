@@ -23,7 +23,10 @@
             "two_theta_step": 0.01
         },
         "baseline": {
-            "smoothing_lam": 1e6
+            "lam": 1e5,
+            "diff_order": 2,
+            "max_iter": 50,
+            "tol": 1e-3
         },
         "match_peaks": {
             "match_width": 0.5

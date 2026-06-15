@@ -8,5 +8,7 @@ def _round_spec(x, digits, key=None):
         return _floor_to(x, digits)
     elif key == "max":
         return _ceil_to(x, digits)
+    elif key == "None":
+        return round(x, digits)
     else:
         return round(x, digits) if x is not None else None
