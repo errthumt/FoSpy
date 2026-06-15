@@ -3,7 +3,7 @@ from pandas import DataFrame
 
 from ..engines import ENGINES
 from ....config import values as cfg
-from ._interactive import check_for_interactive
+from ._utils import check_for_interactive
 
 X_LABEL = cfg.diffraction.x_label
 class PhaseMatcher:
@@ -58,7 +58,7 @@ class PhaseMatcher:
         if not interactive:
             return unpack_peaks(exp_corrected, "widths",**find_cfg)
 
-        from ._interactive import PeakFinder
+        from ..ui.peaks import PeakFinder
 
         interactive_kwargs.setdefault('title', "Baseline-Corrected Peak Finder")
         if interactive_kwargs['title'].startswith("+"):

@@ -48,4 +48,13 @@ def plot_stick_at_x(x, x_array, y_array, ax=None, **vline_kwargs):
     return line
 
 
+def check_for_interactive(interactive, kw):
+    if isinstance(interactive, bool):
+        return interactive
+    elif isinstance(interactive, str):
+        return interactive == kw
+    elif isinstance(interactive, list):
+        return kw in interactive
+
+
 

@@ -1,29 +1,6 @@
-from ....config import values as cfg
-import math
+from FoSpy.config import values as cfg
+from FoSpy.ui._utils import _round_spec
 
-def check_for_interactive(interactive, kw):
-    if isinstance(interactive, bool):
-        return interactive
-    elif isinstance(interactive, str):
-        return interactive == kw
-    elif isinstance(interactive, list):
-        return kw in interactive
-
-def floor_to(x, digits):
-    return math.floor(x * 10**digits) / 10**digits
-
-def ceil_to(x, digits):
-    return math.ceil(x * 10**digits) / 10**digits
-
-def round_spec(x, digits, key=None):
-    if isinstance(x, list or tuple):
-        return [round_spec(xi, digits) for xi in x]
-    elif key == "min":
-        return floor_to(x, digits)
-    elif key == "max":
-        return ceil_to(x, digits)
-    else:
-        return round(x, digits) if x is not None else None
 
 def get_find_sliders(find_cfg, intensity_col):
     sliders = {
@@ -92,8 +69,8 @@ def get_find_sliders(find_cfg, intensity_col):
         spec["default"] = find_cfg.get(name)
 
         for key in ["min", "max", "default"]:
-            spec[key] = round_spec(spec[key], digits, key)
-        
+            spec[key] = _round_spec(spec[key], digits, key)
+
     return sliders
 
 
@@ -115,8 +92,8 @@ class PeakFinderAbstract:
     def update_sticks(self):
         if not hasattr(self, 'exp_corrected') and hasattr(self, 'exp_index'):
             return
-        from ._utils import rows_to_2th
-        from .match import unpack_peaks
+        from ..phase_match._utils import rows_to_2th
+        from ..phase_match.match import unpack_peaks
 
         self.peaks, self.widths = unpack_peaks(self.exp_corrected,
         "widths", **self.cfg)
@@ -129,8 +106,8 @@ class PeakFinderAbstract:
         self.reset_sticks()
         self.add_sticks(segments)
         self.draw_sticks()
-        
-    
+
+
     def update_plot(self, val=None):
         super().update_plot(val)
         self.update_sticks()
@@ -138,7 +115,7 @@ class PeakFinderAbstract:
     def main_loop(self):
         super().main_loop()
         return self.peaks, self.widths
-    
+
 
 def PeakFinder(exp_corrected, exp_index, cfg={}, ui=None, **kwargs):
     from ....ui.matplotlib import SliderPlot as matSliderPlot
