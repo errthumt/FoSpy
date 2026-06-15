@@ -1,3 +1,5 @@
+from ....ui.abstract import AssembleSlider
+
 from ._specs import get_find_sliders
 
 
@@ -45,20 +47,6 @@ class PeakFinderAbstract:
 
 
 def PeakFinder(exp_corrected, exp_index, cfg={}, ui=None, **kwargs):
-    from ....ui.matplotlib import SliderPlot as matSliderPlot
-    from ....ui.pyqtgraph import SliderPlot as pgSliderPlot
-    from ....config import values as full_cfg
-    ui_opts = {
-        'matplotlib': matSliderPlot,
-        'pyqtgraph': pgSliderPlot
-    }
-
-    if ui is None:
-        ui = full_cfg.get('ui.default')
-
-    plot_cls = ui_opts.get(ui, matSliderPlot)
-
-    class PeakFinder(PeakFinderAbstract, plot_cls):
-        pass
+    PeakFinder = AssembleSlider(PeakFinderAbstract, ui=ui)
 
     return PeakFinder(exp_corrected, exp_index, cfg=cfg, **kwargs)

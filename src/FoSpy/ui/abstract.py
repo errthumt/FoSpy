@@ -60,3 +60,26 @@ class SliderPlot:
     def main_loop(self):
         raise NotImplementedError("Override in UI subclass")
 
+
+def AssembleSlider(subcls, ui=None):
+    from ....ui import matplotlib, pyqtgraph
+    from ....config import values as full_cfg
+    ui_opts = {
+        'matplotlib': matplotlib,
+        'pyqtgraph': pyqtgraph
+    }
+
+    if ui is None:
+        ui = full_cfg.get('ui.default')
+
+    plot_module = ui_opts.get(ui, matplotlib)
+
+    if not plot_module.available:
+        plot_module = matplotlib
+
+    class SliderPlot(subcls, plot_module.SliderPlot):
+        pass
+
+
+    return SliderPlot
+
