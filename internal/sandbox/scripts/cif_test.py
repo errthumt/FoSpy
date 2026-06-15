@@ -6,9 +6,7 @@ if __name__ == "__main__":
     from numpy import loadtxt
     from matplotlib import pyplot as plt
     from FoSpy.config import values as cfg
-    from FoSpy.plotting.diffraction.phase_match.match import _debug
     from pprint import pp
-    _debug.on = True
 
 
     X_LABEL = cfg.diffraction.x_label
@@ -36,7 +34,7 @@ if __name__ == "__main__":
 
 
     # matcher.find_baseline(interactive=True)
-    peaks, widths =matcher.find_peaks(interactive='find_peaks', ui='matplotlib')
+    peaks, widths =matcher.find_peaks(interactive='find_peaks')
     pp(peaks)
     pp(widths)
 

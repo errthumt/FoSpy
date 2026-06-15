@@ -15,6 +15,7 @@ class SliderPlot:
         self.sliders = {}
         self.checks = {}
         self.textboxes = {}
+        self.plots = {}
 
     def update_plot(self, val=None):
         self.update_cfg()
@@ -22,8 +23,9 @@ class SliderPlot:
     def update_cfg(self):
         for name, spec in self.specs.items():
             if spec["type"] == "scalar":
+                NoneVal = spec.get("None", None)
                 enabled = self.get_check_enabled(name)
-                self.cfg[name] = self.get_slider_val(name) if enabled else None
+                self.cfg[name] = self.get_slider_val(name) if enabled else NoneVal
 
             elif spec["type"] == "range":
                 lo_enabled = self.get_check_enabled(name + "_min")
@@ -49,7 +51,10 @@ class SliderPlot:
     def draw_sticks(self):
         raise NotImplementedError("Override in UI subclass")
     
-    def plotXY(self, x, *y):
+    def plotXY(self, x, *y, plotset='static',**kwargs):
+        raise NotImplementedError("Override in UI subclass")
+    
+    def reset_plotset(self, plotset='static'):
         raise NotImplementedError("Override in UI subclass")
     
     def main_loop(self):

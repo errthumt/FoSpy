@@ -110,7 +110,7 @@ class PhaseMatcher:
         exp_frame = self.frames['exp']
         fitter = Baseline()
 
-        lam = self.baseline_cfg['smoothing_lam']
+        lam = self.baseline_cfg['lam']
 
         exp_int = exp_frame['int']
 

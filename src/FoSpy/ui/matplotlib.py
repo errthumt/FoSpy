@@ -233,9 +233,18 @@ class SliderPlot(AbstractSlider):
     def draw_sticks(self):
         self.ax.draw_artist(self.stickCollection)
 
-    def plotXY(self, x, *y, **kwargs):
+    def plotXY(self, x, *y, plotset='static', **kwargs):
+        self.plots.setdefault(plotset, [])
         for yi in y:
-            self.ax.plot(x, yi, **kwargs)
+            line = self.ax.plot(x, yi, **kwargs)
+            self.plots[plotset].append(line)
+
+    def reset_plotset(self, plotset='static'):
+        if plotset not in self.plots:
+            return
+        for drawer in self.plots[plotset]:
+            drawer.remove()
+        self.plots[plotset] = []
 
     def update_plot(self, val=None):
         super().update_plot(val)
