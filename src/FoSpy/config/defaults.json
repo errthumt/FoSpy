@@ -38,5 +38,17 @@
             "rel_height": 0.9,
             "plateau_size": [null, null]
         }
+    },
+    "slider_digits": {
+        "default": 2,
+        "find_peaks": {
+            "height": null,
+            "threshold": null,
+            "prominence": null,
+            "rel_height": null
+        }
+    },
+    "ui":{
+        "default": "matplotlib"
     }
 }

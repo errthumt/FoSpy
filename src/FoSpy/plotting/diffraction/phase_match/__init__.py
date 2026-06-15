@@ -45,7 +45,7 @@ class PhaseMatcher:
 
         return matchsets
     
-    def find_peaks(self, interactive=False):
+    def find_peaks(self, interactive=False, **interactive_kwargs):
         self.find_baseline(interactive=interactive)
         interactive = check_for_interactive(interactive, "find_peaks")
         
@@ -55,13 +55,17 @@ class PhaseMatcher:
 
     
         find_cfg = self.find_cfg
-        peaks, widths = unpack_peaks(exp_corrected, "widths",**find_cfg)
         if not interactive:
-            return peaks, widths
+            return unpack_peaks(exp_corrected, "widths",**find_cfg)
 
         from ._interactive import PeakFinder
 
-        peak_finder = PeakFinder(exp_corrected, self.frames['exp'].index, title="Interactive Peak Finder for Baseline-Corrected Data", cfg=find_cfg)
+        interactive_kwargs.setdefault('title', "Baseline-Corrected Peak Finder")
+        if interactive_kwargs['title'].startswith("+"):
+            suffix = interactive_kwargs['title'][1:]
+            interactive_kwargs['title'] = f"Baseline-Corrected Peak Finder\n{suffix}"
+
+        peak_finder = PeakFinder(exp_corrected, self.frames['exp'].index, cfg=find_cfg, **interactive_kwargs)
         return peak_finder.main_loop()
         
 
