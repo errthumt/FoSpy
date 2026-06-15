@@ -1,4 +1,6 @@
 from pandas import DataFrame
+
+
 from ..engines import ENGINES
 from ....config import values as cfg
 
@@ -67,7 +69,8 @@ class PhaseMatcher:
         from matplotlib import pyplot as plt
         from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
         from matplotlib.collections import LineCollection
-        from ._utils import plot_stick_at_x, rows_to_2th, get_find_sliders
+        from ._utils import rows_to_2th
+        from ._interactive import get_find_sliders
         exp_index = self.frames['exp'].index.to_numpy()
 
         slider_specs = get_find_sliders(find_cfg, exp_corrected)
