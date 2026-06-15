@@ -18,6 +18,14 @@ class PhaseMatcher:
         self.cifs = cif_dict
         self.frames = frames
 
+    def _check_for_interactive(self, interactive, kw):
+        if isinstance(interactive, bool):
+            return interactive
+        elif isinstance(interactive, str):
+            return interactive == kw
+        elif isinstance(interactive, list):
+            return kw in interactive
+
     def match_peaks(self):
         import numpy as np
         from .match import match_peaks
@@ -43,19 +51,9 @@ class PhaseMatcher:
         return matchsets
     
     def find_peaks(self, interactive=False):
-        interactive_dict = {}
-
-        for option in ("baseline","find"):
-            if isinstance(interactive, bool):
-                interactive_dict[option] = interactive
-            elif isinstance(interactive, str):
-                interactive_dict[option] = option == interactive
-            elif isinstance(interactive, list):
-                interactive_dict[option] = option in interactive
-            else:
-                interactive_dict[option] = False
-
-        self.find_baseline(interactive=interactive_dict['baseline'])
+        self.find_baseline(interactive=interactive)
+        interactive = self._check_for_interactive(interactive, "find_peaks")
+        
         exp_corrected = self.frames['exp']['corrected'].to_numpy()
 
         from .match import unpack_peaks
@@ -63,7 +61,7 @@ class PhaseMatcher:
     
         find_cfg = self.find_cfg
         peaks, widths = unpack_peaks(exp_corrected, "widths",**find_cfg)
-        if not interactive_dict['find']:
+        if not interactive:
             return peaks, widths
         
         from matplotlib import pyplot as plt
@@ -315,6 +313,8 @@ class PhaseMatcher:
         return fig, ax
     
     def find_baseline(self, interactive=False):
+        interactive = self._check_for_interactive(interactive, "baseline")
+
         from pybaselines import Baseline
 
         exp_frame = self.frames['exp']
