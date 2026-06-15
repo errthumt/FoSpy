@@ -23,7 +23,7 @@ class PhaseMatcher:
 
     def match_peaks(self):
         import numpy as np
-        from .match import match_peaks
+        from ._utils import match_peaks
         from ._utils import rows_to_2th
 
         exp_frame = self.frames['exp']/self.frames['exp'].max()
@@ -51,7 +51,7 @@ class PhaseMatcher:
         
         exp_corrected = self.frames['exp']['corrected'].to_numpy()
 
-        from .match import unpack_peaks
+        from ._utils import unpack_peaks
 
     
         find_cfg = self.find_cfg

@@ -93,7 +93,7 @@ class PeakFinderAbstract:
         if not hasattr(self, 'exp_corrected') and hasattr(self, 'exp_index'):
             return
         from ..phase_match._utils import rows_to_2th
-        from ..phase_match.match import unpack_peaks
+        from ..phase_match._utils import unpack_peaks
 
         self.peaks, self.widths = unpack_peaks(self.exp_corrected,
         "widths", **self.cfg)
