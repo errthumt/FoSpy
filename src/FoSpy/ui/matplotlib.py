@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 from matplotlib.widgets import Slider, Button
 from matplotlib.collections import LineCollection
 
+available = True
+
 # -------------------------------
 # Layout constants for UI elements
 # -------------------------------
