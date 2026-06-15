@@ -68,6 +68,7 @@ class PhaseMatcher:
         
         from matplotlib import pyplot as plt
         from matplotlib.widgets import Slider, Button, CheckButtons, TextBox
+        from matplotlib.collections import LineCollection
         from ._utils import plot_stick_at_x, rows_to_2th, get_find_sliders
         exp_index = self.frames['exp'].index.to_numpy()
 
@@ -99,6 +100,8 @@ class PhaseMatcher:
         sliders = {}
         checks = {}
         stick_lines = []
+        sticks = LineCollection([], colors='b')
+        ax.add_collection(sticks)
 
 
         def disable(slider):
@@ -134,14 +137,22 @@ class PhaseMatcher:
             stick_lines.clear()
 
             peaks_list = [int(x) for x in peaks]
+            intensity_list = [exp_corrected[x] for x in peaks_list] #exp_corrected[x]
             peaks_2th = rows_to_2th(exp_index, peaks_list)
 
-            for x in peaks_2th:
-                stick_lines.append(
-                    plot_stick_at_x(x, exp_index, exp_corrected, ax=ax, color='b')
-                )
+            # for x in peaks_2th:
+            #     stick_lines.append(
+            #         plot_stick_at_x(x, exp_index, exp_corrected, ax=ax, color='b')
+            #     )
 
-            fig.canvas.draw_idle()
+            segments = [ [(x, 0), (x, y)] for x, y in zip(peaks_2th, intensity_list)]
+
+            sticks.set_segments(segments)
+
+            # fig.canvas.draw_idle()
+            ax.draw_artist(ax.patch)
+            ax.draw_artist(sticks)
+            fig.canvas.blit(ax.bbox)
 
 
         def new_slider(label, fig, spec, ypos, min_val, max_val, default, typ, slider_key):
