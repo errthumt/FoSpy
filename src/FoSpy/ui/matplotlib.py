@@ -98,9 +98,7 @@ class SliderPlot(AbstractSlider):
 
 
     def _ok_clicked(self, event):
-        print("OK clicked")
         plt.close(self.fig)
-       #  self.fig.canvas.manager.close()
 
 
     def disable_slider(self, spec_name):
