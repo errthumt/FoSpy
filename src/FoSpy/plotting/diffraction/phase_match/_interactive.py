@@ -1,3 +1,11 @@
+def check_for_interactive(self, interactive, kw):
+    if isinstance(interactive, bool):
+        return interactive
+    elif isinstance(interactive, str):
+        return interactive == kw
+    elif isinstance(interactive, list):
+        return kw in interactive
+
 def get_find_sliders(find_cfg, intensity_col):
     return {
     "height": {
