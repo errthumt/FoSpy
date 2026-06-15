@@ -1,4 +1,4 @@
-from FoSpy._utils import _ceil_to, _floor_to
+from .._utils import _ceil_to, _floor_to
 
 
 def _round_spec(x, digits, key=None):
