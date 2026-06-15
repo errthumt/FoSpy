@@ -9,6 +9,9 @@ if __name__ == "__main__":
     from FoSpy.plotting.diffraction.phase_match.match import _debug
     _debug.on = True
 
+    import matplotlib
+    matplotlib.use("QtAgg")
+
 
     X_LABEL = cfg.diffraction.x_label
 
@@ -33,10 +36,9 @@ if __name__ == "__main__":
     #     fig, ax = plt.subplots()
     #     frame.plot(title=name, ax=ax)
 
-    fig, ax = plt.subplots()
 
     # matcher.find_baseline(interactive=True)
-    matcher.find_peaks(interactive='find')
+    matcher.find_peaks(interactive=True)
 
     #matcher.frames['exp'].plot()
 
