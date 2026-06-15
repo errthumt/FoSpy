@@ -3,6 +3,7 @@ from pandas import DataFrame
 
 from ..engines import ENGINES
 from ....config import values as cfg
+from ._interactive import check_for_interactive
 
 X_LABEL = cfg.diffraction.x_label
 class PhaseMatcher:
@@ -19,14 +20,6 @@ class PhaseMatcher:
             frames[name] = engine.get_pattern().set_index(X_LABEL)
         self.cifs = cif_dict
         self.frames = frames
-
-    def _check_for_interactive(self, interactive, kw):
-        if isinstance(interactive, bool):
-            return interactive
-        elif isinstance(interactive, str):
-            return interactive == kw
-        elif isinstance(interactive, list):
-            return kw in interactive
 
     def match_peaks(self):
         import numpy as np
@@ -54,7 +47,7 @@ class PhaseMatcher:
     
     def find_peaks(self, interactive=False):
         self.find_baseline(interactive=interactive)
-        interactive = self._check_for_interactive(interactive, "find_peaks")
+        interactive = check_for_interactive(interactive, "find_peaks")
         
         exp_corrected = self.frames['exp']['corrected'].to_numpy()
 
@@ -316,7 +309,7 @@ class PhaseMatcher:
         return fig, ax
     
     def find_baseline(self, interactive=False):
-        interactive = self._check_for_interactive(interactive, "baseline")
+        interactive = check_for_interactive(interactive, "baseline")
 
         from pybaselines import Baseline
 
