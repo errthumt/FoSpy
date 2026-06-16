@@ -78,6 +78,7 @@ nav:
     - plotting/__init__: full/plotting/__init__.md
     - _utils: full/plotting/_utils.md
     - diffraction:
+      - diffraction/__init__: full/plotting/diffraction/__init__.md
       - engines:
         - engines/__init__: full/plotting/diffraction/engines/__init__.md
         - _base: full/plotting/diffraction/engines/_base.md
@@ -88,6 +89,7 @@ nav:
         - phase_match/__init__: full/plotting/diffraction/phase_match/__init__.md
         - _utils: full/plotting/diffraction/phase_match/_utils.md
       - ui:
+        - ui/__init__: full/plotting/diffraction/ui/__init__.md
         - _specs: full/plotting/diffraction/ui/_specs.md
         - baseline: full/plotting/diffraction/ui/baseline.md
         - peaks: full/plotting/diffraction/ui/peaks.md
