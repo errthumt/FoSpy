@@ -1,5 +1,5 @@
-from fos_site.fos_to_md import generate_fos_pages
+from fos_site import build_full_site
 
-generate_fos_pages()
+build_full_site(figures=True)
 
 pass
