@@ -1,5 +1,6 @@
 from fos_site import build_full_site
 
-build_full_site(figures=True)
+if __name__ == '__main__':
+    build_full_site(figures=True)
 
 pass
