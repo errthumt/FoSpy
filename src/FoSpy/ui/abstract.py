@@ -62,8 +62,8 @@ class SliderPlot:
 
 
 def AssembleSlider(subcls, ui=None):
-    from ....ui import matplotlib, pyqtgraph
-    from ....config import values as full_cfg
+    from . import matplotlib, pyqtgraph
+    from ..config import values as full_cfg
     ui_opts = {
         'matplotlib': matplotlib,
         'pyqtgraph': pyqtgraph

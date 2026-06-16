@@ -214,11 +214,11 @@ class SliderPlot(AbstractSlider):
         for item in self.sticks:
             self.plot.addItem(item)
 
-    def plotXY(self, x, *y, plotset='static', pen=pg.mkPen('b', width=2), **kwargs):
+    def plotXY(self, x, *y, plotset='static', color='b', **kwargs):
         self.plots.setdefault(plotset, [])
 
         for yi in y:
-            item = self.plot.plot(x, yi, pen=pen, **kwargs)
+            item = self.plot.plot(x, yi, pen=pg.mkPen(color), **kwargs)
             self.plots[plotset].append(item)
 
     def reset_plotset(self, plotset='static'):

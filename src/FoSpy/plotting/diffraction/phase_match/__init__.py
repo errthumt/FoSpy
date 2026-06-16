@@ -3,7 +3,7 @@ from pandas import DataFrame
 
 from ..engines import ENGINES
 from ....config import values as cfg
-from ._utils import check_for_interactive
+from ._utils import check_for_interactive, convert_baseline_cfg
 
 X_LABEL = cfg.diffraction.x_label
 class PhaseMatcher:
@@ -110,79 +110,84 @@ class PhaseMatcher:
         exp_frame = self.frames['exp']
         fitter = Baseline()
 
-        lam = self.baseline_cfg['lam']
+        baseline_args = convert_baseline_cfg(self.baseline_cfg)
+        exp_int = exp_frame['int'].to_numpy()
 
-        exp_int = exp_frame['int']
 
-        def set_baseline(to_lam):
-            baseline, _ = fitter.arpls(
-                exp_frame['int'].to_numpy(),
-                lam=to_lam
-            )
-            exp_frame['baseline'] = baseline
-            exp_frame['corrected'] = exp_int - baseline
-
-            return baseline
-        
-        set_baseline(lam)
+        baseline, _ = fitter.arpls(
+            exp_int,
+            **baseline_args
+        )
+        exp_frame['baseline'] = baseline
+        exp_frame['corrected'] = exp_int - baseline
 
         if not interactive:
             return
+        
+        from ..ui.baseline import BaselineFinder
 
-        from matplotlib import pyplot as plt
-        from matplotlib.widgets import Slider, Button
-        import numpy as np
+        exp_2th = exp_frame.index.to_numpy()
+        finder = BaselineFinder(exp_int, exp_2th, cfg=self.baseline_cfg)
 
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.set_title("Interactive Baseline Adjustment")
+        baseline, corrected = finder.main_loop()
 
-        plt.subplots_adjust(bottom=0.25)
+        exp_frame['baseline'] = baseline
+        exp_frame['corrected'] = corrected
 
-        x = exp_frame.index
+        # from matplotlib import pyplot as plt
+        # from matplotlib.widgets import Slider, Button
+        # import numpy as np
 
-        exp_line, = ax.plot(x, exp_frame['int'], label='Experimental')
-        base_line, = ax.plot(x, exp_frame['baseline'], label='Baseline')
+        # fig, ax = plt.subplots(figsize=(10, 6))
+        # ax.set_title("Interactive Baseline Adjustment")
 
-        ax.legend()
+        # plt.subplots_adjust(bottom=0.25)
 
-        slider_ax = plt.axes([0.15, 0.10, 0.65, 0.03])
+        # x = exp_frame.index
 
-        # Use log10(lambda) because lambda spans many orders of magnitude
-        loglam0 = np.log10(lam)
+        # exp_line, = ax.plot(x, exp_frame['int'], label='Experimental')
+        # base_line, = ax.plot(x, exp_frame['baseline'], label='Baseline')
 
-        lam_slider = Slider(
-            slider_ax,
-            r'log$_{10}(\lambda)$',
-            2,      # 1e2
-            10,     # 1e10
-            valinit=loglam0,
-        )
+        # ax.legend()
 
-        button_ax = plt.axes([0.83, 0.08, 0.10, 0.06])
-        ok_button = Button(button_ax, 'OK')
+        # slider_ax = plt.axes([0.15, 0.10, 0.65, 0.03])
 
-        def update(val):
-            lam = 10**lam_slider.val
+        # # Use log10(lambda) because lambda spans many orders of magnitude
+        # loglam0 = np.log10(lam)
 
-            baseline = set_baseline(lam)
+        # lam_slider = Slider(
+        #     slider_ax,
+        #     r'log$_{10}(\lambda)$',
+        #     2,      # 1e2
+        #     10,     # 1e10
+        #     valinit=loglam0,
+        # )
 
-            base_line.set_ydata(baseline)
+        # button_ax = plt.axes([0.83, 0.08, 0.10, 0.06])
+        # ok_button = Button(button_ax, 'OK')
 
-            ax.relim()
-            ax.autoscale_view()
+        # def update(val):
+        #     lam = 10**lam_slider.val
 
-            fig.canvas.draw_idle()
+        #     baseline = set_baseline(lam)
 
-        def accept(event):
-            self.baseline_cfg['smoothing_lam'] = 10**lam_slider.val
-            plt.close(fig)
+        #     base_line.set_ydata(baseline)
 
-        lam_slider.on_changed(update)
-        ok_button.on_clicked(accept)
+        #     ax.relim()
+        #     ax.autoscale_view()
 
-        plt.show()
+        #     fig.canvas.draw_idle()
 
-        return
+        # def accept(event):
+        #     self.baseline_cfg['smoothing_lam'] = 10**lam_slider.val
+        #     plt.close(fig)
+
+        # lam_slider.on_changed(update)
+        # ok_button.on_clicked(accept)
+
+        # plt.show()
+
+        # return
 
 
 

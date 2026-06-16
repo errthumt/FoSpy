@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
 
     # matcher.find_baseline(interactive=True)
-    peaks, widths =matcher.find_peaks(interactive='find_peaks')
+    peaks, widths =matcher.find_peaks(interactive=True)
     pp(peaks)
     pp(widths)
 
