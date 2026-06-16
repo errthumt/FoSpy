@@ -38,8 +38,13 @@ class Annealing(Treatment):
             warn("Cannot build profile for a template annealing block. Skipping profile build.")
             return None
         
-        from cif2xrd.furnace import Profile #type: ignore
-        import matplotlib.pyplot as plt
+        try:
+            from cif2xrd.furnace import Profile #type: ignore
+            import matplotlib.pyplot as plt
+        except ImportError as e:
+            from warnings import warn
+            warn(f"Could not import furnace module. Skipping profile build. Exception:\n{e}", RuntimeWarning)
+            return None
 
         furnace = Profile(**kwargs)
 
