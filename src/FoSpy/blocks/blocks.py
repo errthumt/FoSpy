@@ -1485,10 +1485,12 @@ class ListBlock(Block):
                 typ = self._reqCls
                 new_list = []
                 for obj in value:
+                    if isinstance(obj, dict) and obj == {}:
+                        continue
                     if not isinstance(obj, typ):
                         try:
                             new_obj = typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
-                        except:
+                        except Exception as e:
                             raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath

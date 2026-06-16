@@ -75,3 +75,8 @@ def _get_block_classes(module):
             __block_classes__.append(name)
 
     return __block_classes__
+
+def _show_quick_pattern(df, ax, x, y):
+    from matplotlib import pyplot as plt
+    df.plot(ax=ax, x=x, y=y)
+    plt.show()

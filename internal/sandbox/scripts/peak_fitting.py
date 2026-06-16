@@ -22,8 +22,6 @@ SCATTER_SETUP = {
     'powder_lorentz':0.5
 }
 
-
-
 def main(patterns):
     # compare = compare_peaks(
     #     ("experimental",EXP_DATA, get_xy_pattern),
@@ -126,6 +124,7 @@ def unpack_peaks(data,*props, unwrap=True, **kwargs):
 
 def match_peaks(exp_data, sim_data, **kwargs):
     kwargs.setdefault("prominence", (None, None))
+    kwargs.setdefault("width", (None, None))
 
     exp, l_bases, r_bases = unpack_peaks(exp_data, "left_bases", "right_bases", **kwargs)
     sim = unpack_peaks(sim_data, **kwargs)

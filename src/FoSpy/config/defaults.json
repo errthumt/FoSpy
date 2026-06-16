@@ -10,5 +10,52 @@
     "DEV": {
         "branch": "main",
         "repo": "../FoSpy"
+    },
+    "diffraction": {
+        "default_engine": "cif2xrd",
+        "x_label": "2theta (deg)",
+        "engine_parameters": {
+            "cif2xrd": {}
+        },
+        "pattern_parameters": {
+            "normalize": true,
+            "two_theta_range": [0, 90],
+            "two_theta_step": 0.01
+        },
+        "baseline": {
+            "lam": 5,
+            "diff_order": 2,
+            "max_iter": 50,
+            "tol": 1e-3
+        },
+        "match_peaks": {
+            "match_width": 0.5
+        },
+        "find_peaks": {
+            "height": [null, null],
+            "threshold": [null, null],
+            "distance": 1,
+            "prominence": [0.01, null],
+            "width": [null, null],
+            "wlen": null,
+            "rel_height": 0.9,
+            "plateau_size": [null, null]
+        }
+    },
+    "slider_digits": {
+        "default": 2,
+        "find_peaks": {
+            "height": null,
+            "threshold": null,
+            "prominence": null,
+            "rel_height": null
+        },
+        "baseline": {
+            "lam": null,
+            "tol": 4
+        }
+    },
+    "ui":{
+        "default": "matplotlib"
     }
 }

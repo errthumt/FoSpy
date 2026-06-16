@@ -177,22 +177,52 @@ class PathFile(Attachment):
 Attachment.dispatch["path"] = PathFile
 
 class CIFFile(Attachment):
-    def get_pattern(self,**kwargs):
-        from cif2xrd.pattern import simPattern
+    def __init__(self, blockDict, **kwargs):
+        super().__init__(blockDict,**kwargs)
+        self._reserved.append("engine")
+        self.engine = None
+    def _get_engine(self, engine_name=None):
+        if engine_name is None:
+            if self.engine is None:
+                self.engine = self.new_engine()
+            engine = self.engine
+        else:
+            engine = self.new_engine(engine_name=engine_name)
 
-        sim = simPattern(cif_path=self._get_filepath(), **kwargs)
+        return engine
 
-        return sim.two_theta, sim.intensity
+    def get_pattern(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_pattern()
     
-    def quick_pattern(self,subprocess=False, **kwargs):
-        import matplotlib.pyplot as plt
-        from ..plotting.EmbeddedCIF import _quick_pattern
-        two_theta, intensity = self.get_pattern(**kwargs)
+    def get_peaks(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_peaks()
+    
+    def new_engine(self, engine_name=None):
+        from ..config import values as cfg
+        from ..plotting.diffraction.engines import ENGINES
+        if engine_name is None:
+            engine_name = cfg.get("diffraction.default_engine")
+        return ENGINES[engine_name](self._get_filepath())
+
+    def quick_pattern(self,subprocess=False):
+        from matplotlib import pyplot as plt
+        from ..plotting._utils import _quick_pattern
+        
+        df = self.get_pattern()
+
+        x,y = df.columns[:2]
+
+        tth, intensity = df[x].to_numpy(), df[y].to_numpy()
 
         if subprocess:
-            return self._subprocess(_quick_pattern,args=(two_theta, intensity))
+            return self._subprocess(_quick_pattern, args=(tth, intensity))
         
-        return _quick_pattern(two_theta, intensity)
+        return _quick_pattern(tth, intensity)
+    
 
 Attachment.extensions[".cif"] = CIFFile
 

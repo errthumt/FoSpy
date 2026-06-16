@@ -27,6 +27,7 @@ nav:
   - __init__: full/__init__.md
   - _debug: full/_debug.md
   - _errors: full/_errors.md
+  - _utils: full/_utils.md
   - core: full/core.md
   - _dev:
     - _dev/__init__: full/_dev/__init__.md
@@ -74,7 +75,29 @@ nav:
       - rename: full/parsing/validators/rename.md
       - units: full/parsing/validators/units.md
   - plotting:
-    - EmbeddedCIF: full/plotting/EmbeddedCIF.md
-    - __init__: full/plotting/__init__.md
+    - plotting/__init__: full/plotting/__init__.md
+    - _utils: full/plotting/_utils.md
+    - diffraction:
+      - diffraction/__init__: full/plotting/diffraction/__init__.md
+      - engines:
+        - engines/__init__: full/plotting/diffraction/engines/__init__.md
+        - _base: full/plotting/diffraction/engines/_base.md
+        - cif2xrd: full/plotting/diffraction/engines/cif2xrd.md
+        - dans_diffraction: full/plotting/diffraction/engines/dans_diffraction.md
+        - pymatgen: full/plotting/diffraction/engines/pymatgen.md
+      - phase_match:
+        - phase_match/__init__: full/plotting/diffraction/phase_match/__init__.md
+        - _utils: full/plotting/diffraction/phase_match/_utils.md
+      - ui:
+        - ui/__init__: full/plotting/diffraction/ui/__init__.md
+        - _specs: full/plotting/diffraction/ui/_specs.md
+        - baseline: full/plotting/diffraction/ui/baseline.md
+        - peaks: full/plotting/diffraction/ui/peaks.md
+  - ui:
+    - ui/__init__: full/ui/__init__.md
+    - _utils: full/ui/_utils.md
+    - abstract: full/ui/abstract.md
+    - matplotlib: full/ui/matplotlib.md
+    - pyqtgraph: full/ui/pyqtgraph.md
 - For Devs: internal/index.md
 - Install with PyPI: https://pypi.org/project/FoSpy

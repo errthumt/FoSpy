@@ -19,7 +19,6 @@ license-files = ["LICEN[CS]E*"]
 dependencies = [
     "pandas",
     "chemformula",
-    "cif2xrd >= 1.0.3",
     "pint"
 ]
 dynamic = [
@@ -27,8 +26,29 @@ dynamic = [
 ]
 
 [project.optional-dependencies]
-DEV = ["questionary"]
-all = ["questionary"]
+diffraction = [
+    "scipy",
+    "numpy",
+    "matplotlib",
+    "pymatgen"
+]
+dans-diff = [
+    "FoSpy[diffraction]",
+    "Dans-Diffraction"
+]
+cif2xrd = [
+    "FoSpy[diffraction]",
+    cif2xrd >= 1.0.3"
+]
+Qt = [
+    "pyqtgraph",
+]
+PySide = [
+    "FoSpy[Qt]",
+    "PySide6"
+]
+all = ["FoSpy[cif2xrd, PySide]"]
+DEV = ["questionary", "FoSpy[all]"]
 
 [project.urls]
 Homepage = "https://github.com/errthumt/FoSpy"
