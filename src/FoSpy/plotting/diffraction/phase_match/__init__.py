@@ -45,8 +45,8 @@ class PhaseMatcher:
 
         return matchsets
     
-    def find_peaks(self, interactive=False, **interactive_kwargs):
-        self.find_baseline(interactive=interactive)
+    def find_peaks(self, interactive=False, ui=None,**interactive_kwargs):
+        self.find_baseline(interactive=interactive, ui=ui)
         interactive = check_for_interactive(interactive, "find_peaks")
         
         exp_corrected = self.frames['exp']['corrected'].to_numpy()
@@ -65,7 +65,7 @@ class PhaseMatcher:
             suffix = interactive_kwargs['title'][1:]
             interactive_kwargs['title'] = f"Baseline-Corrected Peak Finder\n{suffix}"
 
-        peak_finder = PeakFinder(exp_corrected, self.frames['exp'].index, cfg=find_cfg, **interactive_kwargs)
+        peak_finder = PeakFinder(exp_corrected, self.frames['exp'].index, cfg=find_cfg, ui=ui, **interactive_kwargs)
         return peak_finder.main_loop()
         
 
@@ -102,7 +102,7 @@ class PhaseMatcher:
 
         return fig, ax
     
-    def find_baseline(self, interactive=False):
+    def find_baseline(self, interactive=False, ui=None):
         interactive = check_for_interactive(interactive, "baseline")
 
         from pybaselines import Baseline
@@ -127,7 +127,7 @@ class PhaseMatcher:
         from ..ui.baseline import BaselineFinder
 
         exp_2th = exp_frame.index.to_numpy()
-        finder = BaselineFinder(exp_int, exp_2th, cfg=self.baseline_cfg)
+        finder = BaselineFinder(exp_int, exp_2th, cfg=self.baseline_cfg, ui=ui)
 
         baseline, corrected = finder.main_loop()
 

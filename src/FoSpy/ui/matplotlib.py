@@ -10,7 +10,7 @@ available = True
 # -------------------------------
 # Layout constants for UI elements
 # -------------------------------
-LEFT_MARGIN = 0.02
+LEFT_MARGIN = 0.05
 RIGHT_MARGIN = 0.02
 
 START_Y = 0.2
@@ -36,7 +36,7 @@ def _get_label_offset(slider_width):
     return offset
 
 class SliderPlot(AbstractSlider):
-    def __init__(self, figsize=(10,6), title="Interactive Plot", specs={}, cfg={}, backend='TkAgg'):
+    def __init__(self, figsize=(10,6), title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True, backend='TkAgg'):
         
         try:
             matplotlib.use(backend)
@@ -45,7 +45,9 @@ class SliderPlot(AbstractSlider):
             warn(f"Could not set matplotlib backend to {backend}. Using system default. "
                  f"Exception:\n{e}", RuntimeWarning)
 
-        super().__init__(specs=specs, cfg=cfg)
+        self.fig, self.ax = plt.subplots(figsize=figsize)
+
+        super().__init__(specs=specs, cfg=cfg, x_label=x_label, y_label=y_label, x_ticks=x_ticks, y_ticks=y_ticks)
 
         
 
@@ -53,8 +55,6 @@ class SliderPlot(AbstractSlider):
 
         self.row_height = 1.0 / self.sl_rows
 
-
-        self.fig, self.ax = plt.subplots(figsize=figsize)
         self.ax.set_title(title)
 
         self.panel_ax = self.fig.add_axes([PANEL_START, START_Y, PANEL_W, 1-START_Y])
@@ -101,6 +101,18 @@ class SliderPlot(AbstractSlider):
 
     def _ok_clicked(self, event):
         plt.close(self.fig)
+
+    def setXlabel(self, label):
+        self.ax.set_xlabel(label)
+    
+    def setYlabel(self, label):
+        self.ax.set_ylabel(label)
+
+    def setXticks(self, on):
+        self.ax.tick_params(which='both', bottom=on, labelbottom=on)
+
+    def setYticks(self, on):
+        self.ax.tick_params(which='both', left=on, labelleft=on)
 
 
     def disable_slider(self, spec_name):
@@ -228,7 +240,7 @@ class SliderPlot(AbstractSlider):
     def reset_sticks(self):
         self.stickCollection.set_segments([])
 
-    def add_sticks(self, segments):
+    def add_sticks(self, segments, plotset='static'):
         existing = self.stickCollection.get_segments()
         self.stickCollection.set_segments(existing + segments)
 
@@ -239,18 +251,25 @@ class SliderPlot(AbstractSlider):
         self.plots.setdefault(plotset, [])
 
         if color is None:
-            color = self.plotsetcolors.get(plotset, 'b')
+            color = self.plotcolors.get(plotset, 'b')
 
         for yi in y:
-            line = self.ax.plot(x, yi, color=color, **kwargs)
-            self.plots[plotset].append(line)
+            lineset = self.ax.plot(x, yi, color=color, **kwargs)
+            self.plots[plotset].append(lineset)
+
+    def draw_width_bracket(self, x_left, x_right, y, cap_height=0.1, plotset='static', color=None):
+        self.plots.setdefault(plotset, [])
 
     def reset_plotsets(self, *plotsets):
         for plotset in plotsets:
             if plotset not in self.plots:
                 return
             for drawer in self.plots[plotset]:
-                drawer.remove()
+                if isinstance(drawer, list):
+                    for d in drawer:
+                        d.remove()
+                else:
+                    drawer.remove()
             self.plots[plotset] = []
 
     def update_plot(self, val=None):
