@@ -1,9 +1,14 @@
 
 from ._base import CIF_engine
-
+available = True
+try:
+    import Dans_Diffraction as ddf
+except ImportError as e:
+    available = False
 class Engine(CIF_engine):
     def __init__(self, cif_path, **kwargs):
-        import Dans_Diffraction as ddf
+        if not available:
+            raise ImportError("Diffraction Engine: Dans_Diffraction could not be imported. Please install it using pip install Dans_Diffraction")
         self.xtl = ddf.Crystal(cif_path)
         self.sim =  self.xtl.Scatter
         self.sim.setup_scatter(**kwargs)
