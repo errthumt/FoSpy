@@ -94,6 +94,7 @@ nav:
         - baseline: full/plotting/diffraction/ui/baseline.md
         - peaks: full/plotting/diffraction/ui/peaks.md
   - ui:
+    - ui/__init__: full/ui/__init__.md
     - _utils: full/ui/_utils.md
     - abstract: full/ui/abstract.md
     - matplotlib: full/ui/matplotlib.md
