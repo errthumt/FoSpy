@@ -8,7 +8,10 @@ def _count_sliders(specs):
     return total
 
 class SliderPlot:
-    def __init__(self, specs={}, cfg={}):
+    color1 = 'b'
+    color2 = 'magenta'
+    color3 = 'darkgreen'
+    def __init__(self, specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
         self.specs = specs
         self.cfg = cfg
         self.sl_rows = _count_sliders(specs)
@@ -16,7 +19,18 @@ class SliderPlot:
         self.checks = {}
         self.textboxes = {}
         self.plots = {}
-        self.plotsetcolors = {}
+        self.plotcolors = {}
+
+        self.bg_color = 'w'
+        self.fg_color = 'k'
+
+        if x_label is not None:
+            self.setXlabel(x_label)
+        if y_label is not None:
+            self.setYlabel(y_label)
+
+        self.setXticks(x_ticks)
+        self.setYticks(y_ticks)
 
     def update_plot(self, val=None):
         self.update_cfg()
@@ -59,6 +73,18 @@ class SliderPlot:
         raise NotImplementedError("Override in UI subclass")
     
     def main_loop(self):
+        raise NotImplementedError("Override in UI subclass")
+    
+    def setXlabel(self, label):
+        raise NotImplementedError("Override in UI subclass")
+    
+    def setYlabel(self, label):
+        raise NotImplementedError("Override in UI subclass")
+
+    def setXticks(self, on):
+        raise NotImplementedError("Override in UI subclass")
+
+    def setYticks(self, on):
         raise NotImplementedError("Override in UI subclass")
 
 

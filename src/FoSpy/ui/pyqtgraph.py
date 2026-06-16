@@ -12,34 +12,47 @@ except ImportError as e:
 
 TB_WIDTH = 60
 DEF_DIGITS = full_cfg.get("slider_digits.default", 2)
+CTRL_ROWS = 6
+MIN_CTRL_WIDTH = 250
+MAX_CTRL_HEIGHT = 65
 
 def _get_digits(spec):
     return spec.get("digits", DEF_DIGITS)
 
 class SliderPlot(AbstractSlider):
-    def __init__(self, title="Interactive Plot", specs={}, cfg={}):
+    def __init__(self, title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
         if not available:
             raise ImportError(f"One or more required modules could not be imported. Exception:\n{import_e}")
+        
+        self.scheduled = []
 
+        super().__init__(specs=specs, cfg=cfg, x_label=x_label, y_label=y_label, x_ticks=x_ticks, y_ticks=y_ticks)
+        pg.setConfigOption('background', self.bg_color)
+        pg.setConfigOption('foreground', self.fg_color)
+        self.app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
+        self.win = QtWidgets.QMainWindow()
+        self.win.setWindowTitle(f"PyQtGraph | {title}")
+        self.plot = pg.PlotWidget()
 
-        super().__init__(specs=specs, cfg=cfg)
+        for sch in self.scheduled:
+            sch()
+        
 
         self.sl_transforms = {}
 
-        self.app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
-
-        self.win = QtWidgets.QMainWindow()
-        self.win.setWindowTitle(f"PyQtGraph | {title}")
+        
 
         central = QtWidgets.QWidget()
         self.layout = QtWidgets.QHBoxLayout(central)
         self.win.setCentralWidget(central)
 
-        self.plot = pg.PlotWidget()
         self.layout.addWidget(self.plot, stretch=3)
 
         self.ctrl_panel = QtWidgets.QWidget()
-        self.ctrl_layout = QtWidgets.QVBoxLayout(self.ctrl_panel)
+        # self.ctrl_layout = QtWidgets.QVBoxLayout(self.ctrl_panel)
+        self.ctrl_layout = QtWidgets.QGridLayout(self.ctrl_panel)
+        self._ctrl_row = 0
+        self._ctrl_col = 0
         self.layout.addWidget(self.ctrl_panel, stretch=1)
 
         self._build_controls()
@@ -69,10 +82,12 @@ class SliderPlot(AbstractSlider):
         ok_btn.clicked.connect(self._ok_clicked)
         self.ctrl_layout.addWidget(ok_btn)
 
-        self.ctrl_layout.addStretch()
+        # self.ctrl_layout.addStretch()
 
     def _add_scalar(self, name, spec):
         box = QtWidgets.QGroupBox(spec["label"])
+        box.setMinimumWidth(MIN_CTRL_WIDTH)
+        box.setMaximumHeight(MAX_CTRL_HEIGHT)
         layout = QtWidgets.QHBoxLayout(box)
 
         # Checkbox
@@ -118,7 +133,11 @@ class SliderPlot(AbstractSlider):
         check.stateChanged.connect(lambda _, n=name: self._check_changed(n))
         tb.editingFinished.connect(lambda n=name: self._textbox_changed(n))
 
-        self.ctrl_layout.addWidget(box)
+        self.ctrl_layout.addWidget(box, self._ctrl_row, self._ctrl_col)
+        self._ctrl_row += 1
+        if self._ctrl_row >= CTRL_ROWS:
+            self._ctrl_row = 0
+            self._ctrl_col += 1
 
     def _add_range(self, name, spec):
         lo, hi = spec['default']
@@ -145,6 +164,32 @@ class SliderPlot(AbstractSlider):
     def _from_slider_pos(self, name, pos):
         return self.sl_transforms[name][0](pos)
     
+    def setXlabel(self, label):
+        if not hasattr(self, "plot"):
+            self.scheduled.append(lambda label=label: self.setXlabel(label))
+            return
+        self.plot.setLabel("bottom", label)
+    
+    def setYlabel(self, label):
+        if not hasattr(self, "plot"):
+            self.scheduled.append(lambda label=label: self.setYlabel(label))
+            return
+        self.plot.setLabel("left", label)
+
+    def setXticks(self, on):
+        if not hasattr(self, "plot"):
+            self.scheduled.append(lambda on=on: self.setXticks(on))
+            return
+        alpha = 1.0 if on else 0
+        self.plot.getAxis("bottom").setStyle(tickAlpha=alpha, showValues=on)
+
+    def setYticks(self, on):
+        if not hasattr(self, "plot"):
+            self.scheduled.append(lambda on=on: self.setYticks(on))
+            return
+        alpha = 1.0 if on else 0
+        self.plot.getAxis("left").setStyle(tickAlpha=alpha, showValues=on)
+
     # Override abstract gets
     def get_slider_val(self, spec_name):
         slider = self.sliders[spec_name]
@@ -201,12 +246,13 @@ class SliderPlot(AbstractSlider):
 
         self.sticks.clear()
     
-    def add_sticks(self, segments):
+    def add_sticks(self, segments, plotset='static'):
+        color = self.plotcolors.get(plotset, 'r')
         for (x0, y0), (x1, y1) in segments:
             stick = pg.PlotDataItem(
                 x=[x0, x1],
                 y=[y0, y1],
-                pen=pg.mkPen('r',width=2)
+                pen=pg.mkPen(color,width=2)
             )
             self.sticks.append(stick)
     
@@ -214,14 +260,39 @@ class SliderPlot(AbstractSlider):
         for item in self.sticks:
             self.plot.addItem(item)
 
+    def draw_width_bracket(self, x_left, x_right, y, cap_height=0.1, plotset='static', color=None):
+        self.plots.setdefault(plotset, [])
+        if color is None:
+            color = self.plotcolors.get(plotset, 'r')
+        pen = pg.mkPen(color, width=1)
+
+
+        hline = pg.PlotDataItem(
+            x=[x_left, x_right],
+            y=[y, y],
+            pen=pen
+        )
+
+        l_cap, r_cap = [
+            pg.PlotDataItem(
+                x=[x, x],
+                y=[y - cap_height, y + cap_height],
+                pen=pen)
+            for x in (x_left, x_right)
+        ]
+
+        for item in [hline, l_cap, r_cap]:
+            self.plot.addItem(item)
+            self.plots[plotset].append(item)
+
     def plotXY(self, x, *y, plotset='static', color=None, **kwargs):
         self.plots.setdefault(plotset, [])
 
         if color is None:
-            color = self.plotsetcolors.get(plotset, 'b')
+            color = self.plotcolors.get(plotset, 'b')
 
         for yi in y:
-            item = self.plot.plot(x, yi, pen=pg.mkPen(color), **kwargs)
+            item = self.plot.plot(x, yi, pen=pg.mkPen(color, width=2), **kwargs)
             self.plots[plotset].append(item)
 
     def reset_plotsets(self, *plotsets):
@@ -236,9 +307,6 @@ class SliderPlot(AbstractSlider):
     
     def update_plot(self, val=None):
         super().update_plot(val)
-
-        txt = "\n".join(f"{k}: {v}" for k, v in self.cfg.items())
-        self.plot.addItem(pg.TextItem(txt, anchor=(0,0)))
 
     def main_loop(self):
         self.update_plot()

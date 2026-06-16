@@ -1,8 +1,10 @@
 from pybaselines import Baseline
-
+from ....config import values as full_cfg
 from ._specs import get_baseline_sliders
 from ....ui.abstract import AssembleSlider
 from ..phase_match._utils import convert_baseline_cfg
+
+X_LABEL = full_cfg.diffraction.x_label
 
 class BaselineFinderAbstract:
     def __init__(self, exp_int, exp_2th, cfg={}, **kwargs):
@@ -11,12 +13,12 @@ class BaselineFinderAbstract:
         self.offset = max(exp_int)
 
         specs = get_baseline_sliders(baseline_cfg=cfg)
-        super().__init__(specs=specs, cfg=cfg, **kwargs)
+        super().__init__(specs=specs, cfg=cfg, x_label=X_LABEL, y_ticks=False, y_label="Intensity", **kwargs)
 
-        self.plotsetcolors = {
-            "static": "b",
-            "baseline": "r",
-            "corrected": "g"
+        self.plotcolors = {
+            "static": self.color1,
+            "baseline": self.color2,
+            "corrected": self.color3
         }
 
         self.plotXY(self.exp_2th, self.exp_int+self.offset, plotset="static")
