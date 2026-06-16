@@ -57,7 +57,7 @@ jobs:
 
       - name: Install MkDocs dependencies
         run: |
-          pip install mkdocs mkdocstrings mkdocstrings-python mkdocs-copy-markdown mkdocs-pygments pymdown-extensions black mike
+          pip install -r mkdocs/mkdocs_requirements.txt
       
       - name: Install svu
         run: |
