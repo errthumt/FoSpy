@@ -259,11 +259,11 @@ def main():
 
 
     # optional: figure
-    # my_synthesis.cifs[0].quick_pattern(subprocess=True)
+    my_synthesis.cifs[0].quick_pattern(subprocess=True)
 
 
     # optional: figure
-    # my_synthesis.treatments.get_first(type="anneal").show_plot()
+    my_synthesis.treatments.get_first(type="anneal").show_plot()
 
 if __name__ == '__main__':
     main()
