@@ -73,7 +73,7 @@ python314\python -m venv FoSpy\venv
 echo Installing FoSpy to virtual environment...
 cd FoSpy
 call venv\Scripts\activate
-pip install --force-reinstall -e .[DEV]
+pip install --force-reinstall -e .[DEV-TEST]
 
 git checkout main
 

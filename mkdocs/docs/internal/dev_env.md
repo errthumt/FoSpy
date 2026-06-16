@@ -88,6 +88,8 @@ C:\Users\travi\FOS_DEV\FoSpy>venv\Scripts\activate
 ### Install FoSpy as an editable package
 Installing with the `-e` flag means that any time the files are updated, the change is automatically reflected in your scripts.
 
+The `[DEV-TEST]` optional dependency is for extra UI addons that are used in the FOS validation testing workflow. If you want to test the full set of features, especially interactive plots, it's recommended to use `[DEV]` instead.
+
 ```cmd
-(venv) C:\Users\travi\FOS_DEV\FoSpy>pip install -e .
+(venv) C:\Users\travi\FOS_DEV\FoSpy>pip install -e .[DEV-TEST]
 ```

@@ -49,6 +49,7 @@ PySide = [
     "PySide6"
 ]
 all = ["FoSpy[cif2xrd, PySide]"]
+DEV-TEST = ["questionary"]
 DEV = ["questionary", "FoSpy[all]"]
 
 [project.urls]
