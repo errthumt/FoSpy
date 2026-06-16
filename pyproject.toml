@@ -30,7 +30,8 @@ diffraction = [
     "scipy",
     "numpy",
     "matplotlib",
-    "pymatgen"
+    "pymatgen",
+    "pybaselines"
 ]
 dans-diff = [
     "FoSpy[diffraction]",
