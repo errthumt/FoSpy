@@ -210,29 +210,19 @@ class CIFFile(Attachment):
 
     def quick_pattern(self,subprocess=False):
         from matplotlib import pyplot as plt
-        from ._blockUtils import _show_quick_pattern
+        from ..plotting._utils import _quick_pattern
         
         df = self.get_pattern()
 
-        fig, ax = plt.subplots()
-
         x,y = df.columns[:2]
 
-        def show(df=df, ax=ax, x=x, y=y):
-            from matplotlib import pyplot as plt
-            df.plot(ax=ax, x=x, y=y)
-            plt.show()
+        tth, intensity = df[x].to_numpy(), df[y].to_numpy()
 
         if subprocess:
-            return self._subprocess(_show_quick_pattern, args=(df, ax, x, y))
+            return self._subprocess(_quick_pattern, args=(tth, intensity))
         
-        return _show_quick_pattern(df, ax, x, y)
+        return _quick_pattern(tth, intensity)
     
-    def _show_pattern(self, df, ax, x, y):
-        from matplotlib import pyplot as plt
-        
-        df.plot(ax=ax, x=x, y=y)
-        plt.show()
 
 Attachment.extensions[".cif"] = CIFFile
 

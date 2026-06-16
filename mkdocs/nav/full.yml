@@ -75,8 +75,8 @@ nav:
       - rename: full/parsing/validators/rename.md
       - units: full/parsing/validators/units.md
   - plotting:
-    - EmbeddedCIF: full/plotting/EmbeddedCIF.md
-    - __init__: full/plotting/__init__.md
+    - plotting/__init__: full/plotting/__init__.md
+    - _utils: full/plotting/_utils.md
     - diffraction:
       - engines:
         - engines/__init__: full/plotting/diffraction/engines/__init__.md
