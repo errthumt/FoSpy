@@ -27,6 +27,7 @@ nav:
   - __init__: full/__init__.md
   - _debug: full/_debug.md
   - _errors: full/_errors.md
+  - _utils: full/_utils.md
   - core: full/core.md
   - _dev:
     - _dev/__init__: full/_dev/__init__.md
@@ -86,6 +87,14 @@ nav:
       - phase_match:
         - phase_match/__init__: full/plotting/diffraction/phase_match/__init__.md
         - _utils: full/plotting/diffraction/phase_match/_utils.md
-        - match: full/plotting/diffraction/phase_match/match.md
+      - ui:
+        - _specs: full/plotting/diffraction/ui/_specs.md
+        - baseline: full/plotting/diffraction/ui/baseline.md
+        - peaks: full/plotting/diffraction/ui/peaks.md
+  - ui:
+    - _utils: full/ui/_utils.md
+    - abstract: full/ui/abstract.md
+    - matplotlib: full/ui/matplotlib.md
+    - pyqtgraph: full/ui/pyqtgraph.md
 - For Devs: internal/index.md
 - Install with PyPI: https://pypi.org/project/FoSpy
