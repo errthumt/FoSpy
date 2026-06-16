@@ -9,10 +9,17 @@ class BaselineFinderAbstract:
         self.exp_int = exp_int
         self.exp_2th = exp_2th
         self.offset = max(exp_int)
+
         specs = get_baseline_sliders(baseline_cfg=cfg)
         super().__init__(specs=specs, cfg=cfg, **kwargs)
 
-        self.plotXY(self.exp_2th, self.exp_int+self.offset, plotset="static", color='b')
+        self.plotsetcolors = {
+            "static": "b",
+            "baseline": "r",
+            "corrected": "g"
+        }
+
+        self.plotXY(self.exp_2th, self.exp_int+self.offset, plotset="static")
 
         self.fitter = Baseline()
 
@@ -26,9 +33,9 @@ class BaselineFinderAbstract:
         self.baseline = baseline
         self.corrected = self.exp_int - baseline
 
-        self.reset_plotset("results")
-        self.plotXY(self.exp_2th, self.baseline+self.offset, color='r', plotset="results")
-        self.plotXY(self.exp_2th, self.corrected, color='g', plotset="results")
+        self.reset_plotsets("baseline", "corrected")
+        self.plotXY(self.exp_2th, self.baseline+self.offset, plotset="baseline")
+        self.plotXY(self.exp_2th, self.corrected, plotset="corrected")
 
     def update_plot(self, val=None):
         super().update_plot(val)

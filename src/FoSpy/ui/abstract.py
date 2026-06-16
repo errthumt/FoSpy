@@ -16,6 +16,7 @@ class SliderPlot:
         self.checks = {}
         self.textboxes = {}
         self.plots = {}
+        self.plotsetcolors = {}
 
     def update_plot(self, val=None):
         self.update_cfg()
@@ -54,7 +55,7 @@ class SliderPlot:
     def plotXY(self, x, *y, plotset='static',**kwargs):
         raise NotImplementedError("Override in UI subclass")
     
-    def reset_plotset(self, plotset='static'):
+    def reset_plotsets(self, *plotsets):
         raise NotImplementedError("Override in UI subclass")
     
     def main_loop(self):
