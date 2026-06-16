@@ -3828,7 +3828,8 @@
 </span></code></pre></div>
 <h3 id="install-fospy-as-an-editable-package">Install FoSpy as an editable package</h3>
 <p>Installing with the <code>-e</code> flag means that any time the files are updated, the change is automatically reflected in your scripts.</p>
-<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(venv) C:\Users\travi\FOS_DEV\FoSpy&gt;pip install -e .
+<p>The <code>[DEV-TEST]</code> optional dependency is for extra UI addons that are used in the FOS validation testing workflow. If you want to test the full set of features, especially interactive plots, it's recommended to use <code>[DEV]</code> instead.</p>
+<div class="highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>(venv) C:\Users\travi\FOS_DEV\FoSpy&gt;pip install -e .[DEV-TEST]
 </span></code></pre></div>
 
 
