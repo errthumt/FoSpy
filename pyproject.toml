@@ -38,7 +38,7 @@ dans-diff = [
 ]
 cif2xrd = [
     "FoSpy[diffraction]",
-    cif2xrd >= 1.0.3"
+    "cif2xrd >= 1.0.3"
 ]
 Qt = [
     "pyqtgraph",
