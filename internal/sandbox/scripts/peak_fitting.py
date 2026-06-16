@@ -22,8 +22,6 @@ SCATTER_SETUP = {
     'powder_lorentz':0.5
 }
 
-
-
 def main(patterns):
     # compare = compare_peaks(
     #     ("experimental",EXP_DATA, get_xy_pattern),
