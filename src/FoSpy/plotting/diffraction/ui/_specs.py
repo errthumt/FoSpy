@@ -116,3 +116,4 @@ def get_baseline_sliders(baseline_cfg):
 
     sliders = assemble_sliders(sliders, "baseline", baseline_cfg)
     return sliders
+

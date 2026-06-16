@@ -19,6 +19,16 @@ def rows_to_2th(two_theta, row_structure):
     
     return row_structure
 
+def convert_baseline_cfg(baseline_cfg):
+    out = baseline_cfg.copy()
+
+    out['lam'] = 10**out['lam']
+
+    for int_cfg in ("max_iter", "diff_order"):
+        out[int_cfg] = int(out[int_cfg])
+
+    return out
+
 # def plot_rows_as_sticks(df, row_indices, intensity_col, ax=None, **vline_kwargs):
 #     # Create an axis if one wasn't provided
 #     if ax is None:

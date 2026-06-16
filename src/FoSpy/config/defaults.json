@@ -23,7 +23,7 @@
             "two_theta_step": 0.01
         },
         "baseline": {
-            "lam": 1e5,
+            "lam": 5,
             "diff_order": 2,
             "max_iter": 50,
             "tol": 1e-3
@@ -49,6 +49,10 @@
             "threshold": null,
             "prominence": null,
             "rel_height": null
+        },
+        "baseline": {
+            "lam": null,
+            "tol": 4
         }
     },
     "ui":{
