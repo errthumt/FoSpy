@@ -83,7 +83,7 @@ jobs:
           fi
 
           echo "final version => $NEXT_VERSION"
-      #   echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+          echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
 
       # - name: Deploy to GitHub Pages
       - name: Dry-Run Deploy to GitHub Pages
