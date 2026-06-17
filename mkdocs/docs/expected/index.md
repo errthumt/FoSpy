@@ -469,7 +469,7 @@ When applicable, treatments are dispatched to subclasses based on the type value
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| recovered_amount | `validators.numbers.positive_decimal` | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| recovered_amount_unit | `validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])` | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
+| recovered_amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| recovered_amount_unit | [Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 | start_time | `str` | What time the treatment was started |
 | end_time | `str` | What time the treatment was finished |
