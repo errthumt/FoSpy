@@ -99,14 +99,16 @@ ______________________________________________________________________
 
 [Class Documentation][blockdocs-Attachment]
 
+!table_check: Extra required properties: ['extension']
+
 **[Subclass of `SingleBlock`](#singleblock)**
 
 #### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| file_name | [`validators.filenames.file_name`][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. |
-| extension | [`validators.filenames.file_extension`][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
+| file_name | \[`validators.filenames.file_name`\][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. |
+| extension | \[`validators.filenames.file_extension`\][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
 
 ##### Additional Requirements
 
@@ -177,14 +179,15 @@ ______________________________________________________________________
 
 ### `FileBlock`
 
+[Class Documentation][blockdocs-FileBlock]
+
 **[Subclass of `SingleBlock`](#singleblock)**
 
 #### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| metadata | [`MetaData`][blockdocs-MetaData] | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
-
+| metadata | \[`MetaData`\][blockdocs-MetaData] | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
 
 ### `Material`
 
@@ -386,6 +389,8 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 ### `SynthesisMeta`
+
+[Class Documentation][blockdocs-SynthesisMeta]
 
 **[Subclass of `MetaData`](#metadata)**
 

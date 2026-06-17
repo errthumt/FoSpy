@@ -120,8 +120,7 @@
     ],
     "cifs": [
         {
-            "file_name": "Ba2Zn5Sb6_ICSD",
-            "extension": ".cif",
+            "file_name": "Ba2Zn5Sb6_ICSD.cif",
             "embedded": [
                 "\n",
                 "#(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.\n",

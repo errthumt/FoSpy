@@ -42,7 +42,6 @@ treatments: [
 
 [CIFS]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
-extension: .cif 
 path: .
  
 
@@ -86,8 +85,7 @@ treatments: [
 ]
 
 [Cifs]
-file_name: PY618_Ba8-Cu12-Zn12-As29,8
-extension: .cif
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
 
@@ -143,8 +141,7 @@ amount_unit: mol ratio
 purity: 0.995
 
 [Cifs]
-file_name: PY618_Ba8-Cu12-Zn12-As29,8
-extension: .cif
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
 
@@ -222,8 +219,7 @@ type: dwell
 time_unit: hour
 
 [Cifs]
-file_name: PY618_Ba8-Cu12-Zn12-As29,8
-extension: .cif
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
 
@@ -301,8 +297,7 @@ type: dwell
 time_unit: hour
 
 [[Cifs]]
-file_name: Ba2Zn5Sb6_ICSD
-extension: .cif
+file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 
 #(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
@@ -410,8 +405,7 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 #End of TTdata_71031-ICSD
 #################### END FOS EMBED }}}
 
-file_name: PY618_Ba8-Cu12-Zn12-As29,8
-extension: .cif
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
 
@@ -489,8 +483,7 @@ type: dwell
 time_unit: hour
 
 [[Cifs]]
-file_name: Ba2Zn5Sb6_ICSD
-extension: .cif
+file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 
 #(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
@@ -598,8 +591,7 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
 #End of TTdata_71031-ICSD
 #################### END FOS EMBED }}}
 
-file_name: PY618_Ba8-Cu12-Zn12-As29,8
-extension: .cif
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
 

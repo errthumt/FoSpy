@@ -67,12 +67,10 @@ treatments: [
 [Treatments]
 
 [[Cifs]]
-file_name: attached_cif
-extension: .cif
+file_name: attached.cif
 path: projects/my_cifs
 
-file_name: Ba2Zn5Sb6_ICSD
-extension: .cif
+file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 Embedded CIF Test Goes Here
 #################### END FOS EMBED }}}
