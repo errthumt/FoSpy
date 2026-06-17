@@ -48,8 +48,7 @@ def copy_fos_to_PyPI(fos_path: Path, pypi_path: Path):
     my_synth.treatments = []
     my_synth.cifs[0].embedded = ["Embedded CIF Test Goes Here\n"]
     my_synth.cifs.insert(0, {
-        "file_name": "attached_cif",
-        "extension": ".cif",
+        "file_name": "attached.cif",
         "path": "./projects/my_cifs"
     })
 

@@ -15,6 +15,32 @@ class Attachment(SingleBlock):
         super().__init__(blockDict, **kwargs)
         self._filepath = None
 
+    def __setattr__(self, name, value):
+        if name == "_extension" and hasattr(self, "_extension"):
+            from warnings import warn
+            warn("You cannot change the extension of an attachment after construction. Skipping change.", RuntimeWarning)
+            return
+
+        if name != "file_name":
+            return super().__setattr__(name, value)
+
+        if not "." in value and hasattr(self, "_extension"):
+            value = f"{value}{self._extension}"
+
+        super().__setattr__(name, value)
+
+        fn = self.file_name()
+        ext = f".{fn.rsplit(".", 1)[1]}"
+        if not hasattr(self, "_extension"):
+            self._extension = f".{fn.rsplit(".", 1)[1]}"
+        elif ext != self._extension:
+            from warnings import warn
+            new = f"{fn}{self._extension}"
+            warn(f"New filename contains a different extension: '{ext}'. Extensions cannot "
+                 f"be changed after construction. The current extension ('{self._extenstion}') "
+                 f"will be appended to the new filename to form: '{new}'.", RuntimeWarning)
+            return super().__setattr__("file_name", new)
+
     def _get_filepath(self):
         """
         Default behavior: Must be overwritten in subclasses.
@@ -35,7 +61,7 @@ class Attachment(SingleBlock):
         # construct a bare attachment to validate filename and extension
         validated = cls(blockDict, _dispatched=True)
 
-        extension = validated.extension()
+        extension = validated._extension
 
         attachmenttype = None
         for key, ft in cls.dispatch.items():
@@ -67,7 +93,7 @@ class EmbeddedFile(Attachment):
         except Exception as e:
             _debug.msg(f"Could not find a temporary path to write to.\n{e}")
             return None
-        filepath = temppath / f"{self.file_name}{self.extension}"
+        filepath = temppath / self.file_name()
         with open(filepath, "w", encoding=encoding) as f:
             for line in self.embedded:
                 f.write(line.rstrip("\r\n") + "\n")
@@ -97,7 +123,7 @@ class PathFile(Attachment):
     def _get_abspath(self):
         filedir = self._get_filedir()
 
-        return filedir / str(self.path) / f"{self.file_name}{self.extension}"
+        return filedir / str(self.path) / self.file_name()
     
     def _get_filedir(self):
         from pathlib import Path

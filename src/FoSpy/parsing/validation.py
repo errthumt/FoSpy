@@ -126,8 +126,7 @@ required_keys = {
     },
 
     b.Attachment: {
-        "file_name": validators.filenames.file_name,
-        "extension": validators.filenames.file_extension,
+        "file_name": validators.filenames.file_name
     }
 }
 """Maps block classes to dictionaries of required keys and their validators.

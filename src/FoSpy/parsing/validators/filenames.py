@@ -20,15 +20,6 @@ def file_name(name: str, sourceDict={}) -> str:
     """
     Validate a filename (no path, no separators, allowed characters only).
     """
-    #_debug.pmsg(f"Validating {name} with dict:")
-    #_debug.pmsg(sourceDict)
-    if "extension" in sourceDict:
-        ext = file_extension(sourceDict["extension"])
-        if name.endswith(ext):
-            new_name = name[:-len(ext)]
-            _debug.msg(f"Converted filename: {name} into {new_name}")
-            name = new_name
-
     if not isinstance(name, str):
         raise TypeError("Filename must be a string")
 
@@ -46,6 +37,9 @@ def file_name(name: str, sourceDict={}) -> str:
         raise ValueError(
             "Filename contains invalid characters. Allowed: letters, digits, '_', '-', '.'"
         )
+    
+    if len(name.split(".")) < 2 or name.split(".")[1] == "":
+        raise ValueError("Filename must have an extension")
 
     return name
 
