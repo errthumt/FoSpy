@@ -157,19 +157,15 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install MkDocs Dependencies
+      - name: Install Site Build Dependencies
         run: |
-          pip install -r mkdocs/mkdocs_requirements.txt
+          pip install mkdocs/fos_site
 
       - name: Install svu
         run: |
           echo 'deb [trusted=yes] https://apt.fury.io/caarlos0/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
           sudo apt update
           sudo apt install svu
-
-      - name: Install FoSpy
-        run: |
-          pip install -e .
       
       - name: Remove placeholder "incoming" branch
         working-directory: mkdocs

@@ -1,8 +1,0 @@
-mkdocs
-mkdocstrings
-mkdocstrings-python
-mkdocs-copy-markdown
-mkdocs-pygments
-pymdown-extensions
-black
-mike

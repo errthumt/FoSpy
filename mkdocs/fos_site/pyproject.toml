@@ -16,10 +16,22 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
+    "FoSpy @ {root:uri}/../..",
     "markdown-it-py[linkify]",
     "mdformat",
-    "PyYAML"
+    "PyYAML",
+    "mkdocs",
+    "mkdocstrings",
+    "mkdocstrings-python",
+    "mkdocs-copy-markdown",
+    "mkdocs-pygments",
+    "pymdown-extensions",
+    "black",
+    "mike",
 ]
 
 [project.scripts]
 fos-site-build = "fos_site:build_full_site_cli"
+
+[tool.hatch.metadata]
+allow-direct-references = true

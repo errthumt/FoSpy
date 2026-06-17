@@ -1,12 +1,9 @@
-name: Build Site and Deploy "incoming" to MkDocs
+name: Dry-Run Site Build for docs-deploy
 
 on:
   push:
     branches:
-      - main
-
-permissions:
-  contents: write
+      - dev
 
 jobs:
   build-deploy:
@@ -31,25 +28,25 @@ jobs:
         run: |
           fos-site-build --deploy
       
-      - name: Commit and Push Site Changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "WORKFLOW: Docs Build" || echo "No changes to commit"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Commit and Push Site Changes
+      #   run: |
+      #     git config user.name "github-actions[bot]"
+      #     git config user.email "github-actions[bot]@users.noreply.github.com"
+      #     git add -A
+      #     git commit -m "WORKFLOW: Docs Build" || echo "No changes to commit"
+      #     git push
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge changes to dev
-        if: github.ref == 'refs/heads/main'
-        run: |
-          git fetch --all
-          git checkout dev
-          git merge origin/main -m "Resync dev with doc corrections" || true
-          git push origin dev
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Merge changes to dev
+      #   if: github.ref == 'refs/heads/main'
+      #   run: |
+      #     git fetch --all
+      #     git checkout dev
+      #     git merge origin/main -m "Resync dev with doc corrections" || true
+      #     git push origin dev
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Install svu
         run: |
@@ -86,11 +83,11 @@ jobs:
           fi
 
           echo "final version => $NEXT_VERSION"
-          echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+      #   echo "version=$NEXT_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Deploy to GitHub Pages
-        working-directory: mkdocs
-        run: |
-          mike deploy --push --update-aliases --allow-empty "${{ steps.version.outputs.version }}" incoming
-          mike retitle incoming "${{ steps.version.outputs.version }}" --push --allow-empty
+      # - name: Deploy to GitHub Pages
+      #   working-directory: mkdocs
+      #   run: |
+      #     mike deploy --push --update-aliases --allow-empty "${{ steps.version.outputs.version }}" incoming
+      #     mike retitle incoming "${{ steps.version.outputs.version }}" --push --allow-empty
 
