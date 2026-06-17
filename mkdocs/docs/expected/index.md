@@ -83,7 +83,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| program | `AnnealProgram` | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) |
+| program | [Block: `AnnealProgram`][blockdocs-AnnealProgram] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) |
 | start_temp | `validators.numbers.positive_decimal` | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | start_temp_unit | `validators.units.FOSTempUnit` | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs)|
 
@@ -91,7 +91,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| gas_flow | `FlowList` | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) |
+| gas_flow | [Block: `FlowList`][blockdocs-FlowList] | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) |
 
 ______________________________________________________________________
 
@@ -99,16 +99,13 @@ ______________________________________________________________________
 
 [Class Documentation][blockdocs-Attachment]
 
-!table_check: Extra required properties: ['extension']
-
 **[Subclass of `SingleBlock`](#singleblock)**
 
 #### Required properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| file_name | \[`validators.filenames.file_name`\][FoSpy.parsing.validators.filenames.file_name] | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching. |
-| extension | \[`validators.filenames.file_extension`\][FoSpy.parsing.validators.filenames.file_extension] (dispatched) | A valid file extension (with or without "`.`" prefix). |
+| file_name | `validators.filenames.file_name` (dispatched) | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. |
 
 ##### Additional Requirements
 
@@ -187,7 +184,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| metadata | \[`MetaData`\][blockdocs-MetaData] | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
+| metadata | [Block: `MetaData`](#metadata) | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
 
 ### `Material`
 
@@ -214,7 +211,7 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | purity | `validators.numbers.decimal_range` | 0 < purity \<= 1|
-| treatments | `TreatmentList` | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. |
+| treatments | [Block: `TreatmentList`][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. |
 
 ______________________________________________________________________
 
@@ -340,7 +337,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| ext | `SubContainer` | **Not to be passed to constructor. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes. |
+| ext | [Special: `SubContainer`][FoSpy.blocks._containers.SubContainer] | **Do not include in FOS files. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes. |
 
 #### Optional properties
 
@@ -370,21 +367,21 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| metadata | [`SynthesisMeta`](#synthesismeta) | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
-| experimenters | `ExperimenterList` | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
-| reaction | `Reaction` | [General reaction information](#reaction) |
-| products | `ProductList` | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
-| materials | `MaterialList` | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) |
-| treatments | `TreatmentList` | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) |
+| metadata | [Block: `SynthesisMeta`](#synthesismeta) | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
+| experimenters | [Block: `ExperimenterList`][blockdocs-ExperimenterList] | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
+| reaction | [Block: `Reaction`](#reaction) | [General reaction information](#reaction) |
+| products | [Block: `ProductList`][blockdocs-ProductList] | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
+| materials | [Block: `MaterialList`][blockdocs-MaterialList] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) |
+| treatments | [Block: `TreatmentList`][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) |
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| cif | `Attachment.enforce_subtype(CIFFile)` | [A single attached CIF file](#attachment) |
-| cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
-| laboratory_conditions | `LabConditions` | [General Laboratory Conditions](#singleblock-method-subclasses) |
-| equipment | `EquipmentList` | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
+| cif | `Attachment.enforce_subtype(CIFFile)` ([see class method](../blocks/attachments.md#FoSpy.blocks.attachments.Attachment.enforce_subtype)) | [A single attached CIF file](#attachment) |
+| cifs | [Block: `CifList`][blockdocs-CifList]) | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
+| laboratory_conditions | [Block: `LabConditions`](#singleblock-method-subclasses) | [General Laboratory Conditions](#singleblock-method-subclasses) |
+| equipment | [Block: `EquipmentList`][blockdocs-EquipmentList] | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
 
 ______________________________________________________________________
 
@@ -442,7 +439,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 | treatments | `TemplateList.Simple(Treatment)` | A list of incomplete [`Treatment` objects](#treatment) |
 | annealings | `TemplateList.Simple(Annealing)` | A list of incomplete [`Annealing` objects](#annealing) |
 | anneal_sections | `TemplateList.Simple(AnnealSection)` | A list of incomplete [`AnnealSection` objects](#annealsection) |
-| cifs | `CifList` | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
+| cifs | [Block: `CifList`][blockdocs-CifList] | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
 
 ______________________________________________________________________
 
@@ -456,7 +453,7 @@ When applicable, treatments are dispatched to subclasses based on the type value
 
 | type | Subclass |
 | --- | --- |
-| anneal | `Annealing` [(link)](#annealing) |
+| anneal | [Block: `Annealing`](#annealing) |
 
 #### Required properties
 
