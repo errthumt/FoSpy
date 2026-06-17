@@ -1491,7 +1491,7 @@ class ListBlock(Block):
                         try:
                             new_obj = typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
                         except Exception as e:
-                            raise TypeError(f"{type(self).__name__}._objs must be an empty list or list of {typ.__name__} objects.")
+                            raise TypeError(f"{type(self).__name__} objects must be coersible to {typ.__name__}. Failed to coerce at least one object. Error:\n{e}")
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath
                         obj=new_obj
