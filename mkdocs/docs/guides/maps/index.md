@@ -1,0 +1,9 @@
+# Mapping other ELN structures to FOS format using `FoSpy.json`
+
+Many labs already have an established internal format for electronic laboratory notebook (ELN) entries. These formats might already convey experimental methods and results in a serialized, machine-readable format, but don't follow the unified standards set forth by the `FoSpy` project. As the project grows, the developers expect to pre-package tools for converting the most commonly used or standardized formats. However, this will not help smaller or more niche labs that might have their own standards for what to include in an ELN entry.
+
+To address this, `FoSpy` comes with a built-in module that establishes a workflow for automating the conversion of any serialized dictionary format into the FOS format. Generally, the conversion is done in three steps:
+
+1. **Generate a configuration file unique to your ELN structure.** This configuration file attaches an instruction to each field in *your* format about where it should go in the *FOS* format. If done correctly, this only needs to be done once for an entire set of ELN entries with the same structure.
+    - `FoSpy` developers have achieved promising *preliminary* results in training large language models (LLMs) to generate this configuration. Keep an eye out for new features taking advantage of this, or consider training your own LLM with inputs like [the expected properties page](../../expected/index.md) or [the code example](../../examples/code_example/index.md) (with example FOS files of course).
+2. **Convert each ELN entry into a Python dictionary matching the FOS structure.** In its simplest form
