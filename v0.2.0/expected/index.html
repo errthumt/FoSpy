@@ -5359,17 +5359,17 @@
 <tbody>
 <tr>
 <td>program</td>
-<td><code>AnnealProgram</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/treatments/#annealprogram">Block: <code>AnnealProgram</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">specialized <code>ListBlock</code></a> of <a href="#annealsection"><code>AnnealSection</code> objects</a></td>
 </tr>
 <tr>
 <td>start_temp</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>start_temp_unit</td>
-<td><code>validators.units.FOSTempUnit</code></td>
+<td><a class="autorefs autorefs-internal" title="FOSTempUnit" href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSTempUnit">Units validator: <code>FOSTempUnit</code></a></td>
 <td><code>FOSTempUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> which allows a little more coersion of temperature units. (Like recognizing <code>"C"</code> as degrees celsius as opposed to coulombs)</td>
 </tr>
 </tbody>
@@ -5386,7 +5386,7 @@
 <tbody>
 <tr>
 <td>gas_flow</td>
-<td><code>FlowList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/treatments/#flowlist">Block: <code>FlowList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#singleblock-method-subclasses"><code>GasFlow</code> objects</a></td>
 </tr>
 </tbody>
@@ -5407,13 +5407,8 @@
 <tbody>
 <tr>
 <td>file_name</td>
-<td><a class="autorefs autorefs-internal" title="file_name" href="../full/parsing/validators/filenames/#FoSpy.parsing.validators.filenames.file_name"><code>validators.filenames.file_name</code></a></td>
-<td>A name for the file that does not contain any incompatible characters ( <code>\ / : * ? " &lt; &gt; \|</code>). Extensions are allowed, but will be trimmed if matching extension property, or appended to if not matching.</td>
-</tr>
-<tr>
-<td>extension</td>
-<td><a class="autorefs autorefs-internal" title="file_extension" href="../full/parsing/validators/filenames/#FoSpy.parsing.validators.filenames.file_extension"><code>validators.filenames.file_extension</code></a> (dispatched)</td>
-<td>A valid file extension (with or without "<code>.</code>" prefix).</td>
+<td><a class="autorefs autorefs-internal" title="file_name" href="../full/parsing/validators/filenames/#FoSpy.parsing.validators.filenames.file_name">Filenames validator: <code>file_name</code></a> (dispatched)</td>
+<td>A name for the file that does not contain any incompatible characters ( <code>\ / : * ? " &lt; &gt; \|</code>). Must include a valid extension. Some subclasses (like <code>CIFFile</code>) are dispatched based on detected file extension.</td>
 </tr>
 </tbody>
 </table>
@@ -5441,7 +5436,7 @@
 </tr>
 <tr>
 <td>path</td>
-<td><code>validators.filenames.PathPosix</code></td>
+<td><a class="autorefs autorefs-internal" title="PathPosix" href="../full/parsing/validators/filenames/#FoSpy.parsing.validators.filenames.PathPosix">Filenames validator: <code>PathPosix</code></a></td>
 <td>Instead of directly embedding contents, refers to a relative path from the folder containing the parent <code>FileBlock</code>. Can use relative characters like "<code>.</code>" and "<code>..</code>". See <a href="../guides/attachments/">attachments guide</a> for more information.<br> <code>PathPosix</code> validator is a subclass of <code>pathlib.Path</code> which always uses back slashes (<code>/</code>) instead of forward slashes (<code>\</code>) when serialized, regardless of OS</td>
 </tr>
 </tbody>
@@ -5473,12 +5468,17 @@
 <tbody>
 <tr>
 <td>time</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>time_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims('[time]')</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims('[time]')</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
 </tr>
 </tbody>
@@ -5528,6 +5528,7 @@
 </table>
 <hr />
 <h3 id="fileblock"><code>FileBlock</code></h3>
+<p><a class="autorefs autorefs-internal" href="../blocks/files/#fileblock">Class Documentation</a></p>
 <p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
 <h4 id="required-properties_5">Required properties</h4>
 <table>
@@ -5541,11 +5542,12 @@
 <tbody>
 <tr>
 <td>metadata</td>
-<td><a class="autorefs autorefs-internal" href="../blocks/metadata/#metadata"><code>MetaData</code></a></td>
+<td><a href="#metadata">Block: <code>MetaData</code></a></td>
 <td>General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a <code>MetaData</code> dictionary</td>
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="material"><code>Material</code></h3>
 <p><a class="autorefs autorefs-internal" href="../blocks/materials/#material">Class Documentation</a></p>
 <p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
@@ -5596,7 +5598,7 @@
 </tr>
 <tr>
 <td>amount</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>Amount that was used.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
@@ -5618,12 +5620,12 @@
 <tbody>
 <tr>
 <td>purity</td>
-<td><code>validators.numbers.decimal_range</code></td>
-<td>0 &lt; purity \&lt;= 1</td>
+<td><a class="autorefs autorefs-internal" title="decimal_range" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.decimal_range">Numbers validator: <code>decimal_range</code></a></td>
+<td>0 &lt; purity ≤ 1</td>
 </tr>
 <tr>
 <td>treatments</td>
-<td><code>TreatmentList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/treatments/#treatmentlist">Block: <code>TreatmentList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#treatment"><code>Treatment</code> objects</a><br>Any modifications to the material between acquisition and use in the synthesis.</td>
 </tr>
 </tbody>
@@ -5712,22 +5714,32 @@
 <tbody>
 <tr>
 <td>expected_amount</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>expected_amount_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)</td>
 </tr>
 <tr>
 <td>obtained_amount</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>obtained_amount_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)</td>
 </tr>
 <tr>
@@ -5787,32 +5799,37 @@
 <tbody>
 <tr>
 <td>temp</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>The next temperature in the program.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>time</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>rate</td>
-<td><code>validators.numbers.any_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="any_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.any_decimal">Numbers validator: <code>any_decimal</code></a></td>
 <td>The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -&gt; positive, Decrease -&gt; negative).<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>temp_unit</td>
-<td><code>validators.units.FOSTempUnit</code></td>
+<td><a class="autorefs autorefs-internal" title="FOSTempUnit" href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSTempUnit">Units validator: <code>FOSTempUnit</code></a></td>
 <td><code>FOSTempUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> which allows a little more coersion of temperature units. (Like recognizing <code>"C"</code> as degrees celsius as opposed to coulombs)</td>
 </tr>
 <tr>
 <td>time_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims("[time]")</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims("[time]")</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
 </tr>
 <tr>
 <td>rate_unit</td>
-<td><code>validators.units.temp_rate_unit</code></td>
+<td><a class="autorefs autorefs-internal" title="temp_rate_unit" href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.temp_rate_unit">Units validator: <code>temp_rate_unit</code></a></td>
 <td>Makes use of <a href="https://pint.readthedocs.io/en/stable/"><code>pint</code>'s dimensionality properties</a> to verify that the value is a unit of temperature over time.</td>
 </tr>
 </tbody>
@@ -5845,12 +5862,17 @@
 </tr>
 <tr>
 <td>nominal_amount</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>nominal_amount_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
 </tr>
 </tbody>
@@ -5871,8 +5893,8 @@
 <tbody>
 <tr>
 <td>ext</td>
-<td><code>SubContainer</code></td>
-<td><strong>Not to be passed to constructor. This property is automatically created</strong>. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes.</td>
+<td><a class="autorefs autorefs-internal" title="SubContainer" href="../full/blocks/_containers/#FoSpy.blocks._containers.SubContainer">Special: <code>SubContainer</code></a></td>
+<td><strong>Do not include in FOS files. This property is automatically created</strong>. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -5888,7 +5910,7 @@
 <tbody>
 <tr>
 <td>rename</td>
-<td><code>validators.rename.rename_dict</code></td>
+<td><a class="autorefs autorefs-internal" title="rename_dict" href="../full/parsing/validators/rename/#FoSpy.parsing.validators.rename.rename_dict">Rename validator: <code>rename_dict</code></a></td>
 <td>A dictionary of old_name:new_name pairs for renaming properties within the <code>SingleBlock</code> subclass while keeping them in sync with their validators. Refer to the <a href="../examples/code_example/">code example walkthrough</a> for usage.</td>
 </tr>
 </tbody>
@@ -5918,32 +5940,32 @@
 <tbody>
 <tr>
 <td>metadata</td>
-<td><a href="#synthesismeta"><code>SynthesisMeta</code></a></td>
+<td><a href="#synthesismeta">Block: <code>SynthesisMeta</code></a></td>
 <td>General information about the file. Additional requirements from basic <a href="#metadata">file metadata</a>. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a <code>MetaData</code> dictionary</td>
 </tr>
 <tr>
 <td>experimenters</td>
-<td><code>ExperimenterList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/metadata/#experimenterlist">Block: <code>ExperimenterList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#experimenter"><code>Experimenter</code> objects</a></td>
 </tr>
 <tr>
 <td>reaction</td>
-<td><code>Reaction</code></td>
+<td><a href="#reaction">Block: <code>Reaction</code></a></td>
 <td><a href="#reaction">General reaction information</a></td>
 </tr>
 <tr>
 <td>products</td>
-<td><code>ProductList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/metadata/#productlist">Block: <code>ProductList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#product"><code>Product</code> objects</a></td>
 </tr>
 <tr>
 <td>materials</td>
-<td><code>MaterialList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/materials/#materiallist">Block: <code>MaterialList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">specialized <code>ListBlock</code></a> of <a href="#material"><code>Material</code> objects</a></td>
 </tr>
 <tr>
 <td>treatments</td>
-<td><code>TreatmentList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/treatments/#treatmentlist">Block: <code>TreatmentList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#treatment"><code>Treatment</code> objects</a></td>
 </tr>
 </tbody>
@@ -5960,28 +5982,29 @@
 <tbody>
 <tr>
 <td>cif</td>
-<td><code>Attachment.enforce_subtype(CIFFile)</code></td>
+<td><code>Attachment.enforce_subtype(CIFFile)</code> (<a href="../blocks/attachments/#FoSpy.blocks.attachments.Attachment.enforce_subtype">see class method</a>)</td>
 <td><a href="#attachment">A single attached CIF file</a></td>
 </tr>
 <tr>
 <td>cifs</td>
-<td><code>CifList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/attachments/#ciflist">Block: <code>CifList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#attachment">attached CIF files</a></td>
 </tr>
 <tr>
 <td>laboratory_conditions</td>
-<td><code>LabConditions</code></td>
+<td><a href="#singleblock-method-subclasses">Block: <code>LabConditions</code></a></td>
 <td><a href="#singleblock-method-subclasses">General Laboratory Conditions</a></td>
 </tr>
 <tr>
 <td>equipment</td>
-<td><code>EquipmentList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/metadata/#equipmentlist">Block: <code>EquipmentList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#singleblock-method-subclasses"><code>Equipment</code> objects</a></td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h3 id="synthesismeta"><code>SynthesisMeta</code></h3>
+<p><a class="autorefs autorefs-internal" href="../blocks/metadata/#synthesismeta">Class Documentation</a></p>
 <p><strong><a href="#metadata">Subclass of <code>MetaData</code></a></strong></p>
 <h4 id="required-properties_14">Required properties</h4>
 <table>
@@ -6074,7 +6097,7 @@
 </tr>
 <tr>
 <td>cifs</td>
-<td><code>CifList</code></td>
+<td><a class="autorefs autorefs-internal" href="../blocks/attachments/#ciflist">Block: <code>CifList</code></a></td>
 <td>A <a href="#listblock-and-simple-lists">simple list</a> of <a href="#attachment">attached CIF files</a></td>
 </tr>
 </tbody>
@@ -6094,7 +6117,7 @@
 <tbody>
 <tr>
 <td>anneal</td>
-<td><code>Annealing</code> <a href="#annealing">(link)</a></td>
+<td><a href="#annealing">Block: <code>Annealing</code></a></td>
 </tr>
 </tbody>
 </table>
@@ -6137,12 +6160,17 @@
 <tbody>
 <tr>
 <td>recovered_amount</td>
-<td><code>validators.numbers.positive_decimal</code></td>
+<td><a class="autorefs autorefs-internal" title="positive_decimal" href="../full/parsing/validators/numbers/#FoSpy.parsing.validators.numbers.positive_decimal">Numbers validator: <code>positive_decimal</code></a></td>
 <td>How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a <a href="https://pint.readthedocs.io/en/stable/"><code>pint.Quantity</code> object</a>.</td>
 </tr>
 <tr>
 <td>recovered_amount_unit</td>
-<td><code>validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></td>
+<td><a class="autorefs autorefs-internal" title="enforce_dims
+
+
+  
+      classmethod
+  " href="../full/parsing/validators/units/#FoSpy.parsing.validators.units.FOSUnit.enforce_dims">Units validator: <code>FOSUnit.enforce_dims(["[mass]",{"[length]":3}])</code></a></td>
 <td><code>FOSUnit</code> is a <a href="https://pint.readthedocs.io/en/stable/">subclass of <code>pint</code>'s <code>Unit</code></a> with a class method for enforcing the correct dimensionality of the unit.</td>
 </tr>
 <tr>

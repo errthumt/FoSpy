@@ -128,8 +128,7 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
     recovered_mass: 200.0
 
 [Cifs]
-file_name: Ba2Zn5Sb6_ICSD
-extension: .cif
+file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 
 #(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
