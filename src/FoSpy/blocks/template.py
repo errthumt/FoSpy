@@ -103,6 +103,7 @@ class FlexTemplate(TemplateBlock):
         temp_dict = blockDict.copy()
         required = cls.build_req_validators()
         all_validators = cls.build_validators()
+
         for key in required:
             if key != 'ext' and key not in temp_dict:
                 template_keys.append(key)

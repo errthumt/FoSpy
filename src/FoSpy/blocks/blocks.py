@@ -271,7 +271,7 @@ class SingleBlock(Block):
         return SubTemplate
    
     @classmethod
-    def reflex(cls, serialize=True, **kwargs:dict):
+    def reflex(cls, serialize=True, include_temp_names=True, clean=False, **kwargs:dict):
         """
         Generate a flexible template for the current class.
 
@@ -296,7 +296,11 @@ class SingleBlock(Block):
 
         empty = Flex.dispatch_subclass(kwargs)
         if serialize:
-            return empty.serialize()
+            serial = empty.serialize(clean=clean)
+            if not include_temp_names:
+                from ._blockUtils import _prune_template_names
+                serial = _prune_template_names(serial)
+            return serial
         return empty
 
     @classmethod

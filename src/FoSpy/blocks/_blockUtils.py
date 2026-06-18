@@ -1,3 +1,15 @@
+def _prune_template_names(struct):
+    if isinstance(struct, dict):
+        struct = struct.copy()
+        struct.pop("template_name", None)
+        for key, val in struct.items():
+            struct[key] = _prune_template_names(val)
+    elif isinstance(struct, list):
+        struct = struct.copy()
+        struct = [_prune_template_names(v) for v in struct]
+
+    return struct
+
 def _calc_routine(attach=True):
     """
     Decorator for `SingleBlock` or `ListBlock` methods that calculate values
