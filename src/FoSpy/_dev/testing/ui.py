@@ -3,7 +3,7 @@ def get_test(**args):
     import questionary
     from . import TESTS
     from ...config import values as cfg
-    from ._utils import toggle_branches, get_current_branch
+    from ._utils import toggle_branches, get_current_branch, resync_branch
 
     cfg.DEV.branch = get_current_branch()
 
@@ -13,6 +13,7 @@ def get_test(**args):
     while True:
         current_branch = cfg.DEV.branch
         next_branch = "main" if current_branch == "dev" else "dev"
+        resync_label = f"[Resync with GitHub (currently on {current_branch})]"
         branch_label = f"[Switch to {next_branch} feature branch (currently on {current_branch})]"
 
         choices = {}
@@ -38,6 +39,7 @@ def get_test(**args):
             choices[advanced_label] = "toggle_advanced"
 
         choices["[Quit]"] = False
+        choices[resync_label] = resync_branch
         choices[branch_label] = toggle_branches
 
         label = questionary.select(

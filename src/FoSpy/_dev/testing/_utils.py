@@ -13,6 +13,17 @@ def file_prompt(title="Select an input file", filetypes=[("FOS files", "*.fos"),
         raise Exception("No file selected.")
     return filepath
 
+def dir_prompt(title="Select a directory"):
+    root = Tk()
+    root.withdraw()
+
+    filepath = filedialog.askdirectory(
+        title=title
+    )
+    if not filepath:
+        raise Exception("No directory selected.")
+    return filepath
+
 def open_file(path):
     system = platform.system()
     if system == "Windows":
@@ -160,9 +171,22 @@ def toggle_branches():
     cfg_save(prompt=False)
 
     print("\nBranch toggle complete.")
+    print("\nPLEASE NOTE: For changes to take effect, you must exit and restart the testing suite.")
     input("Press any key to continue...")
 
-    return True
+    return False
+
+def resync_branch():
+    print("\nRestoring working directory...")
+    run_git("restore", ".")
+    print("Pulling latest changes...")
+    run_git("pull")
+
+    print("\nGitHub sync complete.")
+    print("\nPLEASE NOTE: For changes to take effect, you must exit and restart the testing suite.")
+    input("Press any key to continue...")
+
+    return False
 
 LOGO = """
         %@@@@@@@@.             .@@@@@@@@%                
