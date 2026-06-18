@@ -36,6 +36,7 @@ nav:
       - _utils: full/_dev/testing/_utils.md
       - cli: full/_dev/testing/cli.md
       - load_test: full/_dev/testing/load_test.md
+      - map_guides: full/_dev/testing/map_guides.md
       - map_test: full/_dev/testing/map_test.md
       - ui: full/_dev/testing/ui.md
   - blocks:
@@ -59,6 +60,8 @@ nav:
     - json/__init__: full/json/__init__.md
     - core: full/json/core.md
     - utils: full/json/utils.md
+    - help:
+      - help/__init__: full/json/help/__init__.md
   - parsing:
     - parsing/__init__: full/parsing/__init__.md
     - format_fos: full/parsing/format_fos.md
