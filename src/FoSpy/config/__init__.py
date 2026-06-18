@@ -112,7 +112,7 @@ def _load():
     out = _load_defaults()
 
     with open(USER_FILE, 'r') as f:
-        out = _deep_merge(out, json.load(f))
+        out = _deep_merge(out, json.load(f) or {})
 
     return out
 
