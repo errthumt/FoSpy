@@ -1,4 +1,5 @@
 from FoSpy import Synthesis
+from FoSpy.json.help import generate_map_guide
 import json
 
 if __name__ == "__main__":
@@ -8,3 +9,12 @@ if __name__ == "__main__":
 
     with open("assets/empty_synthesis.json", "w") as f:
         json.dump(empty_dict, f, indent=4)
+
+    guides = {
+        "simple": generate_map_guide(),
+        "full": generate_map_guide(include_optional=True)
+    }
+
+    for name, dct in guides.items():
+        with open(f"assets/guides/{name}.json", "w") as f:
+            json.dump(dct, f, indent=4)
