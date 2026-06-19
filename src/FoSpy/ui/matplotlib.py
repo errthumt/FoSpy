@@ -66,6 +66,21 @@ class SliderPlot(AbstractSlider):
 
         self.ypos = 0
 
+        # TODO: better group organization
+        # temporary: unpack groups
+        unpacked = {}
+        for name, spec in specs.items():
+            if spec["type"] == "group":
+                grp_label = spec["label"]
+                grp_name = name
+                for nm, spc in spec["specs"].items():
+                    spc["label"] = f"({grp_label}) {spc['label']}"
+                    unpacked[f"{grp_name}_{nm}"] = spc
+            else:
+                unpacked[name] = spec
+
+        specs = unpacked
+
         for name, spec in specs.items():
             if spec["type"] == "scalar":
                 self.add_slider(name)
@@ -151,7 +166,7 @@ class SliderPlot(AbstractSlider):
 
         if spec_name.split("_")[-1] in ["min", "max"]:
             spec_name = spec_name[:-4]
-        digits = self.specs[spec_name].get("digits", 2)
+        digits = self._unpacked_specs[spec_name].get("digits", 2)
 
         def update(val, slider=slider, textbox=textbox, digits=digits):
             try:
@@ -169,7 +184,7 @@ class SliderPlot(AbstractSlider):
         slider = self.sliders[spec_name]
         if spec_name.split("_")[-1] in ["min", "max"]:
             spec_name = spec_name[:-4]
-        digits = self.specs[spec_name].get("digits", 2)
+        digits = self._unpacked_specs[spec_name].get("digits", 2)
         def update(val, slider=slider, textbox=textbox, digits=digits):
             if not slider.active:
                 slider.set_val(float(textbox.val))
@@ -182,7 +197,7 @@ class SliderPlot(AbstractSlider):
         from matplotlib.widgets import Slider, CheckButtons, TextBox
         from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
-        sp = self.specs[spec_name]
+        sp = self._unpacked_specs[spec_name]
         label = sp['label']
 
         if range_type is None:

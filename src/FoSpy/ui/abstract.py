@@ -13,6 +13,8 @@ class SliderPlot:
     color3 = 'darkgreen'
     def __init__(self, specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
         self.specs = specs
+        self._unpacked_specs = {}
+        self._unpack_specs()
         self.cfg = cfg
         self.sl_rows = _count_sliders(specs)
         self.sliders = {}
@@ -32,11 +34,20 @@ class SliderPlot:
         self.setXticks(x_ticks)
         self.setYticks(y_ticks)
 
+    def _unpack_specs(self, specs=None):
+        specs = specs or self.specs
+
+        for name, spec in specs.items():
+            if spec["type"] == "group":
+                self._unpack_specs(spec["specs"])
+            else:
+                self._unpacked_specs[name] = spec
+
     def update_plot(self, val=None):
         self.update_cfg()
 
     def update_cfg(self):
-        for name, spec in self.specs.items():
+        for name, spec in self._unpacked_specs.items():
             if spec["type"] == "scalar":
                 NoneVal = spec.get("None", None)
                 enabled = self.get_check_enabled(name)
@@ -50,6 +61,7 @@ class SliderPlot:
                 hi = self.get_slider_val(name + "_max") if hi_enabled else None
 
                 self.cfg[name] = [lo, hi]
+
 
     def get_slider_val(self, spec_name):
         raise NotImplementedError("Override in UI subclass")

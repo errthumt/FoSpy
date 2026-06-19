@@ -32,6 +32,5 @@ nominal_amount_unit: mg
 
 
 [CIFs]
-file_name: As
-extension: .cif
+file_name: As.cif
 path: .
