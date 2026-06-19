@@ -10,14 +10,15 @@ except ImportError as e:
     available = False
     import_e = e
 
+from ._utils import _get_digits
+
 TB_WIDTH = 60
-DEF_DIGITS = full_cfg.get("slider_digits.default", 2)
+
 CTRL_ROWS = 6
 MIN_CTRL_WIDTH = 250
 MAX_CTRL_HEIGHT = 65
 
-def _get_digits(spec):
-    return spec.get("digits", DEF_DIGITS)
+
 
 def _separator():
     sep = QtWidgets.QFrame()
@@ -26,35 +27,6 @@ def _separator():
     sep.setLineWidth(2)   # thickness
     sep.setMidLineWidth(1)
     return sep
-
-class CollapsibleSection(QtWidgets.QWidget):
-    def __init__(self, title, parent=None):
-        super().__init__(parent)
-
-        self.toggle = QtWidgets.QToolButton(text=title, checkable=True, checked=False)
-        self.toggle.setStyleSheet("QToolButton { border: none; }")
-        self.toggle.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        self.toggle.setArrowType(QtCore.Qt.RightArrow)
-
-        self.toggle.clicked.connect(self._on_toggle)
-
-        self.content = QtWidgets.QWidget()
-        self.content.setVisible(False)
-        self.content_layout = QtWidgets.QGridLayout(self.content)
-        self.content_layout.setContentsMargins(20, 0, 0, 0)
-
-        layout = QtWidgets.QVBoxLayout(self)
-        layout.addWidget(self.toggle)
-        layout.addWidget(self.content)
-        layout.setContentsMargins(0, 0, 0, 0)
-
-    def addWidget(self, w):
-        self.content_layout.addWidget(w)
-
-    def _on_toggle(self):
-        expanded = self.toggle.isChecked()
-        self.toggle.setArrowType(QtCore.Qt.DownArrow if expanded else QtCore.Qt.RightArrow)
-        self.content.setVisible(expanded)
 
 class ControlPanel(QtWidgets.QWidget):
     def __init__(self, rows=CTRL_ROWS, parent=None):
@@ -147,14 +119,6 @@ class SliderPlot(AbstractSlider):
 
         self.layout.addWidget(self.plot, stretch=3)
 
-        # self.ctrl_panel = QtWidgets.QWidget()
-        # self.ctrl_layout = QtWidgets.QGridLayout(self.ctrl_panel)
-        # self._layout_rows = CTRL_ROWS
-        # self._ctrl_row = 0
-        # self._ctrl_col = 0
-        # self.layout.addWidget(self.ctrl_panel, stretch=1)
-
-        # self._collapsibles = {}
         self.panel = ControlPanel(rows=CTRL_ROWS, parent=central)
         self.layout.addWidget(self.panel, stretch=1)
         self._build_controls()
@@ -184,7 +148,6 @@ class SliderPlot(AbstractSlider):
         if self._loop.isRunning():
             self._loop.exit()
 
-    # def _add_group(self, name, label, *widgetcalls:tuple[callable, tuple], max_rows=CTRL_ROWS):
     def _add_group(self, label, specs, rows=CTRL_ROWS):
         # cache current panel
         panel = self.panel
@@ -196,35 +159,6 @@ class SliderPlot(AbstractSlider):
         self.panel.layout.addStretch(1)
 
         self.panel = panel
-
-
-
-        # section = CollapsibleSection(label)
-        # self._collapsibles[name] = section
-        # self.ctrl_layout.addWidget(section, self._ctrl_row, self._ctrl_col)
-
-        # # cache panel
-        # full_panel = self.ctrl_layout
-        # ctrl_row = self._ctrl_row
-        # ctrl_col = self._ctrl_col
-        # layout_rows = self._layout_rows
-
-        # # redirect to section
-        # self.ctrl_layout = section.content_layout
-        # self._ctrl_row = 0
-        # self._ctrl_col = 0
-        # self._layout_rows = max_rows
-
-        # for (widgetcall, args) in widgetcalls:
-        #     widgetcall(*args)
-
-        # # restore cached panel
-        # self.ctrl_layout = full_panel
-        # self._ctrl_row = ctrl_row
-        # self._ctrl_col = ctrl_col
-        # self._layout_rows = layout_rows
-        
-        # self.next_ctrl_row()
 
     def _build_controls(self, specs=None):
         specs = specs or self.specs
@@ -240,8 +174,6 @@ class SliderPlot(AbstractSlider):
 
         for name, spec in specs.items():
             widget_calls.get(spec["type"], skip)(name, spec)
-
-        # self.ctrl_layout.addStretch()
 
     def _add_scalar(self, name, spec):
         box = QtWidgets.QGroupBox(spec["label"])
@@ -318,22 +250,6 @@ class SliderPlot(AbstractSlider):
         }
 
         self._add_group(spec["label"], specs)
-
-        # self._add_scalar(name + "_min",
-        #                  spec={"label": spec["label"] + " (min)",
-        #                        "min": spec["min"],
-        #                        "max": spec["max"],
-        #                        "default": lo,
-        #                        "digits": _get_digits(spec),
-        #                        "type": "scalar"})
-        
-        # self._add_scalar(name + "_max",
-        #                  spec={"label": spec["label"] + " (max)",
-        #                        "min": spec["min"],
-        #                        "max": spec["max"],
-        #                        "default": hi,
-        #                        "digits": _get_digits(spec),
-        #                        "type": "scalar"})
         
     def _to_slider_pos(self, name, val):
         return self.sl_transforms[name][1](val)

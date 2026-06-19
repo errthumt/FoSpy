@@ -18,3 +18,9 @@ def _round_spec(x, digits, key=None, include=True):
         return round(x, digits)
     else:
         return round(x, digits) if x is not None else None
+    
+DEF_DIGITS = 2
+def _get_digits(spec):
+    from ..config import values as cfg
+    default = cfg.get("slider_digits.default", DEF_DIGITS)
+    return spec.get("digits", default)
