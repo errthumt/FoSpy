@@ -107,7 +107,7 @@ def get_baseline_sliders(baseline_cfg):
     sliders = {
         "lam": {
             "type": "scalar",
-            "label": "Logarithmic Lambda",
+            "label": "Baseline Smoothing",
             "min": 0,
             "max": 10
         },
