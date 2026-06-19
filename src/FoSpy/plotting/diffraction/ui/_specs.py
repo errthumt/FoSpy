@@ -22,7 +22,8 @@ def assemble_sliders(specs, cfg_name, cfg):
         for key in ["min", "max", "default", "None"]:
             if key not in spec:
                 continue
-            spec[key] = _round_spec(spec[key], digits, key)
+            include = spec.get("include_"+key, True)
+            spec[key] = _round_spec(spec[key], digits, key, include)
     return specs
 
 def get_find_sliders(find_cfg, intensity_col):
