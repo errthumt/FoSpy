@@ -116,7 +116,8 @@ class ControlPanel(QtWidgets.QWidget):
         return next(self._rowcol)
 
 
-
+# TODO: cleanup comments
+# TODO: abstract _build_controls
 class SliderPlot(AbstractSlider):
     def __init__(self, title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
         if not available:

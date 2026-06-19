@@ -7,6 +7,7 @@ def _count_sliders(specs):
             total += 2
     return total
 
+# TODO: handle bool specs
 class SliderPlot:
     color1 = 'b'
     color2 = 'magenta'

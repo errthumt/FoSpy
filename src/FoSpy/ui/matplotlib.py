@@ -35,6 +35,7 @@ def _get_label_offset(slider_width):
     offset = offset / slider_width
     return offset
 
+# TODO: spec grouping, refactor for abstract _build_controls
 class SliderPlot(AbstractSlider):
     def __init__(self, figsize=(10,6), title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True, backend='TkAgg'):
         

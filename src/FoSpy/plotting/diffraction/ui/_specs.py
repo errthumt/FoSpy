@@ -4,6 +4,7 @@ import numpy as np
 
 
 def assemble_sliders(specs, cfg_name, cfg):
+    # TODO: move to ui utils
     digits_default = full_cfg.get("slider_digits.default")
     digit_cfg = full_cfg.get(f"slider_digits.{cfg_name}")
     for name, spec in specs.items():
