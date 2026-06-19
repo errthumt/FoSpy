@@ -82,6 +82,7 @@ def get_find_sliders(find_cfg, intensity_col):
                 "rel_height": {
                     "type": "scalar",
                     "label": "Width @ Height (Height-Relative, top-down)",
+                    "include_min": False,
                     "min": 0,
                     "max": 1,
                     "None": 1
