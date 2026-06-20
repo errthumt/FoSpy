@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-REM --- Ensure working directory is the batch file's directory ---
+REM ---- Ensure working directory is the batch file's directory ---
 cd /d "%~dp0"
 
 echo Creating user folder FoSpy_DEV_ENV...
