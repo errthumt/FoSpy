@@ -89,7 +89,7 @@ import sys
 import subprocess
 import sys
 import os
-import msvcrt  # Windows-only for single-key input
+
 
 from ...config import values as cfg
 
@@ -121,6 +121,7 @@ def get_current_branch():
 
 
 def choice_prompt(message):
+    import msvcrt  # Windows-only for single-key input
     """Replicates `choice /m` behavior: Y/N single keypress."""
     print(f"{message} [Y,N]? ", end="", flush=True)
     while True:
