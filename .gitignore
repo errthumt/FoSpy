@@ -10,6 +10,7 @@ dist_venv/
 mkdocs/site/
 src/FoSpy/config/user.json
 user_files/
+mkdocs/docs/file_download/*.zip
 
 # hatchling dynamic versioning
 _version.py
