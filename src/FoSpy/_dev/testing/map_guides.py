@@ -6,6 +6,10 @@ from pathlib import Path
 import json
 from textwrap import dedent
 
+SUB_DIR = "FoSpy_Map_Guides"
+
+EXPECTED_FN = "optional_fields"
+REQUIRED_FN = "required_fields"
 
 def run(dirpath=None, open_result=True):
     if dirpath is None:
@@ -17,16 +21,16 @@ def run(dirpath=None, open_result=True):
 
     
         
-    outdir = Path(dirpath) / "FoSpy_Map_Guides"
+    outdir = Path(dirpath) / SUB_DIR
 
-    if str(dirpath).endswith("FoSpy_Map_Guides"):
+    if str(dirpath).endswith(SUB_DIR):
         outdir = outdir.parent
     
     os.makedirs(outdir, exist_ok=True)
 
     guides = {
-        "all_expected_fields": generate_map_guide(include_optional=True),
-        "all_required_fields": generate_map_guide(include_optional=False)
+        EXPECTED_FN: generate_map_guide(include_optional=True),
+        REQUIRED_FN: generate_map_guide(include_optional=False)
     }
 
     for name, guide in guides.items():
