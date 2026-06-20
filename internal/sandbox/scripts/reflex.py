@@ -3,7 +3,6 @@ from FoSpy.json.help import generate_map_guide
 import json
 
 if __name__ == "__main__":
-    raise TypeError("test")
     from _utils import set_sandbox_cwd
     set_sandbox_cwd()
     empty_dict = Synthesis.reflex(serialize=True, include_temp_names=False, clean=True)
