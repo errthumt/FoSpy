@@ -103,10 +103,8 @@ def main():
 
     travis.rename_block("friend","colleague")
 
-    travis.colleague.add_comments("This copy of Joe has information "
-                                  "about him as Travis's colleague")
-    joe.name.add_comments("This copy of Joe has information about "
-                          "him as an experimenter")
+    travis.colleague.add_comments("This copy of Joe has information about him as Travis's colleague")
+    joe.name.add_comments("This copy of Joe has information about him as an experimenter")
     my_exps.add_comments("Note that there are now multiple experimenters in this block,",
                          "So the header now has double brackets")
 

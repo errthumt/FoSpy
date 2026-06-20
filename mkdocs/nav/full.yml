@@ -11,6 +11,7 @@ nav:
   - Attachments: guides/attachments.md
   - Group File Management: guides/group.md
   - User Configuration: guides/config.md
+  - Converting to FOS: guides/maps/index.md
 - Block Modules:
   - What is a Block?: blocks/index.md
   - attachments: blocks/attachments.md
