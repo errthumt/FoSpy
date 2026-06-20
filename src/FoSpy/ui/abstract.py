@@ -7,6 +7,36 @@ def _count_sliders(specs):
             total += 2
     return total
 
+from ._utils import _get_digits
+
+CTRL_ROWS = 6
+
+class ControlPanel:
+    def __init__(self, rows=CTRL_ROWS):
+        self._rowcol = self.row_col_iter()
+        self._max_rows = rows
+
+    def addWidget(self, w):
+        pass
+
+    def addGroup(self, label, rows=CTRL_ROWS):
+        pass
+
+    def row_col_iter(self):
+        current_row = 0
+        current_col = 0
+        while True:
+            if current_row >= self._max_rows-1:
+                current_row = 0
+                current_col += 1
+            else:
+                current_row += 1
+            yield current_row, current_col
+            
+
+    def nextRowCol(self):
+        return next(self._rowcol)
+
 # TODO: handle bool specs
 class SliderPlot:
     color1 = 'b'
@@ -17,7 +47,7 @@ class SliderPlot:
         self._unpacked_specs = {}
         self._unpack_specs()
         self.cfg = cfg
-        self.sl_rows = _count_sliders(specs)
+        self.sl_rows = _count_sliders(self._unpacked_specs)
         self.sliders = {}
         self.checks = {}
         self.textboxes = {}
@@ -63,6 +93,60 @@ class SliderPlot:
 
                 self.cfg[name] = [lo, hi]
 
+    def _add_group(self, label, specs, rows=CTRL_ROWS):
+        # cache current panel
+        panel = self.panel
+
+        # reassign panel to nested group
+        self.panel = panel.addGroup(label, rows=rows)
+
+        # build controls in nested group
+        self._build_controls(specs)
+
+        # restore cached panel
+        self.panel = panel
+
+    def _add_range(self, name, spec):
+        lo, hi = spec['default']
+
+        specs = {
+            name + "_min": {
+                "label": "(min)",
+                "min": spec["min"],
+                "max": spec["max"],
+                "default": lo,
+                "digits": _get_digits(spec),
+                "type": "scalar"
+            },
+            name + "_max": {
+                "label": "(max)",
+                "min": spec["min"],
+                "max": spec["max"],
+                "default": hi,
+                "digits": _get_digits(spec),
+                "type": "scalar"
+            }
+        }
+
+        self._add_group(spec["label"], specs)
+
+    def _build_controls(self, specs=None):
+        specs = specs or self.specs
+        widget_calls = {
+            "scalar": lambda name, spec:
+                self._add_scalar(name, spec),
+            "range": lambda name, spec:
+                self._add_range(name, spec),
+            "group": lambda name, spec:
+                self._add_group(spec["label"], spec["specs"])
+        }
+        skip = lambda name, spec: None
+
+        for name, spec in specs.items():
+            widget_calls.get(spec["type"], skip)(name, spec)
+
+    def _add_scalar(self, name, spec):
+        raise NotImplementedError("Override in UI subclass")
 
     def get_slider_val(self, spec_name):
         raise NotImplementedError("Override in UI subclass")

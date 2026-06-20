@@ -1,4 +1,4 @@
-from .abstract import SliderPlot as AbstractSlider
+from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
 from ..config import values as full_cfg
 
 available = True
@@ -28,9 +28,10 @@ def _separator():
     sep.setMidLineWidth(1)
     return sep
 
-class ControlPanel(QtWidgets.QWidget):
+class ControlPanel(QtWidgets.QWidget, AbstractControl):
     def __init__(self, rows=CTRL_ROWS, parent=None):
         super().__init__(parent)
+        AbstractControl.__init__(self, rows=rows)
 
         self.layout = QtWidgets.QVBoxLayout(self)
 
@@ -48,8 +49,7 @@ class ControlPanel(QtWidgets.QWidget):
         self.group_buttons = QtWidgets.QButtonGroup()
         self.group_buttons.setExclusive(True)
 
-        self._rowcol = self.row_col_iter()
-        self._max_rows = rows
+        
 
     def addWidget(self, w):
         self.loner_grid.addWidget(w, *self.nextRowCol())
@@ -71,21 +71,6 @@ class ControlPanel(QtWidgets.QWidget):
             btn.setChecked(True)
 
         return stack
-
-    def row_col_iter(self):
-        current_row = 0
-        current_col = 0
-        while True:
-            if current_row >= self._max_rows-1:
-                current_row = 0
-                current_col += 1
-            else:
-                current_row += 1
-            yield current_row, current_col
-            
-
-    def nextRowCol(self):
-        return next(self._rowcol)
 
 
 # TODO: cleanup comments
@@ -148,32 +133,11 @@ class SliderPlot(AbstractSlider):
         if self._loop.isRunning():
             self._loop.exit()
 
-    def _add_group(self, label, specs, rows=CTRL_ROWS):
-        # cache current panel
-        panel = self.panel
-
-        self.panel = panel.addGroup(label, rows=rows)
-
-        self._build_controls(specs)
+    def _build_controls(self, specs=None):
+        super()._build_controls(specs=specs)
+        
         self.panel.group_select.addStretch(1)
         self.panel.layout.addStretch(1)
-
-        self.panel = panel
-
-    def _build_controls(self, specs=None):
-        specs = specs or self.specs
-        widget_calls = {
-            "scalar": lambda name, spec:
-                self._add_scalar(name, spec),
-            "range": lambda name, spec:
-                self._add_range(name, spec),
-            "group": lambda name, spec:
-                self._add_group(spec["label"], spec["specs"])
-        }
-        skip = lambda name, spec: None
-
-        for name, spec in specs.items():
-            widget_calls.get(spec["type"], skip)(name, spec)
 
     def _add_scalar(self, name, spec):
         box = QtWidgets.QGroupBox(spec["label"])
@@ -213,7 +177,6 @@ class SliderPlot(AbstractSlider):
         self.sliders[name] = slider
 
         # Textbox
-        
         tb = QtWidgets.QLineEdit(f"{default:.{_get_digits(spec)}f}")
         tb.setFixedWidth(TB_WIDTH)
         layout.addWidget(tb)
@@ -225,31 +188,6 @@ class SliderPlot(AbstractSlider):
         tb.editingFinished.connect(lambda n=name: self._textbox_changed(n))
 
         self.panel.addWidget(box)
-
-
-    def _add_range(self, name, spec):
-        lo, hi = spec['default']
-
-        specs = {
-            name + "_min": {
-                "label": "(min)",
-                "min": spec["min"],
-                "max": spec["max"],
-                "default": lo,
-                "digits": _get_digits(spec),
-                "type": "scalar"
-            },
-            name + "_max": {
-                "label": "(max)",
-                "min": spec["min"],
-                "max": spec["max"],
-                "default": hi,
-                "digits": _get_digits(spec),
-                "type": "scalar"
-            }
-        }
-
-        self._add_group(spec["label"], specs)
         
     def _to_slider_pos(self, name, val):
         return self.sl_transforms[name][1](val)
