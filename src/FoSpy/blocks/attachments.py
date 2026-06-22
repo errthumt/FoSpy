@@ -79,7 +79,7 @@ class Attachment(SingleBlock):
         if cls.enforced_subtype is not None and not issubclass(subtype, cls.enforced_subtype):
             raise ValueError(f"Attachment type for this key must be a subclass of {cls.enforced_subtype.__name__}")
 
-        class NewAttachment(attachmenttype, subtype):
+        class NewAttachment(attachmenttype, subtype, cls):
             @classmethod
             def dispatch_subclass(cls, blockDict, **kwargs):
                 return cls(blockDict, _dispatched=True, **kwargs)

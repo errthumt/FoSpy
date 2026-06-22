@@ -211,7 +211,7 @@ def main():
 
     # removing the Ba2Zn5Sb6 from my synthesis because it's not applicable for this
     # sample.
-    my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
+    my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD.cif")
 
     my_templates.save("templates/check09.fos")
     my_synthesis.save("synthesis/check09.fos")
@@ -259,11 +259,11 @@ def main():
 
 
     # optional: figure
-    # my_synthesis.cifs[0].quick_pattern(subprocess=True)
+    my_synthesis.cifs[0].quick_pattern(subprocess=True)
 
 
     # optional: figure
-    # my_synthesis.treatments.get_first(type="anneal").show_plot()
+    my_synthesis.treatments.get_first(type="anneal").show_plot()
 
 if __name__ == '__main__':
     main()
