@@ -52,3 +52,9 @@ class FailedValidatorError(PropertyError):
         self.cause = cause
 
         self.__cause__ = cause
+
+class PropertyAliasError(PropertyError):
+    def __init__(self, key, blockObj, blockDict={}, hint="Problem with aliased property: ", posthint:str=None, *args, **kwargs):
+        super().__init__(key, blockObj, blockDict, hint, *args, **kwargs)
+        if posthint is not None:
+            self.args[0] += "\n" + posthint

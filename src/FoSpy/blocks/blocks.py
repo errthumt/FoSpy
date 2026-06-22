@@ -585,16 +585,20 @@ class SingleBlock(Block):
             try:
                 name, alias = name.split("$")
             except:
-                raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
+                raise err.PropertyAliasError(name, self, self._sourceDict, "Unable to parse a block alias from key containing '$' character: ")
             
             try:
                 val = self._aliases[alias]
             except KeyError:
-                raise ValueError(f"Unrecognized block alias: '{alias}'")
+                raise err.PropertyAliasError(name, self, self._sourceDict,
+                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
+                                             posthint=f"Valid aliases: {list(self._aliases.keys())}")
             
             if name in validators and val != validators[name]:
-                raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
-                                 f"it cannot be overwritten to '{val.__name__}'.")
+                raise err.PropertyAliasError(name, self, self._sourceDict,
+                                             hint=f"Cannot apply '{alias}' alias override to property: ",
+                                             posthint="That property is already assigned to a validator. "
+                                             f"The following properties are reserved: {list(validators.keys())}")
             if name not in validators:
                 validators[name] = val
                 self._key_overrides[name] = val
