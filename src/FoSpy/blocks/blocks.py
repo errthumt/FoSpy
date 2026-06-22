@@ -617,6 +617,7 @@ class SingleBlock(Block):
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
                     validator = validator.dispatch_subclass
+                    value = _unwrap_block(value)
                 #     if not isinstance(value, validator):
                 #         validator = validator.dispatch_subclass
                 #         if isinstance(value, list):

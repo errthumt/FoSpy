@@ -41,13 +41,13 @@ def _unwrap_listblock(struct, typ:type=None):
     if isinstance(struct, ListBlock):
         return struct.serialize()
     if isinstance(struct, typ):
-        return struct
+        return [struct]
     if not isinstance(struct, list):
         return [_unwrap_block(struct)]
     
     out = []
     for s in struct:
-        out.extend(_unwrap_listblock(s))
+        out.extend(_unwrap_listblock(s, typ))
     return out
 
 
