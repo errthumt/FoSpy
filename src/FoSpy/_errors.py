@@ -6,7 +6,14 @@ class FileBlockNotFoundError(Exception):
     pass
 
 class PropertyError(Exception):
-    pass
+    def __init__(self, key, blockObj, blockDict={}, hint="Error for property: ", *args, **kwargs):
+        typ_nm, block_id, id_key = _get_block_info(blockObj, blockDict)
+
+        hint += f"'{key}' for '{typ_nm}' object."
+        if block_id is not None:
+            hint += f" (ID: {id_key} = {block_id})"
+
+        super().__init__(hint, *args, **kwargs)
 
 
 def _get_block_info(blockObj, blockDict={}):
@@ -33,26 +40,15 @@ class PropertyErrorGroup(ExceptionGroup, PropertyError):
         super().__init__(hint, errors)
 
 
-class MissingPropertyError(ValueError, PropertyError):
+
+class MissingPropertyError(PropertyError):
     def __init__(self, key, blockObj, blockDict={}, *args, **kwargs):
-        typ_nm, block_id, id_key = _get_block_info(blockObj, blockDict)
-
-        hint = f"Missing required property '{key}' for '{typ_nm}' object."
-
-        if block_id is not None:
-            hint += f" (ID: {id_key} = {block_id})"
-
-        super().__init__(hint, *args, **kwargs)
+        super().__init__(key, blockObj, blockDict, hint="Missing required property: ", *args, **kwargs)
 
 class FailedValidatorError(PropertyError):
     def __init__(self, key, blockObj, cause:Exception, blockDict={}, *args, **kwargs):
-        typ_nm, block_id, id_key = _get_block_info(blockObj, blockDict)
+        super().__init__(key, blockObj, blockDict, hint="Failed to validate property: ", *args, **kwargs)
 
-        hint = f"Failed to validate property '{key}' for '{typ_nm}' object."
-
-        if block_id is not None:
-            hint += f" (ID: {id_key} = {block_id})"
-
-        super().__init__(hint, *args, **kwargs)
-        self.__cause__ = cause
         self.cause = cause
+
+        self.__cause__ = cause
