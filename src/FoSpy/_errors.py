@@ -26,6 +26,7 @@ def _get_block_info(blockObj, blockDict={}):
         id_key = typ.id_key
         block_id = blockDict.get(id_key, None)
     else:
+        id_key = None
         block_id = None
 
     return typ_nm, block_id, id_key
