@@ -639,7 +639,8 @@ class SingleBlock(Block):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
                     else:       
-                        raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
+                        e = ValueError(f"You cannot assign a template field as a property for a non-template object.")
+                        raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
                 if isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
