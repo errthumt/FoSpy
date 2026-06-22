@@ -36,6 +36,19 @@ def _unwrap_block(struct):
         struct = _unwrap_block(struct)
     return struct
 
+def _unwrap_listblock(struct):
+    from .blocks import ListBlock, SingleBlock
+    if isinstance(struct, ListBlock):
+        return struct.serialize()
+    if not isinstance(struct, list):
+        return [_unwrap_block(struct)]
+    
+    out = []
+    for s in struct:
+        out.extend(_unwrap_listblock(s))
+    return out
+
+
 def _template_found(val):
     from FoSpy.blocks.template import TemplateField
     if val == TemplateField().serialize():
