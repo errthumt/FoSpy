@@ -6,6 +6,8 @@ from ..parsing.syntax import (
     meta_defaults as md,
 )
 
+from .. import _errors as err
+
 
 from ._blockUtils import _unwrap_block
 
@@ -462,6 +464,7 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        property_errors = []
 
         if not _dispatched:
             from warnings import warn
@@ -504,7 +507,7 @@ class SingleBlock(Block):
                 elif is_type and issubclass(validator, TemplateList):
                     blockDict[key] = []
                 else:
-                    raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
+                    property_errors.append(err.MissingPropertyError(key, self, blockDict))
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -523,7 +526,13 @@ class SingleBlock(Block):
 
         for key, val in blockDict.items():
             self._key_order.append(key)
-            setattr(self, key, val)
+            try:
+                setattr(self, key, val)
+            except err.PropertyError as e:
+                property_errors.append(e)
+
+        if property_errors:
+            raise err.PropertyErrorGroup(self, blockDict,property_errors)
 
         
      
@@ -626,13 +635,12 @@ class SingleBlock(Block):
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
-
-
-
-            return self._assign_and_inject(name,
-                                            validator(value,**val_kwargs)
-                                            if val_kwargs != {}
-                                            else validator(value))
+            try:  
+                val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
+            except Exception as e:
+                raise err.FailedValidatorError(name, self, e, self._sourceDict)
+                
+            return self._assign_and_inject(name, val)
         else:
             return self._assign_and_inject(name, value, extended=True)
 
