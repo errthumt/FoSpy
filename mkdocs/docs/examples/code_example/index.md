@@ -370,7 +370,7 @@ cif_temps.insert(0,Ba2Zn5Sb6)
 
 # removing the Ba2Zn5Sb6 from my synthesis because it's not applicable for this
 # sample.
-my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD")
+my_synthesis.cifs.remove_any(file_name="Ba2Zn5Sb6_ICSD.cif")
 
 my_templates.save("templates/check09.fos")
 my_synthesis.save("synthesis/check09.fos")
