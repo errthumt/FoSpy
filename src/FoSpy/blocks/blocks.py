@@ -640,7 +640,7 @@ class SingleBlock(Block):
                         validator = TemplateField
                     else:       
                         raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
-                if isinstance(validator, type) and isinstance(value, validator):
+                if isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
             try:  
