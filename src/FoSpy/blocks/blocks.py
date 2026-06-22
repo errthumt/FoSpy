@@ -641,7 +641,7 @@ class SingleBlock(Block):
                     else:       
                         e = ValueError(f"You cannot assign a template field as a property for a non-template object.")
                         raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
-                if isinstance(value, validator):
+                if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
             try:  
