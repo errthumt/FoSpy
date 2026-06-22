@@ -507,7 +507,7 @@ class SingleBlock(Block):
                 elif is_type and issubclass(validator, TemplateList):
                     blockDict[key] = []
                 else:
-                    property_errors.append(err.MissingPropertyError(key, self, blockDict))
+                    property_errors.append(err.MissingPropertyError(key, self, blockDict=blockDict))
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -532,7 +532,7 @@ class SingleBlock(Block):
                 property_errors.append(e)
 
         if property_errors:
-            raise err.PropertyErrorGroup(self, blockDict,property_errors)
+            raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
 
         
      
@@ -585,17 +585,17 @@ class SingleBlock(Block):
             try:
                 name, alias = name.split("$")
             except:
-                raise err.PropertyAliasError(name, self, self._sourceDict, "Unable to parse a block alias from key containing '$' character: ")
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict, hint="Unable to parse a block alias from key containing '$' character: ")
             
             try:
                 val = self._aliases[alias]
             except KeyError:
-                raise err.PropertyAliasError(name, self, self._sourceDict,
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
                                              hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
                                              posthint=f"Valid aliases: {list(self._aliases.keys())}")
             
             if name in validators and val != validators[name]:
-                raise err.PropertyAliasError(name, self, self._sourceDict,
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
                                              hint=f"Cannot apply '{alias}' alias override to property: ",
                                              posthint="That property is already assigned to a validator. "
                                              f"The following properties are reserved: {list(validators.keys())}")
@@ -642,7 +642,7 @@ class SingleBlock(Block):
             try:  
                 val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
             except Exception as e:
-                raise err.FailedValidatorError(name, self, e, self._sourceDict)
+                raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict)
                 
             return self._assign_and_inject(name, val)
         else:
