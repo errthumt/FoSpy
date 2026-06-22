@@ -36,10 +36,12 @@ def _unwrap_block(struct):
         struct = _unwrap_block(struct)
     return struct
 
-def _unwrap_listblock(struct):
+def _unwrap_listblock(struct, typ:type=None):
     from .blocks import ListBlock, SingleBlock
     if isinstance(struct, ListBlock):
         return struct.serialize()
+    if isinstance(struct, typ):
+        return struct
     if not isinstance(struct, list):
         return [_unwrap_block(struct)]
     
