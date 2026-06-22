@@ -616,21 +616,23 @@ class SingleBlock(Block):
 
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
-                    if not isinstance(value, validator):
-                        validator = validator.dispatch_subclass
-                        if isinstance(value, list):
-                            if len(value) > 1:
-                                raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
-                            value = value[0]
-                        elif isinstance(value,SingleBlock):
-                            value = value.serialize(keepListType=True)
+                #     if not isinstance(value, validator):
+                #         validator = validator.dispatch_subclass
+                #         if isinstance(value, list):
+                #             if len(value) > 1:
+                #                 raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
+                #             value = value[0]
+                #         elif isinstance(value,SingleBlock):
+                #             value = value.serialize(keepListType=True)
+                #     pass
 
-                elif issubclass(validator, ListBlock):
-                    try: 
-                        value = [block.serialize(keepListType=True) for block in value]
-                    except Exception as e:
-                        if isinstance(value, ListBlock):
-                            value = value.serialize()
+                # elif issubclass(validator, ListBlock):
+                #     try: 
+                #         value = [block.serialize(keepListType=True) for block in value]
+                #     except Exception as e:
+                #         if isinstance(value, ListBlock):
+                #             value = value.serialize()
+                    pass
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
@@ -1492,22 +1494,25 @@ class ListBlock(Block):
                 correct `SingleBlock` subclass specified by _reqCls
         """
         from .attachments import Attachment
+        from ._blockUtils import _unwrap_listblock
 
         if name == "_objs":
-            if type(value) is not list:
-                raise TypeError(f"{type(self).__name__}._objs must be a list of objects.")
 
-            elif hasattr(self, "_reqCls"):
+
+            if hasattr(self, "_reqCls"):
+                errors = []
                 typ = self._reqCls
+                value = _unwrap_listblock(value, typ=typ)
                 new_list = []
                 for obj in value:
                     if isinstance(obj, dict) and obj == {}:
                         continue
                     if not isinstance(obj, typ):
                         try:
-                            new_obj = typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
+                            new_obj = typ.dispatch_subclass(obj)
                         except Exception as e:
-                            raise TypeError(f"{type(self).__name__} objects must be coersible to {typ.__name__}. Failed to coerce at least one object. Error:\n{e}")
+                            errors.append(err.ListBlockMismatchError(self, obj, cause=e))
+                            continue  
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath
                         obj=new_obj
@@ -1515,6 +1520,8 @@ class ListBlock(Block):
                     if hasattr(obj, "refresh") and isinstance(obj, Attachment):
                         obj.refresh(new_copy=self._att_new_copy, overwrite=self._att_overwrite)
                     new_list.append(obj)
+                if errors:
+                    raise err.ListBlockErrorGroup(self, errors)
                 return super().__setattr__(name, new_list)
 
         elif name.startswith("_") or name in self._reserved:

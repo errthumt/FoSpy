@@ -84,11 +84,15 @@ class ListBlockError(Exception):
 
 
 class ListBlockMismatchError(ListBlockError):
-    def __init__(self, blockObj:ListBlock, candidate, *args, hint="Error adding block to ListBlock:", posthint:str=None, **kwargs):
+    def __init__(self, blockObj:ListBlock, candidate, *args, hint="Error adding block to ListBlock:", posthint:str=None, cause:Exception=None, **kwargs):
         self.candidate = candidate
 
 
         super().__init__(blockObj, *args, hint=hint, **kwargs)
+
+        if cause is not None:
+            self.__cause__ = cause
+            self.cause = cause
 
     def _build_prehint(self):
         self.hint += f"\nCandidate:\n{self.candidate}\nis not a valid entry for this list block"
@@ -98,3 +102,8 @@ class ListBlockMismatchError(ListBlockError):
         typ_nm = self.blockObj._reqCls.__name__
         self.hint += f"\nCandidates must be coersible to {typ_nm} objects."
         super()._build_posthint()
+
+class ListBlockErrorGroup(ExceptionGroup, ListBlockError):
+    def __init__(self, blockObj:ListBlock, errors=[]):
+        typ_nm, _, _ = _get_block_info(blockObj)
+        super().__init__(f"Error(s) occurred when trying to construct or modify '{typ_nm}' object.", errors)
