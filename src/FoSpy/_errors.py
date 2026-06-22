@@ -8,8 +8,7 @@ class FileBlockNotFoundError(Exception):
     pass
 
 class PropertyError(Exception):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, key, blockObj:SingleBlock, *args, blockDict={}, hint="Error for property: ", **kwargs):
+    def __init__(self, key, blockObj, *args, blockDict={}, hint="Error for property: ", **kwargs):
         typ_nm, block_id, id_key = _get_block_info(blockObj, blockDict)
 
         hint += f"'{key}' for '{typ_nm}' object."
@@ -32,8 +31,7 @@ def _get_block_info(blockObj, blockDict={}):
     return typ_nm, block_id, id_key
 
 class PropertyErrorGroup(ExceptionGroup, PropertyError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, blockObj:SingleBlock, blockDict={}, errors=[]):
+    def __init__(self, blockObj, blockDict={}, errors=[]):
         typ_nm, block_id, id_key = _get_block_info(blockObj, blockDict)
 
         hint = f"Property Error(s) occurred when trying to construct '{typ_nm}' object."
@@ -46,13 +44,11 @@ class PropertyErrorGroup(ExceptionGroup, PropertyError):
 
 
 class MissingPropertyError(PropertyError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, key, blockObj:SingleBlock, *args, blockDict={}, **kwargs):
+    def __init__(self, key, blockObj, *args, blockDict={}, **kwargs):
         super().__init__(key, blockObj, *args, blockDict=blockDict, hint="Missing required property: ", **kwargs)
 
 class FailedValidatorError(PropertyError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, key, blockObj:SingleBlock, cause:Exception, *args, blockDict={}, **kwargs):
+    def __init__(self, key, blockObj, cause:Exception, *args, blockDict={}, **kwargs):
         
         super().__init__(key, blockObj, *args, blockDict=blockDict, hint="Failed to validate property: ", **kwargs)
 
@@ -61,15 +57,13 @@ class FailedValidatorError(PropertyError):
         self.__cause__ = cause
 
 class PropertyAliasError(PropertyError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, key, blockObj:SingleBlock, *args, blockDict={}, hint="Problem with aliased property: ", posthint:str=None, **kwargs):
+    def __init__(self, key, blockObj, *args, blockDict={}, hint="Problem with aliased property: ", posthint:str=None, **kwargs):
         super().__init__(key, blockObj, *args, blockDict=blockDict, hint=hint, **kwargs)
         if posthint is not None:
             self.args[0] += "\n" + posthint
 
 class ListBlockError(Exception):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, blockObj:ListBlock, *args, hint="Error constructing ListBlock", posthint:str=None, **kwargs):
+    def __init__(self, blockObj, *args, hint="Error constructing ListBlock", posthint:str=None, **kwargs):
         self.blockObj = blockObj
         self.typ_nm, _, _ = _get_block_info(blockObj)
         self.hint = hint
@@ -90,8 +84,7 @@ class ListBlockError(Exception):
 
 
 class ListBlockMismatchError(ListBlockError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, blockObj:ListBlock, candidate, *args, hint="Error adding block to ListBlock:", posthint:str=None, cause:Exception=None, **kwargs):
+    def __init__(self, blockObj, candidate, *args, hint="Error adding block to ListBlock:", posthint:str=None, cause:Exception=None, **kwargs):
         self.candidate = candidate
 
 
@@ -111,7 +104,6 @@ class ListBlockMismatchError(ListBlockError):
         super()._build_posthint()
 
 class ListBlockErrorGroup(ExceptionGroup, ListBlockError):
-    from .blocks.blocks import SingleBlock, ListBlock, Block
-    def __init__(self, blockObj:ListBlock, errors=[]):
+    def __init__(self, blockObj, errors=[]):
         typ_nm, _, _ = _get_block_info(blockObj)
         super().__init__(f"Error(s) occurred when trying to construct or modify '{typ_nm}' object.", errors)
