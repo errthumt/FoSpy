@@ -1,0 +1,21 @@
+[
+  {
+    "cell": null,
+    "code": "E902",
+    "end_location": {
+      "column": 1,
+      "row": 1
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/FoSpy",
+    "fix": null,
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "No such file or directory (os error 2)",
+    "name": "io-error",
+    "noqa_row": null,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/io-error"
+  }
+]

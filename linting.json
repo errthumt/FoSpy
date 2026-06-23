@@ -1,0 +1,6 @@
+{
+  "839c683092dec14fe6e9dd0a1abcad336d50a977": {
+    "ruff": "fail",
+    "vulture": "fail"
+  }
+}
