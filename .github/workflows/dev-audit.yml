@@ -2,17 +2,22 @@ name: Dev Branch Audit
 
 on:
   push:
-    branches: [ dev ]
+    branches: ["**"]   # run on all branches
   pull_request:
-    branches: [ dev ]
+    branches: ["**"]
 
 jobs:
   audit:
+    # Skip main branch entirely
+    if: github.ref != 'refs/heads/main'
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # required for pushing to another branch
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -51,3 +56,31 @@ jobs:
         with:
           name: vulture-report
           path: vulture_report.txt
+
+      # -----------------------------
+      # Push reports to audit branch
+      # -----------------------------
+      - name: Push reports to audit branch
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          REPORT_DIR="reports/${BRANCH_NAME}"
+
+          # Clone audit branch into a subfolder
+          git fetch origin audit
+          git checkout audit
+
+          # Create directory for this branch
+          mkdir -p "${REPORT_DIR}"
+
+          # Move reports into audit/<branch-name>/
+          cp ../ruff_report.json "${REPORT_DIR}/ruff_report.json"
+          cp ../vulture_report.txt "${REPORT_DIR}/vulture_report.txt"
+
+          # Commit and push
+          git add "${REPORT_DIR}"
+          git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
+          git push origin audit
+        shell: bash
+        working-directory: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
