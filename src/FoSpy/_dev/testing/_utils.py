@@ -1,6 +1,10 @@
 from tkinter import Tk, filedialog
 
-import os, platform, subprocess
+import os
+import platform
+import subprocess
+
+from ...config import values as cfg
 
 def file_prompt(title="Select an input file", filetypes=[("FOS files", "*.fos"), ("JSON files", "*.json"), ("All files", "*.*")]):
     root = Tk()
@@ -44,54 +48,6 @@ def run_batch(path=None):
         return
     # Ensure Windows uses cmd.exe to run the batch file
     subprocess.run([os.environ["COMSPEC"], "/c", path], shell=True)
-
-import subprocess
-import threading
-import sys
-
-# def run_interactive_batch(path=None):
-#     if path is None or not os.path.exists(path):
-#         print("No batch file provided.")
-#         return
-
-#     if not platform.system() == "Windows":
-#         print("Only Windows is supported for batch file execution.")
-#         return
-#     # Start the batch file with pipes
-#     proc = subprocess.Popen(
-#         [path],
-#         stdin=subprocess.PIPE,
-#         stdout=subprocess.PIPE,
-#         stderr=subprocess.STDOUT,
-#         text=True,
-#         bufsize=1
-#     )
-
-#     # Thread to stream output live
-#     def stream_output():
-#         for line in proc.stdout:
-#             print(line, end="")  # forward to Python CLI
-
-#     t = threading.Thread(target=stream_output, daemon=True)
-#     t.start()
-
-#     # Main loop: read user input and send to batch file
-#     try:
-#         while proc.poll() is None:
-#             try:
-#                 user_input = input()
-#                 proc.stdin.write(user_input + "\n")
-#             except OSError:
-#                 raise KeyboardInterrupt
-#     except KeyboardInterrupt:
-#         proc.terminate()
-    
-import subprocess
-import sys
-import os
-
-
-from ...config import values as cfg
 
 REPO_PATH = os.path.abspath(cfg.DEV.repo)
 
