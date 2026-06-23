@@ -1094,7 +1094,6 @@ class SingleBlock(Block):
 
         @wraps(func)
         def wrapped():
-            __name__ = func.__name__
             return func(**kwargs)
 
         self._calc_routines.append(wrapped)
@@ -1206,7 +1205,8 @@ class SingleBlock(Block):
         try:
             meta_idx =self._key_order.index("metadata")
             self._key_order.pop(meta_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         self._key_order.insert(0,"metadata")
     
@@ -1220,7 +1220,8 @@ class SingleBlock(Block):
         try:
             meta_idx = args.index("metadata")
             args.pop(meta_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         
         new_order = []
@@ -1275,7 +1276,8 @@ class SingleBlock(Block):
             try:
                 idx = self._key_order.index(key)
                 self._key_order.pop(idx)
-            except:
+            # TODO: Better handling
+            except Exception:
                 pass
             self._key_order.append(key)
         self._meta_to_front()
@@ -1296,7 +1298,8 @@ class SingleBlock(Block):
         try:
             old_idx = self._key_order.index(key)
             self._key_order.pop(old_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         self._key_order.insert(idx, key)
 
@@ -1310,7 +1313,7 @@ class SingleBlock(Block):
         validators = self.get_validators()
         req = self.get_req_validators()
         if True in [name.startswith("_") for name in (old, new)]:
-            raise ValueError(f"You cannot set private attributes (starting with '_') using obj.rename_block()")
+            raise ValueError("You cannot set private attributes (starting with '_') using obj.rename_block()")
         
         if old in req and new in validators:
             raise ValueError(f"You cannot rename '{old}' to '{new}'. '{old}' is a required property that "
@@ -1339,7 +1342,8 @@ class SingleBlock(Block):
         try:
             idx = self._key_order.index(old)
             self._key_order[idx] = new
-        except:
+        # TODO: Better handling
+        except Exception:
             self._key_order.append(new)
 
     def __delattr__(self, attr):
@@ -1654,7 +1658,7 @@ class ListBlock(Block):
         from .._debug import deep_diff
         try:
             return len(deep_diff(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths))==0
-        except:
+        except Exception:
             return False
         
     def __hash__(self):
@@ -1730,8 +1734,8 @@ class ListBlock(Block):
             return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
         elif not override_list_type:
             keepListType = len(self)>1
-            l = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
-            return l
+            lst = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+            return lst
         else:
             copy = self.copy()
             copy.set_list_type(override_list_type)
