@@ -66,6 +66,8 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.AUDIT_BRANCH }}
           path: ${{ env.AUDIT_BRANCH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create audit subfolder
         run: |
