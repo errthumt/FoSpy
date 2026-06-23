@@ -80,6 +80,11 @@ exclude = [
     "src/FoSpy/config/user.json"
 ]
 
+[tool.vulture]
+ignore_names = [
+    "__*__"
+]
+
 [project.scripts]
 fos-dev-test = "FoSpy._dev.testing.cli:main"
 

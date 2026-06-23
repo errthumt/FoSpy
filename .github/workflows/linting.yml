@@ -83,7 +83,7 @@ jobs:
         id: vulture
         run: |
           set +e
-          vulture ./src --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
+          vulture . --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Report Audit Statuses
