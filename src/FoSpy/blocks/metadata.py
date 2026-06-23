@@ -40,7 +40,7 @@ class Reaction(SingleBlock):
         """Returns the molecular weight of nominal_formula"""
         return self.nominal_formula.formula_weight
     
-    @_calc_routine()
+    @_calc_routine
     def add_nom_MW(self):
         """
         Attaches a comment to the nominal_formula with the molecular weight.
