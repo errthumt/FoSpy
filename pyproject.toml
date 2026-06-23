@@ -81,8 +81,7 @@ exclude = [
 ]
 
 [tool.vulture]
-paths = ["src"]
-exclude = ["mkdocs/*", "internal/*"]
+exclude = ["mkdocs/", "internal/"]
 ignore_names = [
     "__*__"
 ]
