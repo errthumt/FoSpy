@@ -49,14 +49,21 @@ def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
     out_md_path.write_text(md_script)
     return out_path
 
-def extract_code_to_test(md_path, test_path, figures=True):
+def extract_code_to_test(md_path, test_path, figures=False):
     indented = _extract_code(md_path, figures)
 
     final_script = (
-        "def test_example():\n"
+        "def test_example(example_dir):\n"
+        "    import os\n"
+        "    os.chdir(example_dir)\n"
         f"{indented}\n\n"
     )
 
     test_path.parent.mkdir(parents=True, exist_ok=True)
     test_path.write_text(final_script)
     return test_path
+
+def copy_start_fos(from_path, to_path):
+    from_path.parent.mkdir(parents=True, exist_ok=True)
+    to_path.parent.mkdir(parents=True, exist_ok=True)
+    to_path.write_text(from_path.read_text())

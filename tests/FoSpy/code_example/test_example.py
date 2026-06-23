@@ -1,4 +1,6 @@
-def test_example():
+def test_example(example_dir):
+    import os
+    os.chdir(example_dir)
     from FoSpy import (
         Synthesis, FileBlock,
         blocks as fb
