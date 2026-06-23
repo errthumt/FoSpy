@@ -3,7 +3,7 @@ from .pymatgen import Engine as Engine_pymatgen
 available = True
 try:
     from cif2xrd.pattern import simPattern
-except ImportError as e:
+except ImportError:
     available = False
 
 class Engine(Engine_pymatgen):

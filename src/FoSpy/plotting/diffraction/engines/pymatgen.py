@@ -10,7 +10,6 @@ class Engine(CIF_engine):
     
     def get_pattern(self,**kwargs):
         import numpy as np
-        from ....config import values as cfg
 
         pattern_config = cfg.get("diffraction.pattern_parameters")
         pattern_config.update(kwargs)
@@ -39,8 +38,6 @@ class Engine(CIF_engine):
         return frame
     
     def get_peaks(self,two_theta_range=None, normalize=None):
-        import numpy as np
-        from ....config import values as cfg
 
         if two_theta_range is None:
             two_theta_range = cfg.get("diffraction.pattern_parameters.two_theta_range")

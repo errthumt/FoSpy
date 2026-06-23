@@ -69,8 +69,8 @@ class TemplateBlock(SingleBlock):
         return self._full_class.dispatch_subclass(serial)
     
     def serialize(self,keepListType=False, shallow=False, clean=False):
-        from ..parsing.validation import required_keys
-        from ..parsing.format_fos import format_field
+        # from ..parsing.validation import required_keys
+        # from ..parsing.format_fos import format_field
         required = self._full_class.build_req_validators()
         required.pop('ext',None)
         serial = super().serialize(keepListType=keepListType, shallow=shallow, clean=clean)
@@ -103,6 +103,7 @@ class FlexTemplate(TemplateBlock):
         temp_dict = blockDict.copy()
         required = cls.build_req_validators()
         all_validators = cls.build_validators()
+
         for key in required:
             if key != 'ext' and key not in temp_dict:
                 template_keys.append(key)

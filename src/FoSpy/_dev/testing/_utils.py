@@ -1,6 +1,10 @@
 from tkinter import Tk, filedialog
 
-import os, platform, subprocess
+import os
+import platform
+import subprocess
+
+from ...config import values as cfg
 
 def file_prompt(title="Select an input file", filetypes=[("FOS files", "*.fos"), ("JSON files", "*.json"), ("All files", "*.*")]):
     root = Tk()
@@ -11,6 +15,17 @@ def file_prompt(title="Select an input file", filetypes=[("FOS files", "*.fos"),
     )
     if not filepath:
         raise Exception("No file selected.")
+    return filepath
+
+def dir_prompt(title="Select a directory"):
+    root = Tk()
+    root.withdraw()
+
+    filepath = filedialog.askdirectory(
+        title=title
+    )
+    if not filepath:
+        raise Exception("No directory selected.")
     return filepath
 
 def open_file(path):
@@ -33,54 +48,6 @@ def run_batch(path=None):
         return
     # Ensure Windows uses cmd.exe to run the batch file
     subprocess.run([os.environ["COMSPEC"], "/c", path], shell=True)
-
-import subprocess
-import threading
-import sys
-
-# def run_interactive_batch(path=None):
-#     if path is None or not os.path.exists(path):
-#         print("No batch file provided.")
-#         return
-
-#     if not platform.system() == "Windows":
-#         print("Only Windows is supported for batch file execution.")
-#         return
-#     # Start the batch file with pipes
-#     proc = subprocess.Popen(
-#         [path],
-#         stdin=subprocess.PIPE,
-#         stdout=subprocess.PIPE,
-#         stderr=subprocess.STDOUT,
-#         text=True,
-#         bufsize=1
-#     )
-
-#     # Thread to stream output live
-#     def stream_output():
-#         for line in proc.stdout:
-#             print(line, end="")  # forward to Python CLI
-
-#     t = threading.Thread(target=stream_output, daemon=True)
-#     t.start()
-
-#     # Main loop: read user input and send to batch file
-#     try:
-#         while proc.poll() is None:
-#             try:
-#                 user_input = input()
-#                 proc.stdin.write(user_input + "\n")
-#             except OSError:
-#                 raise KeyboardInterrupt
-#     except KeyboardInterrupt:
-#         proc.terminate()
-    
-import subprocess
-import sys
-import os
-import msvcrt  # Windows-only for single-key input
-
-from ...config import values as cfg
 
 REPO_PATH = os.path.abspath(cfg.DEV.repo)
 
@@ -110,6 +77,7 @@ def get_current_branch():
 
 
 def choice_prompt(message):
+    import msvcrt  # Windows-only for single-key input
     """Replicates `choice /m` behavior: Y/N single keypress."""
     print(f"{message} [Y,N]? ", end="", flush=True)
     while True:
@@ -160,9 +128,22 @@ def toggle_branches():
     cfg_save(prompt=False)
 
     print("\nBranch toggle complete.")
+    print("\nPLEASE NOTE: For changes to take effect, you must exit and restart the testing suite.")
     input("Press any key to continue...")
 
-    return True
+    return False
+
+def resync_branch():
+    print("\nRestoring working directory...")
+    run_git("restore", ".")
+    print("Pulling latest changes...")
+    run_git("pull")
+
+    print("\nGitHub sync complete.")
+    print("\nPLEASE NOTE: For changes to take effect, you must exit and restart the testing suite.")
+    input("Press any key to continue...")
+
+    return False
 
 LOGO = """
         %@@@@@@@@.             .@@@@@@@@%                

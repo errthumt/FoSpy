@@ -1,9 +1,9 @@
 from ....ui.abstract import AssembleSlider
 from ....config import values as full_cfg
-X_LABEL = full_cfg.diffraction.x_label
 
 from ._specs import get_find_sliders
 
+X_LABEL = full_cfg.diffraction.x_label
 
 class PeakFinderAbstract:
     def __init__(self, exp_corrected, exp_index, cfg={}, **kwargs):
@@ -18,8 +18,6 @@ class PeakFinderAbstract:
             'peaks': self.color2,
             'widths': self.color3
         }
-
-        from matplotlib.collections import LineCollection
 
         self.sticks = []
 
@@ -49,10 +47,16 @@ class PeakFinderAbstract:
     
     def update_widths(self, peaks, widths, w_heights):
         from ..phase_match._utils import rows_to_2th
+
+        def clamp(x, minimum, maximum):
+            return max(minimum, min(x, maximum))
+
         if len(peaks)==0:
             return
         brackets_x = [
-            [round(peak+width/2), round(peak-width/2)] for peak, width in zip(peaks, widths)
+            [clamp(round(x),0,len(self.exp_index)-1) 
+             for x in [peak+width/2, peak-width/2]] 
+             for peak, width in zip(peaks, widths)
         ]
 
         brackets_2th = rows_to_2th(self.exp_index, brackets_x)
@@ -61,6 +65,8 @@ class PeakFinderAbstract:
         cap_height = -y_base/4
         self.reset_plotsets('widths')
         buffer = 2 * max(tth_right-tth_left for (tth_left, tth_right) in brackets_2th)
+
+
 
         for (tth_left, tth_right), y in zip(brackets_2th, w_heights):
             self.draw_width_bracket(tth_left-buffer, tth_right+buffer, y, cap_height=cap_height, plotset='widths')

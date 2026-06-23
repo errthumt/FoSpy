@@ -1,7 +1,5 @@
 from pandas import DataFrame
 
-
-from ..engines import ENGINES
 from ....config import values as cfg
 from ._utils import check_for_interactive, convert_baseline_cfg
 
@@ -13,8 +11,8 @@ class PhaseMatcher:
         self.find_cfg = cfg.get("diffraction.find_peaks")
 
         frames = {'exp':DataFrame({X_LABEL:exp_2theta, "int":exp_int}).set_index(X_LABEL)}
-        x_min=min(exp_2theta)
-        x_max=max(exp_2theta)
+        # x_min=min(exp_2theta)
+        # x_max=max(exp_2theta)
         for name, cif in cif_dict.items():
             engine = cif.new_engine(engine_name='pymatgen')
             frames[name] = engine.get_pattern().set_index(X_LABEL)

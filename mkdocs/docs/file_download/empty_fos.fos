@@ -97,8 +97,7 @@ structure_comments:
 
 // (Experimental) Files can be embedded directly as text.
 [CIFs]
-file_name: embedded_cif
-extension: .cif
+file_name: embedded_cif.cif
 embedded: {{{
 
 #(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.

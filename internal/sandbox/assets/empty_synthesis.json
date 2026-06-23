@@ -1,0 +1,49 @@
+{
+    "metadata": {
+        "fos_id": "<!TEMPLATE-FIELD>",
+        "fos_type": "<!TEMPLATE-FIELD>",
+        "description": "<!TEMPLATE-FIELD>",
+        "group_id": "<!TEMPLATE-FIELD>",
+        "project_id": "<!TEMPLATE-FIELD>"
+    },
+    "experimenters": [
+        {
+            "name": "<!TEMPLATE-FIELD>",
+            "affiliation": "<!TEMPLATE-FIELD>"
+        }
+    ],
+    "reaction": {
+        "nominal_formula": "<!TEMPLATE-FIELD>",
+        "nominal_amount": "<!TEMPLATE-FIELD>",
+        "nominal_amount_unit": "<!TEMPLATE-FIELD>"
+    },
+    "products": [
+        {
+            "name": "<!TEMPLATE-FIELD>",
+            "expected": "<!TEMPLATE-FIELD>",
+            "obtained": "<!TEMPLATE-FIELD>",
+            "formula": "<!TEMPLATE-FIELD>",
+            "observations": "<!TEMPLATE-FIELD>"
+        }
+    ],
+    "materials": [
+        {
+            "name": "<!TEMPLATE-FIELD>",
+            "type": "<!TEMPLATE-FIELD>",
+            "formula": "<!TEMPLATE-FIELD>",
+            "supplier": "<!TEMPLATE-FIELD>",
+            "cas": "<!TEMPLATE-FIELD>",
+            "form": "<!TEMPLATE-FIELD>",
+            "env": "<!TEMPLATE-FIELD>",
+            "amount": "<!TEMPLATE-FIELD>",
+            "amount_unit": "<!TEMPLATE-FIELD>"
+        }
+    ],
+    "treatments": [
+        {
+            "type": "<!TEMPLATE-FIELD>",
+            "repeats": "<!TEMPLATE-FIELD>",
+            "observations": "<!TEMPLATE-FIELD>"
+        }
+    ]
+}

@@ -218,12 +218,3 @@ def deep_diff(d1, d2, path="", suppress_routine_paths=False):
         diffs.append(f"{path}: {d1!r} != {d2!r}")
 
     return diffs
-
-if __name__ == "__main__":
-    from pprint import pp
-    from FoSpy import *
-    pp(debug_status())
-
-
-
-

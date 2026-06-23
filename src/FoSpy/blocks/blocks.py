@@ -6,6 +6,8 @@ from ..parsing.syntax import (
     meta_defaults as md,
 )
 
+from .. import _errors as err
+
 
 from ._blockUtils import _unwrap_block
 
@@ -271,7 +273,7 @@ class SingleBlock(Block):
         return SubTemplate
    
     @classmethod
-    def reflex(cls, serialize=True, **kwargs:dict):
+    def reflex(cls, serialize=True, include_temp_names=True, clean=False, **kwargs:dict):
         """
         Generate a flexible template for the current class.
 
@@ -296,7 +298,11 @@ class SingleBlock(Block):
 
         empty = Flex.dispatch_subclass(kwargs)
         if serialize:
-            return empty.serialize()
+            serial = empty.serialize(clean=clean)
+            if not include_temp_names:
+                from ._blockUtils import _prune_template_names
+                serial = _prune_template_names(serial)
+            return serial
         return empty
 
     @classmethod
@@ -458,6 +464,7 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        property_errors = []
 
         if not _dispatched:
             from warnings import warn
@@ -500,7 +507,7 @@ class SingleBlock(Block):
                 elif is_type and issubclass(validator, TemplateList):
                     blockDict[key] = []
                 else:
-                    raise ValueError(f"Missing required property: '{key}' for '{type(self).__name__}' object.")
+                    property_errors.append(err.MissingPropertyError(key, self, blockDict=blockDict))
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -510,7 +517,7 @@ class SingleBlock(Block):
         for attr, key in mk.items():
             try:
                 k = md[key].copy()
-            except:
+            except AttributeError:
                 k = md[key]
             setattr(self._meta, attr, blockDict.pop(key,k))
 
@@ -519,7 +526,13 @@ class SingleBlock(Block):
 
         for key, val in blockDict.items():
             self._key_order.append(key)
-            setattr(self, key, val)
+            try:
+                setattr(self, key, val)
+            except err.PropertyError as e:
+                property_errors.append(e)
+
+        if property_errors:
+            raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
 
         
      
@@ -571,17 +584,21 @@ class SingleBlock(Block):
         if "$" in name:
             try:
                 name, alias = name.split("$")
-            except:
-                raise ValueError(f"Unable to parse a block alias from key: '{name}'.")
+            except Exception:
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict, hint="Unable to parse a block alias from key containing '$' character: ")
             
             try:
                 val = self._aliases[alias]
             except KeyError:
-                raise ValueError(f"Unrecognized block alias: '{alias}'")
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
+                                             posthint=f"Valid aliases: {list(self._aliases.keys())}")
             
             if name in validators and val != validators[name]:
-                raise ValueError(f"Key: '{name}' is already reserved for '{validators[name].__name__}' validator, "
-                                 f"it cannot be overwritten to '{val.__name__}'.")
+                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                                             hint=f"Cannot apply '{alias}' alias override to property: ",
+                                             posthint="That property is already assigned to a validator. "
+                                             f"The following properties are reserved: {list(validators.keys())}")
             if name not in validators:
                 validators[name] = val
                 self._key_overrides[name] = val
@@ -593,42 +610,31 @@ class SingleBlock(Block):
                 try:
                     if kw in sign(validator).parameters:
                         val_kwargs[kw] = arg
-                except:
+                #TODO: find a better way to handle this
+                except Exception:
                     pass
                 
 
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
-                    if not isinstance(value, validator):
-                        validator = validator.dispatch_subclass
-                        if isinstance(value, list):
-                            if len(value) > 1:
-                                raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
-                            value = value[0]
-                        elif isinstance(value,SingleBlock):
-                            value = value.serialize(keepListType=True)
-
-                elif issubclass(validator, ListBlock):
-                    try: 
-                        value = [block.serialize(keepListType=True) for block in value]
-                    except Exception as e:
-                        if isinstance(value, ListBlock):
-                            value = value.serialize()
+                    validator = validator.dispatch_subclass
+                    value = _unwrap_block(value)
+                    pass
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
                     else:       
-                        raise ValueError(f"You cannot create a '{type(self).__name__}' object with an un-filled '{name}' template field.")
+                        e = ValueError("You cannot assign a template field as a property for a non-template object.")
+                        raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
-
-
-
-            return self._assign_and_inject(name,
-                                            validator(value,**val_kwargs)
-                                            if val_kwargs != {}
-                                            else validator(value))
+            try:  
+                val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
+            except Exception as e:
+                raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict)
+                
+            return self._assign_and_inject(name, val)
         else:
             return self._assign_and_inject(name, value, extended=True)
 
@@ -892,7 +898,7 @@ class SingleBlock(Block):
         for attr, key in mk.items():
             try:
                 k = md[key].copy()
-            except:
+            except AttributeError:
                 k = md[key]
             val = getattr(self._meta,attr,k)
             out[key] = val
@@ -1088,7 +1094,6 @@ class SingleBlock(Block):
 
         @wraps(func)
         def wrapped():
-            __name__ = func.__name__
             return func(**kwargs)
 
         self._calc_routines.append(wrapped)
@@ -1200,7 +1205,8 @@ class SingleBlock(Block):
         try:
             meta_idx =self._key_order.index("metadata")
             self._key_order.pop(meta_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         self._key_order.insert(0,"metadata")
     
@@ -1214,7 +1220,8 @@ class SingleBlock(Block):
         try:
             meta_idx = args.index("metadata")
             args.pop(meta_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         
         new_order = []
@@ -1269,7 +1276,8 @@ class SingleBlock(Block):
             try:
                 idx = self._key_order.index(key)
                 self._key_order.pop(idx)
-            except:
+            # TODO: Better handling
+            except Exception:
                 pass
             self._key_order.append(key)
         self._meta_to_front()
@@ -1290,7 +1298,8 @@ class SingleBlock(Block):
         try:
             old_idx = self._key_order.index(key)
             self._key_order.pop(old_idx)
-        except:
+        # TODO: Better handling
+        except Exception:
             pass
         self._key_order.insert(idx, key)
 
@@ -1304,7 +1313,7 @@ class SingleBlock(Block):
         validators = self.get_validators()
         req = self.get_req_validators()
         if True in [name.startswith("_") for name in (old, new)]:
-            raise ValueError(f"You cannot set private attributes (starting with '_') using obj.rename_block()")
+            raise ValueError("You cannot set private attributes (starting with '_') using obj.rename_block()")
         
         if old in req and new in validators:
             raise ValueError(f"You cannot rename '{old}' to '{new}'. '{old}' is a required property that "
@@ -1333,7 +1342,8 @@ class SingleBlock(Block):
         try:
             idx = self._key_order.index(old)
             self._key_order[idx] = new
-        except:
+        # TODO: Better handling
+        except Exception:
             self._key_order.append(new)
 
     def __delattr__(self, attr):
@@ -1476,22 +1486,25 @@ class ListBlock(Block):
                 correct `SingleBlock` subclass specified by _reqCls
         """
         from .attachments import Attachment
+        from ._blockUtils import _unwrap_listblock
 
         if name == "_objs":
-            if type(value) is not list:
-                raise TypeError(f"{type(self).__name__}._objs must be a list of objects.")
 
-            elif hasattr(self, "_reqCls"):
+
+            if hasattr(self, "_reqCls"):
+                errors = []
                 typ = self._reqCls
+                value = _unwrap_listblock(value, typ=typ)
                 new_list = []
-                for obj in value:
+                for idx, obj in enumerate(value):
                     if isinstance(obj, dict) and obj == {}:
                         continue
                     if not isinstance(obj, typ):
                         try:
-                            new_obj = typ.dispatch_subclass(obj.serialize() if hasattr(obj,"serialize") else obj)
+                            new_obj = typ.dispatch_subclass(obj)
                         except Exception as e:
-                            raise TypeError(f"{type(self).__name__} objects must be coersible to {typ.__name__}. Failed to coerce at least one object. Error:\n{e}")
+                            errors.append(err.ListBlockMismatchError(self, obj, idx, cause=e))
+                            continue  
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath
                         obj=new_obj
@@ -1499,6 +1512,8 @@ class ListBlock(Block):
                     if hasattr(obj, "refresh") and isinstance(obj, Attachment):
                         obj.refresh(new_copy=self._att_new_copy, overwrite=self._att_overwrite)
                     new_list.append(obj)
+                if errors:
+                    raise err.ListBlockErrorGroup(self, errors)
                 return super().__setattr__(name, new_list)
 
         elif name.startswith("_") or name in self._reserved:
@@ -1643,7 +1658,7 @@ class ListBlock(Block):
         from .._debug import deep_diff
         try:
             return len(deep_diff(self.serialize(), other.serialize(), suppress_routine_paths=suppress_routine_paths))==0
-        except:
+        except Exception:
             return False
         
     def __hash__(self):
@@ -1719,8 +1734,8 @@ class ListBlock(Block):
             return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
         elif not override_list_type:
             keepListType = len(self)>1
-            l = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
-            return l
+            lst = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+            return lst
         else:
             copy = self.copy()
             copy.set_list_type(override_list_type)

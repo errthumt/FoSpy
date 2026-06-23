@@ -1,5 +1,5 @@
-from .abstract import SliderPlot as AbstractSlider
-from ..config import values as full_cfg
+from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
+from ._utils import _get_digits
 
 available = True
 try:
@@ -10,15 +10,70 @@ except ImportError as e:
     available = False
     import_e = e
 
+
 TB_WIDTH = 60
-DEF_DIGITS = full_cfg.get("slider_digits.default", 2)
+
 CTRL_ROWS = 6
 MIN_CTRL_WIDTH = 250
 MAX_CTRL_HEIGHT = 65
 
-def _get_digits(spec):
-    return spec.get("digits", DEF_DIGITS)
 
+
+def _separator():
+    sep = QtWidgets.QFrame()
+    sep.setFrameShape(QtWidgets.QFrame.VLine)
+    sep.setFrameShadow(QtWidgets.QFrame.Sunken)
+    sep.setLineWidth(2)   # thickness
+    sep.setMidLineWidth(1)
+    return sep
+
+class ControlPanel(QtWidgets.QWidget, AbstractControl):
+    def __init__(self, rows=CTRL_ROWS, parent=None):
+        super().__init__(parent)
+        AbstractControl.__init__(self, rows=rows)
+
+        self.layout = QtWidgets.QVBoxLayout(self)
+
+        self.loner_grid = QtWidgets.QGridLayout()
+        self.layout.addLayout(self.loner_grid)
+
+        group_layout = QtWidgets.QHBoxLayout()
+        self.group_select = QtWidgets.QVBoxLayout()
+        self.group_panel = QtWidgets.QStackedWidget()
+        group_layout.addLayout(self.group_select)
+        group_layout.addWidget(_separator())
+        group_layout.addWidget(self.group_panel)
+        self.layout.addLayout(group_layout)
+
+        self.group_buttons = QtWidgets.QButtonGroup()
+        self.group_buttons.setExclusive(True)
+
+        
+
+    def addWidget(self, w):
+        self.loner_grid.addWidget(w, *self.nextRowCol())
+
+    def addGroup(self, label, rows=CTRL_ROWS):
+        stack = ControlPanel(rows=rows, parent=self)
+
+        btn = QtWidgets.QPushButton(label)
+        btn.setCheckable(True)
+        btn.clicked.connect(lambda _, label=label, stack=stack: self.group_panel.setCurrentWidget(stack))
+
+        self.group_buttons.addButton(btn)
+        self.group_select.addWidget(btn)
+
+        self.group_panel.addWidget(stack)
+
+        if self.group_panel.count() == 1:
+            self.group_panel.setCurrentWidget(stack)
+            btn.setChecked(True)
+
+        return stack
+
+
+# TODO: cleanup comments
+# TODO: abstract _build_controls
 class SliderPlot(AbstractSlider):
     def __init__(self, title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
         if not available:
@@ -48,19 +103,28 @@ class SliderPlot(AbstractSlider):
 
         self.layout.addWidget(self.plot, stretch=3)
 
-        self.ctrl_panel = QtWidgets.QWidget()
-        # self.ctrl_layout = QtWidgets.QVBoxLayout(self.ctrl_panel)
-        self.ctrl_layout = QtWidgets.QGridLayout(self.ctrl_panel)
-        self._ctrl_row = 0
-        self._ctrl_col = 0
-        self.layout.addWidget(self.ctrl_panel, stretch=1)
-
+        self.panel = ControlPanel(rows=CTRL_ROWS, parent=central)
+        self.layout.addWidget(self.panel, stretch=1)
         self._build_controls()
+        self.panel.group_select.addStretch(1)
+        self.panel.layout.addStretch(1)
+
+        ok_btn = QtWidgets.QPushButton("OK")
+        ok_btn.clicked.connect(self._ok_clicked)
+        self.panel.layout.addStretch(1)
+        self.panel.layout.addWidget(ok_btn)
 
         self.sticks = []
 
         self._ok_pressed = False
         self._loop = QtCore.QEventLoop()
+
+    def next_ctrl_row(self):
+        if self._ctrl_row >= self._layout_rows-1:
+            self._ctrl_col += 1
+            self._ctrl_row = 0
+        else:
+            self._ctrl_row += 1
 
     def _ok_clicked(self):
         self._ok_pressed = True
@@ -68,21 +132,11 @@ class SliderPlot(AbstractSlider):
         if self._loop.isRunning():
             self._loop.exit()
 
+    def _build_controls(self, specs=None):
+        super()._build_controls(specs=specs)
         
-
-    def _build_controls(self):
-        for name, spec in self.specs.items():
-            if spec["type"] == "scalar":
-                self._add_scalar(name, spec)
-
-            elif spec["type"] == "range":
-                self._add_range(name, spec)
-
-        ok_btn = QtWidgets.QPushButton("OK")
-        ok_btn.clicked.connect(self._ok_clicked)
-        self.ctrl_layout.addWidget(ok_btn)
-
-        # self.ctrl_layout.addStretch()
+        self.panel.group_select.addStretch(1)
+        self.panel.layout.addStretch(1)
 
     def _add_scalar(self, name, spec):
         box = QtWidgets.QGroupBox(spec["label"])
@@ -122,7 +176,6 @@ class SliderPlot(AbstractSlider):
         self.sliders[name] = slider
 
         # Textbox
-        
         tb = QtWidgets.QLineEdit(f"{default:.{_get_digits(spec)}f}")
         tb.setFixedWidth(TB_WIDTH)
         layout.addWidget(tb)
@@ -133,30 +186,7 @@ class SliderPlot(AbstractSlider):
         check.stateChanged.connect(lambda _, n=name: self._check_changed(n))
         tb.editingFinished.connect(lambda n=name: self._textbox_changed(n))
 
-        self.ctrl_layout.addWidget(box, self._ctrl_row, self._ctrl_col)
-        self._ctrl_row += 1
-        if self._ctrl_row >= CTRL_ROWS:
-            self._ctrl_row = 0
-            self._ctrl_col += 1
-
-    def _add_range(self, name, spec):
-        lo, hi = spec['default']
-
-        self._add_scalar(name + "_min",
-                         spec={"label": spec["label"] + " (min)",
-                               "min": spec["min"],
-                               "max": spec["max"],
-                               "default": lo,
-                               "digits": _get_digits(spec),
-                               "type": "scalar"})
-        
-        self._add_scalar(name + "_max",
-                         spec={"label": spec["label"] + " (max)",
-                               "min": spec["min"],
-                               "max": spec["max"],
-                               "default": hi,
-                               "digits": _get_digits(spec),
-                               "type": "scalar"})
+        self.panel.addWidget(box)
         
     def _to_slider_pos(self, name, val):
         return self.sl_transforms[name][1](val)
@@ -228,17 +258,18 @@ class SliderPlot(AbstractSlider):
 
     def _spec_for(self, spec_name):
         """Return the spec dict for scalar or range-min/max."""
+        specs = self._unpacked_specs
         if spec_name.endswith("_min"):
             return {
-                **self.specs[spec_name[:-4]],
-                "default": self.specs[spec_name[:-4]]["default"][0]
+                **specs[spec_name[:-4]],
+                "default": specs[spec_name[:-4]]["default"][0]
             }
         if spec_name.endswith("_max"):
             return {
-                **self.specs[spec_name[:-4]],
-                "default": self.specs[spec_name[:-4]]["default"][1]
+                **specs[spec_name[:-4]],
+                "default": specs[spec_name[:-4]]["default"][1]
             }
-        return self.specs[spec_name]
+        return specs[spec_name]
     
     def reset_sticks(self):
         for stick in self.sticks:

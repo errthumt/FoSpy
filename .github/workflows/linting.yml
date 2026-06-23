@@ -1,0 +1,135 @@
+name: Linting and Dead Code Audit
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+env:
+  AUDIT_BRANCH: auditing
+  REPORT_FILE: linting.json
+
+permissions:
+  contents: write
+
+jobs:
+  setup-vars:
+    runs-on: ubuntu-latest
+    outputs:
+      BRANCH_NAME: ${{ steps.vars.outputs.branch }}
+      REPORT_DIR: ${{ steps.vars.outputs.report_dir }}
+      RUFF_REPORT: ${{ steps.vars.outputs.ruff }}
+      VULTURE_REPORT: ${{ steps.vars.outputs.vulture }}
+    steps:    
+      - id: vars
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          REPORT_DIR="${AUDIT_BRANCH}/${BRANCH_NAME}"
+          RUFF_REPORT="${REPORT_DIR}/ruff_report.json"
+          VULTURE_REPORT="${REPORT_DIR}/vulture_report.txt"
+
+
+          echo "branch=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+          echo "report_dir=${REPORT_DIR}" >> $GITHUB_OUTPUT
+          echo "ruff=${RUFF_REPORT}" >> $GITHUB_OUTPUT
+          echo "vulture=${VULTURE_REPORT}" >> $GITHUB_OUTPUT
+
+
+  audit:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: setup-vars
+    env:
+        BRANCH_NAME: ${{ needs.setup-vars.outputs.BRANCH_NAME }}
+        REPORT_DIR: ${{ needs.setup-vars.outputs.REPORT_DIR }}
+        RUFF_REPORT: ${{ needs.setup-vars.outputs.RUFF_REPORT }}
+        VULTURE_REPORT: ${{ needs.setup-vars.outputs.VULTURE_REPORT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies and clear audit subfolder
+        run: |
+          pip install ruff vulture
+          rm -rf "${AUDIT_BRANCH}"
+
+      - name: Checkout audit branch in subfolder
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.AUDIT_BRANCH }}
+          path: ${{ env.AUDIT_BRANCH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create audit subfolder
+        run: |
+          mkdir -p "${REPORT_DIR}"
+
+      - name: Lint docstrings with Ruff
+        id: ruff
+        run: |
+          set +e
+          ruff check ./src --output-format=json > "${RUFF_REPORT}"
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Check for dead code with Vulture
+        id: vulture
+        run: |
+          set +e
+          vulture . --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Report Audit Statuses
+        run: |
+          RUFF_STATUS="pass"
+          VULTURE_STATUS="pass"
+          if [[ "${{ steps.ruff.outputs.exit_code }}" != "0" ]]; then
+            RUFF_STATUS="fail"
+          fi
+          if [[ "${{ steps.vulture.outputs.exit_code }}" != "0" ]]; then
+            VULTURE_STATUS="fail"
+          fi
+
+          if [ ! -f "${AUDIT_BRANCH}/${REPORT_FILE}" ]; then
+            echo "{}" > "${AUDIT_BRANCH}/${REPORT_FILE}"
+          fi
+
+          SHA="${GITHUB_SHA}"
+          tmp=$(mktemp)
+          jq --arg sha "$SHA" \
+            --arg ruff "$RUFF_STATUS" \
+            --arg vulture "$VULTURE_STATUS" \
+            '.[$sha] = { ruff: $ruff, vulture: $vulture }' \
+            "${AUDIT_BRANCH}/${REPORT_FILE}" > "$tmp" && mv "$tmp" "${AUDIT_BRANCH}/${REPORT_FILE}"
+
+      - name: Upload Ruff Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruff-report
+          path: ${{ env.RUFF_REPORT }}
+
+      - name: Upload Vulture Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulture-report
+          path: ${{ env.VULTURE_REPORT }}
+
+      - name: Push reports to audit branch
+        run: |
+          cd "${AUDIT_BRANCH}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add "${BRANCH_NAME}"
+          git add "${REPORT_FILE}"
+          git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
+          git push origin "${AUDIT_BRANCH}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

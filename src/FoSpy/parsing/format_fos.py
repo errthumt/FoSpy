@@ -4,7 +4,7 @@ from .._debug import Debug
 _debug = Debug()
 
 def _indent(st:str, ind):
-    return f"{' '*ind*SYNTAX["indent_size"]}{st}"
+    return f"{' '*ind*SYNTAX['indent_size']}{st}"
 
 def format_block_header(name: str, list_type: str):
     spec = SYNTAX["block_header"]
@@ -24,7 +24,7 @@ def format_key_value(key: str, val: str, ind=0, looped=False):
     if prefix:
         key = f"{prefix}{key}"
 
-    return _indent(f"{key}{delim}{"" if " " in delim else " "}{val}",ind)
+    return _indent(f"{key}{delim}{'' if ' ' in delim else ' '}{val}",ind)
 
 def format_embed_start(key:str, ind=0, looped=False):
     prefix = SYNTAX["key_value"].get("prefix")
@@ -34,7 +34,7 @@ def format_embed_start(key:str, ind=0, looped=False):
     
     if prefix:
         key = f"{prefix}{key}"
-    return _indent(f"{key}{delim}{"" if " " in delim else " "}{SYNTAX["embedded"]["open"]}", ind)
+    return _indent(f"{key}{delim}{'' if ' ' in delim else ' '}{SYNTAX['embedded']['open']}", ind)
 
 
 def format_comment(text: str, ind: int = 0):

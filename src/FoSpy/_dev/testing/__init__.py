@@ -1,22 +1,28 @@
 from . import (
     load_test,
-    map_test
+    map_test,
+    map_guides
 )
 
 TESTS = {
     "Validate a Synthesis File": (
         load_test,{
-            "Open Results?": ("open_result", False)
+            "Open Results?": ("open_result", True)
         }
     ),
     "Map a JSON to A Synthesis and Validate": (
         map_test,{
-            "Open Results?": ("open_result", False),
+            "Open Results?": ("open_result", True),
             "Change Map Name": ("map_name", "default"),
             "Add New Map?": ("make_new", False),
             "Include Missing Values?": ("new_missing", False),
             "Set New Map As Default?": ("new_default", False)
         }
+    ),
+    "Generate Map Guides": (
+        map_guides, {
+            "Open Results?": ("open_result", True)
+        } 
     )
 }
 

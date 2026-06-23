@@ -9,7 +9,7 @@ authors = [
 ]
 description = "A package for opening, editing, and saving Files of Synthesis (*.fos)"
 readme = "PyPI/readme.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -78,6 +78,12 @@ include = [
 ]
 exclude = [
     "src/FoSpy/config/user.json"
+]
+
+[tool.vulture]
+exclude = ["mkdocs/", "internal/"]
+ignore_names = [
+    "__*__"
 ]
 
 [project.scripts]

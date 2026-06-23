@@ -4,8 +4,8 @@ def purity(block:str):
     def func(val):
         try:
             purity = Decimal(val)
-        except:
-            raise ValueError(f"Unable to convert purity: '{val}' into a number for '{block}' block.")
+        except Exception as e:
+            raise ValueError(f"Unable to convert purity: '{val}' into a number for '{block}' block. Exception:\n{e}")
         if purity > 0 and purity <=1:
             return purity
         else:

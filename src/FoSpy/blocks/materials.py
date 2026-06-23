@@ -1,7 +1,5 @@
 from .blocks import SingleBlock, ListBlock
 from ._blockUtils import _calc_routine
-from .template import TemplateBlock, TemplateList
-
 
 from .._debug import Debug
 _debug = Debug()
@@ -10,7 +8,7 @@ class Material(SingleBlock):
     """
     Represents a material used in a synthesis
     """
-    @_calc_routine()
+    @_calc_routine
     def add_MW(self):
         """
         Attach a comment to the formula with molecular weight.
@@ -57,7 +55,7 @@ class MaterialList(ListBlock):
     
     
      
-    @_calc_routine(attach=False)
+    @_calc_routine
     def add_all_MW(self):
         """
         Attach a molecular weight comment to all materials
@@ -65,7 +63,7 @@ class MaterialList(ListBlock):
         for mat in self._objs:
             mat.add_MW()
 
-    @_calc_routine()
+    @_calc_routine
     def add_weight_pcts(self, typ=None):
         """
         Calculate weight percents and attach them as comments to each material's amount.

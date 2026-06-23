@@ -1,5 +1,3 @@
-from .._debug import Debug
-_debug = Debug()
 
 from ..blocks._containers import SubContainer
 from .. import blocks as b
@@ -7,8 +5,9 @@ from .. import blocks as b
 
 from . import validators
 import chemformula
-import pathlib
 
+from .._debug import Debug
+_debug = Debug()
 
 
 

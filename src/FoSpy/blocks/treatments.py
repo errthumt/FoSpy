@@ -2,7 +2,8 @@ from .blocks import (
     SingleBlock, ListBlock
 )
 from ._blockUtils import _calc_routine
-from .template import TemplateBlock, TemplateList
+
+from .. import _errors as err
 
 from .._debug import Debug
 _debug = Debug()
@@ -20,7 +21,7 @@ class Treatment(SingleBlock):
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict, _dispatched=True)
  
-    @_calc_routine(attach=False)
+    @_calc_routine
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
@@ -39,8 +40,9 @@ class Annealing(Treatment):
             return None
         
         try:
+            # TODO: use importlib.util.find_spec to test for availability
             from cif2xrd.furnace import Profile #type: ignore
-            import matplotlib.pyplot as plt
+            import matplotlib.pyplot as plt  # noqa: F401
         except ImportError as e:
             from warnings import warn
             warn(f"Could not import furnace module. Skipping profile build. Exception:\n{e}", RuntimeWarning)
@@ -85,7 +87,7 @@ class AnnealSection(SingleBlock):
             return cls(blockDict, _dispatched=True)
         return subclass.dispatch_subclass(blockDict)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         return
     
@@ -116,7 +118,11 @@ class Ramp(AnnealSection):
             if len(found) == 2:
                 break
         if len(found) != 2:
-            raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
+            missing = [k for k in seeking if k not in found]
+            error = err.MissingPropertyError(missing[1], cls, blockDict=blockDict, hint=f"Must have at least one of: '{missing[0]}' or")
+            error.summary = f"Missing '{missing[0]}' or '{missing[1]}'."
+            raise error
+            
         
         for key in seeking:
             if key not in found:
@@ -130,7 +136,7 @@ class Ramp(AnnealSection):
         from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
         if not hasattr(self, "rate"):
             raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
-        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,"[time]")}")
+        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,'[time]')}")
         rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
         value = rate.to(new_unit)
         return value
@@ -162,7 +168,7 @@ class RampNoTemp(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
 
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         temp_unit = [v.strip() for v in self.rate_units.split("/")][0]
         temp = self.get_temp(temp_unit)
@@ -184,7 +190,7 @@ class RampNoTime(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         time_unit = [v.strip() for v in self.rate_units.split("/")][1]
         time = self.get_time(time_unit)
@@ -194,7 +200,7 @@ Ramp.dispatch["time"] = RampNoTime
 class RampNoRate(Ramp):
     dispatch = {}
     def get_rate(self, temp_units="C", time_units="h"):
-        from ..parsing.validators.units import FOSQuantity, temp_rate_unit, FOSTempUnit
+        from ..parsing.validators.units import FOSQuantity, FOSTempUnit
         try:
             ramp_set = self._parent_block.get_any(type="ramp")
             self_idx = ramp_set.index(self)
@@ -202,7 +208,8 @@ class RampNoRate(Ramp):
                 last_temp = self._parent_block._parent_block.start_temp
             else:
                 last_temp = ramp_set[self_idx-1].get_temp(temp_units)
-        except:
+        #TODO: decrease exception scope to avoid hiding other exceptions
+        except Exception:
             last_temp = FOSQuantity(25,FOSTempUnit("C"))
 
         last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
@@ -216,7 +223,7 @@ class RampNoRate(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         rate = self.get_rate()
         self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")
@@ -244,7 +251,7 @@ class AnnealProgram(ListBlock):
         if hasattr(self, "_parent_block") and self._parent_block is not None:
             self._parent_block.build_profile()
     
-    @_calc_routine()
+    @_calc_routine
     def add_all_missing_parameters(self):
         for section in self:
             if hasattr(section, "add_missing_parameter"):

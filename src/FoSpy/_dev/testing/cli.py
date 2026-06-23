@@ -1,3 +1,9 @@
+import sys
+
+from . import REV_REGISTRY, TESTS
+from . import main as _main
+from ._utils import print_logo
+
 cli_args = {
     "--test" : "test",
     "--loop" : "loop",
@@ -5,7 +11,6 @@ cli_args = {
     "--switch" : "switch"
 }
 
-from . import TESTS
 
 for label, (test, options) in TESTS.items():
     for k in options.keys():
@@ -18,8 +23,7 @@ shortcuts = {
     "-s" : "--switch"
 }
 
-from . import main as _main, REV_REGISTRY
-from ._utils import print_logo
+
 #_main(test="test_name", **args)
 # returns True to continue loop
 
@@ -47,7 +51,7 @@ def main():
     _main(test=test_name, **args)
 
 
-import sys
+
 
 def _get_args():
     argv = sys.argv[1:]
