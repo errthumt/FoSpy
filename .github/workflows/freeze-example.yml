@@ -1,0 +1,39 @@
+name: Freeze Example Outputs for Testing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    name: Copy example outputs into test freeze directory
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy synthesis freeze files
+        run: |
+          mkdir -p tests/FoSpy/code_example/freeze/synthesis
+          cp -r mkdocs/docs/example/synthesis/* tests/FoSpy/code_example/freeze/synthesis/
+
+      - name: Copy templates freeze files
+        run: |
+          mkdir -p tests/FoSpy/code_example/freeze/templates
+          cp -r mkdocs/docs/example/templates/* tests/FoSpy/code_example/freeze/templates/
+
+      - name: Show copied files (debug)
+        run: |
+          echo "Synthesis:"
+          ls -R tests/FoSpy/code_example/freeze/synthesis
+          echo "Templates:"
+          ls -R tests/FoSpy/code_example/freeze/templates
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Freeze example outputs"
+          file_pattern: tests/FoSpy/code_example/freeze/**
