@@ -10,7 +10,7 @@ def _prune_template_names(struct):
 
     return struct
 
-def _calc_routine(attach=True):
+def _calc_routine(func):
     """
     Decorator for `SingleBlock` or `ListBlock` methods that calculate values
     from existing attributes.
@@ -19,12 +19,12 @@ def _calc_routine(attach=True):
     to run at serialization, as in refreshing relevant calculated values before
     saving the file. See `SingleBlock.add_calc_routine()`
     """
-    def decorator(func):
-        func._is_calc_routine = True
-        func.__doc__ = (func.__doc__ or "") + "\nThis function is decorated as a calc_routine"
 
-        return func
-    return decorator
+    func._is_calc_routine = True
+    func.__doc__ = (func.__doc__ or "") + "\nThis function is decorated as a calc_routine"
+
+    return func
+
 
 def _unwrap_block(struct):
     from .blocks import SingleBlock

@@ -21,7 +21,7 @@ class Treatment(SingleBlock):
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict, _dispatched=True)
  
-    @_calc_routine(attach=False)
+    @_calc_routine
     def example_calc(self):
         _debug.msg(f"Running example routine for {self.type} treatment")
         return None
@@ -87,7 +87,7 @@ class AnnealSection(SingleBlock):
             return cls(blockDict, _dispatched=True)
         return subclass.dispatch_subclass(blockDict)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         return
     
@@ -168,7 +168,7 @@ class RampNoTemp(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
 
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         temp_unit = [v.strip() for v in self.rate_units.split("/")][0]
         temp = self.get_temp(temp_unit)
@@ -190,7 +190,7 @@ class RampNoTime(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         time_unit = [v.strip() for v in self.rate_units.split("/")][1]
         time = self.get_time(time_unit)
@@ -223,7 +223,7 @@ class RampNoRate(Ramp):
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
     
-    @_calc_routine()
+    @_calc_routine
     def add_missing_parameter(self):
         rate = self.get_rate()
         self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")
@@ -251,7 +251,7 @@ class AnnealProgram(ListBlock):
         if hasattr(self, "_parent_block") and self._parent_block is not None:
             self._parent_block.build_profile()
     
-    @_calc_routine()
+    @_calc_routine
     def add_all_missing_parameters(self):
         for section in self:
             if hasattr(section, "add_missing_parameter"):
