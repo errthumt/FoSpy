@@ -18,5 +18,9 @@
   "7dfcf1e57e2ce4a42079aa5c6991e0c35c875991": {
     "ruff": "fail",
     "vulture": "fail"
+  },
+  "89b5e07109ef275eb9fb263e862c937bbe0c176a": {
+    "ruff": "fail",
+    "vulture": "fail"
   }
 }
