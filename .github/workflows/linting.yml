@@ -125,7 +125,9 @@ jobs:
       - name: Push reports to audit branch
         run: |
           cd "${AUDIT_BRANCH}"
-
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
           git add "${BRANCH_NAME}"
           git add "${REPORT_FILE}"
           git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
