@@ -53,14 +53,22 @@ def extract_code_to_test(md_path, test_path, figures=False):
     indented = _extract_code(md_path, figures)
 
     final_script = (
-        "def test_example(example_dir):\n"
-        "    import os\n"
-        "    os.chdir(example_dir)\n"
+        "def example():\n"
         f"{indented}\n\n"
     )
 
     test_path.parent.mkdir(parents=True, exist_ok=True)
-    test_path.write_text(final_script)
+
+    with open(test_path, "r") as f:
+        lines = f.readlines()
+    
+    with open(test_path, "w") as f:
+        for ln in lines:
+            f.write(ln)
+            if ln.startswith("# <fos_site>"):
+                f.write(final_script)
+                break
+
     return test_path
 
 def copy_start_fos(from_path, to_path):
