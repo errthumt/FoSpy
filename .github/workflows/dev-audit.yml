@@ -8,6 +8,7 @@ on:
 
 env:
   AUDIT_BRANCH: auditing
+  PROJECT_SRC: FoSpy
 
 jobs:
   setup-vars:
@@ -64,11 +65,11 @@ jobs:
 
       - name: Lint docstrings with Ruff
         run: |
-          ruff check ./FoSpy --output-format=json > "${RUFF_REPORT}" || true
+          ruff check ./${PROJECT_SRC} --output-format=json > "${RUFF_REPORT}" || true
 
       - name: Check for dead code with Vulture
         run: |
-          vulture ./FoSpy --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}" || true
+          vulture ./${PROJECT_SRC} --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}" || true
 
       - name: Upload Ruff Report
         uses: actions/upload-artifact@v4
@@ -86,7 +87,7 @@ jobs:
         run: |
           cd "${AUDIT_BRANCH}"
 
-          git add "${BRANCH_NAME}"
+          git add "${BRANCH_NAME}/*"
           git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
           git push origin "${AUDIT_BRANCH}"
         env:
