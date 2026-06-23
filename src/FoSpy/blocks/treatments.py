@@ -3,6 +3,7 @@ from .blocks import (
 )
 from ._blockUtils import _calc_routine
 from .template import TemplateBlock, TemplateList
+from .. import _errors as err
 
 from .._debug import Debug
 _debug = Debug()
@@ -116,6 +117,10 @@ class Ramp(AnnealSection):
             if len(found) == 2:
                 break
         if len(found) != 2:
+            missing = [k for k in seeking if k not in found]
+            error = err.MissingPropertyError(missing[1], cls, blockDict=blockDict, hint=f"Must have at least one of: '{missing[0]}' or")
+            error.summary = f"Missing '{missing[0]}' or '{missing[1]}'."
+            raise error
             raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
         
         for key in seeking:

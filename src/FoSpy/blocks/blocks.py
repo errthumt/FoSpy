@@ -1507,14 +1507,14 @@ class ListBlock(Block):
                 typ = self._reqCls
                 value = _unwrap_listblock(value, typ=typ)
                 new_list = []
-                for obj in value:
+                for idx, obj in enumerate(value):
                     if isinstance(obj, dict) and obj == {}:
                         continue
                     if not isinstance(obj, typ):
                         try:
                             new_obj = typ.dispatch_subclass(obj)
                         except Exception as e:
-                            errors.append(err.ListBlockMismatchError(self, obj, cause=e))
+                            errors.append(err.ListBlockMismatchError(self, obj, idx, cause=e))
                             continue  
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath
