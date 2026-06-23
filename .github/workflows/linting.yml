@@ -9,6 +9,7 @@ on:
 env:
   AUDIT_BRANCH: auditing
   PROJECT_SRC: FoSpy
+  REPORT_FILE: linting.json
 
 jobs:
   setup-vars:
@@ -63,13 +64,46 @@ jobs:
           ref: ${{ env.AUDIT_BRANCH }}
           path: ${{ env.AUDIT_BRANCH }}
 
-      - name: Lint docstrings with Ruff
+      - name: Create audit subfolder
         run: |
-          ruff check ./${PROJECT_SRC} --output-format=json > "${RUFF_REPORT}" || true
+          mkdir -p "${REPORT_DIR}"
+
+      - name: Lint docstrings with Ruff
+        id: ruff
+        run: |
+          set +e
+          ruff check ./${PROJECT_SRC} --output-format=json > "${RUFF_REPORT}"
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Check for dead code with Vulture
+        id: vulture
         run: |
-          vulture ./${PROJECT_SRC} --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}" || true
+          set +e
+          vulture ./${PROJECT_SRC} --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Report Audit Statuses
+        run: |
+          RUFF_STATUS="pass"
+          VULTURE_STATUS="pass"
+          if [[ "${{ steps.ruff.outputs.exit_code }}" != "0" ]]; then
+            RUFF_STATUS="fail"
+          fi
+          if [[ "${{ steps.vulture.outputs.exit_code }}" != "0" ]]; then
+            VULTURE_STATUS="fail"
+          fi
+
+          if [ ! -f "${AUDIT_BRANCH}/${REPORT_FILE}" ]; then
+            echo "{}" > "${AUDIT_BRANCH}/${REPORT_FILE}"
+          fi
+
+          SHA="${GITHUB_SHA}"
+          tmp=$(mktemp)
+          jq --arg sha "$SHA" \
+            --arg ruff "$RUFF_STATUS" \
+            --arg vulture "$VULTURE_STATUS" \
+            '.[$sha] = { ruff: $ruff, vulture: $vulture }' \
+            "${AUDIT_BRANCH}/${REPORT_FILE}" > "$tmp" && mv "$tmp" "${AUDIT_BRANCH}/${REPORT_FILE}"
 
       - name: Upload Ruff Report
         uses: actions/upload-artifact@v4
@@ -87,7 +121,8 @@ jobs:
         run: |
           cd "${AUDIT_BRANCH}"
 
-          git add "${BRANCH_NAME}/*"
+          git add "${BRANCH_NAME}"
+          git add "${REPORT_FILE}"
           git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
           git push origin "${AUDIT_BRANCH}"
         env:
