@@ -2,22 +2,20 @@ name: Dev Branch Audit
 
 on:
   push:
-    branches: ["**"]   # run on all branches
+    branches: ["**"]
   pull_request:
     branches: ["**"]
 
 jobs:
   audit:
-    # Skip main branch entirely
     if: github.ref != 'refs/heads/main'
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # required for pushing to another branch
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,58 +27,65 @@ jobs:
           pip install ruff vulture
 
       # -----------------------------
-      # Ruff Linting + Docstring Audit
+      # Clone audit branch into subfolder
       # -----------------------------
-      - name: Run Ruff (lint + docstrings)
+      - name: Clone audit branch
         run: |
-          ruff check . --output-format=json > ruff_report.json || true
+          AUDIT_BRANCH="auditing"
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+
+          echo "AUDIT_BRANCH=${AUDIT_BRANCH}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+          rm -rf "${AUDIT_BRANCH}"
+
+          git clone --branch "${AUDIT_BRANCH}" --single-branch \
+            "https://github.com/${GITHUB_REPOSITORY}.git" "${AUDIT_BRANCH}"
+
+          REPORT_DIR="${AUDIT_BRANCH}/${BRANCH_NAME}"
+          echo "REPORT_DIR=${REPORT_DIR}" >> $GITHUB_ENV
+
+          rm -rf "${REPORT_DIR}"
+          mkdir -p "${REPORT_DIR}"
 
       # -----------------------------
-      # Vulture Unused Code Detection
+      # Ruff Linting
+      # -----------------------------
+      - name: Run Ruff
+        run: |
+          ruff check ./FoSpy --output-format=json > "${REPORT_DIR}/ruff_report.json" || true
+
+      # -----------------------------
+      # Vulture
       # -----------------------------
       - name: Run Vulture
         run: |
-          vulture . --min-confidence 0 --sort-by-size > vulture_report.txt || true
+          vulture ./FoSpy --min-confidence 0 --sort-by-size > "${REPORT_DIR}/vulture_report.txt" || true
 
       # -----------------------------
-      # Upload Reports as Artifacts
+      # Upload Artifacts
       # -----------------------------
       - name: Upload Ruff Report
         uses: actions/upload-artifact@v4
         with:
           name: ruff-report
-          path: ruff_report.json
+          path: "${{ env.REPORT_DIR }}/ruff_report.json"
 
       - name: Upload Vulture Report
         uses: actions/upload-artifact@v4
         with:
           name: vulture-report
-          path: vulture_report.txt
+          path: "${{ env.REPORT_DIR }}/vulture_report.txt"
 
       # -----------------------------
-      # Push reports to audit branch
+      # Commit + Push to audit branch
       # -----------------------------
       - name: Push reports to audit branch
         run: |
-          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          REPORT_DIR="reports/${BRANCH_NAME}"
+          cd "${AUDIT_BRANCH}"
 
-          # Clone audit branch into a subfolder
-          git fetch origin audit
-          git checkout audit
-
-          # Create directory for this branch
-          mkdir -p "${REPORT_DIR}"
-
-          # Move reports into audit/<branch-name>/
-          cp ../ruff_report.json "${REPORT_DIR}/ruff_report.json"
-          cp ../vulture_report.txt "${REPORT_DIR}/vulture_report.txt"
-
-          # Commit and push
-          git add "${REPORT_DIR}"
+          git add "${BRANCH_NAME}"
           git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
           git push origin audit
-        shell: bash
-        working-directory: .
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
