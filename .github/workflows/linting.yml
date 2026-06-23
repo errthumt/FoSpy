@@ -11,6 +11,9 @@ env:
   PROJECT_SRC: FoSpy
   REPORT_FILE: linting.json
 
+permissions:
+  contents: write
+
 jobs:
   setup-vars:
     runs-on: ubuntu-latest
