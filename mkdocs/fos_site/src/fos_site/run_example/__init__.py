@@ -3,15 +3,17 @@ from pathlib import Path
 CODE_MD_PATH = Path("mkdocs/docs/examples/code_example/index.md")
 CODE_SCRIPT_PATH = Path("mkdocs/fos_site/src/fos_site/run_example/extracted.py")
 FULL_MD_PATH = Path("mkdocs/docs/examples/code_example/full.md")
+TEST_PATH = Path("tests/FoSpy/test_example.py")
 
 
 def extract_and_run(figures=True):
-    from .helpers import extract_code_to_main
+    from .helpers import extract_code_to_main, extract_code_to_test
     from .._utils import ch2repo
     import os
     ch2repo()
 
     extract_code_to_main(CODE_MD_PATH, CODE_SCRIPT_PATH, FULL_MD_PATH, figures=figures)
+    extract_code_to_test(CODE_MD_PATH, TEST_PATH, figures=figures)
 
     from .extracted import main
 

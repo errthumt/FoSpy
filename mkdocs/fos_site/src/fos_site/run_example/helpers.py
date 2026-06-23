@@ -1,13 +1,12 @@
 import re
 from pathlib import Path
 
-
-def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
+def _extract_code(md_path, figures=True):
     text = Path(md_path).read_text()
 
     pattern = re.compile(r"```python\s+(.*?)```", re.DOTALL | re.IGNORECASE)
     blocks = pattern.findall(text)
-    combined = "\n\n".join(blocks).rstrip()
+    combined = "\n".join(blocks).rstrip()
 
     if not figures:
         lines = combined.splitlines()
@@ -22,8 +21,12 @@ def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
                 modified_lines.append(line)
 
         combined = "\n".join(modified_lines)
-
     indented = "\n".join("    " + line if line.strip() else "" for line in combined.splitlines())
+    return indented
+
+
+def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
+    indented = _extract_code(md_path, figures)
 
     final_script = (
         "def main():\n"
@@ -45,3 +48,15 @@ def extract_code_to_main(md_path, out_path, out_md_path, figures=True):
     out_md_path.parent.mkdir(parents=True, exist_ok=True)
     out_md_path.write_text(md_script)
     return out_path
+
+def extract_code_to_test(md_path, test_path, figures=True):
+    indented = _extract_code(md_path, figures)
+
+    final_script = (
+        "def test_example():\n"
+        f"{indented}\n\n"
+    )
+
+    test_path.parent.mkdir(parents=True, exist_ok=True)
+    test_path.write_text(final_script)
+    return test_path

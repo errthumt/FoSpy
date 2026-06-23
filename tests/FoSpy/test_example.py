@@ -1,4 +1,4 @@
-def main():
+def test_example():
     from FoSpy import (
         Synthesis, FileBlock,
         blocks as fb
@@ -248,5 +248,3 @@ def main():
     # optional: figure
     # my_synthesis.treatments.get_first(type="anneal").show_plot()
 
-if __name__ == '__main__':
-    main()

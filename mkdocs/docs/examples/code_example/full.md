@@ -11,7 +11,6 @@ def main():
     # for Material blocks use fb.Material
     from chemformula import ChemFormula
 
-
     # No debug messages by default, but they can be turned on like this.
     from FoSpy._debug import all_debugs_on, all_debugs_off
     all_debugs_on(soundoff=False)
@@ -25,7 +24,6 @@ def main():
     block_debug.on = True
 
 
-
     # load synthesis and templates from files
     my_synthesis = Synthesis.fromFile(r"synthesis/start_synthesis.fos")
     my_templates = FileBlock.fromFile(r"templates/start_templates.fos")
@@ -37,7 +35,6 @@ def main():
     my_synthesis.save(r"synthesis/check01.fos")
     my_templates.save(r"templates/check01.fos")
 
-
     # some shortcuts so I don't need to keep referencing my_synthesis
     my_meta = my_synthesis.metadata
     my_exps = my_synthesis.experimenters
@@ -45,7 +42,6 @@ def main():
     my_mats = my_synthesis.cifs
     my_mats = my_synthesis.materials
     my_treats = my_synthesis.treatments
-
 
     my_synthesis.clear_all_comments()
     my_synthesis.rename_block("materials","reagents")
@@ -59,7 +55,6 @@ def main():
     my_exps[0].rename_block("affiliation","isu_research_group")
     my_synthesis.keys_to_end("cifs")
     my_synthesis.save("synthesis/check02.fos")
-
 
     # change some metadata for my synthesis
     my_meta.fos_id = "TE002"
@@ -83,7 +78,6 @@ def main():
 
     my_synthesis.save("synthesis/check03.fos")
 
-
     my_synthesis.clear_all_comments()
     # more shortcuts
     exp_temps = my_templates.experimenters
@@ -98,7 +92,6 @@ def main():
     my_exps.add_comments("Note that now there are two experimenters, so the",
                          "experimenters header has changed to double brackets")
     my_synthesis.save("synthesis/check04.fos")
-
 
     my_synthesis.clear_all_comments()
 
@@ -115,10 +108,8 @@ def main():
 
     my_synthesis.save("synthesis/check05.fos")
 
-
     # Changing Barium's molar ratio
     my_mats[0].amount = 8
-
 
     # I find zinc in my materials, change its ratio, and also generate a template
     # from it.
@@ -134,7 +125,6 @@ def main():
     # This saves my powder template to a new category of templates titled "Generic$materials"
     my_templates.add_block("generic","materials", powder_template)
     my_templates.keys_to_end("cifs")
-
 
     # Setting up information that I want to fill into the powder template
     copper_info = {
@@ -160,7 +150,6 @@ def main():
     clear = [file.clear_all_comments() for file in (my_synthesis, my_templates)]
     my_synthesis.save("synthesis/check06.fos")
     my_templates.save("templates/check06.fos")
-
 
     # Building templates from the existing annealing program on my synthesis so that
     # I can replace it with a different program.
@@ -195,7 +184,6 @@ def main():
 
     my_templates.save("templates/check07.fos")
 
-
     # Remove all treatments except the first two
     my_treats.remove_idx(from_idx=2)
 
@@ -204,7 +192,6 @@ def main():
         my_treats.append(anneal)
 
     my_synthesis.save("synthesis/check08.fos")
-
 
     # Copying Phil's cif from my templates into my synthesis.
     py618 = cif_temps[0].copy()
@@ -221,7 +208,6 @@ def main():
     my_templates.save("templates/check09.fos")
     my_synthesis.save("synthesis/check09.fos")
 
-
     # Every material gets a weight percent comment added above their ratio
     my_synthesis.add_calc_routine("reagents.add_weight_pcts")
     my_synthesis.reagents[0].amount.add_comments("Weight percents were calculated automatically when saving.")
@@ -229,7 +215,6 @@ def main():
     # Every anneal treatment gets missing rate parameter comment.
     for anneal in my_synthesis.treatments.get_any(type="anneal"):
         anneal.add_calc_routine("program.add_all_missing_parameters")
-
 
 
     # Reconfigure my_synthesis to copy attachments if location is changed,
@@ -262,10 +247,8 @@ def main():
     print(f"Synthesis matches: {my_synthesis.matches_file()}")
     print(f"Templates match:   {my_templates.matches_file()}")
 
-
     # optional: figure
     # my_synthesis.cifs[0].quick_pattern(subprocess=True)
-
 
     # optional: figure
     # my_synthesis.treatments.get_first(type="anneal").show_plot()
