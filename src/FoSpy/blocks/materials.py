@@ -1,7 +1,5 @@
 from .blocks import SingleBlock, ListBlock
 from ._blockUtils import _calc_routine
-from .template import TemplateBlock, TemplateList
-
 
 from .._debug import Debug
 _debug = Debug()

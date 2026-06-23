@@ -2,10 +2,11 @@ from ...json.core import map_to_fos, new_map
 from ._utils import file_prompt
 from . import load_test
 
-import tempfile, json
+import tempfile
+import json
 
 from pathlib import Path
-import json
+
 
 def run(filepath=None, map_name=None, make_new=False, new_missing=False, new_default=False, open_result=False):
     if filepath is None:

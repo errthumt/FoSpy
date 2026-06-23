@@ -2,7 +2,6 @@ import os
 import shutil
 import traceback
 from datetime import datetime
-from tkinter import Tk, filedialog
 
 from ... import Synthesis
 from ._utils import file_prompt

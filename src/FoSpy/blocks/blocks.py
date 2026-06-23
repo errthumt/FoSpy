@@ -517,7 +517,7 @@ class SingleBlock(Block):
         for attr, key in mk.items():
             try:
                 k = md[key].copy()
-            except:
+            except AttributeError:
                 k = md[key]
             setattr(self._meta, attr, blockDict.pop(key,k))
 
@@ -584,7 +584,7 @@ class SingleBlock(Block):
         if "$" in name:
             try:
                 name, alias = name.split("$")
-            except:
+            except Exception:
                 raise err.PropertyAliasError(name, self, blockDict=self._sourceDict, hint="Unable to parse a block alias from key containing '$' character: ")
             
             try:
@@ -610,7 +610,8 @@ class SingleBlock(Block):
                 try:
                     if kw in sign(validator).parameters:
                         val_kwargs[kw] = arg
-                except:
+                #TODO: find a better way to handle this
+                except Exception:
                     pass
                 
 
@@ -618,28 +619,12 @@ class SingleBlock(Block):
                 if issubclass(validator, SingleBlock):
                     validator = validator.dispatch_subclass
                     value = _unwrap_block(value)
-                #     if not isinstance(value, validator):
-                #         validator = validator.dispatch_subclass
-                #         if isinstance(value, list):
-                #             if len(value) > 1:
-                #                 raise ValueError(f"Block '{name}' must be a single block. It can only be constructed from a list of length 1.")
-                #             value = value[0]
-                #         elif isinstance(value,SingleBlock):
-                #             value = value.serialize(keepListType=True)
-                #     pass
-
-                # elif issubclass(validator, ListBlock):
-                #     try: 
-                #         value = [block.serialize(keepListType=True) for block in value]
-                #     except Exception as e:
-                #         if isinstance(value, ListBlock):
-                #             value = value.serialize()
                     pass
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
                     else:       
-                        e = ValueError(f"You cannot assign a template field as a property for a non-template object.")
+                        e = ValueError("You cannot assign a template field as a property for a non-template object.")
                         raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
@@ -913,7 +898,7 @@ class SingleBlock(Block):
         for attr, key in mk.items():
             try:
                 k = md[key].copy()
-            except:
+            except AttributeError:
                 k = md[key]
             val = getattr(self._meta,attr,k)
             out[key] = val

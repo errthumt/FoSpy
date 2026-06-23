@@ -66,6 +66,6 @@ def _generate_checks(enforced_dict):
             out[key] = (*enforce, hint)
 
         else:
-            raise ValueError(f"Enforcement json should contain a [goodchecks, badchecks, hint] set for each enforced key")
+            raise ValueError("Enforcement json should contain a [goodchecks, badchecks, hint] set for each enforced key")
     
     return out

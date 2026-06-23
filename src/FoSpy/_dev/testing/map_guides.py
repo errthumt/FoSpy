@@ -1,7 +1,7 @@
 import os
 from ._utils import dir_prompt, get_current_branch
 from ...json.help import generate_map_guide
-from ... import Synthesis
+
 from pathlib import Path
 import json
 from textwrap import dedent
@@ -15,7 +15,7 @@ def run(dirpath=None, open_result=True):
     if dirpath is None:
         try:
             dirpath = dir_prompt(title="Select a folder to save the map guides to.")
-        except Exception as e:
+        except Exception:
             print("Failed to select directory. Aborting...")
             return
 

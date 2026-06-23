@@ -1,10 +1,10 @@
 from .blocks import SingleBlock, ListBlock
 
 from .._debug import Debug
-_debug = Debug()
 
 from .._errors import AttachmentTypeError, FileBlockNotFoundError
 
+_debug = Debug()
 
 
 class Attachment(SingleBlock):
@@ -24,15 +24,15 @@ class Attachment(SingleBlock):
         if name != "file_name":
             return super().__setattr__(name, value)
 
-        if not "." in value and hasattr(self, "_extension"):
+        if "." not in value and hasattr(self, "_extension"):
             value = f"{value}{self._extension}"
 
         super().__setattr__(name, value)
 
         fn = self.file_name()
-        ext = f".{fn.rsplit(".", 1)[1]}"
+        ext = f".{fn.rsplit('.', 1)[1]}"
         if not hasattr(self, "_extension"):
-            self._extension = f".{fn.rsplit(".", 1)[1]}"
+            self._extension = f".{fn.rsplit('.', 1)[1]}"
         elif ext != self._extension:
             from warnings import warn
             new = f"{fn}{self._extension}"
@@ -235,7 +235,6 @@ class CIFFile(Attachment):
         return ENGINES[engine_name](self._get_filepath())
 
     def quick_pattern(self,subprocess=False):
-        from matplotlib import pyplot as plt
         from ..plotting._utils import _quick_pattern
         
         df = self.get_pattern()

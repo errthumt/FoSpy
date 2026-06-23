@@ -2,7 +2,7 @@ from .blocks import (
     SingleBlock, ListBlock
 )
 from ._blockUtils import _calc_routine
-from .template import TemplateBlock, TemplateList
+
 from .. import _errors as err
 
 from .._debug import Debug
@@ -40,6 +40,7 @@ class Annealing(Treatment):
             return None
         
         try:
+            # TODO: use importlib.util.find_spec to test for availability
             from cif2xrd.furnace import Profile #type: ignore
             import matplotlib.pyplot as plt
         except ImportError as e:
@@ -135,7 +136,7 @@ class Ramp(AnnealSection):
         from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
         if not hasattr(self, "rate"):
             raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
-        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,"[time]")}")
+        new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,'[time]')}")
         rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
         value = rate.to(new_unit)
         return value
@@ -199,7 +200,7 @@ Ramp.dispatch["time"] = RampNoTime
 class RampNoRate(Ramp):
     dispatch = {}
     def get_rate(self, temp_units="C", time_units="h"):
-        from ..parsing.validators.units import FOSQuantity, temp_rate_unit, FOSTempUnit
+        from ..parsing.validators.units import FOSQuantity, FOSTempUnit
         try:
             ramp_set = self._parent_block.get_any(type="ramp")
             self_idx = ramp_set.index(self)
@@ -207,7 +208,8 @@ class RampNoRate(Ramp):
                 last_temp = self._parent_block._parent_block.start_temp
             else:
                 last_temp = ramp_set[self_idx-1].get_temp(temp_units)
-        except:
+        #TODO: decrease exception scope to avoid hiding other exceptions
+        except Exception:
             last_temp = FOSQuantity(25,FOSTempUnit("C"))
 
         last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
