@@ -18,12 +18,12 @@ jobs:
       - name: Copy synthesis freeze files
         run: |
           mkdir -p tests/FoSpy/code_example/freeze/synthesis
-          cp -r mkdocs/docs/example/synthesis/* tests/FoSpy/code_example/freeze/synthesis/
+          cp -r mkdocs/docs/examples/synthesis/* tests/FoSpy/code_example/freeze/synthesis/
 
       - name: Copy templates freeze files
         run: |
           mkdir -p tests/FoSpy/code_example/freeze/templates
-          cp -r mkdocs/docs/example/templates/* tests/FoSpy/code_example/freeze/templates/
+          cp -r mkdocs/docs/examples/templates/* tests/FoSpy/code_example/freeze/templates/
 
       - name: Show copied files (debug)
         run: |
