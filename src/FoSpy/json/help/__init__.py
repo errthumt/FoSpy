@@ -1,6 +1,5 @@
 from ... import Synthesis
 def generate_map_guide(cls=Synthesis, include_optional=False, parent_str=""):
-    from ...parsing.validation import required_keys, optional_keys
     from ...blocks import ListBlock, SingleBlock
 
     opt_set = cls.build_validators() if include_optional else cls.build_req_validators()

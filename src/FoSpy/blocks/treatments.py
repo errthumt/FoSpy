@@ -42,7 +42,7 @@ class Annealing(Treatment):
         try:
             # TODO: use importlib.util.find_spec to test for availability
             from cif2xrd.furnace import Profile #type: ignore
-            import matplotlib.pyplot as plt
+            import matplotlib.pyplot as plt  # noqa: F401
         except ImportError as e:
             from warnings import warn
             warn(f"Could not import furnace module. Skipping profile build. Exception:\n{e}", RuntimeWarning)

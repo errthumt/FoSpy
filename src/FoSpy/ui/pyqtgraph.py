@@ -1,5 +1,5 @@
 from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
-from ..config import values as full_cfg
+from ._utils import _get_digits
 
 available = True
 try:
@@ -10,7 +10,6 @@ except ImportError as e:
     available = False
     import_e = e
 
-from ._utils import _get_digits
 
 TB_WIDTH = 60
 

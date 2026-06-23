@@ -1,10 +1,9 @@
 from ....ui.abstract import AssembleSlider
 from ....config import values as full_cfg
-X_LABEL = full_cfg.diffraction.x_label
 
 from ._specs import get_find_sliders
-import numpy as np
 
+X_LABEL = full_cfg.diffraction.x_label
 
 class PeakFinderAbstract:
     def __init__(self, exp_corrected, exp_index, cfg={}, **kwargs):
@@ -19,8 +18,6 @@ class PeakFinderAbstract:
             'peaks': self.color2,
             'widths': self.color3
         }
-
-        from matplotlib.collections import LineCollection
 
         self.sticks = []
 

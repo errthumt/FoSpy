@@ -1,3 +1,5 @@
+from ._utils import _get_digits
+
 def _count_sliders(specs):
     total = 0
     for sp in specs.values():
@@ -7,7 +9,6 @@ def _count_sliders(specs):
             total += 2
     return total
 
-from ._utils import _get_digits
 
 CTRL_ROWS = 6
 
@@ -140,7 +141,8 @@ class SliderPlot:
             "group": lambda name, spec:
                 self._add_group(spec["label"], spec["specs"])
         }
-        skip = lambda name, spec: None
+        def skip(name, spec):
+            return None
 
         for name, spec in specs.items():
             widget_calls.get(spec["type"], skip)(name, spec)

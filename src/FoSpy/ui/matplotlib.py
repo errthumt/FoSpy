@@ -1,8 +1,5 @@
 from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl, CTRL_ROWS
 
-import matplotlib
-from matplotlib import pyplot as plt
-from matplotlib.widgets import Slider, Button
 from matplotlib.collections import LineCollection
 import tkinter as tk
 from ._utils import _get_digits

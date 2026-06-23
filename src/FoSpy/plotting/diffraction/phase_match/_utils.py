@@ -1,8 +1,8 @@
 from ....config import values as cfg
 from ...._debug import Debug
-_debug = Debug()
 
 from scipy.signal import find_peaks
+_debug = Debug()
 
 def rows_to_2th(two_theta, row_structure):
     if isinstance(row_structure, int):

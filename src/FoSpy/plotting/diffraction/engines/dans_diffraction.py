@@ -2,8 +2,8 @@
 from ._base import CIF_engine
 available = True
 try:
-    import Dans_Diffraction as ddf
-except ImportError as e:
+    import Dans_Diffraction as ddf #type: ignore
+except ImportError:
     available = False
 class Engine(CIF_engine):
     def __init__(self, cif_path, **kwargs):

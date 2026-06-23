@@ -8,6 +8,7 @@ from .._debug import Debug
 _debug = Debug()
 
 def dict_from_file(filepath):
+    block = None
     blocks = {}
     comments = {}
     current_block = "metadata"
@@ -39,13 +40,15 @@ def dict_from_file(filepath):
                 _debug.msg(f"Starting Embedding on line: {txt}")
                 embedding = True
 
-            block = blocks.get(current_block)
-            if block is None:
-                blocks[current_block] = (current_type,[])
-                block = blocks[current_block][1]
-            else:
-                block = block[1]
+            # block = blocks.get(current_block)
+            # if block is None:
+            #     blocks[current_block] = (current_type,[])
+            #     block = blocks[current_block][1]
+            # else:
+            #     block = block[1]
 
+            blocks.setdefault(current_block, (current_type,[]))
+            block = blocks[current_block][1]
             
             m = rx.BLOCK_HEADER.match(txt)
             if m:
@@ -62,7 +65,7 @@ def dict_from_file(filepath):
                 #_debug.msg(f"Identified {current_type} block header in line: {txt}")
                 #_debug.msg(f"Block name: {current_block}")
 
-                comments[current_block] = [rx.COMMENT_LINE.match(l).group("text").lstrip() for l in endComments]
+                comments[current_block] = [rx.COMMENT_LINE.match(ln).group("text").lstrip() for ln in endComments]
                 endComments = []
                 continue
 
@@ -70,14 +73,17 @@ def dict_from_file(filepath):
                 endComments.append(txt)
                 continue
 
-            for l in [*endComments,txt]:
-                block.append(l.strip())
+            for ln in [*endComments,txt]:
+                block.append(ln.strip())
             endComments = []
     if embedding:
-        raise SyntaxError("An embedded document was never closed before the end of the file or starting a new embed.\n"
-                          f"Current Line (line #{break_num}): {"<end of FOS file>\n" if not break_line else break_line}"
-                          "Ensure that there are spaces between '#', 'END FOS EMBED', and '}}}' when ending an "
-                          "embedded document.")
+        raise SyntaxError(
+            "An embedded document was never closed before the end of the file or starting a new embed.\n"
+            + f"Current Line (line #{break_num}): "
+            + ("<end of FOS file>\n" if not break_line else break_line)
+            + "Ensure that there are spaces between '#', 'END FOS EMBED', and '}}}' when ending an "
+            + "embedded document."
+        )
 
     for block, (typ, lines) in blocks.items():
         if typ == "single":
@@ -96,7 +102,7 @@ def dict_from_file(filepath):
         if meta_key not in blocks:
             try:
                 blocks[meta_key] = md[meta_key].copy()
-            except:
+            except AttributeError:
                 blocks[meta_key] = md[meta_key]
 
     return blocks
@@ -113,7 +119,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
     
     # Single string mode, process block as a multiline string instead of key: value pairs
     if lines[0].strip() == ";;;":
-        return " ".join([l.strip() for l in lines[1:]]).strip()
+        return " ".join([ln.strip() for ln in lines[1:]]).strip()
 
 
     open_br = SYNTAX["nested"]["open"]
@@ -234,10 +240,10 @@ def create_list_block_dict(lines):
 
     nested = 0
     m = False
-    for l in lines:
-        if rx.COMMENT_LINE.match(l):
+    for ln in lines:
+        if rx.COMMENT_LINE.match(ln):
             continue
-        m = rx.LOOP_KEY.match(l)
+        m = rx.LOOP_KEY.match(ln)
         if m:
             break
 
@@ -279,22 +285,22 @@ def create_list_block_dict(lines):
             elif is_key_val:
                 if getting_keys:
                     getting_keys = False
-                    for l in comments:
-                        current_lines.append(format_comment(l))
+                    for ln in comments:
+                        current_lines.append(format_comment(ln))
                 embedding = is_embed_start
                 current_lines.append(line)
 
             else:
                 if getting_keys:
                     getting_keys = False
-                    for l in comments:
-                        current_lines.append(format_comment(l))
+                    for ln in comments:
+                        current_lines.append(format_comment(ln))
                 if key_idx == len(keys):
                     block_list.append(create_single_block_dict(current_lines, _list_type="looped"))
                     trailing_comments = []
-                    for l in reversed(current_lines):
-                        if rx.COMMENT_LINE.match(l):
-                            trailing_comments.append(l)
+                    for ln in reversed(current_lines):
+                        if rx.COMMENT_LINE.match(ln):
+                            trailing_comments.append(ln)
                         else:
                             break
                     
@@ -314,7 +320,7 @@ def create_list_block_dict(lines):
 
         if current_lines:
             # _debug.msg("sending lines to single block:")
-            for l in current_lines:
+            for ln in current_lines:
                 # _debug.msg(l)
                 pass
             # _debug.msg("---")
@@ -341,9 +347,9 @@ def create_list_block_dict(lines):
             elif key in keys:
                 block_list.append(create_single_block_dict(current_lines))
                 trailing_comments = []
-                for l in reversed(current_lines):
-                    if rx.COMMENT_LINE.match(l):
-                        trailing_comments.append(l)
+                for ln in reversed(current_lines):
+                    if rx.COMMENT_LINE.match(ln):
+                        trailing_comments.append(ln)
                     else:
                         break
                 
