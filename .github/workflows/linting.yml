@@ -8,7 +8,6 @@ on:
 
 env:
   AUDIT_BRANCH: auditing
-  PROJECT_SRC: FoSpy
   REPORT_FILE: linting.json
 
 permissions:
@@ -77,14 +76,14 @@ jobs:
         id: ruff
         run: |
           set +e
-          ruff check "./${PROJECT_SRC}" --output-format=json > "${RUFF_REPORT}"
+          ruff check ./src --output-format=json > "${RUFF_REPORT}"
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Check for dead code with Vulture
         id: vulture
         run: |
           set +e
-          vulture "./${PROJECT_SRC}" --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
+          vulture ./src --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Report Audit Statuses
