@@ -81,6 +81,7 @@ exclude = [
 ]
 
 [tool.vulture]
+paths = ["src"]
 ignore_names = [
     "__*__"
 ]
