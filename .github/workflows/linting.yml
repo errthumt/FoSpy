@@ -27,7 +27,7 @@ jobs:
           BRANCH_NAME="${GITHUB_REF#refs/heads/}"
           REPORT_DIR="${AUDIT_BRANCH}/${BRANCH_NAME}"
           RUFF_REPORT="${REPORT_DIR}/ruff_report.json"
-          VULTURE_REPORT="${REPORT_DIR}/vulture_report.json"
+          VULTURE_REPORT="${REPORT_DIR}/vulture_report.txt"
 
 
           echo "branch=${BRANCH_NAME}" >> $GITHUB_OUTPUT
