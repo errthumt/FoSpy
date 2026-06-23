@@ -122,7 +122,7 @@ class Ramp(AnnealSection):
             error = err.MissingPropertyError(missing[1], cls, blockDict=blockDict, hint=f"Must have at least one of: '{missing[0]}' or")
             error.summary = f"Missing '{missing[0]}' or '{missing[1]}'."
             raise error
-            raise ValueError(f"Ramp section must have at least two of the following keys: {seeking}. Found: {found}")
+            
         
         for key in seeking:
             if key not in found:
