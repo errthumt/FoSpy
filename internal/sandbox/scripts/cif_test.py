@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
 
     # matcher.find_baseline(interactive=True)
-    peaks, widths =matcher.find_peaks(interactive=True, ui='matplotlib')
+    peaks, widths =matcher.find_peaks(interactive=True, ui='pyqtgraph')
     pp(peaks)
     pp(widths)
 
