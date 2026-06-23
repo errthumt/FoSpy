@@ -77,14 +77,14 @@ jobs:
         id: ruff
         run: |
           set +e
-          ruff check ./${PROJECT_SRC} --output-format=json > "${RUFF_REPORT}"
+          ruff check "./${PROJECT_SRC}" --output-format=json > "${RUFF_REPORT}"
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Check for dead code with Vulture
         id: vulture
         run: |
           set +e
-          vulture ./${PROJECT_SRC} --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
+          vulture "./${PROJECT_SRC}" --min-confidence 0 --sort-by-size > "${VULTURE_REPORT}"
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Report Audit Statuses
@@ -127,7 +127,7 @@ jobs:
           cd "${AUDIT_BRANCH}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add "${BRANCH_NAME}"
           git add "${REPORT_FILE}"
           git commit -m "Audit reports for ${BRANCH_NAME}" || echo "No changes to commit"
