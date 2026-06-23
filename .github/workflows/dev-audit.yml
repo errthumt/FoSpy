@@ -1,0 +1,53 @@
+name: Dev Branch Audit
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install ruff vulture
+
+      # -----------------------------
+      # Ruff Linting + Docstring Audit
+      # -----------------------------
+      - name: Run Ruff (lint + docstrings)
+        run: |
+          ruff check . --output-format=json > ruff_report.json || true
+
+      # -----------------------------
+      # Vulture Unused Code Detection
+      # -----------------------------
+      - name: Run Vulture
+        run: |
+          vulture . --min-confidence 0 --sort-by-size > vulture_report.txt || true
+
+      # -----------------------------
+      # Upload Reports as Artifacts
+      # -----------------------------
+      - name: Upload Ruff Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruff-report
+          path: ruff_report.json
+
+      - name: Upload Vulture Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: vulture-report
+          path: vulture_report.txt
