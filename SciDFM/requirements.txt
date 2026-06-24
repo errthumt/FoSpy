@@ -1,0 +1,11 @@
+transformers
+datasets
+evaluate
+accelerate
+timm
+torch
+sentencepiece
+protobuf
+TikToken
+xielu
+bitsandbytes
