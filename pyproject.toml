@@ -46,7 +46,7 @@ Qt = [
 ]
 PySide = [
     "FoSpy[Qt]",
-    "PySide6"
+    "PySide6-essentials"
 ]
 all = ["FoSpy[cif2xrd, PySide]"]
 DEV-TEST = ["questionary"]

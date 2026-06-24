@@ -45,7 +45,7 @@ def _vseparator(parent=None):
     return frame
 
 class ControlPanel(tk.Frame,AbstractControl):
-    def __init__(self, rows=CTRL_ROWS, parent=None):
+    def __init__(self, rows=CTRL_ROWS, parent=None, add_buttons=False):
         tk.Frame.__init__(self, parent)
         AbstractControl.__init__(self, rows=rows)
 
@@ -55,23 +55,33 @@ class ControlPanel(tk.Frame,AbstractControl):
         self.loner_grid.pack(side='top', fill='x')
         self._seps.append(_hseparator(self))
 
+        if add_buttons:
+            self.button_panel = tk.Frame(self)
+            self.button_panel.pack(side='bottom', fill='y', anchor='nw', expand=True)
+
         self.group_select = tk.Frame(self)
-        self.group_select.pack(side='left', fill='y')
-
-
+        self.group_select.pack(side='left',anchor='n', fill='none')
 
         self.groups = {}
+
+    @classmethod
+    def withButtons(cls, *args, **kwargs):
+        kwargs.setdefault('add_buttons', True)
+        obj = cls(*args, **kwargs)
+        return obj, obj.button_panel
 
     def addWidget(self, w):
         r,c = self.nextRowCol()
         w.grid(in_=self.loner_grid, row=r, column=c, sticky='w')
+
+        
 
     def addGroup(self, label, rows=CTRL_ROWS):
         if len(self.groups) == 0:
             self._seps.append(_vseparator(self))
 
             self.group_panel = tk.Frame(self)
-            self.group_panel.pack(side='left', fill= 'both', expand=True)
+            self.group_panel.pack(side='left', fill= 'x', anchor='n', expand=True)
 
         btn = tk.Button(self.group_select, text=label)
         btn.pack(fill='x')
@@ -93,7 +103,7 @@ class ControlPanel(tk.Frame,AbstractControl):
             # unselect button
             b.config(relief='raised')
 
-        frame.pack(fill='both', expand=True)
+        frame.pack(fill='x', expand=True)
         self.groups[frame].config(relief='sunken')
 
 
@@ -120,8 +130,10 @@ class SliderPlot(AbstractSlider):
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         self.canvas.get_tk_widget().pack(side="left", fill="both", expand=True)
 
-        self.panel = ControlPanel(parent=self.root)
+        self.panel, self._button_column = ControlPanel.withButtons(parent=self.root)
         self.panel.pack(side="right", fill="y")
+
+        self._buttons = []
 
         super().__init__(specs=specs, cfg=cfg, x_label=x_label, y_label=y_label, x_ticks=x_ticks, y_ticks=y_ticks)
 
@@ -129,8 +141,8 @@ class SliderPlot(AbstractSlider):
 
         self._return = tk.BooleanVar(value=False)
 
-        self.ok_btn = tk.Button(self.panel, text="OK", command=self._ok_clicked)
-        self.ok_btn.pack(side="bottom", fill="x")
+        # self.ok_btn = tk.Button(self.panel, text="OK", command=self._ok_clicked)
+        # self.ok_btn.pack(side="bottom", fill="x")
 
 
 
@@ -259,6 +271,18 @@ class SliderPlot(AbstractSlider):
         tb.set(f"{val:.{digits}f}")
 
         self.update_plot()
+
+    def _add_button(self, label, callback):
+        # TODO: unit test
+        btn = tk.Button(self._button_column, text=label, command=callback)
+        btn.pack(side='top', anchor='w', pady=2)
+
+        self._buttons.append(btn)
+
+    def _finish_buttons(self):
+        # TODO: unit test
+
+        super()._finish_buttons()
 
 
     def _ok_clicked(self):
