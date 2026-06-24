@@ -106,13 +106,14 @@ class SliderPlot(AbstractSlider):
         self.panel = ControlPanel(rows=CTRL_ROWS, parent=central)
         self.layout.addWidget(self.panel, stretch=1)
         self._build_controls()
-        self.panel.group_select.addStretch(1)
-        self.panel.layout.addStretch(1)
 
-        ok_btn = QtWidgets.QPushButton("OK")
-        ok_btn.clicked.connect(self._ok_clicked)
-        self.panel.layout.addStretch(1)
-        self.panel.layout.addWidget(ok_btn)
+
+        # this block will no longer be necessary because
+        # super()._build_controls() will call self._finish_buttons()
+        # ok_btn = QtWidgets.QPushButton("OK")
+        # ok_btn.clicked.connect(self._ok_clicked)
+        # self.panel.layout.addStretch(1)
+        # self.panel.layout.addWidget(ok_btn)
 
         self.sticks = []
 
@@ -187,6 +188,22 @@ class SliderPlot(AbstractSlider):
         tb.editingFinished.connect(lambda n=name: self._textbox_changed(n))
 
         self.panel.addWidget(box)
+
+    def _add_button(self, label, callback):
+        # TODO: unit test
+        btn = QtWidgets.QPushButton(label)
+        btn.clicked.connect(callback)
+        self._button_column.addWidget(btn)
+
+
+    def _finish_buttons(self):
+        # TODO: unit test
+        self._button_column = QtWidgets.QVBoxLayout()
+        self._button_column.setAlignment(QtCore.Qt.AlignLeft)
+        self.panel.layout.addLayout(self._button_column)
+
+
+        return super()._finish_buttons()
         
     def _to_slider_pos(self, name, val):
         return self.sl_transforms[name][1](val)

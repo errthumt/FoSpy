@@ -147,6 +147,35 @@ class SliderPlot:
         for name, spec in specs.items():
             widget_calls.get(spec["type"], skip)(name, spec)
 
+        if specs == self.specs:
+            self._finish_buttons()
+    
+    def _add_button(self, label, callback):
+        # TODO: unit test
+        raise NotImplementedError("Override in UI subclass")
+
+    def _finish_buttons(self):
+        # TODO: unit test
+        for label, callback in (
+            ("OK", self._ok_clicked),
+            ("Reset to defaults", self.revert_cfg),
+            ("Save as default", self.save_cfg)
+        ):
+            self._add_button(label, callback)
+
+    def save_cfg(self):
+        # TODO: unit test
+        # TODO: abstract config save
+        pass
+    
+    def revert_cfg(self):
+        # TODO: unit test
+        # TODO: abstract config revert
+        pass
+
+    def _ok_clicked(self):
+        raise NotImplementedError("Override in UI subclass")
+
     def _add_scalar(self, name, spec):
         raise NotImplementedError("Override in UI subclass")
 

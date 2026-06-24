@@ -4,7 +4,7 @@ if __name__ == "__main__":
     from FoSpy import Synthesis
     from FoSpy.plotting.diffraction.phase_match import PhaseMatcher
     from numpy import loadtxt
-    from matplotlib import pyplot as plt
+
     from FoSpy.config import values as cfg
     from pprint import pp
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
 
     # matcher.find_baseline(interactive=True)
-    peaks, widths =matcher.find_peaks(interactive=True, ui='pyqtgraph')
+    peaks, widths =matcher.find_peaks(interactive=True, ui='matplotlib')
     pp(peaks)
     pp(widths)
 
