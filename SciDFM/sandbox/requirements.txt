@@ -7,5 +7,4 @@ torch
 sentencepiece
 protobuf
 TikToken
-xielu
 bitsandbytes
