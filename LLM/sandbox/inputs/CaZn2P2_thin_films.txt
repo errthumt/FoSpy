@@ -1,0 +1,21 @@
+doi 10.1002/aenm.202402640
+CaZn2P2 thin films were synthesized by radio frequency (RF) co-sputtering from
+metallic 50.8 mm diameter Ca and Zn targets, with Ca and Zn power density of
+1.48 – 1.97 and 2.96 W cm−2, respectively, in a mixed PH3/Ar gas environment.
+The process gas was introduced into the chamber as a mixture of 2% PH3 and 98%
+Ar flowing at 19.5 sccm. Process pressure was maintained by a throttled gate
+valve. After a few pressures ≈4 mTorr were determined to have little effect on
+CaZn2P2 phase formation, a final working condition of 5 mTorr was chosen,
+corresponding to 0.1 mTorr of PH3. While the growth chamber's base pressure was
+<10−7 Torr, after every growth an O2 purging step was carried out, prior to
+shuttling the sample to the load lock, to clear any unreacted P from the growth
+platen and PH3 from the chamber, so some oxygen might be expected. Films were
+made with both combinatorial composition gradients, achieved by keeping the
+substrate stationary against the confocally oriented sputter cathodes, as well
+as with compositional uniformity, achieved by rotating the platen during growth.
+The substrate temperature (Tgrowth) was varied from 100 – 400 °C. Crystalline
+CaZn2P2 thin films were successfully grown on both conductive and non-conductive
+substrates, including aSiO2 (fused silica), borosilicate glass (Corning EXG), Si
+(100) orientation with native oxide), c-plane sapphire, and fluorinated tin
+oxide coated glass (FTO), with a deposition time of 2 h yielding films ≈500 nm
+thick.
