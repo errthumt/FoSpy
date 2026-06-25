@@ -35,11 +35,13 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
+            import sys
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
             
             print("Confirm after uploading secrets.json")
+            sys.stdout.flush()
             input("Press enter to continue...")
 
             if not upload.value:
