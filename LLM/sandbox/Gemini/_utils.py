@@ -1,4 +1,4 @@
-async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
+def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     import os
     from importlib.util import find_spec
     from pathlib import Path
@@ -38,25 +38,12 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             import asyncio 
 
             upload = FileUpload(accept=".json", multiple=False)
-            display(upload)
+            
+            input("Confirm after uploading secrets.json")
 
-            # 1. Create an async event tracker
-            upload_event = asyncio.Event()
-
-            # 2. Define a callback function that triggers when the value updates
-            def on_value_change(change):
-                if change['new']:
-                    # Signal the event that the file is ready
-                    upload_event.set()
-
-            # 3. Attach the callback to the widget
-            upload.observe(on_value_change, names='value')
-
-            # 4. Wait asynchronously until the event is fired
-            # This allows VS Code to receive widget signals in the background
-            print("test")
-            await upload_event.wait()
-
+            if not upload.value:
+                raise Exception("Could not find secrets. Upload secrets.json")
+            
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
                 file_info = upload.value[0]
