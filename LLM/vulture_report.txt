@@ -1,3 +1,5 @@
+LLM/sandbox/Gemini/_utils.py:37: unused import 'display' (90% confidence, 1 line)
+LLM/sandbox/Gemini/_utils.py:38: unused import 'asyncio' (90% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:4: unused variable 'line_comment' (60% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:5: unused variable 'key_delimiter' (60% confidence, 1 line)
 src/FoSpy/plotting/diffraction/engines/dans_diffraction.py:17: unused variable 'reflections' (60% confidence, 1 line)
@@ -337,5 +339,5 @@ src/FoSpy/blocks/blocks.py:1213: unused method 'keys_to_front' (60% confidence, 
 src/FoSpy/parsing/validators/filenames.py:48: unused function 'file_extension' (60% confidence, 22 lines)
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:73: unused method 'plot_matches' (60% confidence, 29 lines)
 src/FoSpy/blocks/data.py:6: unused class 'CSVdata' (60% confidence, 65 lines)
-LLM/sandbox/Gemini/_utils.py:1: unused function '_get_key' (60% confidence, 91 lines)
+LLM/sandbox/Gemini/_utils.py:1: unused function '_get_key' (60% confidence, 78 lines)
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:7: unused class 'PhaseMatcher' (60% confidence, 127 lines)
