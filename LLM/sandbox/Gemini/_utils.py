@@ -1,8 +1,11 @@
 import asyncio
+from pathlib import Path
+import os
+
+target_path = Path(os.path.abspath(__file__)).parent / "secrets.json"
+
 async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
-    import os
     from importlib.util import find_spec
-    from pathlib import Path
 
     print(f"Looking for API key with variable name '{env_var_name}'.")
 
@@ -25,43 +28,19 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             print(e)
 
 
-    
-    target_path = Path(os.path.abspath(__file__)).parent / "secrets.json"
     print(f"\nLooking for cached secrets at '{target_path}'...")
-    target_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if not target_path.exists():
-        if fallback:
-            print("Could not find secrets. Upload secrets.json")
-
-            from ipywidgets import FileUpload
-            from IPython.display import display
-
-
-            upload = FileUpload(accept=".json", multiple=False)
-            display(upload)
-            await asyncio.sleep(0.1) # flush asyncio display
-            print("Waiting for upload...")
-
-            value = await wait_for_file(upload, "value")
-
-            if isinstance(value, tuple):
-                # ipywidgets v8+ layout
-                file_info = value[0]
-                # In v8, 'content' is a memoryview object, cast it to bytes
-                file_bytes = bytes(file_info["content"])
-            else:
-                # ipywidgets v7 layout (fallback)
-                file_name = list(value.keys())[0]
-                file_bytes = value[file_name]["content"]
-
-            with open(target_path, "wb") as f:
-                f.write(file_bytes)
-            
-            
-
-            print(f"\nCached secrets to runtime at '{target_path}'")
     
+
+    if not target_path.exists() and fallback:
+        print("Could not find secrets. Delegating to secrets.json upload.")
+
+        return "upload"
+    
+    return _get_key_from_file(env_var_name, target_path, fallback)
+    
+
+
+def _get_key_from_file(env_var_name,filepath=target_path, fallback=True):
     print(f"\nLooking for '{env_var_name}' key in cached secrets...")
     try:
         import json
@@ -72,32 +51,34 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             return key
     except Exception as e:
         if fallback:
-            raise Exception("Could not get API key through cached secrets. Exception: {e}")
+            raise Exception(f"Could not get API key through cached secrets. Exception: {e}")
         else:
             print("Could not get API key through cached secrets. Exception:")
             print(e)
             print("\n Returning None.")
     
     return None
-    
 
+def _get_key_from_upload(env_var_name, upload):
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    value = upload.value
+    if not value:
+        raise Exception("No file uploaded.")
+    if isinstance(value, tuple):
+        # ipywidgets v8+ layout
+        file_info = value[0]
+        # In v8, 'content' is a memoryview object, cast it to bytes
+        file_bytes = bytes(file_info["content"])
+    else:
+        # ipywidgets v7 layout (fallback)
+        file_name = list(value.keys())[0]
+        file_bytes = value[file_name]["content"]
 
-def wait_for_file(widget, value):
-    future = asyncio.Future()
+    with open(target_path, "wb") as f:
+        f.write(file_bytes)
 
-    if widget.value:
-        future.set_result(widget.value)
-        return future
-    
-    def getvalue(change):
-        if not future.done():
-            future.set_result(change.new)
+    return _get_key_from_file(env_var_name, target_path)
 
-        widget.unobserve(getvalue, value)
-
-    widget.observe(getvalue, value)
-
-    return future
 
         
     
