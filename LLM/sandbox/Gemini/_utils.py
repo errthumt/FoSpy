@@ -42,11 +42,12 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             
             waiting = True
             while waiting:
-                if upload.value is not None:
+                if upload.value:
+                    print(upload.value)
                     waiting = False
                 else:
                     inp = input("Enter to confirm after secrets upload (type anything to cancel)")
-                    if inp != "":
+                    if inp.strip() != "":
                         raise Exception("Cancelled")
             
             if isinstance(upload.value, tuple):
