@@ -18,6 +18,7 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             from google.colab import userdata
             key = userdata.get(env_var_name)
             print("Found API key in Colab secrets.")
+            return key
         except Exception as e:
             print("Could not get API key through Colab secrets. Exception:")
             print(e)
