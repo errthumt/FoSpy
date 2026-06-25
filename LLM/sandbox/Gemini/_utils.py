@@ -46,7 +46,7 @@ def _get_key_from_file(env_var_name,filepath=target_path, fallback=True):
         import json
         with open(target_path, "r") as f:
             secrets = json.load(f)
-            print(secrets)
+
             key = secrets[env_var_name]
             print("Found API key in cached secrets.")
             return key
