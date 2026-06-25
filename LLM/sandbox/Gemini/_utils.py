@@ -40,8 +40,21 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
 
-            while not upload.value:
-                await asyncio.sleep(1)
+            # 1. Create an async event tracker
+            upload_event = asyncio.Event()
+
+            # 2. Define a callback function that triggers when the value updates
+            def on_value_change(change):
+                if change['new']:
+                    # Signal the event that the file is ready
+                    upload_event.set()
+
+            # 3. Attach the callback to the widget
+            upload.observe(on_value_change, names='value')
+
+            # 4. Wait asynchronously until the event is fired
+            # This allows VS Code to receive widget signals in the background
+            await upload_event.wait()
 
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
