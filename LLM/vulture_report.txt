@@ -336,5 +336,6 @@ src/FoSpy/blocks/materials.py:66: unused method 'add_weight_pcts' (60% confidenc
 src/FoSpy/blocks/blocks.py:1213: unused method 'keys_to_front' (60% confidence, 22 lines)
 src/FoSpy/parsing/validators/filenames.py:48: unused function 'file_extension' (60% confidence, 22 lines)
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:73: unused method 'plot_matches' (60% confidence, 29 lines)
+LLM/sandbox/Gemini/_utils.py:1: unused function '_get_key' (60% confidence, 39 lines)
 src/FoSpy/blocks/data.py:6: unused class 'CSVdata' (60% confidence, 65 lines)
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:7: unused class 'PhaseMatcher' (60% confidence, 127 lines)
