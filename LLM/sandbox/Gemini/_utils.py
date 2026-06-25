@@ -40,6 +40,7 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
+            await asyncio.sleep(0.1) # flush asyncio display
             print("Waiting for upload...")
 
             value = await wait_for_file(upload, "value")
