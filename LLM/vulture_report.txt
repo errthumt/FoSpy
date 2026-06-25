@@ -1,5 +1,3 @@
-LLM/sandbox/Gemini/_utils.py:37: unused import 'display' (90% confidence, 1 line)
-LLM/sandbox/Gemini/_utils.py:38: unused import 'asyncio' (90% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:4: unused variable 'line_comment' (60% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:5: unused variable 'key_delimiter' (60% confidence, 1 line)
 src/FoSpy/plotting/diffraction/engines/dans_diffraction.py:17: unused variable 'reflections' (60% confidence, 1 line)
