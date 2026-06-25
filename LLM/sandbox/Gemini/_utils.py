@@ -25,23 +25,46 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
 
     
-    target_path = Path(os.path.abspath(__file__)).parent / f"secrets/{env_var_name}.txt"
-    print(f"\nLooking for cached key at '{target_path}'...")
+    target_path = Path(os.path.abspath(__file__)).parent / "secrets.json"
+    print(f"\nLooking for cached secrets at '{target_path}'...")
     target_path.parent.mkdir(parents=True, exist_ok=True)
 
     if not target_path.exists():
         if fallback:
-            print("Could not find key file. Paste your API key when requested.")
+            print("Could not find secrets. Upload secrets.json")
 
-            target_path.write_bytes(input("API key: ").encode("utf-8"))
+            from ipywidgets import FileUpload
+            from IPython.display import display
 
-            print(f"\nCached key file to runtime at '{target_path}'")
-        else:
-            print("Could not find key. Returning None.")
-            return None
+            upload = FileUpload(accept=".json", multiple=False)
+            display(upload)
+
+            if len(upload.value) == 0:
+                print("No file uploaded. Returning None.")
+                raise Exception("No Secrets Available")
+            
+            with open(target_path, "wb") as f:
+                f.write(upload.value[0]["content"])
+
+            print(f"\nCached secrets to runtime at '{target_path}'")
     
-    print("API key read from cached file.")
-    return target_path.read_text()
+    print(f"\nLooking for '{env_var_name}' key in cached secrets...")
+    try:
+        import json
+        with open(target_path, "r") as f:
+            secrets = json.load(f)
+            key = secrets[env_var_name]
+            print("Found API key in cached secrets.")
+            return key
+    except Exception as e:
+        if fallback:
+            raise Exception("Could not get API key through cached secrets. Exception: {e}")
+        else:
+            print("Could not get API key through cached secrets. Exception:")
+            print(e)
+            print("\n Returning None.")
+    
+    return None
     
 
     
