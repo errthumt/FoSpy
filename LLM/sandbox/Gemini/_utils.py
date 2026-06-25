@@ -40,12 +40,14 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
             
-            while not upload.value:
-                if input("Enter to confirm after secrets upload (type anything to cancel)") != "":
-                    raise Exception("Cancelled")
-
-            if not upload.value:
-                raise Exception("Could not find secrets. Upload secrets.json")
+            waiting = True
+            while waiting:
+                if upload.value is not None:
+                    waiting = False
+                else:
+                    inp = input("Enter to confirm after secrets upload (type anything to cancel)")
+                    if inp != "":
+                        raise Exception("Cancelled")
             
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
