@@ -40,9 +40,11 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
             
-            print("Confirm after uploading secrets.json")
-            sys.stdout.flush()
-            input("Press enter to continue...")
+            def wait():
+                print("Confirm after uploading secrets.json")
+                return input("Press enter to continue...")
+            
+            wait()
 
             if not upload.value:
                 raise Exception("Could not find secrets. Upload secrets.json")
