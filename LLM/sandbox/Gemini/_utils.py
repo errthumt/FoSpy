@@ -40,9 +40,16 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
             
-            waiting = True
+            def wait(widget):
+                if widget.value:
+                    print("Upload Detected")
+            
+            upload.observe(wait, "value")
+            
             while not upload.value:
                 time.sleep(1)
+            
+            print("Uploading secrets.json...")
             
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
