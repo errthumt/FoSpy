@@ -1,4 +1,5 @@
-def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
+import asyncio
+async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     import os
     from importlib.util import find_spec
     from pathlib import Path
@@ -35,34 +36,28 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
-            import time
+
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
-            
-            def wait(widget):
-                if widget.value:
-                    print("Upload Detected")
-            
-            upload.observe(wait, "value")
-            
-            while not upload.value:
-                time.sleep(1)
-            
-            print("Uploading secrets.json...")
-            
-            if isinstance(upload.value, tuple):
+            print("Waiting for upload...")
+
+            value = await wait_for_file(upload, "value")
+
+            if isinstance(value, tuple):
                 # ipywidgets v8+ layout
-                file_info = upload.value[0]
+                file_info = value[0]
                 # In v8, 'content' is a memoryview object, cast it to bytes
                 file_bytes = bytes(file_info["content"])
             else:
                 # ipywidgets v7 layout (fallback)
-                file_name = list(upload.value.keys())[0]
-                file_bytes = upload.value[file_name]["content"]
+                file_name = list(value.keys())[0]
+                file_bytes = value[file_name]["content"]
 
             with open(target_path, "wb") as f:
                 f.write(file_bytes)
+            
+            
 
             print(f"\nCached secrets to runtime at '{target_path}'")
     
@@ -85,7 +80,24 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     return None
     
 
+
+def wait_for_file(widget, value):
+    future = asyncio.Future()
+
+    if widget.value:
+        future.set_result(widget.value)
+        return future
     
+    def getvalue(change):
+        if not future.done():
+            future.set_result(change.new)
+
+        widget.unobserve(getvalue, value)
+
+    widget.observe(getvalue, value)
+
+    return future
+
         
     
     
