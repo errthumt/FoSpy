@@ -334,7 +334,7 @@ src/FoSpy/blocks/attachments.py:237: unused method 'quick_pattern' (60% confiden
 src/FoSpy/blocks/blocks.py:1167: unused method 'add_all_calc_routines' (60% confidence, 15 lines)
 src/FoSpy/blocks/blocks.py:142: unused method 'find_tempdir' (60% confidence, 17 lines)
 src/FoSpy/blocks/materials.py:66: unused method 'add_weight_pcts' (60% confidence, 17 lines)
-LLM/sandbox/Gemini/_utils.py:62: unused function '_get_key_from_upload' (60% confidence, 19 lines)
+LLM/sandbox/Gemini/_utils.py:63: unused function '_get_key_from_upload' (60% confidence, 19 lines)
 src/FoSpy/blocks/blocks.py:1213: unused method 'keys_to_front' (60% confidence, 22 lines)
 src/FoSpy/parsing/validators/filenames.py:48: unused function 'file_extension' (60% confidence, 22 lines)
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:73: unused method 'plot_matches' (60% confidence, 29 lines)
