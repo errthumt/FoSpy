@@ -26,7 +26,7 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     
     target_path = Path(os.path.abspath(__file__)).parent / f"secrets/{env_var_name}.txt"
     print(f"\nLooking for cached key at '{target_path}'...")
-    target_path.mkdir(parents=True, exist_ok=True)
+    target_path.parent.mkdir(parents=True, exist_ok=True)
 
     if not target_path.exists():
         if fallback:
