@@ -4,7 +4,7 @@ import os
 
 target_path = Path(os.path.abspath(__file__)).parent / "secrets.json"
 
-async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
+def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     from importlib.util import find_spec
 
     print(f"Looking for API key with variable name '{env_var_name}'.")
