@@ -35,7 +35,7 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
-            import sys
+            import time
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
@@ -46,9 +46,7 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
                     print(upload.value)
                     waiting = False
                 else:
-                    inp = input("Enter to confirm after secrets upload (type anything to cancel)")
-                    if inp.strip() != "":
-                        raise Exception("Cancelled")
+                    time.sleep(1)
             
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
