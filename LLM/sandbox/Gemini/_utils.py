@@ -1,4 +1,4 @@
-def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
+async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
     import os
     from importlib.util import find_spec
     from pathlib import Path
@@ -35,13 +35,16 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
+            import asyncio
+
+            async def wait_for_upload(upload):
+                while len(upload.value) == 0:
+                    await asyncio.sleep(1)
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
 
-            if len(upload.value) == 0:
-                print("No file uploaded. Returning None.")
-                raise Exception("No Secrets Available")
+            wait_for_upload(upload)
             
             with open(target_path, "wb") as f:
                 f.write(upload.value[0]["content"])
