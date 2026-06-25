@@ -35,9 +35,9 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
-            import asyncio 
 
             upload = FileUpload(accept=".json", multiple=False)
+            display(upload)
             
             input("Confirm after uploading secrets.json")
 
