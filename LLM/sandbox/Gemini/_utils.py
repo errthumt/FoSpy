@@ -54,6 +54,7 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             # 4. Wait asynchronously until the event is fired
             # This allows VS Code to receive widget signals in the background
+            print("test")
             await upload_event.wait()
 
             if isinstance(upload.value, tuple):
