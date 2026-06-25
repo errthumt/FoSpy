@@ -41,12 +41,8 @@ def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             display(upload)
             
             waiting = True
-            while waiting:
-                if upload.value:
-                    print(upload.value)
-                    waiting = False
-                else:
-                    time.sleep(1)
+            while not upload.value:
+                time.sleep(1)
             
             if isinstance(upload.value, tuple):
                 # ipywidgets v8+ layout
