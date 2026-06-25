@@ -40,11 +40,21 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
 
-            while len(upload.value) == 0:
+            while not upload.value:
                 await asyncio.sleep(1)
-            
+
+            if isinstance(upload.value, tuple):
+                # ipywidgets v8+ layout
+                file_info = upload.value[0]
+                # In v8, 'content' is a memoryview object, cast it to bytes
+                file_bytes = bytes(file_info["content"])
+            else:
+                # ipywidgets v7 layout (fallback)
+                file_name = list(upload.value.keys())[0]
+                file_bytes = upload.value[file_name]["content"]
+
             with open(target_path, "wb") as f:
-                f.write(upload.value[0]["content"])
+                f.write(file_bytes)
 
             print(f"\nCached secrets to runtime at '{target_path}'")
     
