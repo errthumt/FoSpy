@@ -35,16 +35,13 @@ async def _get_key(env_var_name="FoSpy_Testing_API_key", fallback=True):
 
             from ipywidgets import FileUpload
             from IPython.display import display
-            import asyncio
-
-            async def wait_for_upload(upload):
-                while len(upload.value) == 0:
-                    await asyncio.sleep(1)
+            import asyncio 
 
             upload = FileUpload(accept=".json", multiple=False)
             display(upload)
 
-            wait_for_upload(upload)
+            while len(upload.value) == 0:
+                await asyncio.sleep(1)
             
             with open(target_path, "wb") as f:
                 f.write(upload.value[0]["content"])
