@@ -12,14 +12,14 @@ def positive_decimal(label, value_key, require_unit=False):
         return decimal_val
     
     if require_unit:
-        def unit_func(val, cls, sourceDict):
+        def unit_func(val, cls=None, sourceDict=None):
             return attach_unit(func(val), value_key, cls, sourceDict)
         return unit_func
     return func
             
 
 def decimal_range(label, value_key, lower=0, upper=1, include_lower=False, include_upper=True, require_unit=False):
-    def func(val, sourceDict):
+    def func(val, sourceDict=None):
         try:
             value = Decimal(val)
         except Exception as e:
@@ -37,13 +37,13 @@ def decimal_range(label, value_key, lower=0, upper=1, include_lower=False, inclu
         return value
     
     if require_unit:
-        def unit_func(val, cls, sourceDict):
+        def unit_func(val, cls=None, sourceDict=None):
             return attach_unit(func(val), value_key, cls, sourceDict)
         return unit_func
     return func
 
 def any_decimal(label, value_key, require_unit=False):
-    def func(val, sourceDict):
+    def func(val, sourceDict=None):
         try:
             value = Decimal(val)
         except Exception as e:
@@ -51,7 +51,7 @@ def any_decimal(label, value_key, require_unit=False):
         return value
     
     if require_unit:
-        def unit_func(val, cls, sourceDict):
+        def unit_func(val, cls=None, sourceDict=None):
             return attach_unit(func(val), value_key, cls, sourceDict)
         return unit_func
     return func
