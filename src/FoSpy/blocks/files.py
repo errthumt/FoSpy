@@ -1,6 +1,7 @@
 from .blocks import SingleBlock
 from ..parsing.read import dict_from_file
 from ..parsing.write import write_dict_to_file
+from .. import _errors as err
 
 
 import atexit
@@ -63,11 +64,17 @@ class FileBlock(SingleBlock):
 
         blockDict = ext_map[ext](abspath)
         if "metadata" not in blockDict:
-            raise ValueError(f"Could not find metadata block in file {abspath}")
+            raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
         
         metadata = _unwrap_block(blockDict["metadata"])
         if "fos_type" not in metadata:
-            raise ValueError(f"Could not find fos_type in metadata block in file {abspath}")
+            # Metadata construction will always fail, delegate error message to construction
+            try:
+                from .metadata import MetaData
+                _ = MetaData(metadata)
+            except Exception as e:
+                raise ValueError(f"Could not open file due to the following errors when validating metadata block:\n{e}")
+
 
         typ = metadata.get("fos_type","").lower()
         subcls = MetaData.dispatch.get(typ, ("", cls))[1]
