@@ -1,7 +1,7 @@
 {
   "Video ID": "metadata.video_id",
-  "Process Name": "metadata.process_name",
-  "Sample Name (Sample_no)": "metadata.name",
+  "Process Name": "metadata.description",
+  "Sample Name (Sample_no)": "metadata.fos_id",
   "Date of Experiment (Expt_date)": "metadata.date",
   "Temperature (Lab_temp)": {
     "value": "laboratory.temp",
@@ -54,9 +54,9 @@
     "unit": "equipment[0].final_mass_unit"
   },
   "Mass of product (Mass_prod)": {
-    "value": "reaction.product_mass",
-    "unit": "reaction.product_mass_unit"
+    "value": "products[0].obtained_amount",
+    "unit": "products[0].obtained_amount_unit"
   },
-  "Color of product (Color_prod)": "reaction.product_color",
-  "Structure of product (Struc_prod)": "reaction.product_structure"
+  "Color of product (Color_prod)": "products[0].color",
+  "Structure of product (Struc_prod)": "products[0].structure"
 }
