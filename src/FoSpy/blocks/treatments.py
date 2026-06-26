@@ -157,13 +157,26 @@ AnnealSection.dispatch["ramp"] = Ramp
 class RampNoTemp(Ramp):
     dispatch = {}
     def get_temp(self, temp_units="C"):
-        from ..parsing.validators.units import convert_temp
-        current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
-        rate = self.get_rate(current_temp, current_time)
-        time = self.get_time(current_time)
-        temp = rate * time
-        temp = convert_temp(temp, current_temp, temp_units)
+        from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
+        try:
+            ramp_set = self._parent_block.get_any(type="ramp")
+            self_idx = ramp_set.index(self)
+            if self_idx == 0:
+                last_temp = self._parent_block._parent_block.start_temp
+            else:
+                last_temp = ramp_set[self_idx-1].get_temp(temp_units)
+        #TODO: decrease exception scope to avoid hiding other exceptions
+        except Exception:
+            last_temp = FOSQuantity(25,FOSTempUnit(temp_units))
+
+        last_temp = _to_decimal(last_temp)
+
+        rate = _to_decimal(self.get_rate(temp_units, "h"))
+        time = _to_decimal(self.get_time("h"))
+
+        temp = last_temp + rate * time
         return temp
+        
     @classmethod
     def dispatch_subclass(cls, blockDict):
         return cls(blockDict, _dispatched=True)
@@ -179,12 +192,23 @@ Ramp.dispatch["temp"] = RampNoTemp
 class RampNoTime(Ramp):
     dispatch = {}
     def get_time(self, time_units="h"):
-        from ..parsing.validators.units import convert_time
-        current_temp, current_time = [v.strip() for v in self.rate_units.split("/")]
-        rate = self.get_rate(current_temp, current_time)
-        temp = self.get_temp(current_temp)
-        time = temp / rate
-        time = convert_time(time, current_time, time_units)
+        from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
+        try:
+            ramp_set = self._parent_block.get_any(type="ramp")
+            self_idx = ramp_set.index(self)
+            if self_idx == 0:
+                last_temp = self._parent_block._parent_block.start_temp
+            else:
+                last_temp = ramp_set[self_idx-1].get_temp("K")
+        #TODO: decrease exception scope to avoid hiding other exceptions
+        except Exception:
+            last_temp = FOSQuantity(float(25),FOSTempUnit("K"))
+
+        last_temp = _to_decimal(last_temp)
+        rate = _to_decimal(self.get_rate("K", time_units))
+        temp = _to_decimal(self.get_temp("K"))
+
+        time = (temp - last_temp) / rate
         return time
     @classmethod
     def dispatch_subclass(cls, blockDict):
@@ -200,7 +224,7 @@ Ramp.dispatch["time"] = RampNoTime
 class RampNoRate(Ramp):
     dispatch = {}
     def get_rate(self, temp_units="C", time_units="h"):
-        from ..parsing.validators.units import FOSQuantity, FOSTempUnit
+        from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
             ramp_set = self._parent_block.get_any(type="ramp")
             self_idx = ramp_set.index(self)
@@ -212,7 +236,7 @@ class RampNoRate(Ramp):
         except Exception:
             last_temp = FOSQuantity(25,FOSTempUnit("C"))
 
-        last_temp = FOSQuantity(float(last_temp.magnitude),last_temp.units)
+        last_temp = _to_decimal(last_temp)
 
         delta_temp = self.get_temp(temp_units)-last_temp
         time = self.get_time(time_units)

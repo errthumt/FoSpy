@@ -1,4 +1,5 @@
 from pint import Quantity, Unit
+import numpy as np
 
 class FOSUnit(Unit):
     def __init__(self, unitlike, allow_dims=[]):
@@ -49,3 +50,7 @@ def attach_unit(value, value_key, cls, sourceDict):
     unit = unit_validator(unit)
 
     return FOSQuantity(value, unit)
+
+def _to_decimal(quantity):
+    typ = type(quantity)
+    return typ(np.float64(quantity.magnitude), quantity.units)
