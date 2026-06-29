@@ -310,6 +310,7 @@ tests/FoSpy/ui/test_pyqtgraph.py:376: unused variable 'expected' (100% confidenc
 tests/FoSpy/ui/test_utils.py:3: unused import 'FoSpy' (90% confidence, 1 line)
 tests/FoSpy/ui/test_utils.py:13: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/ui/test_utils.py:26: unused variable 'expected' (100% confidence, 1 line)
+LLM/sandbox/Gemini/_utils.py:87: unused function '_get_registry' (60% confidence, 2 lines)
 src/FoSpy/blocks/data.py:3: unused class 'TraceData' (60% confidence, 2 lines)
 src/FoSpy/blocks/files.py:137: unused method 'check_attachments' (60% confidence, 2 lines)
 src/FoSpy/blocks/synthesis.py:12: unused method 'insert_material' (60% confidence, 3 lines)
