@@ -84,3 +84,7 @@ def _get_key_from_upload(env_var_name, upload):
         
     
     
+def _get_registry():
+    from FoSpy import blocks
+
+    
