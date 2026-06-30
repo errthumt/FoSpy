@@ -79,18 +79,20 @@ required_keys = {
         "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
     },
 
+    b.Chemical: {
+        "formula": chemformula.ChemFormula
+    },
+
     b.Product: {
         "name": str,
         "expected" : bool,
         "obtained" : bool,
-        "formula": chemformula.ChemFormula,
         "observations": str
     },
 
     b.Material: {
         "name": str,
         "type": str,
-        "formula": chemformula.ChemFormula,
         "supplier": str,
         "cas": str,
         "form": str,

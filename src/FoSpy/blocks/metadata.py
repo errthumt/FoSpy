@@ -1,3 +1,5 @@
+from FoSpy.blocks.products import Product
+
 from .synthesis import Synthesis
 from .blocks import (
     SingleBlock, ListBlock
@@ -48,9 +50,6 @@ class Reaction(SingleBlock):
         mw = self.get_nom_MW()
         _debug.msg(f"Calculated Nominal MW: {mw:.2f} for Reaction block.")
         self.add_calc_comment("nominal_formula",f"Nominal MW: {mw:.2f} g/mol","Nominal MW")
-
-class Product(SingleBlock):
-    pass
 
 class Experimenter(SingleBlock):
     """

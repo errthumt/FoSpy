@@ -1,21 +1,16 @@
-from .blocks import SingleBlock, ListBlock
+from .blocks import ListBlock
 from ._blockUtils import _calc_routine
+from .chemicals import Chemical
 
 from .._debug import Debug
 _debug = Debug()
 
-class Material(SingleBlock):
+
+class Material(Chemical):
     """
     Represents a material used in a synthesis
     """
-    @_calc_routine
-    def add_MW(self):
-        """
-        Attach a comment to the formula with molecular weight.
-        """
-        _debug.msg(f"Adding molecular weight to Material: {self.name}")
-        mw = self.formula.formula_weight
-        self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")
+    pass
 
 class MaterialList(ListBlock):
     """
