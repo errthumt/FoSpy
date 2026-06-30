@@ -107,3 +107,38 @@ def _show_quick_pattern(df, ax, x, y):
     from matplotlib import pyplot as plt
     df.plot(ax=ax, x=x, y=y)
     plt.show()
+
+def _get_prop_mro(cls, keyDict):
+    mro = reversed(cls.__mro__)
+
+    return [keyDict.get(k, {}) for k in mro]
+
+def _merge_vals(current, prop_mro, idx):
+    merged = current.copy()
+
+    if idx >= len(prop_mro):
+        return merged
+
+    for key, validator in prop_mro[idx].items():
+        if isinstance(validator, bool):
+            new_val = merged.pop(key, validator)
+
+            if validator and idx+1 < len(prop_mro):
+                for props in prop_mro[-1:idx:-1]:
+                    if key in props and not isinstance(props[key], bool):
+                        new_val = props[key]
+                        break
+            
+            if (not isinstance(new_val, bool)
+                and validator):
+                validator = new_val
+            else:
+                continue
+        
+        merged[key] = validator
+
+
+    return merged
+    
+
+

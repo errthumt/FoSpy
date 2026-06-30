@@ -97,10 +97,13 @@ required_keys = {
     b.Material: {
         "name": str,
         "type": str,
+        "formula": True,
         "supplier": str,
         "cas": str,
         "form": str,
         "env": str,
+        "amount": True,
+        "amount_unit": True
     },
 
     b.Treatment: {
