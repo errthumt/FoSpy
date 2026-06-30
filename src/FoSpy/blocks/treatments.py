@@ -20,11 +20,7 @@ class Treatment(SingleBlock):
         t = blockDict.get("type", None)
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict, _dispatched=True)
- 
-    @_calc_routine
-    def example_calc(self):
-        _debug.msg(f"Running example routine for {self.type} treatment")
-        return None
+
 
 class Annealing(Treatment):
     dispatch = {}
