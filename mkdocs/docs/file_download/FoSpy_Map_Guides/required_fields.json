@@ -23,17 +23,17 @@
     },
     "products": [
         {
+            "formula": "products[0].formula",
             "name": "products[0].name",
             "expected": "products[0].expected",
             "obtained": "products[0].obtained",
-            "formula": "products[0].formula",
             "observations": "products[0].observations"
         },
         {
+            "formula": "products[1].formula",
             "name": "products[1].name",
             "expected": "products[1].expected",
             "obtained": "products[1].obtained",
-            "formula": "products[1].formula",
             "observations": "products[1].observations"
         }
     ],
@@ -64,13 +64,11 @@
     "treatments": [
         {
             "type": "treatments[0].type",
-            "repeats": "treatments[0].repeats",
-            "observations": "treatments[0].observations"
+            "repeats": "treatments[0].repeats"
         },
         {
             "type": "treatments[1].type",
-            "repeats": "treatments[1].repeats",
-            "observations": "treatments[1].observations"
+            "repeats": "treatments[1].repeats"
         }
     ]
 }

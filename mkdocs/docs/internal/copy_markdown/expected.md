@@ -78,7 +78,7 @@ ______________________________________________________________________
 |---------|-----------------------------|-------------|
 | type | `str` (dispatched) | Examples: `"dwell", "ramp", "quench"` |
 
----
+______________________________________________________________________
 
 ### `Annealing`
 
@@ -90,17 +90,17 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| program | [Block: `AnnealProgram`][blockdocs-AnnealProgram] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) |
-| start_temp | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| start_temp_unit | [Units validator: `FOSTempUnit`][FoSpy.parsing.validators.units.FOSTempUnit] | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs)|
+| program | \[Block: `AnnealProgram`\][blockdocs-AnnealProgram] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) |
+| start_temp | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| start_temp_unit | \[Units validator: `FOSTempUnit`\][FoSpy.parsing.validators.units.FOSTempUnit] | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs)|
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| gas_flow | [Block: `FlowList`][blockdocs-FlowList] | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) |
+| gas_flow | \[Block: `FlowList`\][blockdocs-FlowList] | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) |
 
----
+______________________________________________________________________
 
 ### `Attachment`
 
@@ -112,7 +112,7 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| file_name | [Filenames validator: `file_name`][FoSpy.parsing.validators.filenames.file_name] (dispatched) | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. |
+| file_name | \[Filenames validator: `file_name`\][FoSpy.parsing.validators.filenames.file_name] (dispatched) | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. |
 
 ##### Additional Requirements
 
@@ -128,7 +128,7 @@ The first matching property found will be used and the remainder will be discard
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | embedded | `list` | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. |
-| path | [Filenames validator: `PathPosix`][FoSpy.parsing.validators.filenames.PathPosix] | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS |
+| path | \[Filenames validator: `PathPosix`\][FoSpy.parsing.validators.filenames.PathPosix] | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "`.`" and "`..`". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS |
 
 #### Attachment Method Subclasses
 
@@ -145,6 +145,50 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 - `CIFFile`
 
+### `Chemical`
+
+!table_check: Placeholder for missing class.
+
+!table_check: Missing required properties: ['amount', 'amount_unit', 'formula']
+
+!table_check: Missing optional properties: []
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### `CompChange`
+
+!table_check: Placeholder for missing class.
+
+!table_check: Missing required properties: ['repeats']
+
+!table_check: Missing optional properties: ['add', 'remove']
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+### Required properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
+### Optional properties
+
+| Property | Validation Routine or Class | Description |
+|---------|-----------------------------|-------------|
+| | |
+
 ### `Dwell`
 
 [Class Documentation][blockdocs-Dwell]
@@ -155,10 +199,10 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| time | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| time_unit | [Units validator: `FOSUnit.enforce_dims('[time]')`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
+| time | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| time_unit | \[Units validator: `FOSUnit.enforce_dims('[time]')`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 
----
+______________________________________________________________________
 
 ### `Experimenter`
 
@@ -179,7 +223,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |---------|-----------------------------|-------------|
 | orcid | `str` | The experimenter's [ORCID](https://orcid.org/)|
 
----
+______________________________________________________________________
 
 ### `FileBlock`
 
@@ -193,7 +237,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |---------|-----------------------------|-------------|
 | metadata | [Block: `MetaData`](#metadata) | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
 
----
+______________________________________________________________________
 
 ### `Material`
 
@@ -209,20 +253,20 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | type | `str` | How it was used in the synthesis (e.g., reagent, flux, solvent) |
 | formula | `ChemFormula` | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format |
 | supplier | `str` | Source of purchase/synthesis (may be internal) |
-| cas | `str` | CAS ID. May be "unknown"| 
+| cas | `str` | CAS ID. May be "unknown"|
 | form | `str` | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments).|
 | env | `str` | What environment the material is stored in. (e.g., ambient, Ar(g))|
-| amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| amount | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
 | amount_unit | `str` | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters.|
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| purity | [Numbers validator: `decimal_range`][FoSpy.parsing.validators.numbers.decimal_range] | 0 < purity ≤ 1 |
-| treatments | [Block: `TreatmentList`][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. |
+| purity | \[Numbers validator: `decimal_range`\][FoSpy.parsing.validators.numbers.decimal_range] | 0 < purity ≤ 1 |
+| treatments | \[Block: `TreatmentList`\][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. |
 
----
+______________________________________________________________________
 
 ### `MetaData`
 
@@ -238,11 +282,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | fos_type | `str` | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` |
 | description | `str` | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). |
 
----
+______________________________________________________________________
 
 ### `Product`
 
 [Class Documentation][blockdocs-Product]
+
+!table_check: Missing required properties: ['amount', 'amount_unit']
+
+!table_check: Extra required properties: ['formula']
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -260,14 +308,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| expected_amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| expected_amount_unit | [Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
-| obtained_amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| obtained_amount_unit | [Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
+| expected_amount | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| expected_amount_unit | \[Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
+| obtained_amount | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| obtained_amount_unit | \[Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) |
 | characterizations | `str` | Description of characterization methods used to determine/quantitate the product. |
 | structure_comments | `str` | General description on the structure of the product. |
 
----
+______________________________________________________________________
 
 ### `Quench`
 
@@ -281,7 +329,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |---------|-----------------------------|-------------|
 | medium | `str` | What medium the reaction vessel was quenched in (e.g., water, air). |
 
----
+______________________________________________________________________
 
 ### `Ramp`
 
@@ -303,12 +351,12 @@ If all three are provided, the last one found during reading will be discarded a
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| temp | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| time | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| rate | [Numbers validator: `any_decimal`][FoSpy.parsing.validators.numbers.any_decimal] | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| temp_unit | [Units validator: `FOSTempUnit`][FoSpy.parsing.validators.units.FOSTempUnit] | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) |
-| time_unit | [Units validator: `FOSUnit.enforce_dims("[time]")`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
-| rate_unit | [Units validator: `temp_rate_unit`][FoSpy.parsing.validators.units.temp_rate_unit] | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time.|
+| temp | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| time | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| rate | \[Numbers validator: `any_decimal`\][FoSpy.parsing.validators.numbers.any_decimal] | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| temp_unit | \[Units validator: `FOSTempUnit`\][FoSpy.parsing.validators.units.FOSTempUnit] | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) |
+| time_unit | \[Units validator: `FOSUnit.enforce_dims("[time]")`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
+| rate_unit | \[Units validator: `temp_rate_unit`\][FoSpy.parsing.validators.units.temp_rate_unit] | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time.|
 
 #### Ramp Method Subclasses
 
@@ -331,10 +379,10 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | nominal_formula | `ChemFormula` | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format |
-| nominal_amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| nominal_amount_unit | [Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
+| nominal_amount | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| nominal_amount_unit | \[Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 
----
+______________________________________________________________________
 
 ### `SingleBlock`
 
@@ -346,13 +394,13 @@ ______________________________________________________________________
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| ext | [Special: `SubContainer`][FoSpy.blocks._containers.SubContainer] | **Do not include in FOS files. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes. |
+| ext | \[Special: `SubContainer`\][FoSpy.blocks.\_containers.SubContainer] | **Do not include in FOS files. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes. |
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| rename | [Rename validator: `rename_dict`][FoSpy.parsing.validators.rename.rename_dict] | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage.|
+| rename | \[Rename validator: `rename_dict`\][FoSpy.parsing.validators.rename.rename_dict] | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage.|
 
 #### SingleBlock Method Subclasses
 
@@ -377,22 +425,22 @@ ______________________________________________________________________
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | metadata | [Block: `SynthesisMeta`](#synthesismeta) | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary |
-| experimenters | [Block: `ExperimenterList`][blockdocs-ExperimenterList] | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
+| experimenters | \[Block: `ExperimenterList`\][blockdocs-ExperimenterList] | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) |
 | reaction | [Block: `Reaction`](#reaction) | [General reaction information](#reaction) |
-| products | [Block: `ProductList`][blockdocs-ProductList] | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
-| materials | [Block: `MaterialList`][blockdocs-MaterialList] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) |
-| treatments | [Block: `TreatmentList`][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) |
+| products | \[Block: `ProductList`\][blockdocs-ProductList] | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) |
+| materials | \[Block: `MaterialList`\][blockdocs-MaterialList] | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) |
+| treatments | \[Block: `TreatmentList`\][blockdocs-TreatmentList] | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) |
 
 #### Optional properties
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
 | cif | `Attachment.enforce_subtype(CIFFile)` ([see class method](../blocks/attachments.md#FoSpy.blocks.attachments.Attachment.enforce_subtype)) | [A single attached CIF file](#attachment) |
-| cifs | [Block: `CifList`][blockdocs-CifList] | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
+| cifs | \[Block: `CifList`\][blockdocs-CifList] | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
 | laboratory_conditions | [Block: `LabConditions`](#singleblock-method-subclasses) | [General Laboratory Conditions](#singleblock-method-subclasses) |
-| equipment | [Block: `EquipmentList`][blockdocs-EquipmentList] | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
+| equipment | \[Block: `EquipmentList`\][blockdocs-EquipmentList] | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) |
 
----
+______________________________________________________________________
 
 ### `SynthesisMeta`
 
@@ -448,13 +496,17 @@ Developers are currently working on ways to flexibly allow any template list in 
 | treatments | `TemplateList.Simple(Treatment)` | A list of incomplete [`Treatment` objects](#treatment) |
 | annealings | `TemplateList.Simple(Annealing)` | A list of incomplete [`Annealing` objects](#annealing) |
 | anneal_sections | `TemplateList.Simple(AnnealSection)` | A list of incomplete [`AnnealSection` objects](#annealsection) |
-| cifs | [Block: `CifList`][blockdocs-CifList] | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
+| cifs | \[Block: `CifList`\][blockdocs-CifList] | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) |
 
 ______________________________________________________________________
 
 ### `Treatment`
 
 [Class Documentation][blockdocs-Treatment]
+
+!table_check: Missing optional properties: ['observations']
+
+!table_check: Extra required properties: ['observations']
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
@@ -476,8 +528,8 @@ When applicable, treatments are dispatched to subclasses based on the type value
 
 | Property | Validation Routine or Class | Description |
 |---------|-----------------------------|-------------|
-| recovered_amount | [Numbers validator: `positive_decimal`][FoSpy.parsing.validators.numbers.positive_decimal] | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
-| recovered_amount_unit | [Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
+| recovered_amount | \[Numbers validator: `positive_decimal`\][FoSpy.parsing.validators.numbers.positive_decimal] | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). |
+| recovered_amount_unit | \[Units validator: `FOSUnit.enforce_dims(["[mass]",{"[length]":3}])`\][FoSpy.parsing.validators.units.FOSUnit.enforce_dims] | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. |
 | start_time | `str` | What time the treatment was started |
 | end_time | `str` | What time the treatment was finished |
 

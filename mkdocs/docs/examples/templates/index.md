@@ -200,10 +200,10 @@ purity: 0.995
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
--observations: <!TEMPLATE-FIELD>
 -program: <!TEMPLATE-FIELD>
 start_temp: 25
 start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp
@@ -278,10 +278,10 @@ purity: 0.995
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
--observations: <!TEMPLATE-FIELD>
 -program: <!TEMPLATE-FIELD>
 start_temp: 25
 start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp
@@ -464,10 +464,10 @@ purity: 0.995
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
--observations: <!TEMPLATE-FIELD>
 -program: <!TEMPLATE-FIELD>
 start_temp: 25
 start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp
