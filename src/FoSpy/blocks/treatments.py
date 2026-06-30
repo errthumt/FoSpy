@@ -21,6 +21,11 @@ class Treatment(SingleBlock):
         subclass = cls.dispatch.get(t,cls)
         return subclass(blockDict, _dispatched=True)
 
+class CompChange(Treatment):
+    dispatch={}
+
+Treatment.dispatch["composition"] = CompChange
+
 
 class Annealing(Treatment):
     dispatch = {}
