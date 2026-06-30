@@ -9,7 +9,7 @@ Output is a JSON-formatted string according to the following rules:
 - Subheaders are keys within the parent header's dictionary mapping to another nested dictionary.
 - Lines uninterrupted by header or table syntax can be considered as one "section"
 - A section is contained within the dictionary mapped to the most recent header
-- A section's lines are mapped to a unique section name inside the containing dictionary
+- A section's lines are mapped to a unique section name inside the containing dictionary and should be a list of line strings ending with line break characters "\n"
 - When encountering table syntax, the table should be converted to a dictionary mapping column headers to lists, where each item in the list corresponds to a row of the table.
 - The dictionary created from a table should be mapped to a key starting with "table_" followed by a sequential number in order of appearence within the containing header's dictionary
 - Every header's dictionary contains the key "SECTIONS", which maps to an ordered list of the unique section names, table names, or subheaders contained within that dictionary, in order of appearance.
