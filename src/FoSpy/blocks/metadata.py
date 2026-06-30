@@ -1,5 +1,3 @@
-from FoSpy.blocks.products import Product
-
 from .synthesis import Synthesis
 from .blocks import (
     SingleBlock, ListBlock
@@ -62,11 +60,6 @@ ExperimenterList = ListBlock.Simple(Experimenter)
 """
 A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
 [`Experimenter` objects][FoSpy.blocks.metadata.Experimenter].
-"""
-ProductList = ListBlock.Simple(Product)
-"""
-A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
-[`Product` objects][FoSpy.blocks.metadata.Product].
 """
 
 class LabConditions(SingleBlock):
