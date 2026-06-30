@@ -102,7 +102,10 @@ required_keys = {
     b.Treatment: {
         "type": str,
         "repeats": int,
-        "observations": str
+    },
+
+    b.CompChange: {
+        "repeats": False,
     },
 
     b.AnnealSection: {
@@ -168,10 +171,16 @@ optional_keys = {
     },
 
     b.Treatment: {
+        "observations": str,
         "recovered_amount": validators.numbers.positive_decimal("b.Treatment/recovered_amount", "recovered_amount", True),
         "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,
         "end_time": str
+    },
+
+    b.CompChange: {
+        "add": None,
+        "remove": None
     },
 
     b.Annealing: {
