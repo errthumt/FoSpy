@@ -42,6 +42,50 @@ def table_dict_to_lines(table_dict, mode="cli"):
 
     return lines
 
+def diff_descs():
+    from ...parsing.validation import(
+        required_keys as req_keys,
+        optional_keys as opt_keys
+    )
+    descs = get_descs()
+
+    diffs = {"block diffs": {}}
+
+    block_lst = list(set(req_keys.keys()) | set(opt_keys.keys()))
+
+    for blk in block_lst:
+        blk_diffs = {"missing": [], "overrided": {}, "extra": {}, "inherited": {}}
+
+        blk_nm = blk.__name__
+        validators = blk.get_validators()
+
+        blk_descs = descs.pop(blk_nm, {})
+        blk_props = req_keys.get(blk, {}) | opt_keys.get(blk, {})
+        blk_props = {k:v for k, v in blk_props.items() if not isinstance(v, bool)}
+
+        for prop in blk_props.keys():
+            desc = blk_descs.pop(prop, None)
+            if desc is None:
+                try:
+                    desc = find_desc(blk, prop, get_descs())
+                    blk_diffs["inherited"][prop] = desc
+                except Exception:
+                    blk_diffs["missing"].append(prop)
+
+        for prop, desc in blk_descs.items():
+            if prop in validators:
+                blk_diffs["overrided"][prop] = desc
+            else:
+                blk_diffs["extra"][prop] = desc
+
+        diffs["block diffs"][blk] = blk_diffs
+
+    diffs["extra blocks"] = descs
+
+    return diffs
+
+
+
 def _load_all_validators():
     """Dynamically imports all modules in the validators package to trigger decorators."""
     import pkgutil
