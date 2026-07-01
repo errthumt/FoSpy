@@ -1,33 +1,9 @@
 from scripts._utils import set_sandbox_cwd
 from pathlib import Path
 import json
-import os
 
 import FoSpy
 block_lst = sorted(FoSpy.blocks.__all__)
-
-def exp_dict_to_lines(exp_dict, h=3):
-    lines = []
-
-    order = exp_dict.pop("SECTIONS", exp_dict.keys())
-
-    for k in order:
-        v = exp_dict[k]
-        if h==3:
-            k = f"`{k}`"
-        if k.startswith("table_"):
-            lines.extend(table_dict_to_lines(v))
-        elif isinstance(v, dict):
-            lines.append(f"{'#'*h} {k}\n\n")
-            lines.extend(exp_dict_to_lines(v, h+1))
-            if lines[-1].strip() != "---":
-                lines.append("---\n\n")
-        elif isinstance(v, list):
-            lines.extend(v)
-            lines.append("\n")
-        else:
-            print(f"Warning, unexpected value in expected dict under '{k}': {v}")
-    return lines
 
 def table_dict_to_lines(table_dict):
     lines = ["| " + " | ".join(table_dict.keys()) + " |\n",
@@ -39,10 +15,6 @@ def table_dict_to_lines(table_dict):
     lines.append("\n")
 
     return lines
-
-def clean_exp_dict(exp_dict):
-    key = "Expected Property Tables"
-    return exp_dict[key]
 
 
 def build_tables(cls, descs, val_rules={}):
@@ -100,7 +72,7 @@ def get_stub(temp_dir, cls, descs, val_rules={}):
     stub_path = temp_dir / f"{cls_nm}.md"
 
     full_stub = [
-        f"\n## `{cls_nm}`\n\n",
+        f"\n### `{cls_nm}`\n\n",
         f"[Class Documentation][blockdocs-{cls_nm}]\n\n",
         f"**[Subclass of `{parent_nm}`](#{parent_nm.lower()})**\n\n",
     ]
@@ -155,32 +127,43 @@ def get_stub(temp_dir, cls, descs, val_rules={}):
 
     if not (req_hd_found and
             any(col==[] for col in tables["req"].values())):
-        full_stub.append("### Required properties\n\n")
+        full_stub.append("#### Required properties\n\n")
         full_stub.extend(req_tb_lines)
 
     if not (opt_hd_found and
             any(col==[] for col in tables["opt"].values())):
-        full_stub.append("### Optional properties\n\n")
+        full_stub.append("#### Optional properties\n\n")
         full_stub.extend(opt_tb_lines)
 
     full_stub.extend(temp_lines)
 
     return "".join(full_stub)
 
-def write_tables():
+def get_tables():
     with open(DESCS, "r", encoding="utf-8") as f:
         descs = json.load(f)
 
-    with open(TABLES, "w", encoding="utf-8") as f:
-        for cls_nm in block_lst:
-            cls = getattr(FoSpy.blocks, cls_nm)
+    txt = "\n## Expected Property Tables\n"
 
-            if isinstance(cls, type) and issubclass(cls, FoSpy.blocks.SingleBlock):
-                f.write(get_stub(STUBS, cls, descs))
+
+    for cls_nm in block_lst:
+        cls = getattr(FoSpy.blocks, cls_nm)
+
+        if isinstance(cls, type) and issubclass(cls, FoSpy.blocks.SingleBlock):
+            txt += get_stub(STUBS, cls, descs)
+
+    return txt
+
+def build_md():
+    with open(PREAMBLE, "r", encoding="utf-8") as f:
+        preamble = f.read()
+
+    with open(MD_OUT, "w", encoding="utf-8") as f:
+        f.write(preamble + get_tables())
 
 
 if __name__ == "__main__":
     set_sandbox_cwd()
     #main()
-    write_tables()
+    build_md()
 
