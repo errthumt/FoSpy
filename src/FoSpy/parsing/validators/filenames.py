@@ -1,6 +1,7 @@
 import re
 from ..._debug import Debug
 from pathlib import Path
+from . import _validator_rules
 _debug = Debug()
 _debug.on = True
 
@@ -9,11 +10,13 @@ FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
 
 basePath = type(Path(""))
 
+@_validator_rules(
+    "A valid relative filepath."
+    "Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file."
+)
 class PathPosix(basePath):
     def serialize(self, *args, **kwargs):
         return self.as_posix()
-
-    
 
 
 def file_name(name: str, sourceDict={}) -> str:

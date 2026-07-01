@@ -1,9 +1,30 @@
-from scripts._utils import set_sandbox_cwd
 from pathlib import Path
 import json
+import os
 
-import FoSpy
-block_lst = sorted(FoSpy.blocks.__all__)
+from ... import blocks as blk_module
+
+block_lst = sorted(blk_module.__all__)
+
+module_dir = Path(os.path.abspath(__file__)).parent
+STUBS_DIR = module_dir / "summary_stubs"
+PROP_DESCS = module_dir / "descriptions.json"
+PREAMBLE = module_dir / "preamble.md"
+
+val_rules = {}
+"""
+Summaries of validation rules mapped to validator functions.
+
+Rule lists are formatted as markdown lists before being mapped to a validator.
+
+Possible Validators:
+    `SingleBlock` subclasses:
+        A single rule points to the validating class.
+    `ListBlock` subclasses:
+        A single rule points to the `SingleBlock` class enforced by the `ListBlock`.
+    Other Validators:
+        The validator function is decorated with `@_validator_rules()`, which specifies a list of rules to be mapped in this dictionary.
+"""
 
 def table_dict_to_lines(table_dict):
     lines = ["| " + " | ".join(table_dict.keys()) + " |\n",
@@ -17,7 +38,7 @@ def table_dict_to_lines(table_dict):
     return lines
 
 
-def build_tables(cls, descs, val_rules={}):
+def build_tables(cls, descs, force_rules=False):
     def empty_gen():
         while True:
             mt = {"Property": [], "Description": [], "Validation Rules": []}
@@ -38,7 +59,13 @@ def build_tables(cls, descs, val_rules={}):
             if key == "req":
                 optional.pop(prop, None)
             desc = find_desc(cls, prop, descs)
-            val_rule = val_rules.get(val, "Rules not found")
+            val_rule = val_rules.get(val, None)
+            if val_rule is None:
+                if force_rules:
+                    raise ValueError(f"No validation rules found for {val}")
+                val_rule = "No Rules Found"
+            else:
+                val_rule = val_rule.replace("\n", "<br>")
             out[key]["Property"].append(prop)
             out[key]["Description"].append(desc)
             out[key]["Validation Rules"].append(val_rule)
@@ -54,24 +81,19 @@ def find_desc(cls, prop, descs):
             return desc
     raise KeyError(f"Could not find description for {cls.__name__}.{prop}")
 
-TABLES = Path("exp_tables.md")
-DESCS = Path("exp_descs.json")
-MD_OUT = Path("expected.md")
-PREAMBLE = Path("exp_pre.md")
-STUBS = Path("stubs")
 
 
-def get_stub(temp_dir, cls, descs, val_rules={}):
+def get_summary(temp_dir, cls, descs, force_rules=False):
     cls_nm = cls.__name__
     parent_nm = cls.__bases__[0].__name__
 
-    tables = build_tables(cls, descs, val_rules)
+    tables = build_tables(cls, descs, force_rules=force_rules)
     req_tb_lines = table_dict_to_lines(tables["req"])
     opt_tb_lines = table_dict_to_lines(tables["opt"])
 
     stub_path = temp_dir / f"{cls_nm}.md"
 
-    full_stub = [
+    full_summary = [
         f"\n### `{cls_nm}`\n\n",
         f"[Class Documentation][blockdocs-{cls_nm}]\n\n",
         f"**[Subclass of `{parent_nm}`](#{parent_nm.lower()})**\n\n",
@@ -127,43 +149,37 @@ def get_stub(temp_dir, cls, descs, val_rules={}):
 
     if not (req_hd_found and
             any(col==[] for col in tables["req"].values())):
-        full_stub.append("#### Required properties\n\n")
-        full_stub.extend(req_tb_lines)
+        full_summary.append("#### Required properties\n\n")
+        full_summary.extend(req_tb_lines)
 
     if not (opt_hd_found and
             any(col==[] for col in tables["opt"].values())):
-        full_stub.append("#### Optional properties\n\n")
-        full_stub.extend(opt_tb_lines)
+        full_summary.append("#### Optional properties\n\n")
+        full_summary.extend(opt_tb_lines)
 
-    full_stub.extend(temp_lines)
+    full_summary.extend(temp_lines)
 
-    return "".join(full_stub)
+    return "".join(full_summary)
 
-def get_tables():
-    with open(DESCS, "r", encoding="utf-8") as f:
+def get_all_props():
+    with open(PROP_DESCS, "r", encoding="utf-8") as f:
         descs = json.load(f)
 
     txt = "\n## Expected Property Tables\n"
 
 
     for cls_nm in block_lst:
-        cls = getattr(FoSpy.blocks, cls_nm)
+        cls = getattr(blk_module, cls_nm)
 
-        if isinstance(cls, type) and issubclass(cls, FoSpy.blocks.SingleBlock):
-            txt += get_stub(STUBS, cls, descs)
+        if isinstance(cls, type) and issubclass(cls, blk_module.SingleBlock):
+            txt += get_summary(STUBS_DIR, cls, descs)
 
     return txt
 
-def build_md():
+def write_prop_md(md_path):
     with open(PREAMBLE, "r", encoding="utf-8") as f:
         preamble = f.read()
 
-    with open(MD_OUT, "w", encoding="utf-8") as f:
-        f.write(preamble + get_tables())
-
-
-if __name__ == "__main__":
-    set_sandbox_cwd()
-    #main()
-    build_md()
+    with open(md_path, "w", encoding="utf-8") as f:
+        f.write(preamble + get_all_props())
 
