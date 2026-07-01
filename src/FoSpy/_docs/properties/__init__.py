@@ -54,7 +54,11 @@ def _load_all_validators():
 val_rules = {
     str: "Any text entry",
     float: "Any decimal number (positive or negative)",
-    int: "Any integer (positive or negative)"
+    int: "Any integer (positive or negative)",
+    bool: "True or False",
+    list: "A list of values",
+    tuple: "A tuple of values",
+    dict: "A dictionary of values",
 }
 """
 Summaries of validation rules mapped to validator functions.
