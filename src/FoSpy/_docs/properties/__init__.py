@@ -21,7 +21,9 @@ def table_dict_to_lines(table_dict, mode="cli"):
     tab_kwargs = {
         "headers": "keys",
         "tablefmt": "pipe",
-        "maxcolwidths": None
+        "maxcolwidths": None,
+        "stralign": None,
+        "numalign": None
     }
     if mode == "cli":
         first_col = next(iter(table_dict.keys()))
@@ -30,6 +32,8 @@ def table_dict_to_lines(table_dict, mode="cli"):
         cols = len(table_dict.keys())
         col_widths = [(TAB_WIDTH - cols - 1 - prop_width) // (cols - 1) for _ in range(cols-1)]
 
+        tab_kwargs["stralign"] = "left"
+        tab_kwargs["numalign"] = "left"
         tab_kwargs["maxcolwidths"] = (prop_width, *col_widths)
         tab_kwargs["tablefmt"] = CLI_TBL_FMT
 
