@@ -57,7 +57,6 @@ special_prop2: 6.022
 
 ______________________________________________________________________
 ## Expected Property Tables
-
 ### `AnnealSection`
 
 [Class Documentation][blockdocs-AnnealSection]
@@ -77,7 +76,6 @@ ______________________________________________________________________
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Annealing`
 
 [Class Documentation][blockdocs-Annealing]
@@ -107,7 +105,6 @@ ______________________________________________________________________
 | gas_flow | Consistent gas flow conditions applied during annealing. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
 
 ---
-
 ### `Attachment`
 
 [Class Documentation][blockdocs-Attachment]
@@ -151,7 +148,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 ##### File Types
 
 - `CIFFile`---
-
 ### `CIFFile`
 
 [Class Documentation][blockdocs-CIFFile]
@@ -173,7 +169,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
-
 ### `CSVdata`
 
 [Class Documentation][blockdocs-CSVdata]
@@ -192,7 +187,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Dwell`
 
 [Class Documentation][blockdocs-Dwell]
@@ -214,7 +208,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `EmbeddedFile`
 
 [Class Documentation][blockdocs-EmbeddedFile]
@@ -236,7 +229,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
-
 ### `Equipment`
 
 [Class Documentation][blockdocs-Equipment]
@@ -255,7 +247,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Experimenter`
 
 [Class Documentation][blockdocs-Experimenter]
@@ -277,7 +268,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
 
 ---
-
 ### `FileBlock`
 
 [Class Documentation][blockdocs-FileBlock]
@@ -297,7 +287,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `FlexTemplate`
 
 [Class Documentation][blockdocs-FlexTemplate]
@@ -317,7 +306,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `GasFlow`
 
 [Class Documentation][blockdocs-GasFlow]
@@ -336,7 +324,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `LabConditions`
 
 [Class Documentation][blockdocs-LabConditions]
@@ -355,7 +342,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Material`
 
 [Class Documentation][blockdocs-Material]
@@ -385,7 +371,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
 ---
-
 ### `MetaData`
 
 [Class Documentation][blockdocs-MetaData]
@@ -407,7 +392,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `PathFile`
 
 [Class Documentation][blockdocs-PathFile]
@@ -429,7 +413,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
-
 ### `Product`
 
 [Class Documentation][blockdocs-Product]
@@ -459,7 +442,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | structure_comments | General description of the structure of the product. | <ul><li>Any text entry</li></ul> |
 
 ---
-
 ### `Quench`
 
 [Class Documentation][blockdocs-Quench]
@@ -480,7 +462,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Ramp`
 
 [Class Documentation][blockdocs-Ramp]
@@ -533,7 +514,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 - `RampNoTemp`: overrides [`get_temp()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_temp)
 - `RampNoTime`: overrides [`get_time()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_time)
 ---
-
 ### `RampNoRate`
 
 [Class Documentation][blockdocs-RampNoRate]
@@ -559,7 +539,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rate_unit | Units for ramp rate. | No Rules Found |
 
 ---
-
 ### `RampNoTemp`
 
 [Class Documentation][blockdocs-RampNoTemp]
@@ -585,7 +564,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rate_unit | Units for ramp rate. | No Rules Found |
 
 ---
-
 ### `RampNoTime`
 
 [Class Documentation][blockdocs-RampNoTime]
@@ -611,7 +589,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rate_unit | Units for ramp rate. | No Rules Found |
 
 ---
-
 ### `Reaction`
 
 [Class Documentation][blockdocs-Reaction]
@@ -633,7 +610,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]
@@ -652,7 +628,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Synthesis`
 
 [Class Documentation][blockdocs-Synthesis]
@@ -681,7 +656,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
 
 ---
-
 ### `SynthesisMeta`
 
 [Class Documentation][blockdocs-SynthesisMeta]
@@ -705,7 +679,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `TemplateBlock`
 
 [Class Documentation][blockdocs-TemplateBlock]
@@ -732,7 +705,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 
 - `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.reflex) method and [`TemplateList`](../blocks/template.md#FoSpy.blocks.template.TemplateList) construction.---
-
 ### `TemplateSet`
 
 [Class Documentation][blockdocs-TemplateSet]
@@ -766,7 +738,6 @@ Developers are currently working on ways to flexibly allow any template list in 
 | Property | Description | Validation Rules |
 |------------|-------------------------------------|-----------------------------------------------------|
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |---
-
 ### `TraceData`
 
 [Class Documentation][blockdocs-TraceData]
@@ -785,7 +756,6 @@ Developers are currently working on ways to flexibly allow any template list in 
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 
 ---
-
 ### `Treatment`
 
 [Class Documentation][blockdocs-Treatment]

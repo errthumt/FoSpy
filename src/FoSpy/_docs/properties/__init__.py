@@ -254,23 +254,27 @@ def _strip_links(txt, urls=None, crossrefs=None):
     return modified_txt, urls, crossrefs
 
 def _get_header_lines(cls_nm, parent_nm, mode="cli"):
+    lines = []
     if mode in ("md-tb", "md"):
-
-        return [
-            f"\n### `{cls_nm}`\n\n",
-            f"[Class Documentation][blockdocs-{cls_nm}]\n\n",
-            f"**[Subclass of `{parent_nm}`](#{parent_nm.lower()})**\n\n",
-        ]
+        lines.append(f"### `{cls_nm}`\n\n")
+        bold = "**"
     else:
         if mode != "cli":
             warn(f"Unrecognized mode: {mode}. Defaulting to CLI formatting for header lines.")
-        return [
-            f"===== Property Summary for {cls_nm} =====\n",
+        header = f"===== Property Summary for {cls_nm} =====\n\n"
+        pre = "^" * len(header.strip()) + "\n"
+        lines.extend([
+            pre, header,
             "URLs are surrounded by ~ characters. FoSpy cross-references "
             "are surrounded by <> characters.\n",
             "URL and cross-reference destinations are listed at the end of this message.\n\n",
-            f"~Subclass of {parent_nm}~\n\n"
-        ]
+        ])
+        bold = ""
+
+    lines.append(f"[Class Documentation][blockdocs-{cls_nm}]\n\n")
+    lines.append(f"{bold}[Subclass of `{parent_nm}`](#{parent_nm.lower()}){bold}\n\n")
+
+    return lines
 
 def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
     if mode in ("md", "md-tb"):
@@ -298,7 +302,7 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
             current_h = h
 
             header = ln.lstrip("#").strip()
-            header = f"==== {header} ====\n"
+            header = f"==== {header} ===="
             out_txt += "  "*indent + header + "\n"
         else:
             out_txt += "  "*indent + ln
@@ -427,7 +431,7 @@ def get_descs():
         descs = json.load(f)
     return descs
 
-def get_prop_md():
+def get_prop_md(force_rules=False):
     from ... import blocks as blk_module
 
     block_lst = sorted(blk_module.__all__)
@@ -439,17 +443,33 @@ def get_prop_md():
         cls = getattr(blk_module, cls_nm)
 
         if isinstance(cls, type) and issubclass(cls, blk_module.SingleBlock):
-            txt += get_summary(cls, mode="md-tb")
+            txt += get_summary(cls, mode="md-tb", force_rules=force_rules)
             txt += "---\n"
 
     return txt
 
-def write_prop_md(md_path):
+def write_prop_md(md_path, delay=False, force_rules=False):
     with open(PREAMBLE, "r", encoding="utf-8") as f:
         preamble = f.read()
+    
+    try:
+        txt = preamble + get_prop_md(force_rules=force_rules)
+        exc = None
+    except Exception as e:
+        exc = e
+        txt = "Doc build failed:\n\n" + str(e)
 
-    with open(md_path, "w", encoding="utf-8") as f:
-        f.write(preamble + get_prop_md())
+    def _write(md=md_path, t=txt):
+        with open(md, "w", encoding="utf-8") as f:
+            f.write(t)
+    
+    if delay:
+        return exc, _write
+    elif exc is None:
+        _write()
+        return None, lambda: None
+    else:
+        raise exc
 
 
 def _validator_rules(*args):
