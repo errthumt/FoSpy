@@ -1,17 +1,9 @@
-from _utils import set_sandbox_cwd
-from pathlib import Path
-from FoSpy._docs.properties import write_prop_md
-from FoSpy import Synthesis
+from FoSpy._docs.properties import diff_descs
+from pprint import pp
 
 
 def main():
-    set_sandbox_cwd()
-
-    MD_PATH = Path("expected.md")
-
-    write_prop_md(MD_PATH)
-
-    Synthesis.print_summary()
+    pp(diff_descs())
 
 if __name__ == "__main__":
     main()
