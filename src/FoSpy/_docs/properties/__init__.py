@@ -3,9 +3,7 @@ import json
 import os
 
 
-from ... import blocks as blk_module
 
-block_lst = sorted(blk_module.__all__)
 
 module_dir = Path(os.path.abspath(__file__)).parent
 STUBS_DIR = module_dir / "summary_stubs"
@@ -34,7 +32,11 @@ def _load_all_validators():
         importlib.import_module(module_name)
 
 
-val_rules = {}
+val_rules = {
+    str: "- Any text entry",
+    float: "- Any decimal number (positive or negative)",
+    int: "- Any integer (positive or negative)"
+}
 """
 Summaries of validation rules mapped to validator functions.
 
@@ -176,6 +178,10 @@ def get_summary(temp_dir, cls, descs, force_rules=False):
     return "".join(full_summary)
 
 def get_all_props():
+    from ... import blocks as blk_module
+
+    block_lst = sorted(blk_module.__all__)
+
     with open(PROP_DESCS, "r", encoding="utf-8") as f:
         descs = json.load(f)
 

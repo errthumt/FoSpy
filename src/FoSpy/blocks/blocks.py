@@ -1445,11 +1445,16 @@ class ListBlock(Block):
                 The subclass of `SingleBlock` that this `ListBlock` subclass
                 accepts.
         """
+        from .._docs.properties import _validator_rules
+
         if not issubclass(reqCls, SingleBlock):
             raise TypeError("reqCls must be a subclass of SingleBlock")
         if cls._reqCls is not None:
             raise TypeError("You cannot create a simple subclass of another ListBlock subclass.")
         
+        @_validator_rules(
+            f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.](#{reqCls.__name__.lower()})"
+        )
         class SimpleSub(cls):
             _reqCls = reqCls
 

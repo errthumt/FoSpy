@@ -68,7 +68,7 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -88,10 +88,10 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | No Rules Found |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | No Rules Found |
-| observations | General observations | No Rules Found |
-| program | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) | No Rules Found |
+| type | What type of treatment was performed | <ul><li>Any text entry</li></ul> |
+| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | <ul><li>Any integer (positive or negative)</li></ul> |
+| observations | General observations | <ul><li>Any text entry</li></ul> |
+| program | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
 | start_temp | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
 | start_temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
 
@@ -102,9 +102,9 @@ ______________________________________________________________________
 | rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 | recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
 | recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| start_time | What time the treatment was started | No Rules Found |
-| end_time | What time the treatment was finished | No Rules Found |
-| gas_flow | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) | No Rules Found |
+| start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
+| end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
+| gas_flow | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
 
 ---
 
@@ -203,7 +203,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | time | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
 | time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
 
@@ -266,15 +266,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Name of the experimenter | No Rules Found |
-| affiliation | Lab/University/Research Group/etc. | No Rules Found |
+| name | Name of the experimenter | <ul><li>Any text entry</li></ul> |
+| affiliation | Lab/University/Research Group/etc. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 | rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| orcid | The experimenter's [ORCID](https://orcid.org/) | No Rules Found |
+| orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
 
 ---
 
@@ -288,7 +288,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
 
@@ -308,7 +308,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | No Rules Found |
+| template_name | An identifiable name for the template. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -366,15 +366,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the material | No Rules Found |
-| type | How it was used in the synthesis (e.g., reagent, flux, solvent) | No Rules Found |
+| name | Identifiable name for the material | <ul><li>Any text entry</li></ul> |
+| type | How it was used in the synthesis (e.g., reagent, flux, solvent) | <ul><li>Any text entry</li></ul> |
 | formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | No Rules Found |
-| supplier | Source of purchase/synthesis (may be internal) | No Rules Found |
-| cas | CAS ID. May be "unknown" | No Rules Found |
-| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | No Rules Found |
-| env | What environment the material is stored in. (e.g., ambient, Ar(g)) | No Rules Found |
+| supplier | Source of purchase/synthesis (may be internal) | <ul><li>Any text entry</li></ul> |
+| cas | CAS ID. May be "unknown" | <ul><li>Any text entry</li></ul> |
+| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | <ul><li>Any text entry</li></ul> |
+| env | What environment the material is stored in. (e.g., ambient, Ar(g)) | <ul><li>Any text entry</li></ul> |
 | amount | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| amount_unit | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters. | No Rules Found |
+| amount_unit | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -382,7 +382,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | -------- | ----------- | ---------------- |
 | rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 | purity | 0 < purity ≤ 1 | No Rules Found |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. | No Rules Found |
+| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
 ---
 
@@ -396,9 +396,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | No Rules Found |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | No Rules Found |
-| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | No Rules Found |
+| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | <ul><li>Any text entry</li></ul> |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | <ul><li>Any text entry</li></ul> |
+| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -440,11 +440,11 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the product. | No Rules Found |
+| name | Identifiable name for the product. | <ul><li>Any text entry</li></ul> |
 | expected | Whether or not it was expected from the synthesis. | No Rules Found |
 | obtained | Whether or not it was obtained from the synthesis. | No Rules Found |
 | formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format. | No Rules Found |
-| observations | General observations about the product. | No Rules Found |
+| observations | General observations about the product. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -455,8 +455,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | expected_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
 | obtained_amount | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
 | obtained_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
-| characterizations | Description of characterization methods used to determine/quantitate the product. | No Rules Found |
-| structure_comments | General description on the structure of the product. | No Rules Found |
+| characterizations | Description of characterization methods used to determine/quantitate the product. | <ul><li>Any text entry</li></ul> |
+| structure_comments | General description on the structure of the product. | <ul><li>Any text entry</li></ul> |
 
 ---
 
@@ -470,8 +470,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
-| medium | What medium the reaction vessel was quenched in (e.g., water, air). | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
+| medium | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -491,7 +491,7 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -546,7 +546,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -572,7 +572,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -598,7 +598,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -665,12 +665,12 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
-| experimenters | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) | No Rules Found |
-| reaction | [General reaction information](#reaction) | No Rules Found |
-| products | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) | No Rules Found |
-| materials | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) | No Rules Found |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) | No Rules Found |
+| metadata | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
+| experimenters | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
+| reaction | [General reaction information](#reaction) | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
+| products | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Product` objects.](#product)</li></ul> |
+| materials | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) | <ul><li>A [specialized `ListBlock`][blockdocs-MaterialList] of [`Material` objects.](#material)</li></ul> |
+| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
 #### Optional properties
 
@@ -678,9 +678,9 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | -------- | ----------- | ---------------- |
 | rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 | cif | [A single attached CIF file](#attachment) | No Rules Found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | No Rules Found |
-| laboratory_conditions | [General Laboratory Conditions](#singleblock-method-subclasses) | No Rules Found |
-| equipment | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) | No Rules Found |
+| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
+| laboratory_conditions | [General Laboratory Conditions](#singleblock-method-subclasses) | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
+| equipment | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
 
 ---
 
@@ -694,11 +694,11 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | No Rules Found |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | No Rules Found |
-| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | No Rules Found |
-| group_id | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. | No Rules Found |
-| project_id | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* | No Rules Found |
+| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | <ul><li>Any text entry</li></ul> |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | <ul><li>Any text entry</li></ul> |
+| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
+| group_id | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. | <ul><li>Any text entry</li></ul> |
+| project_id | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -718,7 +718,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | No Rules Found |
+| template_name | An identifiable name for the template. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -745,7 +745,7 @@ These subclasses don't currently have any additional required properties but wil
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
 
@@ -757,7 +757,7 @@ These subclasses don't currently have any additional required properties but wil
 | treatments | A list of incomplete [`Treatment` objects](#treatment) | No Rules Found |
 | annealings | A list of incomplete [`Annealing` objects](#annealing) | No Rules Found |
 | anneal_sections | A list of incomplete [`AnnealSection` objects](#annealsection) | No Rules Found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | No Rules Found |
+| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
 
 #### Optional properties
 
@@ -767,7 +767,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 ---
 
@@ -800,9 +800,9 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | No Rules Found |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | No Rules Found |
-| observations | General observations | No Rules Found |
+| type | What type of treatment was performed | <ul><li>Any text entry</li></ul> |
+| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | <ul><li>Any integer (positive or negative)</li></ul> |
+| observations | General observations | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
@@ -811,7 +811,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 | rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 | recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
 | recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| start_time | What time the treatment was started | No Rules Found |
-| end_time | What time the treatment was finished | No Rules Found |
+| start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
+| end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
 
 ---

@@ -89,7 +89,8 @@ def _is_full_template(val):
         return True
     
 def _get_block_classes(module):
-    from .blocks import Block
+    from .blocks import Block, SingleBlock, ListBlock
+    from .._docs.properties import _validator_rules, val_rules
     import inspect
 
     __block_classes__ = []
@@ -100,6 +101,17 @@ def _get_block_classes(module):
 
         if issubclass(obj, Block):
             __block_classes__.append(name)
+
+            if issubclass(obj, SingleBlock):
+                _ = _validator_rules(
+                    f"[A `{obj.__name__}` object.](#{obj.__name__.lower()})"
+                )(obj)
+
+            if issubclass(obj, ListBlock) and obj not in val_rules:
+                reqCls = obj._reqCls or SingleBlock
+                _ = _validator_rules(
+                    f"A [specialized `ListBlock`][blockdocs-{obj.__name__}] of [`{reqCls.__name__}` objects.](#{reqCls.__name__.lower()})"
+                )(obj)
 
     return __block_classes__
 
