@@ -14,31 +14,27 @@ TEMPLATE_DIR = module_dir / "summary_stubs"
 PROP_DESCS = module_dir / "descriptions.json"
 PREAMBLE = module_dir / "preamble.md"
 
-TBL_FMT = "grid"
+CLI_TBL_FMT = "grid"
 
 def table_dict_to_lines(table_dict, mode="cli"):
-    if mode in ("md-tb", "md"):
-
-        lines = ["| " + " | ".join(table_dict.keys()) + " |\n",
-                "| " + " | ".join(["-"*len(k) for k in table_dict.keys()]) + " |\n"]
-
-        for cells in zip(*table_dict.values()):
-            line = "| " + " | ".join(cells) + " |\n"
-            lines.append(line)
-        lines.append("\n")
-    else:
-        if mode != "cli":
-            warn(f"Unrecognized mode: {mode}. Defaulting to CLI formatting for table lines.")
-        from tabulate import tabulate
-        
+    from tabulate import tabulate
+    tab_kwargs = {
+        "headers": "keys",
+        "tablefmt": "pipe",
+        "maxcolwidths": None
+    }
+    if mode == "cli":
         first_col = next(iter(table_dict.keys()))
         prop_width = max([len(k) for k in [first_col, *table_dict[first_col]]])
 
         cols = len(table_dict.keys())
         col_widths = [(TAB_WIDTH - cols - 1 - prop_width) // (cols - 1) for _ in range(cols-1)]
-        txt = tabulate(table_dict, headers="keys", tablefmt=TBL_FMT, maxcolwidths=(prop_width, *col_widths))
-        lines = txt.splitlines(keepends=True)
 
+        tab_kwargs["maxcolwidths"] = (prop_width, *col_widths)
+        tab_kwargs["tablefmt"] = CLI_TBL_FMT
+
+    txt = tabulate(table_dict, **tab_kwargs)
+    lines = txt.splitlines(keepends=True)
 
     return lines
 
@@ -315,7 +311,7 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
             for k, v in urls.items()
         }
         out_txt += tabulate(urls.items(), headers=["Text Reference", "URL"],
-                            tablefmt=TBL_FMT, maxcolwidths=(key_width, None))
+                            tablefmt=CLI_TBL_FMT, maxcolwidths=(key_width, None))
 
     crossrefs.pop("_repeats_", None)
     if crossrefs != {}:
@@ -325,7 +321,7 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
         ref_width = TAB_WIDTH - key_width - 3
 
         out_txt += tabulate(crossrefs.items(), headers=["Text Reference", "Reference"],
-                            tablefmt=TBL_FMT, maxcolwidths=(key_width, ref_width))
+                            tablefmt=CLI_TBL_FMT, maxcolwidths=(key_width, ref_width))
         
 
     return out_txt

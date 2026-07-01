@@ -66,19 +66,15 @@ ______________________________________________________________________
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                           | Validation Rules                 |
+|:-----------|:--------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -90,29 +86,25 @@ ______________________________________________________________________
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
-| repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
-| observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
-| program | The temperatures and gradients used during annealing. | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
-| start_temp | Initial temperature at start of program. | No Rules Found |
-| start_temp_unit | Units for initial temperature. | No Rules Found |
-
-
+| Property        | Description                                                                                                                                                                                     | Validation Rules                                                                                                     |
+|:----------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------|
+| type            | What type of treatment was performed.                                                                                                                                                           | <ul><li>Any text entry</li></ul>                                                                                     |
+| repeats         | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul>                                                                 |
+| observations    | General observations during the treatment                                                                                                                                                       | <ul><li>Any text entry</li></ul>                                                                                     |
+| program         | The temperatures and gradients used during annealing.                                                                                                                                           | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
+| start_temp      | Initial temperature at start of program.                                                                                                                                                        | No Rules Found                                                                                                       |
+| start_temp_unit | Units for initial temperature.                                                                                                                                                                  | No Rules Found                                                                                                       |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| recovered_amount | How much material was recovered after treatment. | No Rules Found |
-| recovered_amount_unit | Units for treatment recovered amount. | No Rules Found |
-| start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
-| end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
-| gas_flow | Consistent gas flow conditions applied during annealing. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
-
-
+| Property              | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                        |
+|:----------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
+| rename                | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                          |
+| recovered_amount      | How much material was recovered after treatment.                                                                                                                                                                                                                                                                             | No Rules Found                                                                                          |
+| recovered_amount_unit | Units for treatment recovered amount.                                                                                                                                                                                                                                                                                        | No Rules Found                                                                                          |
+| start_time            | What time the treatment was started                                                                                                                                                                                                                                                                                          | <ul><li>Any text entry</li></ul>                                                                        |
+| end_time              | What time the treatment was finished                                                                                                                                                                                                                                                                                         | <ul><li>Any text entry</li></ul>                                                                        |
+| gas_flow              | Consistent gas flow conditions applied during annealing.                                                                                                                                                                                                                                                                     | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
 
 ---
 
@@ -124,21 +116,17 @@ ______________________________________________________________________
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| file_name | The name of the attached file (with extension) | No Rules Found |
-
-
+| Property   | Description                                    | Validation Rules   |
+|:-----------|:-----------------------------------------------|:-------------------|
+| file_name  | The name of the attached file (with extension) | No Rules Found     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                                                                                |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                                                                  |
+| embedded   | Attachment content embedded as raw `utf-8` line strings.                                                                                                                                                                                                                                                                     | No Rules Found                                                                                                                                                                  |
+| path       | The filepath to the attached file, relative to the directory containing the parent `FileBlock`.                                                                                                                                                                                                                              | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Additional Requirements
 
@@ -172,21 +160,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| file_name | The name of the attached file (with extension) | No Rules Found |
-
-
+| Property   | Description                                    | Validation Rules   |
+|:-----------|:-----------------------------------------------|:-------------------|
+| file_name  | The name of the attached file (with extension) | No Rules Found     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                                                                                |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                                                                  |
+| embedded   | Attachment content embedded as raw `utf-8` line strings.                                                                                                                                                                                                                                                                     | No Rules Found                                                                                                                                                                  |
+| path       | The filepath to the attached file, relative to the directory containing the parent `FileBlock`.                                                                                                                                                                                                                              | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
 
@@ -198,18 +182,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -221,21 +201,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-| time | How long the temperature was kept constant in this section. | No Rules Found |
-| time_unit | Units for dwell time. | No Rules Found |
-
-
+| Property   | Description                                                 | Validation Rules                 |
+|:-----------|:------------------------------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"`                       | <ul><li>Any text entry</li></ul> |
+| time       | How long the temperature was kept constant in this section. | No Rules Found                   |
+| time_unit  | Units for dwell time.                                       | No Rules Found                   |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -247,21 +223,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| file_name | The name of the attached file (with extension) | No Rules Found |
-
-
+| Property   | Description                                    | Validation Rules   |
+|:-----------|:-----------------------------------------------|:-------------------|
+| file_name  | The name of the attached file (with extension) | No Rules Found     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                                                                                |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                                                                  |
+| embedded   | Attachment content embedded as raw `utf-8` line strings.                                                                                                                                                                                                                                                                     | No Rules Found                                                                                                                                                                  |
+| path       | The filepath to the attached file, relative to the directory containing the parent `FileBlock`.                                                                                                                                                                                                                              | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
 
@@ -273,18 +245,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -296,21 +264,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| name | Name of the experimenter | <ul><li>Any text entry</li></ul> |
+| Property    | Description                        | Validation Rules                 |
+|:------------|:-----------------------------------|:---------------------------------|
+| name        | Name of the experimenter           | <ul><li>Any text entry</li></ul> |
 | affiliation | Lab/University/Research Group/etc. | <ul><li>Any text entry</li></ul> |
-
-
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                 |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                   |
+| orcid      | The experimenter's [ORCID](https://orcid.org/)                                                                                                                                                                                                                                                                               | <ul><li>Any text entry</li></ul> |
 
 ---
 
@@ -322,19 +286,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
-
-
+| Property   | Description                         | Validation Rules                                    |
+|:-----------|:------------------------------------|:----------------------------------------------------|
+| metadata   | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -346,19 +306,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
+| Property      | Description                      | Validation Rules                 |
+|:--------------|:---------------------------------|:---------------------------------|
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
-
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -370,18 +326,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -393,18 +345,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -416,29 +364,25 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| name | A unique name for the material. | <ul><li>Any text entry</li></ul> |
-| type | How it was used in the synthesis (e.g., reagent, flux, solvent) | <ul><li>Any text entry</li></ul> |
-| formula | Chemical composition. | No Rules Found |
-| supplier | Source of purchase/synthesis | <ul><li>Any text entry</li></ul> |
-| cas | CAS ID | <ul><li>Any text entry</li></ul> |
-| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (e.g., grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | <ul><li>Any text entry</li></ul> |
-| env | What atmospheric environment the material is stored in. (e.g., ambient, Ar(g)) | <ul><li>Any text entry</li></ul> |
-| amount | Amount of the material that was used. | No Rules Found |
-| amount_unit | Units for material amount. | <ul><li>Any text entry</li></ul> |
-
-
+| Property    | Description                                                                                                                                                                                                                                                                                                                            | Validation Rules                 |
+|:------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| name        | A unique name for the material.                                                                                                                                                                                                                                                                                                        | <ul><li>Any text entry</li></ul> |
+| type        | How it was used in the synthesis (e.g., reagent, flux, solvent)                                                                                                                                                                                                                                                                        | <ul><li>Any text entry</li></ul> |
+| formula     | Chemical composition.                                                                                                                                                                                                                                                                                                                  | No Rules Found                   |
+| supplier    | Source of purchase/synthesis                                                                                                                                                                                                                                                                                                           | <ul><li>Any text entry</li></ul> |
+| cas         | CAS ID                                                                                                                                                                                                                                                                                                                                 | <ul><li>Any text entry</li></ul> |
+| form        | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (e.g., grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | <ul><li>Any text entry</li></ul> |
+| env         | What atmospheric environment the material is stored in. (e.g., ambient, Ar(g))                                                                                                                                                                                                                                                         | <ul><li>Any text entry</li></ul> |
+| amount      | Amount of the material that was used.                                                                                                                                                                                                                                                                                                  | No Rules Found                   |
+| amount_unit | Units for material amount.                                                                                                                                                                                                                                                                                                             | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| purity | 0 < purity <= 1 | No Rules Found |
-| treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                            |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                              |
+| purity     | 0 < purity <= 1                                                                                                                                                                                                                                                                                                              | No Rules Found                                                                                              |
+| treatments | Treatments that were applied to the material before use in the synthesis.                                                                                                                                                                                                                                                    | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
 ---
 
@@ -450,21 +394,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
+| Property    | Description                                                                                                        | Validation Rules                 |
+|:------------|:-------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| fos_id      | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.)         | <ul><li>Any text entry</li></ul> |
+| fos_type    | What type of `FileBlock` subclass the file should be interpreted as.                                               | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
-
-
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -476,21 +416,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| file_name | The name of the attached file (with extension) | No Rules Found |
-
-
+| Property   | Description                                    | Validation Rules   |
+|:-----------|:-----------------------------------------------|:-------------------|
+| file_name  | The name of the attached file (with extension) | No Rules Found     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                                                                                |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                                                                  |
+| embedded   | Attachment content embedded as raw `utf-8` line strings.                                                                                                                                                                                                                                                                     | No Rules Found                                                                                                                                                                  |
+| path       | The filepath to the attached file, relative to the directory containing the parent `FileBlock`.                                                                                                                                                                                                                              | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 ---
 
@@ -502,29 +438,25 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| name | A unique name for the product. | <ul><li>Any text entry</li></ul> |
-| expected | Whether or not the product was expected from the synthesis. | No Rules Found |
-| obtained | Whether or not the product obtained from the synthesis. | No Rules Found |
-| formula | Chemical composition | No Rules Found |
-| observations | General observations about the product. | <ul><li>Any text entry</li></ul> |
-
-
+| Property     | Description                                                 | Validation Rules                 |
+|:-------------|:------------------------------------------------------------|:---------------------------------|
+| name         | A unique name for the product.                              | <ul><li>Any text entry</li></ul> |
+| expected     | Whether or not the product was expected from the synthesis. | No Rules Found                   |
+| obtained     | Whether or not the product obtained from the synthesis.     | No Rules Found                   |
+| formula      | Chemical composition                                        | No Rules Found                   |
+| observations | General observations about the product.                     | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| expected_amount | How much of the product was nominally expected to be obtained from the synthesis | No Rules Found |
-| expected_amount_unit | Units for product expected amount. | No Rules Found |
-| obtained_amount | How much of the product was actually obtained from the synthesis.. | No Rules Found |
-| obtained_amount_unit | Units for product obtained amount | No Rules Found |
-| characterizations | Description of characterization methods used to determine/quantitate the product. | <ul><li>Any text entry</li></ul> |
-| structure_comments | General description of the structure of the product. | <ul><li>Any text entry</li></ul> |
-
-
+| Property             | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                 |
+|:---------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| rename               | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                   |
+| expected_amount      | How much of the product was nominally expected to be obtained from the synthesis                                                                                                                                                                                                                                             | No Rules Found                   |
+| expected_amount_unit | Units for product expected amount.                                                                                                                                                                                                                                                                                           | No Rules Found                   |
+| obtained_amount      | How much of the product was actually obtained from the synthesis..                                                                                                                                                                                                                                                           | No Rules Found                   |
+| obtained_amount_unit | Units for product obtained amount                                                                                                                                                                                                                                                                                            | No Rules Found                   |
+| characterizations    | Description of characterization methods used to determine/quantitate the product.                                                                                                                                                                                                                                            | <ul><li>Any text entry</li></ul> |
+| structure_comments   | General description of the structure of the product.                                                                                                                                                                                                                                                                         | <ul><li>Any text entry</li></ul> |
 
 ---
 
@@ -536,20 +468,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-| medium | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                                                         | Validation Rules                 |
+|:-----------|:--------------------------------------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"`                               | <ul><li>Any text entry</li></ul> |
+| medium     | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -561,25 +489,21 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                           | Validation Rules                 |
+|:-----------|:--------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| temp | The next temperature in the program. | No Rules Found |
-| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
-| temp_unit | Units for ramp temperature. | No Rules Found |
-| time_unit | Units for ramp time. | No Rules Found |
-| rate_unit | Units for ramp rate. | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
+| temp       | The next temperature in the program.                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| time       | Length of time from the previous temperature to the new temperature.                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate       | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).                                                                                                                                                                                        | No Rules Found     |
+| temp_unit  | Units for ramp temperature.                                                                                                                                                                                                                                                                                                  | No Rules Found     |
+| time_unit  | Units for ramp time.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate_unit  | Units for ramp rate.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
 
 #### Required properties
 
@@ -592,17 +516,15 @@ During construction of a `Ramp` object, it is required to have at least 2 of the
 If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dispatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
 
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| temp | The next temperature in the program. | No Rules Found |
-| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
-| temp_unit | Units for ramp temperature. | No Rules Found |
-| time_unit | Units for ramp time. | No Rules Found |
-| rate_unit | Units for ramp rate. | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
+| temp       | The next temperature in the program.                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| time       | Length of time from the previous temperature to the new temperature.                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate       | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).                                                                                                                                                                                        | No Rules Found     |
+| temp_unit  | Units for ramp temperature.                                                                                                                                                                                                                                                                                                  | No Rules Found     |
+| time_unit  | Units for ramp time.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate_unit  | Units for ramp rate.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
 #### Ramp Method Subclasses
 
 The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:
@@ -620,25 +542,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                           | Validation Rules                 |
+|:-----------|:--------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| temp | The next temperature in the program. | No Rules Found |
-| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
-| temp_unit | Units for ramp temperature. | No Rules Found |
-| time_unit | Units for ramp time. | No Rules Found |
-| rate_unit | Units for ramp rate. | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
+| temp       | The next temperature in the program.                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| time       | Length of time from the previous temperature to the new temperature.                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate       | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).                                                                                                                                                                                        | No Rules Found     |
+| temp_unit  | Units for ramp temperature.                                                                                                                                                                                                                                                                                                  | No Rules Found     |
+| time_unit  | Units for ramp time.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate_unit  | Units for ramp rate.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
 
 ---
 
@@ -650,25 +568,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                           | Validation Rules                 |
+|:-----------|:--------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| temp | The next temperature in the program. | No Rules Found |
-| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
-| temp_unit | Units for ramp temperature. | No Rules Found |
-| time_unit | Units for ramp time. | No Rules Found |
-| rate_unit | Units for ramp rate. | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
+| temp       | The next temperature in the program.                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| time       | Length of time from the previous temperature to the new temperature.                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate       | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).                                                                                                                                                                                        | No Rules Found     |
+| temp_unit  | Units for ramp temperature.                                                                                                                                                                                                                                                                                                  | No Rules Found     |
+| time_unit  | Units for ramp time.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate_unit  | Units for ramp rate.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
 
 ---
 
@@ -680,25 +594,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-
-
+| Property   | Description                           | Validation Rules                 |
+|:-----------|:--------------------------------------|:---------------------------------|
+| type       | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| temp | The next temperature in the program. | No Rules Found |
-| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
-| temp_unit | Units for ramp temperature. | No Rules Found |
-| time_unit | Units for ramp time. | No Rules Found |
-| rate_unit | Units for ramp rate. | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
+| temp       | The next temperature in the program.                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| time       | Length of time from the previous temperature to the new temperature.                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate       | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).                                                                                                                                                                                        | No Rules Found     |
+| temp_unit  | Units for ramp temperature.                                                                                                                                                                                                                                                                                                  | No Rules Found     |
+| time_unit  | Units for ramp time.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
+| rate_unit  | Units for ramp rate.                                                                                                                                                                                                                                                                                                         | No Rules Found     |
 
 ---
 
@@ -710,21 +620,17 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| nominal_formula | Total expected chemical composition from all final products. | No Rules Found |
-| nominal_amount | Total amount expected to be recovered from all final products. | No Rules Found |
-| nominal_amount_unit | Units for reaction nominal amount. | No Rules Found |
-
-
+| Property            | Description                                                    | Validation Rules   |
+|:--------------------|:---------------------------------------------------------------|:-------------------|
+| nominal_formula     | Total expected chemical composition from all final products.   | No Rules Found     |
+| nominal_amount      | Total amount expected to be recovered from all final products. | No Rules Found     |
+| nominal_amount_unit | Units for reaction nominal amount.                             | No Rules Found     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -736,18 +642,14 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -759,28 +661,24 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| metadata | General information about the file. | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
-| experimenters | Experimenters who participated in any treatments described in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
-| reaction | General information applying to the entire synthetic reaction. | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
-| products | Products expected or obtained from the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Product` objects.](#product)</li></ul> |
-| materials | Starting chemicals and materials used in the synthesis. | <ul><li>A [specialized `ListBlock`][blockdocs-MaterialList] of [`Material` objects.](#material)</li></ul> |
-| treatments | Sequence of individual actions performed on the materials or active reaction to carry out the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
-
-
+| Property      | Description                                                                                              | Validation Rules                                                                                                  |
+|:--------------|:---------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------|
+| metadata      | General information about the file.                                                                      | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul>                                                     |
+| experimenters | Experimenters who participated in any treatments described in the synthesis.                             | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
+| reaction      | General information applying to the entire synthetic reaction.                                           | <ul><li>[A `Reaction` object.](#reaction)</li></ul>                                                               |
+| products      | Products expected or obtained from the synthesis.                                                        | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Product` objects.](#product)</li></ul>           |
+| materials     | Starting chemicals and materials used in the synthesis.                                                  | <ul><li>A [specialized `ListBlock`][blockdocs-MaterialList] of [`Material` objects.](#material)</li></ul>         |
+| treatments    | Sequence of individual actions performed on the materials or active reaction to carry out the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul>       |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| cif | A single attached CIF file applicable to the entire synthesis. | No Rules Found |
-| cifs | Multiple attached CIF files applicable to the entire synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
-| laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
-| equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
-
-
+| Property              | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                              |
+|:----------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------|
+| rename                | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                |
+| cif                   | A single attached CIF file applicable to the entire synthesis.                                                                                                                                                                                                                                                               | No Rules Found                                                                                                                |
+| cifs                  | Multiple attached CIF files applicable to the entire synthesis.                                                                                                                                                                                                                                                              | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
+| laboratory_conditions | General conditions of the laboratory during the synthesis.                                                                                                                                                                                                                                                                   | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul>                                                                 |
+| equipment             | Specialized equipment or apparatuses used during the synthesis.                                                                                                                                                                                                                                                              | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul>                   |
 
 ---
 
@@ -792,23 +690,19 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
+| Property    | Description                                                                                                        | Validation Rules                 |
+|:------------|:-------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| fos_id      | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.)         | <ul><li>Any text entry</li></ul> |
+| fos_type    | What type of `FileBlock` subclass the file should be interpreted as.                                               | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
-| group_id | The unique identifier for the generating research group or organization. | <ul><li>Any text entry</li></ul> |
-| project_id | Describes the context or purpose of the synthesis within the scope of the `group_id` and/or lead experimenter. | <ul><li>Any text entry</li></ul> |
-
-
+| group_id    | The unique identifier for the generating research group or organization.                                           | <ul><li>Any text entry</li></ul> |
+| project_id  | Describes the context or purpose of the synthesis within the scope of the `group_id` and/or lead experimenter.     | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -820,19 +714,15 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
+| Property      | Description                      | Validation Rules                 |
+|:--------------|:---------------------------------|:---------------------------------|
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
-
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 `TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
 
@@ -851,25 +741,21 @@ These subclasses don't currently have any additional required properties but wil
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
-
-
+| Property   | Description                         | Validation Rules                                    |
+|:-----------|:------------------------------------|:----------------------------------------------------|
+| metadata   | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| experimenters | A list of incomplete templates describing experimenters. | No Rules Found |
-| materials | A list of incomplete templates describing materials. | No Rules Found |
-| treatments | A list of incomplete templates describing treatments. | No Rules Found |
-| annealings | A list of incomplete templates describing annealing treatments. | No Rules Found |
-| anneal_sections | A list of incomplete templates describing annealing sections. | No Rules Found |
-| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
-
-
+| Property        | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                                                                                                              |
+|:----------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------|
+| rename          | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                                                                                                                |
+| experimenters   | A list of incomplete templates describing experimenters.                                                                                                                                                                                                                                                                     | No Rules Found                                                                                                                |
+| materials       | A list of incomplete templates describing materials.                                                                                                                                                                                                                                                                         | No Rules Found                                                                                                                |
+| treatments      | A list of incomplete templates describing treatments.                                                                                                                                                                                                                                                                        | No Rules Found                                                                                                                |
+| annealings      | A list of incomplete templates describing annealing treatments.                                                                                                                                                                                                                                                              | No Rules Found                                                                                                                |
+| anneal_sections | A list of incomplete templates describing annealing sections.                                                                                                                                                                                                                                                                | No Rules Found                                                                                                                |
+| cifs            | A list of CIF files attached to the template set.                                                                                                                                                                                                                                                                            | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
 
 #### Optional properties
 
@@ -877,11 +763,9 @@ In contrast with a `Synthesis` file, most top-level properties for a `TemplateSe
 
 Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
-
----
+| Property   | Description                         | Validation Rules                                    |
+|:-----------|:------------------------------------|:----------------------------------------------------|
+| metadata   | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |---
 
 ### `TraceData`
 
@@ -891,18 +775,14 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-
-
+| Property   | Description   | Validation Rules   |
+|------------|---------------|--------------------|
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-
-
+| Property   | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules   |
+|:-----------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|
+| rename     | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found     |
 
 ---
 
@@ -914,24 +794,20 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 #### Required properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
-| repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
-| observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
-
-
+| Property     | Description                                                                                                                                                                                     | Validation Rules                                     |
+|:-------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------|
+| type         | What type of treatment was performed.                                                                                                                                                           | <ul><li>Any text entry</li></ul>                     |
+| repeats      | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
+| observations | General observations during the treatment                                                                                                                                                       | <ul><li>Any text entry</li></ul>                     |
 
 #### Optional properties
 
-| Property | Description | Validation Rules |
-| -------- | ----------- | ---------------- |
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
-| recovered_amount | How much material was recovered after treatment. | No Rules Found |
-| recovered_amount_unit | Units for treatment recovered amount. | No Rules Found |
-| start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
-| end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
-
-
+| Property              | Description                                                                                                                                                                                                                                                                                                                  | Validation Rules                 |
+|:----------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------|
+| rename                | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found                   |
+| recovered_amount      | How much material was recovered after treatment.                                                                                                                                                                                                                                                                             | No Rules Found                   |
+| recovered_amount_unit | Units for treatment recovered amount.                                                                                                                                                                                                                                                                                        | No Rules Found                   |
+| start_time            | What time the treatment was started                                                                                                                                                                                                                                                                                          | <ul><li>Any text entry</li></ul> |
+| end_time              | What time the treatment was finished                                                                                                                                                                                                                                                                                         | <ul><li>Any text entry</li></ul> |
 
 ---
