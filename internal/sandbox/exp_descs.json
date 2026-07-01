@@ -1,0 +1,269 @@
+{
+    "AnnealSection": {
+        "type": {
+            "desc": "Examples: `\"dwell\", \"ramp\", \"quench\"`"
+        }
+    },
+    "Annealing": {
+        "program": {
+            "desc": "A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection)"
+        },
+        "start_temp": {
+            "desc": "The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "start_temp_unit": {
+            "desc": "`FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `\"C\"` as degrees celsius as opposed to coulombs)"
+        },
+        "gas_flow": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses)"
+        }
+    },
+    "Attachment": {
+        "file_name": {
+            "desc": "A name for the file that does not contain any incompatible characters ( `\\ / : * ? \" < > \\|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension."
+        },
+        "embedded": {
+            "desc": "A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax."
+        },
+        "path": {
+            "desc": "Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like \".\" and \"..\". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\\`) when serialized, regardless of OS"
+        }
+    },
+    "Dwell": {
+        "time": {
+            "desc": "How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "time_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit."
+        }
+    },
+    "Experimenter": {
+        "name": {
+            "desc": "Name of the experimenter"
+        },
+        "affiliation": {
+            "desc": "Lab/University/Research Group/etc."
+        },
+        "orcid": {
+            "desc": "The experimenter's [ORCID](https://orcid.org/)"
+        }
+    },
+    "FileBlock": {
+        "metadata": {
+            "desc": "General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary"
+        }
+    },
+    "Material": {
+        "name": {
+            "desc": "Identifiable name for the material"
+        },
+        "type": {
+            "desc": "How it was used in the synthesis (e.g., reagent, flux, solvent)"
+        },
+        "formula": {
+            "desc": "Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format"
+        },
+        "supplier": {
+            "desc": "Source of purchase/synthesis (may be internal)"
+        },
+        "cas": {
+            "desc": "CAS ID. May be \"unknown\""
+        },
+        "form": {
+            "desc": "Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments)."
+        },
+        "env": {
+            "desc": "What environment the material is stored in. (e.g., ambient, Ar(g))"
+        },
+        "amount": {
+            "desc": "Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "amount_unit": {
+            "desc": "Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters."
+        },
+        "purity": {
+            "desc": "0 < purity \u2264 1"
+        },
+        "treatments": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis."
+        }
+    },
+    "MetaData": {
+        "fos_id": {
+            "desc": "Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience."
+        },
+        "fos_type": {
+            "desc": "What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates`"
+        },
+        "description": {
+            "desc": "A brief description of the intent for the file (characteristic methods, target products, template category, etc.)."
+        }
+    },
+    "Product": {
+        "name": {
+            "desc": "Identifiable name for the product."
+        },
+        "expected": {
+            "desc": "Whether or not it was expected from the synthesis."
+        },
+        "obtained": {
+            "desc": "Whether or not it was obtained from the synthesis."
+        },
+        "formula": {
+            "desc": "Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format."
+        },
+        "observations": {
+            "desc": "General observations about the product."
+        },
+        "expected_amount": {
+            "desc": "How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "expected_amount_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)"
+        },
+        "obtained_amount": {
+            "desc": "How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "obtained_amount_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume)"
+        },
+        "characterizations": {
+            "desc": "Description of characterization methods used to determine/quantitate the product."
+        },
+        "structure_comments": {
+            "desc": "General description on the structure of the product."
+        }
+    },
+    "Quench": {
+        "medium": {
+            "desc": "What medium the reaction vessel was quenched in (e.g., water, air)."
+        }
+    },
+    "Ramp": {
+        "temp": {
+            "desc": "The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "time": {
+            "desc": "How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "rate": {
+            "desc": "The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "temp_unit": {
+            "desc": "`FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `\"C\"` as degrees celsius as opposed to coulombs)"
+        },
+        "time_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit."
+        },
+        "rate_unit": {
+            "desc": "Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time."
+        }
+    },
+    "Reaction": {
+        "nominal_formula": {
+            "desc": "Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format"
+        },
+        "nominal_amount": {
+            "desc": "Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "nominal_amount_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit."
+        }
+    },
+    "SingleBlock": {
+        "ext": {
+            "desc": "**Do not include in FOS files. This property is automatically created**. This attribute is used to store unexpected properties so that they don't inadvertently overwrite existing methods or attributes."
+        },
+        "rename": {
+            "desc": "A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage."
+        }
+    },
+    "Synthesis": {
+        "metadata": {
+            "desc": "General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary"
+        },
+        "experimenters": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter)"
+        },
+        "reaction": {
+            "desc": "[General reaction information](#reaction)"
+        },
+        "products": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product)"
+        },
+        "materials": {
+            "desc": "A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material)"
+        },
+        "treatments": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)"
+        },
+        "cif": {
+            "desc": "[A single attached CIF file](#attachment)"
+        },
+        "cifs": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment)"
+        },
+        "laboratory_conditions": {
+            "desc": "[General Laboratory Conditions](#singleblock-method-subclasses)"
+        },
+        "equipment": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses)"
+        }
+    },
+    "SynthesisMeta": {
+        "group_id": {
+            "desc": "A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories."
+        },
+        "project_id": {
+            "desc": "An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using \"`/`\" or \"`\\`\" delimiters.*"
+        }
+    },
+    "TemplateBlock": {
+        "template_name": {
+            "desc": "An identifiable name for the template."
+        }
+    },
+    "TemplateSet": {
+        "experimenters": {
+            "desc": "A list of incomplete [`Experimenter` objects](#experimenter)"
+        },
+        "materials": {
+            "desc": "A list of incomplete [`Material` objects](#material)"
+        },
+        "treatments": {
+            "desc": "A list of incomplete [`Treatment` objects](#treatment)"
+        },
+        "annealings": {
+            "desc": "A list of incomplete [`Annealing` objects](#annealing)"
+        },
+        "anneal_sections": {
+            "desc": "A list of incomplete [`AnnealSection` objects](#annealsection)"
+        },
+        "cifs": {
+            "desc": "A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment)"
+        }
+    },
+    "Treatment": {
+        "type": {
+            "desc": "What type of treatment was performed"
+        },
+        "repeats": {
+            "desc": "How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments)"
+        },
+        "observations": {
+            "desc": "General observations"
+        },
+        "recovered_amount": {
+            "desc": "How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/)."
+        },
+        "recovered_amount_unit": {
+            "desc": "`FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit."
+        },
+        "start_time": {
+            "desc": "What time the treatment was started"
+        },
+        "end_time": {
+            "desc": "What time the treatment was finished"
+        }
+    }
+}
