@@ -68,14 +68,15 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Annealing`
 
@@ -87,24 +88,25 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | Rules not found |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | Rules not found |
-| observations | General observations | Rules not found |
-| program | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) | Rules not found |
-| start_temp | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| start_temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
+| type | What type of treatment was performed | No Rules Found |
+| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | No Rules Found |
+| observations | General observations | No Rules Found |
+| program | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) | No Rules Found |
+| start_temp | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| start_temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| start_time | What time the treatment was started | Rules not found |
-| end_time | What time the treatment was finished | Rules not found |
-| gas_flow | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| start_time | What time the treatment was started | No Rules Found |
+| end_time | What time the treatment was finished | No Rules Found |
+| gas_flow | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) | No Rules Found |
 
+---
 
 ### `Attachment`
 
@@ -116,15 +118,15 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | Rules not found |
+| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | Rules not found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
+| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Additional Requirements
 
@@ -134,9 +136,6 @@ In addition to the required properties above, all `Attachment` objects must be c
 - `path`
 
 The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the [attachments guide](../guides/attachments.md) for more information
-
----
-
 
 #### Attachment Method Subclasses
 
@@ -149,13 +148,10 @@ Attachment types are dispatched based on which optional properties they have. Fi
 - `EmbeddedFile`
 - `PathFile`
 
----
-
 ##### File Types
 
-- `CIFFile`
+- `CIFFile`---
 
----
 ### `CIFFile`
 
 [Class Documentation][blockdocs-CIFFile]
@@ -166,16 +162,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | Rules not found |
+| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | Rules not found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
+| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
+---
 
 ### `CSVdata`
 
@@ -192,8 +189,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Dwell`
 
@@ -205,16 +203,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
-| time | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| time | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `EmbeddedFile`
 
@@ -226,16 +225,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | Rules not found |
+| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | Rules not found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
+| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
+---
 
 ### `Equipment`
 
@@ -252,8 +252,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Experimenter`
 
@@ -265,16 +266,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Name of the experimenter | Rules not found |
-| affiliation | Lab/University/Research Group/etc. | Rules not found |
+| name | Name of the experimenter | No Rules Found |
+| affiliation | Lab/University/Research Group/etc. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| orcid | The experimenter's [ORCID](https://orcid.org/) | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| orcid | The experimenter's [ORCID](https://orcid.org/) | No Rules Found |
 
+---
 
 ### `FileBlock`
 
@@ -286,14 +288,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | Rules not found |
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `FlexTemplate`
 
@@ -305,14 +308,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | Rules not found |
+| template_name | An identifiable name for the template. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `GasFlow`
 
@@ -329,8 +333,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `LabConditions`
 
@@ -347,8 +352,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Material`
 
@@ -360,24 +366,25 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the material | Rules not found |
-| type | How it was used in the synthesis (e.g., reagent, flux, solvent) | Rules not found |
-| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | Rules not found |
-| supplier | Source of purchase/synthesis (may be internal) | Rules not found |
-| cas | CAS ID. May be "unknown" | Rules not found |
-| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | Rules not found |
-| env | What environment the material is stored in. (e.g., ambient, Ar(g)) | Rules not found |
-| amount | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| amount_unit | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters. | Rules not found |
+| name | Identifiable name for the material | No Rules Found |
+| type | How it was used in the synthesis (e.g., reagent, flux, solvent) | No Rules Found |
+| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | No Rules Found |
+| supplier | Source of purchase/synthesis (may be internal) | No Rules Found |
+| cas | CAS ID. May be "unknown" | No Rules Found |
+| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | No Rules Found |
+| env | What environment the material is stored in. (e.g., ambient, Ar(g)) | No Rules Found |
+| amount | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| amount_unit | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| purity | 0 < purity ≤ 1 | Rules not found |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| purity | 0 < purity ≤ 1 | No Rules Found |
+| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. | No Rules Found |
 
+---
 
 ### `MetaData`
 
@@ -389,16 +396,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | Rules not found |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | Rules not found |
-| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | Rules not found |
+| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | No Rules Found |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | No Rules Found |
+| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `PathFile`
 
@@ -410,16 +418,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | Rules not found |
+| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | Rules not found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
+| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
+---
 
 ### `Product`
 
@@ -431,24 +440,25 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the product. | Rules not found |
-| expected | Whether or not it was expected from the synthesis. | Rules not found |
-| obtained | Whether or not it was obtained from the synthesis. | Rules not found |
-| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format. | Rules not found |
-| observations | General observations about the product. | Rules not found |
+| name | Identifiable name for the product. | No Rules Found |
+| expected | Whether or not it was expected from the synthesis. | No Rules Found |
+| obtained | Whether or not it was obtained from the synthesis. | No Rules Found |
+| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format. | No Rules Found |
+| observations | General observations about the product. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| expected_amount | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| expected_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | Rules not found |
-| obtained_amount | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| obtained_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | Rules not found |
-| characterizations | Description of characterization methods used to determine/quantitate the product. | Rules not found |
-| structure_comments | General description on the structure of the product. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| expected_amount | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| expected_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
+| obtained_amount | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| obtained_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
+| characterizations | Description of characterization methods used to determine/quantitate the product. | No Rules Found |
+| structure_comments | General description on the structure of the product. | No Rules Found |
 
+---
 
 ### `Quench`
 
@@ -460,15 +470,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
-| medium | What medium the reaction vessel was quenched in (e.g., water, air). | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
+| medium | What medium the reaction vessel was quenched in (e.g., water, air). | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Ramp`
 
@@ -480,19 +491,19 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
 
 #### Required properties
 
@@ -507,16 +518,13 @@ If all three are provided, the last one found during reading will be discarded a
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | Rules not found |
-
-
----
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
 
 
 #### Ramp Method Subclasses
@@ -526,8 +534,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 - `RampNoRate`: overrides [`get_rate()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_rate)
 - `RampNoTemp`: overrides [`get_temp()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_temp)
 - `RampNoTime`: overrides [`get_time()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_time)
-
 ---
+
 ### `RampNoRate`
 
 [Class Documentation][blockdocs-RampNoRate]
@@ -538,20 +546,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
 
+---
 
 ### `RampNoTemp`
 
@@ -563,20 +572,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
 
+---
 
 ### `RampNoTime`
 
@@ -588,20 +598,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | Examples: `"dwell", "ramp", "quench"` | Rules not found |
+| type | Examples: `"dwell", "ramp", "quench"` | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | Rules not found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
 
+---
 
 ### `Reaction`
 
@@ -613,16 +624,17 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| nominal_formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | Rules not found |
-| nominal_amount | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| nominal_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
+| nominal_formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | No Rules Found |
+| nominal_amount | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| nominal_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `SingleBlock`
 
@@ -639,8 +651,9 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Synthesis`
 
@@ -652,23 +665,24 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | Rules not found |
-| experimenters | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) | Rules not found |
-| reaction | [General reaction information](#reaction) | Rules not found |
-| products | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) | Rules not found |
-| materials | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) | Rules not found |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) | Rules not found |
+| metadata | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
+| experimenters | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) | No Rules Found |
+| reaction | [General reaction information](#reaction) | No Rules Found |
+| products | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) | No Rules Found |
+| materials | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) | No Rules Found |
+| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| cif | [A single attached CIF file](#attachment) | Rules not found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | Rules not found |
-| laboratory_conditions | [General Laboratory Conditions](#singleblock-method-subclasses) | Rules not found |
-| equipment | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| cif | [A single attached CIF file](#attachment) | No Rules Found |
+| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | No Rules Found |
+| laboratory_conditions | [General Laboratory Conditions](#singleblock-method-subclasses) | No Rules Found |
+| equipment | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) | No Rules Found |
 
+---
 
 ### `SynthesisMeta`
 
@@ -680,18 +694,19 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | Rules not found |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | Rules not found |
-| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | Rules not found |
-| group_id | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. | Rules not found |
-| project_id | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* | Rules not found |
+| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | No Rules Found |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | No Rules Found |
+| description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | No Rules Found |
+| group_id | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. | No Rules Found |
+| project_id | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `TemplateBlock`
 
@@ -703,13 +718,13 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | Rules not found |
+| template_name | An identifiable name for the template. | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
 `TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
 
@@ -718,9 +733,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 These subclasses don't currently have any additional required properties but will either be expanded in the future or have specialized methods.
 
-- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.reflex) method and [`TemplateList`](../blocks/template.md#FoSpy.blocks.template.TemplateList) construction.
+- `FlexTemplate`: Same functionality as `TemplateBlock`, but automatically interprets missing input as template fields rather than having preset expectations for which fields are unfilled. Used for [`reflex()`](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.reflex) method and [`TemplateList`](../blocks/template.md#FoSpy.blocks.template.TemplateList) construction.---
 
----
 ### `TemplateSet`
 
 [Class Documentation][blockdocs-TemplateSet]
@@ -731,19 +745,19 @@ These subclasses don't currently have any additional required properties but wil
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | Rules not found |
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| experimenters | A list of incomplete [`Experimenter` objects](#experimenter) | Rules not found |
-| materials | A list of incomplete [`Material` objects](#material) | Rules not found |
-| treatments | A list of incomplete [`Treatment` objects](#treatment) | Rules not found |
-| annealings | A list of incomplete [`Annealing` objects](#annealing) | Rules not found |
-| anneal_sections | A list of incomplete [`AnnealSection` objects](#annealsection) | Rules not found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| experimenters | A list of incomplete [`Experimenter` objects](#experimenter) | No Rules Found |
+| materials | A list of incomplete [`Material` objects](#material) | No Rules Found |
+| treatments | A list of incomplete [`Treatment` objects](#treatment) | No Rules Found |
+| annealings | A list of incomplete [`Annealing` objects](#annealing) | No Rules Found |
+| anneal_sections | A list of incomplete [`AnnealSection` objects](#annealsection) | No Rules Found |
+| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | No Rules Found |
 
 #### Optional properties
 
@@ -753,10 +767,10 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | Rules not found |
-
+| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | No Rules Found |
 
 ---
+
 ### `TraceData`
 
 [Class Documentation][blockdocs-TraceData]
@@ -772,8 +786,9 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
 
+---
 
 ### `Treatment`
 
@@ -785,17 +800,18 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | Rules not found |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | Rules not found |
-| observations | General observations | Rules not found |
+| type | What type of treatment was performed | No Rules Found |
+| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | No Rules Found |
+| observations | General observations | No Rules Found |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | Rules not found |
-| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | Rules not found |
-| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | Rules not found |
-| start_time | What time the treatment was started | Rules not found |
-| end_time | What time the treatment was finished | Rules not found |
+| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
+| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| start_time | What time the treatment was started | No Rules Found |
+| end_time | What time the treatment was finished | No Rules Found |
 
+---

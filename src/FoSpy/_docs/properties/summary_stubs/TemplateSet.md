@@ -5,5 +5,3 @@ In contrast with a `Synthesis` file, most top-level properties for a `TemplateSe
 Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.
 
 <prop_table>
-
----

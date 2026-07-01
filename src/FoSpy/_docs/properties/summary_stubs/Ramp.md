@@ -11,9 +11,6 @@ If all three are provided, the last one found during reading will be discarded a
 
 <prop_table>
 
----
-
-
 #### Ramp Method Subclasses
 
 The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:
@@ -21,5 +18,3 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 - `RampNoRate`: overrides [`get_rate()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_rate)
 - `RampNoTemp`: overrides [`get_temp()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_temp)
 - `RampNoTime`: overrides [`get_time()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_time)
-
----

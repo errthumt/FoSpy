@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import os
 
+
 from ... import blocks as blk_module
 
 block_lst = sorted(blk_module.__all__)
@@ -10,6 +11,28 @@ module_dir = Path(os.path.abspath(__file__)).parent
 STUBS_DIR = module_dir / "summary_stubs"
 PROP_DESCS = module_dir / "descriptions.json"
 PREAMBLE = module_dir / "preamble.md"
+
+
+
+def table_dict_to_lines(table_dict):
+    lines = ["| " + " | ".join(table_dict.keys()) + " |\n",
+             "| " + " | ".join(["-"*len(k) for k in table_dict.keys()]) + " |\n"]
+
+    for cells in zip(*table_dict.values()):
+        line = "| " + " | ".join(cells) + " |\n"
+        lines.append(line)
+    lines.append("\n")
+
+    return lines
+
+def _load_all_validators():
+    """Dynamically imports all modules in the validators package to trigger decorators."""
+    import pkgutil
+    import importlib
+    from ...parsing import validators
+    for _, module_name, _ in pkgutil.walk_packages(validators.__path__, validators.__name__ + "."):
+        importlib.import_module(module_name)
+
 
 val_rules = {}
 """
@@ -26,19 +49,8 @@ Possible Validators:
         The validator function is decorated with `@_validator_rules()`, which specifies a list of rules to be mapped in this dictionary.
 """
 
-def table_dict_to_lines(table_dict):
-    lines = ["| " + " | ".join(table_dict.keys()) + " |\n",
-             "| " + " | ".join(["-"*len(k) for k in table_dict.keys()]) + " |\n"]
-
-    for cells in zip(*table_dict.values()):
-        line = "| " + " | ".join(cells) + " |\n"
-        lines.append(line)
-    lines.append("\n")
-
-    return lines
-
-
 def build_tables(cls, descs, force_rules=False):
+    _load_all_validators()
     def empty_gen():
         while True:
             mt = {"Property": [], "Description": [], "Validation Rules": []}
@@ -65,7 +77,9 @@ def build_tables(cls, descs, force_rules=False):
                     raise ValueError(f"No validation rules found for {val}")
                 val_rule = "No Rules Found"
             else:
+                val_rule = val_rule.replace("\n- ", "</li><li>").replace("- ", "<li>") + "</li>"
                 val_rule = val_rule.replace("\n", "<br>")
+                val_rule = f"<ul>{val_rule}</ul>"
             out[key]["Property"].append(prop)
             out[key]["Description"].append(desc)
             out[key]["Validation Rules"].append(val_rule)
@@ -173,6 +187,7 @@ def get_all_props():
 
         if isinstance(cls, type) and issubclass(cls, blk_module.SingleBlock):
             txt += get_summary(STUBS_DIR, cls, descs)
+            txt += "---\n"
 
     return txt
 
@@ -182,4 +197,14 @@ def write_prop_md(md_path):
 
     with open(md_path, "w", encoding="utf-8") as f:
         f.write(preamble + get_all_props())
+
+
+def _validator_rules(*args):
+    from ..._docs.properties import val_rules
+    lst = ["- " + arg for arg in args]
+    txt = "\n".join(lst)
+    def decorator(func, txt=txt):
+        val_rules[func] = txt
+        return func
+    return decorator
 

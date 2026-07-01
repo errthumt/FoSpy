@@ -14,12 +14,4 @@ __all__ = [
     "units",
 ]
 
-def _validator_rules(*args):
-    from ..._docs.properties import val_rules    
-    lst = ["- " + arg for arg in args]
-    txt = "\n".join(lst)
-    def decorator(func, txt=txt):
-        val_rules[func] = txt
-        return func
-    return decorator
     
