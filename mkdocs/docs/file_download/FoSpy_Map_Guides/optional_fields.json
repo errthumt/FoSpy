@@ -31,10 +31,10 @@
     "products": [
         {
             "rename": "products[0].rename",
+            "formula": "products[0].formula",
             "name": "products[0].name",
             "expected": "products[0].expected",
             "obtained": "products[0].obtained",
-            "formula": "products[0].formula",
             "observations": "products[0].observations",
             "expected_amount": "products[0].expected_amount",
             "expected_amount_unit": "products[0].expected_amount_unit",
@@ -45,10 +45,10 @@
         },
         {
             "rename": "products[1].rename",
+            "formula": "products[1].formula",
             "name": "products[1].name",
             "expected": "products[1].expected",
             "obtained": "products[1].obtained",
-            "formula": "products[1].formula",
             "observations": "products[1].observations",
             "expected_amount": "products[1].expected_amount",
             "expected_amount_unit": "products[1].expected_amount_unit",

@@ -63,24 +63,6 @@ documentation](../full/index.md).
         summary:
            functions: true
 ---
-[](){ #blockdocs-Product }
-### `Product`
-::: FoSpy.blocks.metadata.Product
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
-[](){ #blockdocs-ProductList }
-### `ProductList`
-::: FoSpy.blocks.metadata.ProductList
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
 [](){ #blockdocs-Reaction }
 ### `Reaction`
 ::: FoSpy.blocks.metadata.Reaction

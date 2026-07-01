@@ -36,6 +36,15 @@ documentation](../full/index.md).
         summary:
            functions: true
 ---
+[](){ #blockdocs-CompChange }
+### `CompChange`
+::: FoSpy.blocks.treatments.CompChange
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-Dwell }
 ### `Dwell`
 ::: FoSpy.blocks.treatments.Dwell

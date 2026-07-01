@@ -49,9 +49,6 @@ class Reaction(SingleBlock):
         _debug.msg(f"Calculated Nominal MW: {mw:.2f} for Reaction block.")
         self.add_calc_comment("nominal_formula",f"Nominal MW: {mw:.2f} g/mol","Nominal MW")
 
-class Product(SingleBlock):
-    pass
-
 class Experimenter(SingleBlock):
     """
     Represents an an experimenter who worked on a synthesis.
@@ -63,11 +60,6 @@ ExperimenterList = ListBlock.Simple(Experimenter)
 """
 A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
 [`Experimenter` objects][FoSpy.blocks.metadata.Experimenter].
-"""
-ProductList = ListBlock.Simple(Product)
-"""
-A [simple list][FoSpy.blocks.blocks.ListBlock.Simple] of
-[`Product` objects][FoSpy.blocks.metadata.Product].
 """
 
 class LabConditions(SingleBlock):

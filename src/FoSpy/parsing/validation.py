@@ -76,33 +76,43 @@ required_keys = {
     b.Reaction: {
         "nominal_formula": chemformula.ChemFormula,
         "nominal_amount" : validators.numbers.positive_decimal("Reaction/nominal_amount", "nominal_amount"),
-        "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
+        "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]) # TODO: single validator instance for enforcing amount units.
+    },
+
+    b.Chemical: {
+        "formula": chemformula.ChemFormula,
+        "amount": validators.numbers.positive_decimal("b.Chemical/amount", "amount"),
+        "amount_unit": str # TODO: enforce units after formalization of moles and molar ratios.
     },
 
     b.Product: {
         "name": str,
         "expected" : bool,
         "obtained" : bool,
-        "formula": chemformula.ChemFormula,
-        "observations": str
+        "observations": str,
+        "amount": False,
+        "amount_unit": False
     },
 
     b.Material: {
         "name": str,
         "type": str,
-        "formula": chemformula.ChemFormula,
+        "formula": True,
         "supplier": str,
         "cas": str,
         "form": str,
         "env": str,
-        "amount": validators.numbers.positive_decimal("b.Material/amount", "amount"),
-        "amount_unit": str
+        "amount": True,
+        "amount_unit": True
     },
 
     b.Treatment: {
         "type": str,
         "repeats": int,
-        "observations": str
+    },
+
+    b.CompChange: {
+        "repeats": False,
     },
 
     b.AnnealSection: {
@@ -168,10 +178,16 @@ optional_keys = {
     },
 
     b.Treatment: {
+        "observations": str,
         "recovered_amount": validators.numbers.positive_decimal("b.Treatment/recovered_amount", "recovered_amount", True),
         "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,
         "end_time": str
+    },
+
+    b.CompChange: {
+        "add": None,
+        "remove": None
     },
 
     b.Annealing: {

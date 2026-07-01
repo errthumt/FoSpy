@@ -16,10 +16,12 @@ nav:
   - What is a Block?: blocks/index.md
   - attachments: blocks/attachments.md
   - blocks: blocks/blocks.md
+  - chemicals: blocks/chemicals.md
   - data: blocks/data.md
   - files: blocks/files.md
   - materials: blocks/materials.md
   - metadata: blocks/metadata.md
+  - products: blocks/products.md
   - synthesis: blocks/synthesis.md
   - template: blocks/template.md
   - treatments: blocks/treatments.md
@@ -46,10 +48,12 @@ nav:
     - _containers: full/blocks/_containers.md
     - attachments: full/blocks/attachments.md
     - blocks: full/blocks/blocks.md
+    - chemicals: full/blocks/chemicals.md
     - data: full/blocks/data.md
     - files: full/blocks/files.md
     - materials: full/blocks/materials.md
     - metadata: full/blocks/metadata.md
+    - products: full/blocks/products.md
     - synthesis: full/blocks/synthesis.md
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
