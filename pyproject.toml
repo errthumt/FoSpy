@@ -19,7 +19,8 @@ license-files = ["LICEN[CS]E*"]
 dependencies = [
     "pandas",
     "chemformula",
-    "pint"
+    "pint",
+    "tabulate"
 ]
 dynamic = [
     "version"

@@ -70,11 +70,15 @@ ______________________________________________________________________
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -88,23 +92,27 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | <ul><li>Any text entry</li></ul> |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | <ul><li>Any integer (positive or negative)</li></ul> |
-| observations | General observations | <ul><li>Any text entry</li></ul> |
-| program | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`AnnealSection` objects](#annealsection) | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
-| start_temp | The initial temperature of the annealing profile.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| start_temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
+| type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
+| repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
+| observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
+| program | The temperatures and gradients used during annealing. | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
+| start_temp | Initial temperature at start of program. | No Rules Found |
+| start_temp_unit | Units for initial temperature. | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| recovered_amount | How much material was recovered after treatment. | No Rules Found |
+| recovered_amount_unit | Units for treatment recovered amount. | No Rules Found |
 | start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
 | end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
-| gas_flow | A [simple list](#listblock-and-simple-lists) of [`GasFlow` objects](#singleblock-method-subclasses) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
+| gas_flow | Consistent gas flow conditions applied during annealing. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
+
+
 
 ---
 
@@ -118,15 +126,19 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
+| file_name | The name of the attached file (with extension) | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
+| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+
+
 
 #### Additional Requirements
 
@@ -162,15 +174,19 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
+| file_name | The name of the attached file (with extension) | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
+| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+
+
 
 ---
 
@@ -185,11 +201,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -204,14 +224,18 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
-| time | How long the temperature was kept constant in this section.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| time | How long the temperature was kept constant in this section. | No Rules Found |
+| time_unit | Units for dwell time. | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -225,15 +249,19 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
+| file_name | The name of the attached file (with extension) | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
+| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+
+
 
 ---
 
@@ -248,11 +276,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -269,12 +301,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | name | Name of the experimenter | <ul><li>Any text entry</li></ul> |
 | affiliation | Lab/University/Research Group/etc. | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
 | orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
+
+
 
 ---
 
@@ -288,13 +324,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
+| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -308,13 +348,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | <ul><li>Any text entry</li></ul> |
+| template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -329,11 +373,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -348,11 +396,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -366,23 +418,27 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the material | <ul><li>Any text entry</li></ul> |
+| name | A unique name for the material. | <ul><li>Any text entry</li></ul> |
 | type | How it was used in the synthesis (e.g., reagent, flux, solvent) | <ul><li>Any text entry</li></ul> |
-| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | No Rules Found |
-| supplier | Source of purchase/synthesis (may be internal) | <ul><li>Any text entry</li></ul> |
-| cas | CAS ID. May be "unknown" | <ul><li>Any text entry</li></ul> |
-| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (like grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | <ul><li>Any text entry</li></ul> |
-| env | What environment the material is stored in. (e.g., ambient, Ar(g)) | <ul><li>Any text entry</li></ul> |
-| amount | Amount that was used.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| amount_unit | Descriptive unit for amount. Dimensionality may be enforced in the future once more input is gained from experimenters. | <ul><li>Any text entry</li></ul> |
+| formula | Chemical composition. | No Rules Found |
+| supplier | Source of purchase/synthesis | <ul><li>Any text entry</li></ul> |
+| cas | CAS ID | <ul><li>Any text entry</li></ul> |
+| form | Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (e.g., grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments). | <ul><li>Any text entry</li></ul> |
+| env | What atmospheric environment the material is stored in. (e.g., ambient, Ar(g)) | <ul><li>Any text entry</li></ul> |
+| amount | Amount of the material that was used. | No Rules Found |
+| amount_unit | Units for material amount. | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| purity | 0 < purity ≤ 1 | No Rules Found |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment)<br>Any modifications to the material between acquisition and use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| purity | 0 < purity <= 1 | No Rules Found |
+| treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
+
+
 
 ---
 
@@ -396,15 +452,19 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | <ul><li>Any text entry</li></ul> |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | <ul><li>Any text entry</li></ul> |
+| fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -418,15 +478,19 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| file_name | A name for the file that does not contain any incompatible characters ( `\ / : * ? " < > \|`). Must include a valid extension. Some subclasses (like `CIFFile`) are dispatched based on detected file extension. | No Rules Found |
+| file_name | The name of the attached file (with extension) | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| embedded | A list of raw utf-8 line strings copied from the embedded file. See [attachments guide](../guides/attachments.md) for syntax. | No Rules Found |
-| path | Instead of directly embedding contents, refers to a relative path from the folder containing the parent `FileBlock`. Can use relative characters like "." and "..". See [attachments guide](../guides/attachments.md) for more information.<br> `PathPosix` validator is a subclass of `pathlib.Path` which always uses back slashes (`/`) instead of forward slashes (`\`) when serialized, regardless of OS | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| embedded | Attachment content embedded as raw `utf-8` line strings. | No Rules Found |
+| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>A valid relative filepath.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+
+
 
 ---
 
@@ -440,23 +504,27 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| name | Identifiable name for the product. | <ul><li>Any text entry</li></ul> |
-| expected | Whether or not it was expected from the synthesis. | No Rules Found |
-| obtained | Whether or not it was obtained from the synthesis. | No Rules Found |
-| formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format. | No Rules Found |
+| name | A unique name for the product. | <ul><li>Any text entry</li></ul> |
+| expected | Whether or not the product was expected from the synthesis. | No Rules Found |
+| obtained | Whether or not the product obtained from the synthesis. | No Rules Found |
+| formula | Chemical composition | No Rules Found |
 | observations | General observations about the product. | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| expected_amount | How much of the product was nominally expected to be obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| expected_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
-| obtained_amount | How much of the product was actually obtained from the synthesis.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| obtained_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. (In this case mass or volume) | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| expected_amount | How much of the product was nominally expected to be obtained from the synthesis | No Rules Found |
+| expected_amount_unit | Units for product expected amount. | No Rules Found |
+| obtained_amount | How much of the product was actually obtained from the synthesis.. | No Rules Found |
+| obtained_amount_unit | Units for product obtained amount | No Rules Found |
 | characterizations | Description of characterization methods used to determine/quantitate the product. | <ul><li>Any text entry</li></ul> |
-| structure_comments | General description on the structure of the product. | <ul><li>Any text entry</li></ul> |
+| structure_comments | General description of the structure of the product. | <ul><li>Any text entry</li></ul> |
+
+
 
 ---
 
@@ -473,11 +541,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | medium | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -493,17 +565,21 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| temp | The next temperature in the program. | No Rules Found |
+| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
+| temp_unit | Units for ramp temperature. | No Rules Found |
+| time_unit | Units for ramp time. | No Rules Found |
+| rate_unit | Units for ramp rate. | No Rules Found |
+
+
 
 #### Required properties
 
@@ -518,13 +594,13 @@ If all three are provided, the last one found during reading will be discarded a
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| temp | The next temperature in the program. | No Rules Found |
+| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
+| temp_unit | Units for ramp temperature. | No Rules Found |
+| time_unit | Units for ramp time. | No Rules Found |
+| rate_unit | Units for ramp rate. | No Rules Found |
 
 
 #### Ramp Method Subclasses
@@ -548,17 +624,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| temp | The next temperature in the program. | No Rules Found |
+| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
+| temp_unit | Units for ramp temperature. | No Rules Found |
+| time_unit | Units for ramp time. | No Rules Found |
+| rate_unit | Units for ramp rate. | No Rules Found |
+
+
 
 ---
 
@@ -574,17 +654,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| temp | The next temperature in the program. | No Rules Found |
+| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
+| temp_unit | Units for ramp temperature. | No Rules Found |
+| time_unit | Units for ramp time. | No Rules Found |
+| rate_unit | Units for ramp rate. | No Rules Found |
+
+
 
 ---
 
@@ -600,17 +684,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | -------- | ----------- | ---------------- |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| temp | The next temperature in the program.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| time | How long it took to get from the last temperature to the new temperature.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative).<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| temp_unit | `FOSTempUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) which allows a little more coersion of temperature units. (Like recognizing `"C"` as degrees celsius as opposed to coulombs) | No Rules Found |
-| time_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
-| rate_unit | Makes use of [`pint`'s dimensionality properties](https://pint.readthedocs.io/en/stable/) to verify that the value is a unit of temperature over time. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| temp | The next temperature in the program. | No Rules Found |
+| time | Length of time from the previous temperature to the new temperature. | No Rules Found |
+| rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | No Rules Found |
+| temp_unit | Units for ramp temperature. | No Rules Found |
+| time_unit | Units for ramp time. | No Rules Found |
+| rate_unit | Units for ramp rate. | No Rules Found |
+
+
 
 ---
 
@@ -624,15 +712,19 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| nominal_formula | Chemical composition written in a [ChemFormula](https://pypi.org/project/chemformula/) compatible format | No Rules Found |
-| nominal_amount | Total amount expected to be recovered from all participating reactants.<br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| nominal_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| nominal_formula | Total expected chemical composition from all final products. | No Rules Found |
+| nominal_amount | Total amount expected to be recovered from all final products. | No Rules Found |
+| nominal_amount_unit | Units for reaction nominal amount. | No Rules Found |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -647,11 +739,15 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -665,22 +761,26 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Additional requirements from basic [file metadata](#metadata). Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
-| experimenters | A [simple list](#listblock-and-simple-lists) of [`Experimenter` objects](#experimenter) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
-| reaction | [General reaction information](#reaction) | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
-| products | A [simple list](#listblock-and-simple-lists) of [`Product` objects](#product) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Product` objects.](#product)</li></ul> |
-| materials | A [specialized `ListBlock`](#listblock-and-simple-lists) of [`Material` objects](#material) | <ul><li>A [specialized `ListBlock`][blockdocs-MaterialList] of [`Material` objects.](#material)</li></ul> |
-| treatments | A [simple list](#listblock-and-simple-lists) of [`Treatment` objects](#treatment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
+| metadata | General information about the file. | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
+| experimenters | Experimenters who participated in any treatments described in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
+| reaction | General information applying to the entire synthetic reaction. | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
+| products | Products expected or obtained from the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Product` objects.](#product)</li></ul> |
+| materials | Starting chemicals and materials used in the synthesis. | <ul><li>A [specialized `ListBlock`][blockdocs-MaterialList] of [`Material` objects.](#material)</li></ul> |
+| treatments | Sequence of individual actions performed on the materials or active reaction to carry out the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| cif | [A single attached CIF file](#attachment) | No Rules Found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
-| laboratory_conditions | [General Laboratory Conditions](#singleblock-method-subclasses) | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
-| equipment | A [simple list](#listblock-and-simple-lists) of [`Equipment` objects](#singleblock-method-subclasses) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| cif | A single attached CIF file applicable to the entire synthesis. | No Rules Found |
+| cifs | Multiple attached CIF files applicable to the entire synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
+| laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
+| equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
+
+
 
 ---
 
@@ -694,17 +794,21 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| fos_id | Identifiable ID for the synthesis or sample.<br><br>**For [`Synthesis`](#synthesismeta) files:** this should be kept informative and unique within the scope of the project_id, as it may be used as identification for future database storage.<br>**For [`TemplateSet`](#templateset) files:** it is for convenience. | <ul><li>Any text entry</li></ul> |
-| fos_type | What type of `FileBlock` subclass the file should be interpreted as. Expected values are:<br>`synthesis`<br>`templates` | <ul><li>Any text entry</li></ul> |
+| fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
+| fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
-| group_id | A unique identifier for the research group or organization.<br><br>**In the future:** unique group_id values should be standardized and/or issued by a central party to ensure that all future database uploads have a unique index location.<br>**For now:** group_id values can be verified unique by ending with the primary investigator's ORCID (example: kovnir-0000-0003-1152-1912). After standardization, tools will be developed to convert group_id values for entire group repositories. | <ul><li>Any text entry</li></ul> |
-| project_id | An identifier that only needs to be unique within the scope of the group_id. This can be more flexible to the needs of the group, but good practice is to keep synthesis files in a folder structure that matches project_id values. A large experimental group, for example, might categorize syntheses by experimenter then project, or vice versa for intra-collaboration. To avoid future conflicts, name-based categories should be given unique suffixes, like university ID/username or the last 4 digits of the ORCID. Some examples:<br> `travis5672/clathrates`, `travis(errthumt)/pnictides`, `thermoelectrics/travis5672/Ba2-TM5-Pn6`<br><br>***Future Tools** will expect project_ids to reflect folder structure using "`/`" or "`\`" delimiters.* | <ul><li>Any text entry</li></ul> |
+| group_id | The unique identifier for the generating research group or organization. | <ul><li>Any text entry</li></ul> |
+| project_id | Describes the context or purpose of the synthesis within the scope of the `group_id` and/or lead experimenter. | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -718,13 +822,17 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| template_name | An identifiable name for the template. | <ul><li>Any text entry</li></ul> |
+| template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 `TemplateBlock` is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
 
@@ -745,19 +853,23 @@ These subclasses don't currently have any additional required properties but wil
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
+| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| experimenters | A list of incomplete [`Experimenter` objects](#experimenter) | No Rules Found |
-| materials | A list of incomplete [`Material` objects](#material) | No Rules Found |
-| treatments | A list of incomplete [`Treatment` objects](#treatment) | No Rules Found |
-| annealings | A list of incomplete [`Annealing` objects](#annealing) | No Rules Found |
-| anneal_sections | A list of incomplete [`AnnealSection` objects](#annealsection) | No Rules Found |
-| cifs | A [simple list](#listblock-and-simple-lists) of [attached CIF files](#attachment) | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| experimenters | A list of incomplete templates describing experimenters. | No Rules Found |
+| materials | A list of incomplete templates describing materials. | No Rules Found |
+| treatments | A list of incomplete templates describing treatments. | No Rules Found |
+| annealings | A list of incomplete templates describing annealing treatments. | No Rules Found |
+| anneal_sections | A list of incomplete templates describing annealing sections. | No Rules Found |
+| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#enforcedattachment)</li></ul> |
+
+
 
 #### Optional properties
 
@@ -767,7 +879,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| metadata | General information about the file. Lines at the beginning of a FOS-formatted file without a header will automatically be interpreted as a `MetaData` dictionary | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
+| metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 ---
 
@@ -782,11 +894,15 @@ Developers are currently working on ways to flexibly allow any template list in 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
 
+
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+
+
 
 ---
 
@@ -800,18 +916,22 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| type | What type of treatment was performed | <ul><li>Any text entry</li></ul> |
-| repeats | How many times it was performed in succession (if interrupted by other treatments, add a different treatment block after the interrupting treatments) | <ul><li>Any integer (positive or negative)</li></ul> |
-| observations | General observations | <ul><li>Any text entry</li></ul> |
+| type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
+| repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
+| observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
+
+
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
 | -------- | ----------- | ---------------- |
-| rename | A dictionary of old_name:new_name pairs for renaming properties within the `SingleBlock` subclass while keeping them in sync with their validators. Refer to the [code example walkthrough](../examples/code_example/index.md) for usage. | No Rules Found |
-| recovered_amount | How much material was recovered after treatment. <br>Values are attached to the required unit and constructed into a [`pint.Quantity` object](https://pint.readthedocs.io/en/stable/). | No Rules Found |
-| recovered_amount_unit | `FOSUnit` is a [subclass of `pint`'s `Unit`](https://pint.readthedocs.io/en/stable/) with a class method for enforcing the correct dimensionality of the unit. | No Rules Found |
+| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | No Rules Found |
+| recovered_amount | How much material was recovered after treatment. | No Rules Found |
+| recovered_amount_unit | Units for treatment recovered amount. | No Rules Found |
 | start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
 | end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
+
+
 
 ---

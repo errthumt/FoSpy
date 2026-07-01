@@ -207,6 +207,12 @@ class SingleBlock(Block):
     _aliases = None
    
     @classmethod
+    def print_summary(cls, mode="cli"):
+        from .._docs.properties import get_summary
+
+        print(get_summary(cls, mode=mode))
+
+    @classmethod
     def TemplateClass(cls,*args:str):
         """
         Create a template for a subclass of `SingleBlock`.
