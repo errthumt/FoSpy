@@ -42,6 +42,10 @@ nav:
       - map_guides: full/_dev/testing/map_guides.md
       - map_test: full/_dev/testing/map_test.md
       - ui: full/_dev/testing/ui.md
+  - _docs:
+    - _docs/__init__: full/_docs/__init__.md
+    - properties:
+      - properties/__init__: full/_docs/properties/__init__.md
   - blocks:
     - blocks/__init__: full/blocks/__init__.md
     - _blockUtils: full/blocks/_blockUtils.md
