@@ -3,6 +3,7 @@ from pathlib import Path
 import json
 import os
 from warnings import warn
+import textwrap
 
 
 TAB_WIDTH = 80
@@ -15,6 +16,31 @@ PROP_DESCS = module_dir / "descriptions.json"
 PREAMBLE = module_dir / "preamble.md"
 
 CLI_TBL_FMT = "grid"
+
+
+def _wrap_preserving_indent(text, width=40):
+    wrapped_lines = []
+    
+    for line in text.splitlines():
+        # 1. Capture the existing indentation of this specific line
+        indentation = line[:len(line) - len(line.lstrip())]
+        
+        # 2. If the line is empty, just keep it empty
+        if not line.strip():
+            wrapped_lines.append("")
+            continue
+            
+        # 3. Wrap the line, applying the captured indent to subsequent lines
+        # subsequent_indent ensures lines 2, 3, etc. line up with line 1
+        chunks = textwrap.wrap(
+            line, 
+            width=width, 
+            initial_indent="", 
+            subsequent_indent=indentation
+        )
+        wrapped_lines.extend(chunks)
+        
+    return "\n".join(wrapped_lines)
 
 def table_dict_to_lines(table_dict, mode="cli"):
     from tabulate import tabulate
@@ -91,6 +117,8 @@ def diff_descs():
             if desc is None:
                 try:
                     desc = find_desc(blk, prop, get_descs())
+                    if desc is None:
+                        raise Exception
                     blk_diffs["inherited"][prop] = desc
                 except Exception:
                     full_descs[blk_nm].setdefault(prop, {})
@@ -526,15 +554,46 @@ def get_prop_md(force_rules=False):
 
     return txt
 
-def write_prop_md(md_path, delay=False, force_rules=False):
+def write_prop_md(md_path, delay=False, enforce=False):
+    diff_exc = None
+
+    diffs = diff_descs()
+
+    overrides = {}
+    for cls, diff in diffs["block diffs"].items():
+        ovrd = diff.pop("overrided", None)
+        if ovrd:
+            overrides[cls] = ovrd
+    
+    diffs["block diffs"] = {k:v for k,v in diffs["block diffs"].items() if v}
+    
+    if overrides:
+        warning = "The following property descriptions have overridden their parents:\n"
+
+        for cls, ovrd in overrides.items():
+            warning += "  "+cls
+            warning += "\n    ".join([
+                f"{k}: {v}" for k,v in ovrd.items()
+            ])
+            warning += "\n\n"
+
+        warning = _wrap_preserving_indent(warning, width=80)
+        warn(warning)
+
+    if diffs:
+        diff_exc = Exception("Property descriptions are out of sync. See the diff below.")
+
+
     with open(PREAMBLE, "r", encoding="utf-8") as f:
         preamble = f.read()
     
     try:
-        txt = preamble + get_prop_md(force_rules=force_rules)
-        exc = None
+        txt = preamble + get_prop_md(force_rules=enforce)
+        exc = diff_exc
     except Exception as e:
         exc = e
+        if diff_exc is not None:
+            exc = ExceptionGroup("Problem(s) with property documentation.", [exc, diff_exc])
         txt = "Doc build failed:\n\n" + str(e)
 
     def _write(md=md_path, t=txt):

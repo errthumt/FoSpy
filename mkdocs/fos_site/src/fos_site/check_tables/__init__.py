@@ -28,5 +28,5 @@ TEMPLATE_PATH = Path("mkdocs/build_scripts/class_template.md")
 def build_prop_tables(delay=False):
     from FoSpy._docs.properties import write_prop_md
 
-    return write_prop_md(MD_PATH,delay=delay, force_rules=True)
+    return write_prop_md(MD_PATH,delay=delay, enforce=True)
 
