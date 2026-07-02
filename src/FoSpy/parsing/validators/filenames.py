@@ -11,14 +11,26 @@ FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
 basePath = type(Path(""))
 
 @_validator_rules(
-    "A valid relative filepath.",
-    "Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file."
+    "A valid relative filepath to a directory.",
+    "Path is relative to the directory containing the parent `FileBlock`.",
+    '`"."` should be used to indicate the same directory as the parent `FileBlock`.',
+    '`".."` can be used to walk up the directory tree.',
+    "Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.",
+    "Examples for a `FileBlock` at `/home/user/synthesis.fos`:", [
+        "`\".\"` is `/home/user",
+        "`\"..\"` is `/home",
+        "`\"../foo\"` is `/home/foo`",
+        "`\"./bar\"` is `/home/user/bar`",
+    ]
 )
 class PathPosix(basePath):
     def serialize(self, *args, **kwargs):
         return self.as_posix()
 
-
+@_validator_rules(
+    "A valid filename (no path, no separators, allowed characters only).",
+    "Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file."
+)
 def file_name(name: str, sourceDict={}) -> str:
     """
     Validate a filename (no path, no separators, allowed characters only).
