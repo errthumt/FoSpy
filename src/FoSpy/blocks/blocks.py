@@ -1466,14 +1466,17 @@ class ListBlock(Block):
                 accepts.
         """
         from .._docs.properties import _validator_rules
+        from ._blockUtils import _get_docs_link
 
         if not issubclass(reqCls, SingleBlock):
             raise TypeError("reqCls must be a subclass of SingleBlock")
         if cls._reqCls is not None:
             raise TypeError("You cannot create a simple subclass of another ListBlock subclass.")
-        
+
+        link = _get_docs_link(reqCls)
+
         @_validator_rules(
-            f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.](#{reqCls.__name__.lower()})"
+            f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.]{link}"
         )
         class SimpleSub(cls):
             _reqCls = reqCls

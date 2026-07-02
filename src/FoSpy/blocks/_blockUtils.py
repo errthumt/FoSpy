@@ -109,8 +109,9 @@ def _get_block_classes(module):
 
             if issubclass(obj, ListBlock) and obj not in val_rules:
                 reqCls = obj._reqCls or SingleBlock
+                link = _get_docs_link(reqCls)
                 _ = _validator_rules(
-                    f"A [specialized `ListBlock`][blockdocs-{obj.__name__}] of [`{reqCls.__name__}` objects.](#{reqCls.__name__.lower()})"
+                    f"A [specialized `ListBlock`][blockdocs-{obj.__name__}] of [`{reqCls.__name__}` objects.]{link}"
                 )(obj)
 
     return __block_classes__
@@ -152,5 +153,28 @@ def _merge_vals(current, prop_mro, idx):
 
     return merged
     
+def _get_docs_link(reqCls):
+    # Try to find the closest parent to reqCls that has a heading in property documentation
+    import inspect
+    import sys
+    docs_cls = None
+    # Iterate through the MRO cleanly using a standard loop
+    for ancestor in inspect.getmro(reqCls):
+        # Skip built-in base types entirely since they won't have doc headings
+        if ancestor.__module__ == "builtins":
+            continue
 
+        # Look up the already-loaded module directly from sys.modules
+        module = sys.modules.get(ancestor.__module__)
+        if module and getattr(module, ancestor.__name__, None) is ancestor:
+            docs_cls = ancestor
+            break  # Found the closest documented heading, stop searching
+
+    # Build the output link based on the search results
+    if docs_cls is not None:
+        link = f"(#{docs_cls.__name__.lower()})"
+    else:
+        link = f"[{reqCls.__module__}] (Dynamically created block class.)"
+
+    return link
 
