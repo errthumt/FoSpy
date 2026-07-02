@@ -31,21 +31,21 @@
     },
     "Chemical": {
         "amount": {
-            "desc": null
+            "desc": "Amount of the chemical."
         },
         "amount_unit": {
-            "desc": null
+            "desc": "Units for chemical amount."
         },
         "formula": {
-            "desc": null
+            "desc": "Molecular composition."
         }
     },
     "CompChange": {
         "add": {
-            "desc": null
+            "desc": "Chemicals that were added to the active reaction during this treatment."
         },
         "remove": {
-            "desc": null
+            "desc": "Chemicals that were removed from the active reaction during this treatment."
         }
     },
     "Dwell": {

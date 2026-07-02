@@ -5,6 +5,8 @@ import os
 from warnings import warn
 import textwrap
 
+from contextlib import contextmanager
+
 
 TAB_WIDTH = 80
 PROP_URL = "https://errthumt.github.io/FoSpy/latest/expected/"
@@ -176,7 +178,7 @@ Possible Validators:
         The validator function is decorated with `@_validator_rules()`, which specifies a list of rules to be mapped in this dictionary.
 """
 
-def build_tables(cls, descs, force_rules=False, mode="cli", urls={}, crossrefs={}):
+def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
     _load_all_validators()
     def empty_gen():
         while True:
@@ -191,32 +193,39 @@ def build_tables(cls, descs, force_rules=False, mode="cli", urls={}, crossrefs={
 
     optional = cls.build_validators()
 
+    exceptions = []
     for (key, val_set) in (("req",required), ("opt",optional)):
         for prop, val in val_set.items():
-            if prop == "ext":
-                continue
-            if key == "req":
-                optional.pop(prop, None)
-            desc = find_desc(cls, prop, descs)
+            try:
+                if prop == "ext":
+                    continue
+                if key == "req":
+                    optional.pop(prop, None)
+                desc = find_desc(cls, prop, descs)
 
-            if mode == "cli":
-                desc, urls, crossrefs = _strip_links(desc, urls=urls, crossrefs=crossrefs)
-
-            val_rule = val_rules.get(val, None)
-            if val_rule is None:
-                if force_rules:
-                    raise ValueError(f"No validation rules found for {val}")
-                val_rule = "No Rules Found"
-            else:
-                val_rule = _val_rules_to_txt(val_rule, mode=mode)
                 if mode == "cli":
-                    val_rule, urls, crossrefs = _strip_links(val_rule, urls=urls, crossrefs=crossrefs)
-                # val_rule = val_rule.replace("\n- ", "</li><li>").replace("- ", "<li>") + "</li>"
-                # val_rule = val_rule.replace("\n", "<br>")
-                # val_rule = f"<ul>{val_rule}</ul>"
-            out[key]["Property"].append(prop)
-            out[key]["Description"].append(desc)
-            out[key]["Validation Rules"].append(val_rule)
+                    desc, urls, crossrefs = _strip_links(desc, urls=urls, crossrefs=crossrefs)
+
+                val_rule = val_rules.get(val, None)
+                if val_rule is None:
+                    if enforce:
+                        raise ValueError(f"No validation rules found for {val.__name__}")
+                    val_rule = "No Rules Found"
+                else:
+                    val_rule = _val_rules_to_txt(val_rule, mode=mode)
+                    if mode == "cli":
+                        val_rule, urls, crossrefs = _strip_links(val_rule, urls=urls, crossrefs=crossrefs)
+                    # val_rule = val_rule.replace("\n- ", "</li><li>").replace("- ", "<li>") + "</li>"
+                    # val_rule = val_rule.replace("\n", "<br>")
+                    # val_rule = f"<ul>{val_rule}</ul>"
+                out[key]["Property"].append(prop)
+                out[key]["Description"].append(desc)
+                out[key]["Validation Rules"].append(val_rule)
+            except Exception as e:
+                exceptions.append(e)
+
+    if exceptions:
+        raise ExceptionGroup(f"Error(s) occured while building table for {cls.__name__}.", exceptions)
 
     return out, urls, crossrefs
 
@@ -442,7 +451,7 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
 
 
 
-def get_summary(cls, force_rules=False, mode="cli"):
+def get_summary(cls, enforce=False, mode="cli"):
     cls_nm = cls.__name__
     parent_nm = cls.__bases__[0].__name__
 
@@ -455,13 +464,53 @@ def get_summary(cls, force_rules=False, mode="cli"):
     }
     crossrefs = {}
 
-    tables, urls, crossrefs = build_tables(cls, descs, force_rules=force_rules, mode=mode, urls=urls, crossrefs=crossrefs)
-    req_tb_lines = table_dict_to_lines(tables["req"], mode=mode)
-    opt_tb_lines = table_dict_to_lines(tables["opt"], mode=mode)
+    exceptions = []
+
+    # @contextmanager
+    # def try_summary(step, fallback_func=lambda: None):
+    #     try:
+    #         yield
+    #     except Exception as e:
+    #         exceptions.append(Exception(f"Error on summary step: {step}", e))
+    #         yield fallback_func()
+
+    def try_summary_call(step, fallback, func, *args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            exc = Exception(f"Error on summary step: {step}")
+            exc.__cause__ = e
+            exceptions.append(exc)
+            return fallback
+
+    tables, urls, crossrefs = try_summary_call(
+        "Building table dicts", 
+        ({"req": {}, "opt": {}}, {}, {}),
+        build_tables,
+        cls, descs, enforce=enforce, mode=mode,
+        urls=urls, crossrefs=crossrefs
+    )
+
+    req_tb_lines = try_summary_call(
+        "Building required table lines", [], 
+        table_dict_to_lines,
+        tables["req"], mode=mode
+    )
+
+    opt_tb_lines = try_summary_call(
+        "Building optional table lines", [], 
+        table_dict_to_lines,
+        tables["opt"], mode=mode
+    )
+
 
     stub_path = temp_dir / f"{cls_nm}.md"
 
-    full_summary = _get_header_lines(cls_nm, parent_nm, mode=mode)
+    full_summary = try_summary_call(
+        "Getting header lines", None,
+        _get_header_lines,
+        cls_nm, parent_nm, mode=mode)
+    full_summary = [] if full_summary is None else full_summary
 
     temp_lines = []
 
@@ -471,53 +520,76 @@ def get_summary(cls, force_rules=False, mode="cli"):
     else:
         template_lines = []
 
-    req_hd_found = False
-    req_tb_found = False
+    found = {k: False for k in ["req_hd", "req_tb", "opt_hd", "opt_tb"]}
 
-    opt_hd_found = False
-    opt_tb_found = False
+    def _hd_balanced(found):
+        return (
+            found["req_hd"] == found["req_tb"] and
+            found["opt_hd"] == found["opt_tb"]
+        )
 
-    for line in template_lines:
+    def _process_line(line):
         stripped = line.strip()
 
         if (line.startswith("#") and
-            not (
-                req_hd_found == req_tb_found and
-                opt_hd_found == opt_tb_found
-            )):
+            not _hd_balanced(found)):
             raise Exception("Property table headers must be accompanied by a table placeholder")
 
         if stripped.endswith("# Required properties"):
-            if req_hd_found:
-                Exception("Duplicate required properties header")
-            req_hd_found = True
+            if found["req_hd"]:
+                raise Exception("Duplicate required properties header")
+            found["req_hd"] = True
 
         if stripped.endswith("# Optional properties"):
-            if opt_hd_found:
+            if found["opt_hd"]:
                 raise Exception("Duplicate optional properties header")
-            opt_hd_found = True
+            elif not found["req_hd"] and tables["req"] != {}:
+                raise Exception("Optional properties header found without preceding required properties header")
+            found["opt_hd"] = True
 
         if stripped == "<prop_table>":
-            if opt_hd_found:
-                opt_tb_found = True
-                temp_lines.extend(req_tb_lines)
-            elif req_hd_found:
-                req_tb_found = True
+            if _hd_balanced(found) or (
+                not found["req_hd"] and not found["opt_hd"]
+            ):
+                raise Exception("Unexpected property table placeholder")
+            if found["opt_hd"]:
+                found["opt_tb"] = True
                 temp_lines.extend(opt_tb_lines)
+            elif found["req_hd"]:
+                found["req_tb"] = True
+                temp_lines.extend(req_tb_lines)
             else:
+                # Shouldn't get here
                 raise Exception("Property table placeholder found without preceding header")
 
-            continue
+            return
 
         temp_lines.append(line)
 
-    if not (req_hd_found and
+    for i, line in enumerate(template_lines):
+        try_summary_call(
+            f"Processing line {i+1}: {line}", None,
+            _process_line, line
+        )
+
+    if not _hd_balanced(found):
+        if found["req_hd"] and not found["req_tb"]:
+            found["req_tb"] = True
+            temp_lines.extend(req_tb_lines)
+        elif found["opt_hd"] and not found["opt_tb"]:
+            found["opt_tb"] = True
+            temp_lines.extend(opt_tb_lines)
+        else:
+            # Shouldn't get here
+            exceptions.append(Exception("Property table headers and placeholders not balanced"))
+
+    if not (found["req_hd"] and
             any(col==[] for col in tables["req"].values())):
         full_summary.append("#### Required properties\n\n")
         full_summary.extend(req_tb_lines)
         full_summary.append("\n\n")
 
-    if not (opt_hd_found and
+    if not (found["opt_hd"] and
             any(col==[] for col in tables["opt"].values())):
         full_summary.append("#### Optional properties\n\n")
         full_summary.extend(opt_tb_lines)
@@ -527,9 +599,11 @@ def get_summary(cls, force_rules=False, mode="cli"):
 
     txt = "".join(full_summary)
 
-
-
     txt = _md_to_mode(txt, mode=mode, urls=urls, crossrefs=crossrefs)
+
+    if exceptions:
+        raise ExceptionGroup(f"Summary generation for {cls_nm} failed", exceptions)
+
     return txt
 
 def get_descs():
@@ -537,20 +611,26 @@ def get_descs():
         descs = json.load(f)
     return descs
 
-def get_prop_md(force_rules=False):
+def get_prop_md(enforce=False):
     from ... import blocks as blk_module
 
     block_lst = sorted(blk_module.__all__)
 
     txt = "\n## Expected Property Tables\n"
 
-
+    exceptions = []
     for cls_nm in block_lst:
         cls = getattr(blk_module, cls_nm)
 
         if isinstance(cls, type) and issubclass(cls, blk_module.SingleBlock):
-            txt += get_summary(cls, mode="md-tb", force_rules=force_rules)
-            txt += "---\n"
+            try:
+                txt += get_summary(cls, mode="md-tb", enforce=enforce)
+                txt += "---\n"
+            except Exception as e:
+                exceptions.append(e)
+
+    if exceptions:
+        raise ExceptionGroup("Property markdown generation failed", exceptions)
 
     return txt
 
@@ -571,7 +651,7 @@ def write_prop_md(md_path, delay=False, enforce=False):
         warning = "The following property descriptions have overridden their parents:\n"
 
         for cls, ovrd in overrides.items():
-            warning += "  "+cls
+            warning += "  "+cls+"\n"
             warning += "\n    ".join([
                 f"{k}: {v}" for k,v in ovrd.items()
             ])
@@ -580,18 +660,23 @@ def write_prop_md(md_path, delay=False, enforce=False):
         warning = _wrap_preserving_indent(warning, width=80)
         warn(warning)
 
-    if diffs:
-        exc = Exception(f"Property descriptions are out of sync. Diff:\n{diffs}")
+    diffs = {k:v for k,v in diffs.items() if v}
 
+    exc = Exception(
+        f"Property descriptions are out of sync. Diff:\n{diffs}"
+        ) if diffs else None
 
     with open(PREAMBLE, "r", encoding="utf-8") as f:
         preamble = f.read()
     try:
-        txt = preamble + get_prop_md(force_rules=enforce)
+        txt = preamble + get_prop_md(enforce=enforce)
         exc = diff_exc
     except Exception as e:
-        if exc is not None:
-            exc = ExceptionGroup("Problem(s) with property documentation.", [exc, e])
+        txt = ""
+        exc = ExceptionGroup(
+            "Problem(s) with property documentation.",
+            [exc, e]) if exc is not None else e
+        
     
     if exc is not None:
         import traceback
