@@ -736,7 +736,10 @@ def _val_rules_to_txt(rules, mode="cli", indent=0):
         else:
             if mode not in ("cli", "md"):
                 warn(f"Unrecognized mode: {mode}. Defaulting to markdown/CLI formatting for list.")
-            txt += f"{' '*indent}- {i_txt}\n"
+            if isinstance(rule, (list, tuple)) and i_txt.strip().startswith("- "):
+                txt += f"{'  '*indent}{i_txt}\n"
+            else:
+                txt += f"{'  '*indent}- {i_txt}\n"
     return txt
     
 
