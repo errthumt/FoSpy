@@ -581,24 +581,31 @@ def write_prop_md(md_path, delay=False, enforce=False):
         warn(warning)
 
     if diffs:
-        diff_exc = Exception("Property descriptions are out of sync. See the diff below.")
+        exc = Exception(f"Property descriptions are out of sync. Diff:\n{diffs}")
 
 
     with open(PREAMBLE, "r", encoding="utf-8") as f:
         preamble = f.read()
-    
     try:
         txt = preamble + get_prop_md(force_rules=enforce)
         exc = diff_exc
     except Exception as e:
-        exc = e
-        if diff_exc is not None:
-            exc = ExceptionGroup("Problem(s) with property documentation.", [exc, diff_exc])
-        txt = "Doc build failed:\n\n" + str(e)
+        if exc is not None:
+            exc = ExceptionGroup("Problem(s) with property documentation.", [exc, e])
+    
+    if exc is not None:
+        import traceback
+        txt = "".join(
+            traceback.format_exception(
+                type(exc), exc, exc.__traceback__
+            )
+        )
 
     def _write(md=md_path, t=txt):
         with open(md, "w", encoding="utf-8") as f:
+
             f.write(t)
+
     
     if delay:
         return exc, _write
