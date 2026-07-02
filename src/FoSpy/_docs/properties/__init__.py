@@ -680,7 +680,12 @@ def write_prop_md(md_path, delay=False, enforce=False):
     
     if exc is not None:
         import traceback
-        txt = "".join(
+        txt = ""
+
+        if overrides:
+            txt += warning + "\n\n"
+
+        txt += "".join(
             traceback.format_exception(
                 type(exc), exc, exc.__traceback__
             )
