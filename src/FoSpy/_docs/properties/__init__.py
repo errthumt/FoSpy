@@ -651,7 +651,7 @@ def write_prop_md(md_path, delay=False, enforce=False):
         warning = "The following property descriptions have overridden their parents:\n"
 
         for cls, ovrd in overrides.items():
-            warning += "  "+cls+"\n"
+            warning += "  "+cls+"\n    "
             warning += "\n    ".join([
                 f"{k}: {v}" for k,v in ovrd.items()
             ])
