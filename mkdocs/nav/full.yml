@@ -82,7 +82,6 @@ nav:
     - validators:
       - validators/__init__: full/parsing/validators/__init__.md
       - filenames: full/parsing/validators/filenames.md
-      - material: full/parsing/validators/material.md
       - numbers: full/parsing/validators/numbers.md
       - rename: full/parsing/validators/rename.md
       - units: full/parsing/validators/units.md
