@@ -1,5 +1,6 @@
 from pint import Quantity, Unit
 import numpy as np
+from ..._docs.properties import _validator_rules
 
 class FOSUnit(Unit):
     def __init__(self, unitlike, allow_dims=[]):

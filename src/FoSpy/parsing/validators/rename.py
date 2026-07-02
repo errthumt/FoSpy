@@ -1,3 +1,13 @@
+from ..._docs.properties import _validator_rules
+
+@_validator_rules(
+    "A dictionary of key:value string pairs",
+    "Keys starting with \"`_`\" are ignored.",
+    "Keys must be expected property names for the block.",[
+        "For unexpected (custom) keys, renaming is not necessary."
+    ],
+    "Values cannot be registered property names."
+)
 def rename_dict(nameDict, cls):
     from FoSpy.blocks.blocks import SingleBlock
     if not isinstance(nameDict, dict):
