@@ -11,14 +11,15 @@ FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
 basePath = type(Path(""))
 
 @_validator_rules(
+    "Mutually exclusive with `embedded` property.",
     "A valid relative filepath to a directory.",
     "Path is relative to the directory containing the parent `FileBlock`.",
     '"`.`" should be used to indicate the same directory as the parent `FileBlock`.',
     '"`..`" can be used to walk up the directory tree.',
     "Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.",
     "Examples for a `FileBlock` at `/home/user/synthesis.fos`:", [
-        "\"`.`\" is `/home/user",
-        "\"`..`\" is `/home",
+        "\"`.`\" is `/home/user`",
+        "\"`..`\" is `/home`",
         "\"`../foo`\" is `/home/foo`",
         "\"`./bar`\" is `/home/user/bar`",
     ]
@@ -26,6 +27,14 @@ basePath = type(Path(""))
 class PathPosix(basePath):
     def serialize(self, *args, **kwargs):
         return self.as_posix()
+
+@_validator_rules(
+    "Mutually exclusive with `path` property.",
+    "Attachment content as a list of raw `utf-8` line strings."
+)
+def embedded_lines(lines):
+    return list(lines)
+
 
 @_validator_rules(
     "A valid filename (no path, no separators, allowed characters only).",

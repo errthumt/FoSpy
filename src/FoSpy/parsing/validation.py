@@ -148,7 +148,7 @@ functions."""
 
 optional_keys = {
     b.Attachment: {
-        "embedded": list,
+        "embedded": validators.filenames.embedded_lines,
         "path": validators.filenames.PathPosix
     }, 
     b.SingleBlock: {
