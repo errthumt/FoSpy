@@ -1,5 +1,5 @@
 from ._blockUtils import _calc_routine
-from .blocks import SingleBlock
+from .blocks import SingleBlock, ListBlock
 
 from .._debug import Debug
 _debug = Debug()
@@ -20,3 +20,8 @@ class Chemical(SingleBlock):
         _debug.msg(f"Adding molecular weight to chemical: {self.formula}")
         mw = self.formula.formula_weight
         self.add_calc_comment("formula",f"Molecular Weight: {mw:.2f} g/mol", "add_MW")
+
+class ChemChange(Chemical):
+    pass
+
+ChemChangeList = ListBlock.Simple(ChemChange)

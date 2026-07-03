@@ -80,7 +80,10 @@ required_keys = {
     },
 
     b.Chemical: {
-        "formula": chemformula.ChemFormula,
+        "formula": chemformula.ChemFormula
+    },
+
+    b.ChemChange: {
         "amount": validators.numbers.positive_decimal("b.Chemical/amount", "amount"),
         "amount_unit": str # TODO: enforce units after formalization of moles and molar ratios.
     },
@@ -90,8 +93,6 @@ required_keys = {
         "expected" : bool,
         "obtained" : bool,
         "observations": str,
-        "amount": False,
-        "amount_unit": False
     },
 
     b.Material: {
@@ -102,8 +103,8 @@ required_keys = {
         "cas": str,
         "form": str,
         "env": str,
-        "amount": True,
-        "amount_unit": True
+        "amount": validators.numbers.positive_decimal("b.Chemical/amount", "amount"),
+        "amount_unit": str # TODO: enforce units after formalization of moles and molar ratios.
     },
 
     b.Treatment: {
@@ -113,6 +114,7 @@ required_keys = {
 
     b.CompChange: {
         "repeats": False,
+        "changes": b.ChemChangeList
     },
 
     b.AnnealSection: {
@@ -183,11 +185,6 @@ optional_keys = {
         "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,
         "end_time": str
-    },
-
-    b.CompChange: {
-        "add": None,
-        "remove": None
     },
 
     b.Annealing: {

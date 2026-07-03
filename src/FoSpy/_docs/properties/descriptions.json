@@ -29,23 +29,22 @@
             "desc": "The filepath to the attached file, relative to the directory containing the parent `FileBlock`."
         }
     },
-    "Chemical": {
+    "ChemChange": {
         "amount": {
-            "desc": "Amount of the chemical."
+            "desc": "The sign-sensitive amount of this chemical that was added (positive) or removed (negative)."
         },
         "amount_unit": {
-            "desc": "Units for chemical amount."
-        },
+            "desc": "Units for comp change amount."
+        }
+    },
+    "Chemical": {
         "formula": {
             "desc": "Molecular composition."
         }
     },
     "CompChange": {
-        "add": {
-            "desc": "Chemicals that were added to the active reaction during this treatment."
-        },
-        "remove": {
-            "desc": "Chemicals that were removed from the active reaction during this treatment."
+        "changes": {
+            "desc": "A list of chemicals that were added or removed from the active reaction in this step."
         }
     },
     "Dwell": {
