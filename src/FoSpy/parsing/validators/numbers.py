@@ -28,6 +28,12 @@ def positive_decimal(label, value_key, require_unit=False):
             
 
 def decimal_range(label, value_key, lower=0, upper=1, include_lower=False, include_upper=True, require_unit=False):
+    rules = [
+        "Decimal value within range:",
+        [f"{lower} <{'=' if include_lower else ''} val <{'=' if include_upper else ''} {upper}"]
+    ]
+
+    @_validator_rules(*rules)
     def func(val, sourceDict=None):
         try:
             value = Decimal(val)
@@ -46,12 +52,17 @@ def decimal_range(label, value_key, lower=0, upper=1, include_lower=False, inclu
         return value
     
     if require_unit:
+        rules.append(f"Requires that `{value_key}_unit` also be present")
+        @_validator_rules(*rules)
         def unit_func(val, cls=None, sourceDict=None):
             return attach_unit(func(val), value_key, cls, sourceDict)
         return unit_func
     return func
 
 def any_decimal(label, value_key, require_unit=False):
+    rules = ["Any decimal value (positive or negative)"]
+
+    @_validator_rules(*rules)
     def func(val, sourceDict=None):
         try:
             value = Decimal(val)
@@ -60,6 +71,8 @@ def any_decimal(label, value_key, require_unit=False):
         return value
     
     if require_unit:
+        rules.append(f"Requires that `{value_key}_unit` also be present")
+        @_validator_rules(*rules)
         def unit_func(val, cls=None, sourceDict=None):
             return attach_unit(func(val), value_key, cls, sourceDict)
         return unit_func
