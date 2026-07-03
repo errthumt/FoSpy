@@ -26,7 +26,7 @@ class FOSUnit(Unit):
 
         @_validator_rules(
             "Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) "
-            "With additional rules enforcing the correct dimensionality of the unit."
+            "With additional rules enforcing the correct dimensionality of the unit.",
             "Allowed dimensions:",
             dim_rules
         )
@@ -52,7 +52,7 @@ class FOSTempUnit(FOSUnit):
 
 @_validator_rules(
     "Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) "
-    "With more flexibility for recognizing temperature units.",
+    "with more flexibility for recognizing temperature units.",
     "Must be a recognizable unit for temperature *over time*."
 )
 def temp_rate_unit(unitlike):

@@ -732,7 +732,10 @@ def _val_rules_to_txt(rules, mode="cli", indent=0):
             if i == 0:
                 txt += "<ul>"
             
-            txt += f"<li>{i_txt}</li>"
+            if i_txt.startswith("<ul>"):
+                txt = txt[:-5] + i_txt + txt[-5:]
+            else:
+                txt += f"<li>{i_txt}</li>"
 
             if i == len(rules)-1:
                 txt += "</ul>"

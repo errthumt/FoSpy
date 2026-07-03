@@ -163,29 +163,20 @@
     "cif": {
         "rename": "cif.rename",
         "file_name": "cif.file_name",
-        "embedded": [
-            "cif.embedded[0]",
-            "cif.embedded[1]"
-        ],
+        "embedded": "cif.embedded",
         "path": "cif.path"
     },
     "cifs": [
         {
             "rename": "cifs[0].rename",
             "file_name": "cifs[0].file_name",
-            "embedded": [
-                "cifs[0].embedded[0]",
-                "cifs[0].embedded[1]"
-            ],
+            "embedded": "cifs[0].embedded",
             "path": "cifs[0].path"
         },
         {
             "rename": "cifs[1].rename",
             "file_name": "cifs[1].file_name",
-            "embedded": [
-                "cifs[1].embedded[0]",
-                "cifs[1].embedded[1]"
-            ],
+            "embedded": "cifs[1].embedded",
             "path": "cifs[1].path"
         }
     ],
