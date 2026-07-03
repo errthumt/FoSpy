@@ -87,9 +87,6 @@
         "form": {
             "desc": "Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (e.g., grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments)."
         },
-        "formula": {
-            "desc": "Chemical composition."
-        },
         "name": {
             "desc": "A unique name for the material."
         },
@@ -129,9 +126,6 @@
         },
         "expected_amount_unit": {
             "desc": "Units for product expected amount."
-        },
-        "formula": {
-            "desc": "Chemical composition"
         },
         "name": {
             "desc": "A unique name for the product."
