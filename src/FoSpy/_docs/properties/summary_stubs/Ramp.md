@@ -11,6 +11,11 @@ If all three are provided, the last one found during reading will be discarded a
 <prop_table>
 
 
+#### Optional properties
+
+<prop_table>
+
+
 #### Ramp Method Subclasses
 
 The following subclasses are dispatched based on the redundant parameter (see [Required Properties](#ramp) above) and override the retrieval method to calculate the missing parameter instead of getting it from attributes:

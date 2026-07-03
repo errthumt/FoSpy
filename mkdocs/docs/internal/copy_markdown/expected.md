@@ -182,11 +182,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -307,11 +302,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -384,11 +374,6 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -401,11 +386,6 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 [Class Documentation][blockdocs-LabConditions]
 
 **[Subclass of `SingleBlock`](#singleblock)**
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
 
 #### Optional properties
 
@@ -542,6 +522,14 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 
 #### Required properties
 
+During construction of a `Ramp` object, it is required to have at least 2 of the following optional properties, with their respective units:
+
+- `temp`
+- `time`
+- `rate`
+
+If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dispatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
+
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|----------------------------------|
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
@@ -557,20 +545,6 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | temp_unit | Units for ramp temperature. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature.</li></ul> |
 | time_unit | Units for ramp time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
 | rate_unit | Units for ramp rate. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) with more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature *over time*.</li></ul> |
-
-#### Required properties
-
-During construction of a `Ramp` object, it is required to have at least 2 of the following optional properties, with their respective units:
-
-- `temp`
-- `time`
-- `rate`
-
-If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dispatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
-
-| Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
-| type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Ramp Method Subclasses
 
@@ -681,11 +655,6 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 [Class Documentation][blockdocs-SingleBlock]
 
 **[Subclass of `Block`][blockdocs-Block]**
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
 
 #### Optional properties
 
@@ -798,11 +767,6 @@ Developers are currently working on ways to flexibly allow any template list in 
 [Class Documentation][blockdocs-TraceData]
 
 **[Subclass of `SingleBlock`](#singleblock)**
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|------------|---------------|--------------------|
 
 #### Optional properties
 
