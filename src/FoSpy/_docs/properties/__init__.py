@@ -605,13 +605,13 @@ def get_summary(cls, enforce=False, mode="cli"):
             # Shouldn't get here
             exceptions.append(Exception("Property table headers and placeholders not balanced"))
 
-    if not (found["req_hd"] and
+    if not (found["req_hd"] or
             any(col==[] for col in tables["req"].values())):
         full_summary.append("#### Required properties\n\n")
         full_summary.extend(req_tb_lines)
         full_summary.append("\n\n")
 
-    if not (found["opt_hd"] and
+    if not (found["opt_hd"] or
             any(col==[] for col in tables["opt"].values())):
         full_summary.append("#### Optional properties\n\n")
         full_summary.extend(opt_tb_lines)
