@@ -68,19 +68,22 @@ def fill_properties(block_dict, **kwargs):
     return current_dict
 
 def build_property_dict(data, key_map, current={}):
-    """
-    Build a property dictionary from a data dictionary and a mapping dictionary.
+    """Map FoS property abbreviations to values.
+
+    The output dictionary uses abbreviations for nested structures in the FOS
+    format. For example, `{"foo[0].bar": 1}` -> `{"foo" : [ {"bar": 1} ] }`.
 
     Args:
-        data_dict (dict): The data dictionary containing the values.
+        data (dict): Any JSON-like data structure.
         
-        map_dict (dict):
-            The mapping dictionary mirroring the structure of the data
-            dictionary, where values are replaced with destination property
-            names to be passed to `fill_properties()`.
+        key_map (dict):
+            A mirror of the data structure, where values are replaced with FoS
+            property abbreviations.
+        current (dict, optional):
+            Maintains changes on recursion. Defaults to {}.
 
     Returns:
-        dict: The constructed property dictionary.
+        dict: Flattened dictionary mapping abbreviated FoS properties to values.
     """
     property_dict = current
     if isinstance(key_map, str):

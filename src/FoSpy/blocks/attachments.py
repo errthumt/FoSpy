@@ -3,6 +3,7 @@ from .blocks import SingleBlock, ListBlock
 from .._debug import Debug
 
 from .._errors import AttachmentTypeError, FileBlockNotFoundError
+from .._docs.properties import _validator_rules, val_rules
 
 _debug = Debug()
 
@@ -50,6 +51,9 @@ class Attachment(SingleBlock):
 
     @classmethod
     def enforce_subtype(cls, subcls, **kwargs):
+        @_validator_rules(
+            val_rules.get(subcls)
+        )
         class EnforcedAttachment(cls):
             enforced_subtype = subcls
             pass

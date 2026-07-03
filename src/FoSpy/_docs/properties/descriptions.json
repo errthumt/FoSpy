@@ -1,0 +1,278 @@
+{
+    "AnnealSection": {
+        "type": {
+            "desc": "Examples: `\"dwell\", \"ramp\", \"quench\"`"
+        }
+    },
+    "Annealing": {
+        "gas_flow": {
+            "desc": "Consistent gas flow conditions applied during annealing."
+        },
+        "program": {
+            "desc": "The temperatures and gradients used during annealing."
+        },
+        "start_temp": {
+            "desc": "Initial temperature at start of program."
+        },
+        "start_temp_unit": {
+            "desc": "Units for initial temperature."
+        }
+    },
+    "Attachment": {
+        "embedded": {
+            "desc": "Attachment content embedded as raw `utf-8` line strings."
+        },
+        "file_name": {
+            "desc": "The name of the attached file (with extension)"
+        },
+        "path": {
+            "desc": "The filepath to the attached file, relative to the directory containing the parent `FileBlock`."
+        }
+    },
+    "ChemChange": {
+        "amount": {
+            "desc": "The sign-sensitive amount of this chemical that was added (positive) or removed (negative)."
+        },
+        "amount_unit": {
+            "desc": "Units for comp change amount."
+        }
+    },
+    "Chemical": {
+        "formula": {
+            "desc": "Molecular composition."
+        }
+    },
+    "CompChange": {
+        "changes": {
+            "desc": "A list of chemicals that were added or removed from the active reaction in this step."
+        }
+    },
+    "Dwell": {
+        "time": {
+            "desc": "How long the temperature was kept constant in this section."
+        },
+        "time_unit": {
+            "desc": "Units for dwell time."
+        }
+    },
+    "Experimenter": {
+        "affiliation": {
+            "desc": "Lab/University/Research Group/etc."
+        },
+        "name": {
+            "desc": "Name of the experimenter"
+        },
+        "orcid": {
+            "desc": "The experimenter's [ORCID](https://orcid.org/)"
+        }
+    },
+    "FileBlock": {
+        "metadata": {
+            "desc": "General information about the file."
+        }
+    },
+    "Material": {
+        "amount": {
+            "desc": "Amount of the material that was used."
+        },
+        "amount_unit": {
+            "desc": "Units for material amount."
+        },
+        "cas": {
+            "desc": "CAS ID"
+        },
+        "env": {
+            "desc": "What atmospheric environment the material is stored in. (e.g., ambient, Ar(g))"
+        },
+        "form": {
+            "desc": "Physical shape or state of the material **at time of acquisition** (e.g., powder, shot, wire, lump). If the material was modified after aquiring but before use in the synthesis (e.g., grinding into powder, drying, etc.), these actions should be specified in the *material's* treatments property (not the synthesis treatments)."
+        },
+        "name": {
+            "desc": "A unique name for the material."
+        },
+        "purity": {
+            "desc": "0 < purity <= 1"
+        },
+        "supplier": {
+            "desc": "Source of purchase/synthesis"
+        },
+        "treatments": {
+            "desc": "Treatments that were applied to the material before use in the synthesis."
+        },
+        "type": {
+            "desc": "How it was used in the synthesis (e.g., reagent, flux, solvent)"
+        }
+    },
+    "MetaData": {
+        "description": {
+            "desc": "A brief description of the intent for the file (characteristic methods, target products, template category, etc.)."
+        },
+        "fos_id": {
+            "desc": "A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.)"
+        },
+        "fos_type": {
+            "desc": "What type of `FileBlock` subclass the file should be interpreted as."
+        }
+    },
+    "Product": {
+        "characterizations": {
+            "desc": "Description of characterization methods used to determine/quantitate the product."
+        },
+        "expected": {
+            "desc": "Whether or not the product was expected from the synthesis."
+        },
+        "expected_amount": {
+            "desc": "How much of the product was nominally expected to be obtained from the synthesis"
+        },
+        "expected_amount_unit": {
+            "desc": "Units for product expected amount."
+        },
+        "name": {
+            "desc": "A unique name for the product."
+        },
+        "observations": {
+            "desc": "General observations about the product."
+        },
+        "obtained": {
+            "desc": "Whether or not the product obtained from the synthesis."
+        },
+        "obtained_amount": {
+            "desc": "How much of the product was actually obtained from the synthesis.."
+        },
+        "obtained_amount_unit": {
+            "desc": "Units for product obtained amount"
+        },
+        "structure_comments": {
+            "desc": "General description of the structure of the product."
+        }
+    },
+    "Quench": {
+        "medium": {
+            "desc": "What medium the reaction vessel was quenched in (e.g., water, air)."
+        }
+    },
+    "Ramp": {
+        "rate": {
+            "desc": "The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative)."
+        },
+        "rate_unit": {
+            "desc": "Units for ramp rate."
+        },
+        "temp": {
+            "desc": "The next temperature in the program."
+        },
+        "temp_unit": {
+            "desc": "Units for ramp temperature."
+        },
+        "time": {
+            "desc": "Length of time from the previous temperature to the new temperature."
+        },
+        "time_unit": {
+            "desc": "Units for ramp time."
+        }
+    },
+    "Reaction": {
+        "nominal_amount": {
+            "desc": "Total amount expected to be recovered from all final products."
+        },
+        "nominal_amount_unit": {
+            "desc": "Units for reaction nominal amount."
+        },
+        "nominal_formula": {
+            "desc": "Total expected chemical composition from all final products."
+        }
+    },
+    "SingleBlock": {
+        "rename": {
+            "desc": "Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `\"experimenters\"` might be mapped to the more generic `\"collaborators\"` for computational or meta-contexted FOS files.)"
+        }
+    },
+    "Synthesis": {
+        "cif": {
+            "desc": "A single attached CIF file applicable to the entire synthesis."
+        },
+        "cifs": {
+            "desc": "Multiple attached CIF files applicable to the entire synthesis."
+        },
+        "equipment": {
+            "desc": "Specialized equipment or apparatuses used during the synthesis."
+        },
+        "experimenters": {
+            "desc": "Experimenters who participated in any treatments described in the synthesis."
+        },
+        "laboratory_conditions": {
+            "desc": "General conditions of the laboratory during the synthesis."
+        },
+        "materials": {
+            "desc": "Starting chemicals and materials used in the synthesis."
+        },
+        "metadata": {
+            "desc": "General information about the file."
+        },
+        "products": {
+            "desc": "Products expected or obtained from the synthesis."
+        },
+        "reaction": {
+            "desc": "General information applying to the entire synthetic reaction."
+        },
+        "treatments": {
+            "desc": "Sequence of individual actions performed on the materials or active reaction to carry out the synthesis."
+        }
+    },
+    "SynthesisMeta": {
+        "group_id": {
+            "desc": "The unique identifier for the generating research group or organization."
+        },
+        "project_id": {
+            "desc": "Describes the context or purpose of the synthesis within the scope of the `group_id` and/or lead experimenter."
+        }
+    },
+    "TemplateBlock": {
+        "template_name": {
+            "desc": "An unique name for the template."
+        }
+    },
+    "TemplateSet": {
+        "anneal_sections": {
+            "desc": "A list of incomplete templates describing annealing sections."
+        },
+        "annealings": {
+            "desc": "A list of incomplete templates describing annealing treatments."
+        },
+        "cifs": {
+            "desc": "A list of CIF files attached to the template set."
+        },
+        "experimenters": {
+            "desc": "A list of incomplete templates describing experimenters."
+        },
+        "materials": {
+            "desc": "A list of incomplete templates describing materials."
+        },
+        "treatments": {
+            "desc": "A list of incomplete templates describing treatments."
+        }
+    },
+    "Treatment": {
+        "end_time": {
+            "desc": "What time the treatment was finished"
+        },
+        "observations": {
+            "desc": "General observations during the treatment"
+        },
+        "recovered_amount": {
+            "desc": "How much material was recovered after treatment."
+        },
+        "recovered_amount_unit": {
+            "desc": "Units for treatment recovered amount."
+        },
+        "repeats": {
+            "desc": "How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments."
+        },
+        "start_time": {
+            "desc": "What time the treatment was started"
+        },
+        "type": {
+            "desc": "What type of treatment was performed."
+        }
+    }
+}

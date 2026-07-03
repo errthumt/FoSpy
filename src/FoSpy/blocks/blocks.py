@@ -207,6 +207,12 @@ class SingleBlock(Block):
     _aliases = None
    
     @classmethod
+    def print_summary(cls, mode="cli"):
+        from .._docs.properties import get_summary
+
+        print(get_summary(cls, mode=mode))
+
+    @classmethod
     def TemplateClass(cls,*args:str):
         """
         Create a template for a subclass of `SingleBlock`.
@@ -350,15 +356,22 @@ class SingleBlock(Block):
             ```
         """
         from ..parsing.validation import required_keys
+        from ._blockUtils import _get_prop_mro, _merge_vals
         merged = {}
-        for base in reversed(cls.__mro__):
-            base_reqs = required_keys.get(base,{})
-            for key, validator in base_reqs.items():
-                # allow subclasses to remove parent requirements.
-                if validator is False:
-                    merged.pop(key, None)
-                else:
-                    merged[key] = validator
+        # mro = list(reversed(cls.__mro__))
+        # for i, base in enumerate(mro):
+        #     base_reqs = required_keys.get(base,{})
+        #     for key, validator in base_reqs.items():
+        #         # allow subclasses to remove parent requirements.
+        #         if not validator:
+        #             merged.pop(key, None)
+        #         else:
+        #             merged[key] = validator
+
+        req_mro = _get_prop_mro(cls, required_keys)
+        for i in range(len(req_mro)):
+            merged = _merge_vals(merged, req_mro, i)
+
         return merged
 
     @classmethod
@@ -376,16 +389,23 @@ class SingleBlock(Block):
         [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators]
         """
         from ..parsing.validation import required_keys, optional_keys
+        from ._blockUtils import _merge_vals, _get_prop_mro
         merged = {}
-        for base in reversed(cls.__mro__):
-            for key_set in (required_keys, optional_keys):
-                base_reqs = key_set.get(base,{})
-                for key, validator in base_reqs.items():
-                    # allow subclasses to remove parent requirements.
-                    if validator is False:
-                        merged.pop(key, None)
-                    else:
-                        merged[key] = validator
+        # for base in reversed(cls.__mro__):
+        #     for key_set in (required_keys, optional_keys):
+        #         base_reqs = key_set.get(base,{})
+        #         for key, validator in base_reqs.items():
+        #             # allow subclasses to remove parent requirements.
+        #             if validator is False:
+        #                 merged.pop(key, None)
+        #             else:
+        #                 merged[key] = validator
+        req_mro = _get_prop_mro(cls, required_keys)
+        opt_mro = _get_prop_mro(cls, optional_keys)
+
+        for i in range(len(req_mro)): # req_mro and opt_mro are the same length
+            merged = _merge_vals(merged, req_mro, i)
+            merged = _merge_vals(merged, opt_mro, i)
 
         return merged
     
@@ -1445,11 +1465,19 @@ class ListBlock(Block):
                 The subclass of `SingleBlock` that this `ListBlock` subclass
                 accepts.
         """
+        from .._docs.properties import _validator_rules
+        from ._blockUtils import _get_docs_link
+
         if not issubclass(reqCls, SingleBlock):
             raise TypeError("reqCls must be a subclass of SingleBlock")
         if cls._reqCls is not None:
             raise TypeError("You cannot create a simple subclass of another ListBlock subclass.")
-        
+
+        link = _get_docs_link(reqCls)
+
+        @_validator_rules(
+            f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.]{link}"
+        )
         class SimpleSub(cls):
             _reqCls = reqCls
 

@@ -1,6 +1,8 @@
 from .files import FileBlock
 
 from .blocks import ListBlock, SingleBlock
+from ._blockUtils import _get_docs_link
+from .._docs.properties import _validator_rules
 
 from .._debug import Debug
 _debug = Debug()
@@ -34,6 +36,17 @@ class TemplateList(ListBlock):
             _baseReq = reqCls
         
         SimpleList = ListBlock.Simple(Flex)
+
+        link = _get_docs_link(reqCls)
+
+        @_validator_rules(
+            f"A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`{reqCls.__name__}` *templates.*]{link}",
+            ["[`FlexTemplate` subclasses](#flextemplate) are defined with a parent "
+             "[`SingleBlock` subclass](#singleblock). They automatically detect "
+             "which required properties are missing at construction time, and "
+             "instantiate a [dynamic `TemplateBlock`](#templateblock) with template "
+             "fields in those properties."]
+        )
         class FlexList(TemplateList, SimpleList):
             pass
 
