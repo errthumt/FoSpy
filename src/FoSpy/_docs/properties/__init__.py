@@ -641,10 +641,12 @@ def write_prop_md(md_path, delay=False, enforce=False):
     diffs = diff_descs()
 
     overrides = {}
-    for cls, diff in diffs["block diffs"].items():
-        ovrd = diff.pop("overrided", None)
-        if ovrd:
-            overrides[cls] = ovrd
+
+    if "block diffs" in diffs:
+        for cls, diff in diffs["block diffs"].items():
+            ovrd = diff.pop("overrided", None)
+            if ovrd:
+                overrides[cls] = ovrd
     
     diffs["block diffs"] = {k:v for k,v in diffs["block diffs"].items() if v}
     
