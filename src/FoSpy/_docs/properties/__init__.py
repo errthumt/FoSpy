@@ -4,8 +4,7 @@ import json
 import os
 from warnings import warn
 import textwrap
-
-from contextlib import contextmanager
+import chemformula
 
 
 TAB_WIDTH = 80
@@ -163,6 +162,7 @@ val_rules = {
     list: "A list of values",
     tuple: "A tuple of values",
     dict: "A dictionary of values",
+    chemformula.ChemFormula: "A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)"
 }
 """
 Summaries of validation rules mapped to validator functions.
@@ -209,7 +209,8 @@ def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
                 val_rule = val_rules.get(val, None)
                 if val_rule is None:
                     if enforce:
-                        raise ValueError(f"No validation rules found for {val.__name__}")
+                        val_nm = val.__name__ if hasattr(val, "__name__") else str(val)
+                        raise ValueError(f"No validation rules found for {val_nm} ({prop} validator).")
                     val_rule = "No Rules Found"
                 else:
                     val_rule = _val_rules_to_txt(val_rule, mode=mode)
