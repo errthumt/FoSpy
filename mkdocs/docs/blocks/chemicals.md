@@ -9,6 +9,24 @@ documentation](../full/index.md).
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-ChemChange }
+### `ChemChange`
+::: FoSpy.blocks.chemicals.ChemChange
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
+[](){ #blockdocs-ChemChangeList }
+### `ChemChangeList`
+::: FoSpy.blocks.chemicals.ChemChangeList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-Chemical }
 ### `Chemical`
 ::: FoSpy.blocks.chemicals.Chemical
