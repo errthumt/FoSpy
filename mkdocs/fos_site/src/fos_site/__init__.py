@@ -5,25 +5,41 @@ class FileMismatchError(Exception):
     pass
 
 def build_full_site(deploy=False, figures=False):
-    diffs, update_func = check_tables.update_tables_report_diffs(delay=True)
+    if deploy:
+        check_tables.build_prop_tables(delay=False)
 
-    for diff in diffs.values():
-        if len(diff) > 0:
-            from pprint import pformat
-            report = f"Mismatch in property tables:\n{pformat(diffs)}"
+    else:
+        exc, update_func = check_tables.build_prop_tables(delay=True)
 
-            if not deploy:
-                from warnings import warn
-                warn(report, UserWarning)
-                update = input("Add placeholders to property tables? (y/n): ").lower().strip() == "y"
-                if update:
-                    update_func()
-                cont = input("Continue with site build? (y/n): ").lower().strip() == "y"
-                if not cont:
-                    raise FileMismatchError(report)
-                break
-            else:
-                raise FileMismatchError(report)
+        def prompt_for_update():
+            print(f"Property Documentation build failed:\n{exc}\n\n")
+            if not input("\nContinue with site build? (y/n): ").lower().strip() == "y":
+                raise exc
+
+            update = input("Overwrite docs page with exception? (y/n): ").lower().strip() == "y"
+
+            return update
+
+        if exc is None or prompt_for_update():
+            update_func()
+
+    # for diff in diffs.values():
+    #     if len(diff) > 0:
+    #         from pprint import pformat
+    #         report = f"Mismatch in property tables:\n{pformat(diffs)}"
+
+    #         if not deploy:
+    #             from warnings import warn
+    #             warn(report, UserWarning)
+    #             update = input("Add placeholders to property tables? (y/n): ").lower().strip() == "y"
+    #             if update:
+    #                 update_func()
+    #             cont = input("Continue with site build? (y/n): ").lower().strip() == "y"
+    #             if not cont:
+    #                 raise FileMismatchError(report)
+    #             break
+    #         else:
+    #             raise FileMismatchError(report)
 
     internal.copy_md.copy_all()
     internal.package_installers.pkg_all()

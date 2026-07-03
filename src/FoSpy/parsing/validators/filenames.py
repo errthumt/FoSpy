@@ -1,6 +1,7 @@
 import re
 from ..._debug import Debug
 from pathlib import Path
+from ..._docs.properties import _validator_rules
 _debug = Debug()
 _debug.on = True
 
@@ -9,13 +10,39 @@ FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
 
 basePath = type(Path(""))
 
+@_validator_rules(
+    "Mutually exclusive with `embedded` property.",
+    "A valid relative filepath to a directory.",
+    "Path is relative to the directory containing the parent `FileBlock`.",
+    '"`.`" should be used to indicate the same directory as the parent `FileBlock`.',
+    '"`..`" can be used to walk up the directory tree.',
+    "Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.",
+    "Examples for a `FileBlock` at `/home/user/synthesis.fos`:", [
+        "\"`.`\" is `/home/user`",
+        "\"`..`\" is `/home`",
+        "\"`../foo`\" is `/home/foo`",
+        "\"`./bar`\" is `/home/user/bar`",
+    ]
+)
 class PathPosix(basePath):
     def serialize(self, *args, **kwargs):
         return self.as_posix()
 
-    
+@_validator_rules(
+    "Mutually exclusive with `path` property.",
+    "Attachment content as a list of raw `utf-8` line strings."
+)
+def embedded_lines(lines):
+    return list(lines)
 
 
+@_validator_rules(
+    "A valid filename (no path, no separators, allowed characters only).",
+    "Must include a valid extension.",
+    "Allowed characters: letters, digits, '`_`', '`-`', '`.`'",
+    "Commas are allowed, but may lead to unexpected behavior for some OS or software.",
+    "Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file."
+)
 def file_name(name: str, sourceDict={}) -> str:
     """
     Validate a filename (no path, no separators, allowed characters only).
@@ -45,28 +72,28 @@ def file_name(name: str, sourceDict={}) -> str:
 
 EXT_RE = re.compile(r"^[A-Za-z0-9_-]+$")  # no dots allowed inside
 
-def file_extension(ext: str) -> str:
-    """
-    Validate a file extension.
-    Accepts either 'png' or '.png' and normalizes to '.png'.
-    """
-    if not isinstance(ext, str):
-        raise TypeError("Extension must be a string")
+# def file_extension(ext: str) -> str:
+#     """
+#     Validate a file extension.
+#     Accepts either 'png' or '.png' and normalizes to '.png'.
+#     """
+#     if not isinstance(ext, str):
+#         raise TypeError("Extension must be a string")
 
-    if not ext:
-        raise ValueError("Extension cannot be empty")
+#     if not ext:
+#         raise ValueError("Extension cannot be empty")
 
-    # Normalize: strip leading dot if present
-    if ext.startswith("."):
-        ext = ext[1:]
+#     # Normalize: strip leading dot if present
+#     if ext.startswith("."):
+#         ext = ext[1:]
 
-    # Validate characters
-    if not EXT_RE.match(ext):
-        raise ValueError(
-            "Extension contains invalid characters. Allowed: letters, digits, '_', '-'"
-        )
+#     # Validate characters
+#     if not EXT_RE.match(ext):
+#         raise ValueError(
+#             "Extension contains invalid characters. Allowed: letters, digits, '_', '-'"
+#         )
 
-    return f".{ext}"
+#     return f".{ext}"
 
 
     

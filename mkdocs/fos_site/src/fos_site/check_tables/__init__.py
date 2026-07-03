@@ -5,22 +5,28 @@ MD_PATH = Path("mkdocs/docs/expected/index.md")
 OUT_PATH = MD_PATH
 TEMPLATE_PATH = Path("mkdocs/build_scripts/class_template.md")
 
-def update_tables_report_diffs(delay=False):
-    from .._utils import ch2repo
-    ch2repo()
+# def update_tables_report_diffs(delay=False):
+#     from .._utils import ch2repo
+#     ch2repo()
 
-    from .helpers import get_table_diffs, process_markdown, get_method_blocks
+#     from .helpers import get_table_diffs, process_markdown, get_method_blocks
 
-    diffs = get_table_diffs(MD_PATH)
+#     diffs = get_table_diffs(MD_PATH)
 
-    def update():
-        ch2repo()
-        # Process and write output
-        new_md = process_markdown(MD_PATH, diffs=diffs, temp_path=TEMPLATE_PATH)
+#     def update():
+#         ch2repo()
+#         # Process and write output
+#         new_md = process_markdown(MD_PATH, diffs=diffs, temp_path=TEMPLATE_PATH)
         
-        OUT_PATH.write_text(new_md, encoding="utf-8")
+#         OUT_PATH.write_text(new_md, encoding="utf-8")
 
-        print(f"Updated markdown written to {OUT_PATH}")
-    if delay:
-        return diffs, update
-    return diffs
+#         print(f"Updated markdown written to {OUT_PATH}")
+#     if delay:
+#         return diffs, update
+#     return diffs
+
+def build_prop_tables(delay=False):
+    from FoSpy._docs.properties import write_prop_md
+
+    return write_prop_md(MD_PATH,delay=delay, enforce=True)
+

@@ -1,9 +1,8 @@
 {
+    "metadata.fos_type": "synthesis",
     "experimenters[0].name": "Jill",
     "experimenters[0].affiliation": "Drexel",
     "reaction.nominal_formula": "H2O",
-    "reaction.nominal_mass": 1.0,
-    "reaction.nominal_mass_units": "g",
     "treatments[0].type": "anneal",
     "treatments[0].repeats": "1",
     "treatments[0].observations": "I made a new material",
@@ -20,5 +19,16 @@
         {"name": "Argon"},
         {"name": "Hydrogen"},
         {"name": "Ammonia"}
-    ]
+    ],
+    "metadata.group_id": "wenderott-0000-0002-8419-2702",
+    "metadata.project_id": "FOS_testing/ammonolysis",
+    "reaction.nominal_amount": 1.0,
+    "reaction.nominal_amount_unit": "g",
+    "treatments[0].start_temp": 25.0,
+    "treatments[0].start_temp_unit": "C",
+    "products[0].name": "water",
+    "products[0].expected": true,
+    "products[0].obtained": true,
+    "products[0].formula": "H2O",
+    "products[0].observations": "wet"
 }

@@ -76,33 +76,45 @@ required_keys = {
     b.Reaction: {
         "nominal_formula": chemformula.ChemFormula,
         "nominal_amount" : validators.numbers.positive_decimal("Reaction/nominal_amount", "nominal_amount"),
-        "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}])
+        "nominal_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]) # TODO: single validator instance for enforcing amount units.
+    },
+
+    b.Chemical: {
+        "formula": chemformula.ChemFormula
+    },
+
+    b.ChemChange: {
+        "amount": validators.numbers.positive_decimal("b.Chemical/amount", "amount"),
+        "amount_unit": str # TODO: enforce units after formalization of moles and molar ratios.
     },
 
     b.Product: {
         "name": str,
         "expected" : bool,
         "obtained" : bool,
-        "formula": chemformula.ChemFormula,
-        "observations": str
+        "observations": str,
     },
 
     b.Material: {
         "name": str,
         "type": str,
-        "formula": chemformula.ChemFormula,
+        "formula": True,
         "supplier": str,
         "cas": str,
         "form": str,
         "env": str,
-        "amount": validators.numbers.positive_decimal("b.Material/amount", "amount"),
-        "amount_unit": str
+        "amount": validators.numbers.positive_decimal("b.Chemical/amount", "amount"),
+        "amount_unit": str # TODO: enforce units after formalization of moles and molar ratios.
     },
 
     b.Treatment: {
         "type": str,
         "repeats": int,
-        "observations": str
+    },
+
+    b.CompChange: {
+        "repeats": False,
+        "changes": b.ChemChangeList
     },
 
     b.AnnealSection: {
@@ -136,7 +148,7 @@ functions."""
 
 optional_keys = {
     b.Attachment: {
-        "embedded": list,
+        "embedded": validators.filenames.embedded_lines,
         "path": validators.filenames.PathPosix
     }, 
     b.SingleBlock: {
@@ -168,6 +180,7 @@ optional_keys = {
     },
 
     b.Treatment: {
+        "observations": str,
         "recovered_amount": validators.numbers.positive_decimal("b.Treatment/recovered_amount", "recovered_amount", True),
         "recovered_amount_unit": validators.units.FOSUnit.enforce_dims(["[mass]",{"[length]":3}]), 
         "start_time": str,

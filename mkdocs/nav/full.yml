@@ -16,10 +16,12 @@ nav:
   - What is a Block?: blocks/index.md
   - attachments: blocks/attachments.md
   - blocks: blocks/blocks.md
+  - chemicals: blocks/chemicals.md
   - data: blocks/data.md
   - files: blocks/files.md
   - materials: blocks/materials.md
   - metadata: blocks/metadata.md
+  - products: blocks/products.md
   - synthesis: blocks/synthesis.md
   - template: blocks/template.md
   - treatments: blocks/treatments.md
@@ -40,16 +42,22 @@ nav:
       - map_guides: full/_dev/testing/map_guides.md
       - map_test: full/_dev/testing/map_test.md
       - ui: full/_dev/testing/ui.md
+  - _docs:
+    - _docs/__init__: full/_docs/__init__.md
+    - properties:
+      - properties/__init__: full/_docs/properties/__init__.md
   - blocks:
     - blocks/__init__: full/blocks/__init__.md
     - _blockUtils: full/blocks/_blockUtils.md
     - _containers: full/blocks/_containers.md
     - attachments: full/blocks/attachments.md
     - blocks: full/blocks/blocks.md
+    - chemicals: full/blocks/chemicals.md
     - data: full/blocks/data.md
     - files: full/blocks/files.md
     - materials: full/blocks/materials.md
     - metadata: full/blocks/metadata.md
+    - products: full/blocks/products.md
     - synthesis: full/blocks/synthesis.md
     - template: full/blocks/template.md
     - treatments: full/blocks/treatments.md
@@ -74,7 +82,6 @@ nav:
     - validators:
       - validators/__init__: full/parsing/validators/__init__.md
       - filenames: full/parsing/validators/filenames.md
-      - material: full/parsing/validators/material.md
       - numbers: full/parsing/validators/numbers.md
       - rename: full/parsing/validators/rename.md
       - units: full/parsing/validators/units.md

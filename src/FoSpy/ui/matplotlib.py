@@ -9,30 +9,30 @@ available = True
 # -------------------------------
 # Layout constants for UI elements
 # -------------------------------
-LEFT_MARGIN = 0.05
-RIGHT_MARGIN = 0.02
+# LEFT_MARGIN = 0.05
+# RIGHT_MARGIN = 0.02
 
-START_Y = 0.2
-PANEL_START = 0.70
-PANEL_W = 1.0 - PANEL_START
-PADDING = 0.02
-CHECK_X      = PANEL_START+PADDING
-CHECK_W      = 0.06
-SLIDER_X     = CHECK_X + CHECK_W + PADDING
-SLIDER_W     = 1.0 - SLIDER_X - PADDING
-LABEL_LSHIFT = (CHECK_W + 2*PADDING) / SLIDER_W
-ROW_H        = 0.03
+# START_Y = 0.2
+# PANEL_START = 0.70
+# # PANEL_W = 1.0 - PANEL_START
+# PADDING = 0.02
+# CHECK_X      = PANEL_START+PADDING
+# CHECK_W      = 0.06
+# SLIDER_X     = CHECK_X + CHECK_W + PADDING
+# SLIDER_W     = 1.0 - SLIDER_X - PADDING
+# LABEL_LSHIFT = (CHECK_W + 2*PADDING) / SLIDER_W
+# ROW_H        = 0.03
 
-ROW_SPACING  = 0.05
+# ROW_SPACING  = 0.05
 
-OK_BTN_W     = 0.20
-OK_BTN_H     = START_Y / 2
+# OK_BTN_W     = 0.20
+# OK_BTN_H     = START_Y / 2
 
-def _get_label_offset(slider_width):
-    offset = 2*PADDING + CHECK_W
+# def _get_label_offset(slider_width):
+#     offset = 2*PADDING + CHECK_W
 
-    offset = offset / slider_width
-    return offset
+#     offset = offset / slider_width
+#     return offset
 
 def _hseparator(parent=None):
     frame = tk.Frame(parent, height=2, bg="#888")
