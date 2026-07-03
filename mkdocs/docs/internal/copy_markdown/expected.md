@@ -680,7 +680,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 [Class Documentation][blockdocs-SingleBlock]
 
-**[Subclass of `Block`][FoSpy.blocks.blocks.Block]**
+**[Subclass of `Block`][blockdocs-Block]**
 
 #### Required properties
 

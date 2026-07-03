@@ -408,7 +408,7 @@ def _get_header_lines(cls_nm, parent_nm, mode="cli"):
         bold = ""
 
     lines.append(f"[Class Documentation][blockdocs-{cls_nm}]\n\n")
-    link = f"(#{parent_nm.lower()})" if not parent_nm == "Block" else "[FoSpy.blocks.blocks.Block]"
+    link = f"(#{parent_nm.lower()})" if not parent_nm == "Block" else "[blockdocs-Block]"
     lines.append(f"{bold}[Subclass of `{parent_nm}`]{link}{bold}\n\n")
 
     return lines
