@@ -648,7 +648,7 @@ def write_prop_md(md_path, delay=False, enforce=False):
             if ovrd:
                 overrides[cls] = ovrd
     
-    diffs["block diffs"] = {k:v for k,v in diffs["block diffs"].items() if v}
+        diffs["block diffs"] = {k:v for k,v in diffs["block diffs"].items() if v}
     
     if overrides:
         warning = "The following property descriptions have overridden their parents:\n"
