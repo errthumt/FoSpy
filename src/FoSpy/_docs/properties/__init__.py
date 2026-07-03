@@ -19,6 +19,11 @@ PREAMBLE = module_dir / "preamble.md"
 CLI_TBL_FMT = "grid"
 
 
+DOCS_DIR = module_dir / "../../../../mkdocs/docs"
+MD_DIR = DOCS_DIR / "expected"
+DOCS_URL = "https://errthumt.github.io/FoSpy/latest/"
+
+
 def _wrap_preserving_indent(text, width=40):
     wrapped_lines = []
     
@@ -276,7 +281,7 @@ def _get_block_module_path(attr_name: str) -> str:
     module_obj = inspect.getmodule(obj)
     
     if module_obj is not None:
-        return module_obj.__name__
+        return module_obj.__name__ + "." + attr_name
         
     # Fallback for basic data types (ints, strings) that lack module metadata
     if hasattr(obj, '__module__'):
@@ -339,8 +344,23 @@ def _strip_links(txt, urls=None, crossrefs=None):
             text = match.group('url_text')[1:-1]
             link = match.group('url_link')
             
-            if link.startswith("#"):
-                link = PROP_URL + link
+            if not link.startswith("http"):
+                page_path, anchor = link.split("#",1)
+                page_path = MD_DIR / page_path
+                rel_page_path = page_path.resolve().relative_to(DOCS_DIR.resolve()).as_posix()
+
+                if rel_page_path.endswith(".md"):
+                    rel_page_path = rel_page_path[:-3]
+
+                    if rel_page_path.endswith("/index"):
+                        rel_page_path = rel_page_path[:-5]
+                    else:
+                        rel_page_path += "/"
+
+                elif rel_page_path == "expected":
+                    rel_page_path += "/"
+
+                link = f"{DOCS_URL}{rel_page_path}#{anchor}"
 
             # Handle repeats
             rpts = url_rpts
@@ -388,7 +408,8 @@ def _get_header_lines(cls_nm, parent_nm, mode="cli"):
         bold = ""
 
     lines.append(f"[Class Documentation][blockdocs-{cls_nm}]\n\n")
-    lines.append(f"{bold}[Subclass of `{parent_nm}`](#{parent_nm.lower()}){bold}\n\n")
+    link = f"(#{parent_nm.lower()})" if not parent_nm == "Block" else "[FoSpy.blocks.blocks.Block]"
+    lines.append(f"{bold}[Subclass of `{parent_nm}`]{link}{bold}\n\n")
 
     return lines
 
