@@ -156,7 +156,6 @@ tests/FoSpy/parsing/test_write.py:39: unused variable 'expected' (100% confidenc
 tests/FoSpy/parsing/test_write.py:52: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/parsing/validators/test_filenames.py:13: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/parsing/validators/test_filenames.py:26: unused variable 'expected' (100% confidence, 1 line)
-tests/FoSpy/parsing/validators/test_material.py:13: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/parsing/validators/test_numbers.py:13: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/parsing/validators/test_numbers.py:26: unused variable 'expected' (100% confidence, 1 line)
 tests/FoSpy/parsing/validators/test_numbers.py:39: unused variable 'expected' (100% confidence, 1 line)
