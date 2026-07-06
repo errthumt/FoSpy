@@ -103,28 +103,22 @@ class PhaseMatcher:
     def find_baseline(self, interactive=False, ui=None):
         interactive = check_for_interactive(interactive, "baseline")
 
-        from pybaselines import Baseline
+        from ._utils import get_baseline
 
         exp_frame = self.frames['exp']
-        fitter = Baseline()
 
-        baseline_args = convert_baseline_cfg(self.baseline_cfg)
+        baseline_args = self.baseline_cfg
         exp_int = exp_frame['int'].to_numpy()
-
-
-        baseline, _ = fitter.arpls(
-            exp_int,
-            **baseline_args
-        )
-        exp_frame['baseline'] = baseline
-        exp_frame['corrected'] = exp_int - baseline
+        exp_2th = exp_frame.index.to_numpy()
 
         if not interactive:
+            baseline = get_baseline(exp_2th, exp_int, **baseline_args)
+            exp_frame['baseline'] = baseline
+            exp_frame['corrected'] = exp_int - baseline
             return
         
         from ..ui.baseline import BaselineFinder
 
-        exp_2th = exp_frame.index.to_numpy()
         finder = BaselineFinder(exp_int, exp_2th, cfg=self.baseline_cfg, ui=ui)
 
         baseline, corrected = finder.main_loop()

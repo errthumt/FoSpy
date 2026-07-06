@@ -105,32 +105,42 @@ def get_find_sliders(find_cfg, intensity_col):
 
 
 def get_baseline_sliders(baseline_cfg):
+    # sliders = {
+    #     "lam": {
+    #         "type": "scalar",
+    #         "label": "Baseline Smoothing",
+    #         "min": 0,
+    #         "max": 10
+    #     },
+    #     "diff_order": {
+    #         "type": "scalar",
+    #         "label": "Differential Order",
+    #         "min": 1,
+    #         "max": 3,
+    #         "int": True
+    #     },
+    #     "max_iter": {
+    #         "type": "scalar",
+    #         "label": "Maximum Iterations",
+    #         "min": 1,
+    #         "max": 100,
+    #         "int": True
+    #     },
+    #     "tol": {
+    #         "type": "scalar",
+    #         "label": "Tolerance",
+    #         "min": 0,
+    #         "max": 1
+    #     }
+    # }
+
     sliders = {
-        "lam": {
+        "poly_order": {
             "type": "scalar",
-            "label": "Baseline Smoothing",
-            "min": 0,
-            "max": 10
-        },
-        "diff_order": {
-            "type": "scalar",
-            "label": "Differential Order",
-            "min": 1,
-            "max": 3,
+            "label": "Polynomial Order",
+            "min": 2,
+            "max": 10,
             "int": True
-        },
-        "max_iter": {
-            "type": "scalar",
-            "label": "Maximum Iterations",
-            "min": 1,
-            "max": 100,
-            "int": True
-        },
-        "tol": {
-            "type": "scalar",
-            "label": "Tolerance",
-            "min": 0,
-            "max": 1
         }
     }
 

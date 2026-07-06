@@ -29,6 +29,23 @@ def convert_baseline_cfg(baseline_cfg):
 
     return out
 
+def get_baseline(two_theta, intensity, poly_order=5):
+    from pybaselines import Baseline
+    from numpy.polynomial import chebyshev
+    fitter = Baseline(x_data=two_theta)
+
+    _, params = fitter.modpoly(intensity, poly_order=poly_order, return_coef=True)
+
+    x_min, x_max = two_theta.min(), two_theta.max()
+    x_scaled = 2*(two_theta - x_min)/(x_max - x_min) - 1
+
+    weights = params['weights']
+
+    cheb_coefs = chebyshev.chebfit(x_scaled, intensity, deg=poly_order, w=weights)
+    cheb_baseline = chebyshev.chebval(x_scaled, cheb_coefs)
+
+    return cheb_baseline
+
 # def plot_rows_as_sticks(df, row_indices, intensity_col, ax=None, **vline_kwargs):
 #     # Create an axis if one wasn't provided
 #     if ax is None:

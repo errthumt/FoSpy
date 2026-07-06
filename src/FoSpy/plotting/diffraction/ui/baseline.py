@@ -2,7 +2,7 @@ from pybaselines import Baseline
 from ....config import values as full_cfg
 from ._specs import get_baseline_sliders
 from ....ui.abstract import AssembleSlider
-from ..phase_match._utils import convert_baseline_cfg
+#from ..phase_match._utils import convert_baseline_cfg
 
 X_LABEL = full_cfg.diffraction.x_label
 
@@ -26,11 +26,15 @@ class BaselineFinderAbstract:
         self.fitter = Baseline()
 
     def update_baseline(self):
+        from ..phase_match._utils import get_baseline
+
         self.update_cfg()
 
-        args = convert_baseline_cfg(self.cfg)
+        # args = convert_baseline_cfg(self.cfg)
 
-        baseline, _ = self.fitter.arpls(self.exp_int,**args)
+        # baseline, _ = self.fitter.arpls(self.exp_int,**args)
+
+        baseline = get_baseline(self.exp_2th, self.exp_int, **self.cfg)
 
         self.baseline = baseline
         self.corrected = self.exp_int - baseline
