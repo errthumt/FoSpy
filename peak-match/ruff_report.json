@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 64,
+      "row": 4
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/plotting/diffraction/phase_match/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 44,
+      "row": 4
+    },
+    "message": "`._utils.convert_baseline_cfg` imported but unused; consider removing, adding to `__all__`, or using a redundant alias",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]

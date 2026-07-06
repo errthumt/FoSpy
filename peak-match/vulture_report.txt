@@ -289,6 +289,7 @@ src/FoSpy/ui/pyqtgraph.py:123: unused method 'next_ctrl_row' (60% confidence, 6 
 src/FoSpy/blocks/materials.py:53: unused method 'add_all_MW' (60% confidence, 7 lines)
 src/FoSpy/blocks/metadata.py:43: unused method 'add_nom_MW' (60% confidence, 8 lines)
 src/FoSpy/config/__init__.py:36: unused function 'load_user' (60% confidence, 9 lines)
+src/FoSpy/plotting/diffraction/phase_match/_utils.py:22: unused function 'convert_baseline_cfg' (60% confidence, 9 lines)
 src/FoSpy/_dev/testing/_utils.py:41: unused function 'run_batch' (60% confidence, 10 lines)
 src/FoSpy/config/__init__.py:53: unused function 'reset' (60% confidence, 11 lines)
 src/FoSpy/json/utils.py:6: unused function 'block_from_file' (60% confidence, 12 lines)
@@ -300,4 +301,4 @@ src/FoSpy/blocks/blocks.py:1233: unused method 'keys_to_front' (60% confidence, 
 src/FoSpy/plotting/diffraction/phase_match/__init__.py:73: unused method 'plot_matches' (60% confidence, 29 lines)
 src/FoSpy/blocks/data.py:6: unused class 'CSVdata' (60% confidence, 65 lines)
 src/FoSpy/_docs/properties/__init__.py:659: unused function 'write_prop_md' (60% confidence, 72 lines)
-src/FoSpy/plotting/diffraction/phase_match/__init__.py:7: unused class 'PhaseMatcher' (60% confidence, 127 lines)
+src/FoSpy/plotting/diffraction/phase_match/__init__.py:7: unused class 'PhaseMatcher' (60% confidence, 121 lines)
