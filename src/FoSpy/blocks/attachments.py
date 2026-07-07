@@ -11,7 +11,8 @@ _debug = Debug()
 class Attachment(SingleBlock):
     dispatch={}
     extensions={}
-    enforced_subtype=None  
+    enforced_subtype=None
+    _id_key = "file_name"  
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         self._filepath = None

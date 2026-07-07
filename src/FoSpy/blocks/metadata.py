@@ -53,6 +53,7 @@ class Experimenter(SingleBlock):
     """
     Represents an an experimenter who worked on a synthesis.
     """
+    _id_key = "name"
     pass
 
 

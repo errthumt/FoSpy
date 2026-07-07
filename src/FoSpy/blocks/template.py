@@ -63,6 +63,7 @@ class TemplateList(ListBlock):
         return serial
          
 class TemplateBlock(SingleBlock):
+    _id_key = "template_name"
     def __init__(self, blockDict, _dispatched=False):
         self._full_class = None
         super().__init__(blockDict, _dispatched=_dispatched)

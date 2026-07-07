@@ -205,7 +205,7 @@ class SingleBlock(Block):
     """
     dispatch = {}
     _aliases = None
-   
+    _id_key = None
     @classmethod
     def print_summary(cls, mode="cli"):
         from .._docs.properties import get_summary
@@ -705,6 +705,10 @@ class SingleBlock(Block):
         
     def __hash__(self):
         return id(self)
+    
+    def get_id(self):
+        id_txt = getattr(self, self._id_key) if self._id_key is not None else type(self).__name__
+        return self._id_key, id_txt
     
     def _rename_validators(self, validators:dict):
         """
