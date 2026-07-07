@@ -1,6 +1,6 @@
 import pytest
 
-import FoSpy.ui.sliders.matplotlib
+import FoSpy.ui.sliders.native
 
 
 @pytest.mark.parametrize(

@@ -56,6 +56,6 @@
         }
     },
     "ui":{
-        "default": "matplotlib"
+        "default": "native"
     }
 }
