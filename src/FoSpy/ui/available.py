@@ -90,8 +90,15 @@ def get_valid_ui(ui_name=None, options=None):
 
     if ui_name.lower() not in options:
         new_ui = options[0]
-        warn(f"\n\nThe '{ui_name}' backend is not avaialable for the requested context. "
-             f"Attempting to use '{new_ui}' instead.", RuntimeWarning)
+
+
+
+        warn_txt = (f"\n\nThe '{ui_name}' backend is not available for the requested context "
+                    f"(See dependency summary below). Attempting to use '{new_ui}' instead.\n\n"
+                    f"===== DEPENDENCIES FOR '{ui_name.upper()}' UI =====\n")
+        warn_txt += _summarize_reqs(_UI_REQUIREMENTS[ui_name])
+
+        warn(warn_txt, RuntimeWarning)
 
         ui_name = new_ui
 

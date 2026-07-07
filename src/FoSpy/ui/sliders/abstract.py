@@ -218,7 +218,6 @@ class SliderPlot:
 
 def AssembleSlider(subcls, ui=None):
     from ..available import get_valid_ui, discover_ui_options
-    import sys
 
     # look for existing slider bindings
     ui_opts = discover_ui_options(__package__)
