@@ -1,4 +1,4 @@
-from ....ui.abstract import AssembleSlider
+from ....ui.sliders.abstract import AssembleSlider
 from ....config import values as full_cfg
 
 from ._specs import get_find_sliders
