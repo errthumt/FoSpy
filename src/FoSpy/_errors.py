@@ -50,8 +50,8 @@ def _get_block_info(blockObj, blockDict={}):
     typ = type(blockObj)
     typ_nm = typ.__name__
 
-    if hasattr(typ, "id_key"):
-        id_key = typ.id_key
+    if hasattr(typ, "_id_key"):
+        id_key = typ._id_key
         block_id = blockDict.get(id_key, None)
     else:
         id_key = None
