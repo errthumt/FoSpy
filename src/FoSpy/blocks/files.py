@@ -182,3 +182,29 @@ class FileBlock(SingleBlock):
 
         return self.__eq__(reloaded, suppress_routine_paths=True)
     
+    def package(self, pkg_fp):
+        import shutil
+        pkg_fp = Path(pkg_fp)
+        pkg_dir = self._temppath / "~package~"
+        pkg_dir.mkdir(exist_ok=True)
+
+        attachment_dir = pkg_dir / "attachments"
+        attachment_dir.mkdir(exist_ok=True)
+
+        copy = self.copy()
+
+        for attachment in copy.find_attachments():
+            attachment.path = "attachments"
+
+        copy._sourceFile = pkg_dir / (pkg_fp.stem + ".fos")
+        copy.refresh_attachments(new_copy=True, overwrite=False)
+        copy.save()
+
+        pkg_fp = pkg_fp.parent / pkg_fp.stem
+        fosx_fp = pkg_fp.with_suffix(".fosx")
+        zip_fp = Path(shutil.make_archive(pkg_fp, "zip", pkg_dir))
+
+        zip_fp.rename(fosx_fp)
+
+        shutil.rmtree(pkg_dir)
+    

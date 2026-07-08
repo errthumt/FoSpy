@@ -118,6 +118,9 @@ class MainWindow(QMainWindow):
         self.refresh_tree()
         self._initialize_views()
 
+        if fb is None:
+            return
+
         if fb._sourceFile is None:
             self._flag_edited(fb)
 
