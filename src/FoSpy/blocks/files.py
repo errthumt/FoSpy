@@ -43,6 +43,17 @@ class FileBlock(SingleBlock):
         if self._tempdir is not None:
             self._tempdir.cleanup()
 
+    def get_id(self):
+        try:
+            if self._sourceFile is not None:
+                from pathlib import Path
+                fp = Path(self._sourceFile)
+                return "file_name", str(fp.name)
+            else:
+                return "file_name", "<Unsaved FileBlock>"
+        except Exception:
+            return super().get_id()
+
     @classmethod
     def fromFile(cls, filepath):
         from .metadata import MetaData

@@ -8,10 +8,10 @@ from PySide6.QtWidgets import (
     QWidget,
     QLabel,
     QVBoxLayout
-    # QMenuBar
 )
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
+from ._utils import _get_label
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
@@ -48,6 +48,9 @@ class MainWindow(QMainWindow):
 
         self.root_block = fb
 
+        # map of block -> tree item
+        self.tree_items = {}
+
         # build dropdown ribbon
         self._create_menu_bar()
 
@@ -81,6 +84,8 @@ class MainWindow(QMainWindow):
 
         self.refresh_tree()
 
+
+
     def refresh_tree(self, blk:Block=None, target_item:QStandardItem=None):
         """Refreshes or builds tree nodes.
         If target_item is given, only that sub-tree branch is cleared and rebuilt"""
@@ -94,11 +99,7 @@ class MainWindow(QMainWindow):
             self._clear_views(self.tree_model.invisibleRootItem())
             self.tree_model.clear()
 
-            if isinstance(blk, FileBlock):
-                text = blk._sourceFile or "<Not Saved>"
-                target_item = QStandardItem(text)
-            else:
-                target_item = QStandardItem(f"{type(blk).__name__} Object")
+            target_item = QStandardItem(_get_label(blk))
 
             self.tree_model.appendRow(target_item)
         
@@ -114,20 +115,16 @@ class MainWindow(QMainWindow):
 
         if isinstance(blk, ListBlock):
             for i, blk_i in enumerate(blk._objs):
-                id_key, id_txt = blk_i.get_id()
-                label = f"{i} - {id_txt}"
-                if id_key is None:
-                    label += " Object"
+                label = _get_label(blk_i, i)
 
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, blk_i)
         
         elif isinstance(blk, SingleBlock):
-            # serialize to property names only
-            serial = blk.serialize(shallow=True, clean=True)
+            # get dict of property name -> live object
+            prop_dict = blk.get_prop_dict()
 
-            for prop in serial:
-                obj = getattr(blk, prop)
+            for prop, obj in prop_dict.items():
                 # only Block instances get added to tree. Primitives are edited
                 # in the SingleBlock's own widget
                 if isinstance(obj, Block):
@@ -140,9 +137,14 @@ class MainWindow(QMainWindow):
         self._register_view(child_item, blk)
         self._populate_tree_nodes(child_item, blk)
 
+        self.tree_items[blk] = child_item
+
     def _register_view(self, item:QStandardItem, blk:Block):
+
+        label = item.text()
+
         view_data = {
-            "builder": lambda: self._build_widget(blk),
+            "builder": lambda lbl=label,b=blk: self._build_widget(lbl,b),
             "widget": None
         }
 
@@ -212,10 +214,34 @@ class MainWindow(QMainWindow):
             self.content_stack.addWidget(widget_data["widget"])
         
         self.content_stack.setCurrentWidget(widget_data["widget"])
+    
+    def go_to_block(self, blk:Block):
+        """Programmatically select a block in the tree."""
 
-    def _build_widget(self, blk:Block):
+        item = self.tree_items.get(blk, None)
+
+        if item is None:
+            raise ValueError(f"Block {blk} not found in tree.")
+        
+        idx = self.tree_model.indexFromItem(item)
+        if not idx.isValid():
+            raise ValueError(f"Item {item} not found in tree model.")
+        
+        self.tree_view.setCurrentIndex(idx)
+        self.tree_view.scrollTo(idx)
+        self._on_tree_selection(idx)
+
+
+    def _build_widget(self, label, blk:Block):
         """Stub: Build a widget for the given block."""
-        return QLabel(f"Editor View for {type(blk).__name__}")
+        from .widgets import widget_map
+
+        for typ, widget in widget_map.items():
+            if isinstance(blk, typ):
+                return widget(label, blk, self)
+        
+        return QLabel("ERROR: No Widget Found")
+
 
 
 

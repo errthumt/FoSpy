@@ -707,8 +707,15 @@ class SingleBlock(Block):
         return id(self)
     
     def get_id(self):
-        id_txt = getattr(self, self._id_key) if self._id_key is not None else type(self).__name__
+        """Returns an easily recognizable identifier for self. Non-unique."""
+        id_txt = str(getattr(self, self._id_key)) if self._id_key is not None else type(self).__name__
         return self._id_key, id_txt
+    
+    def get_prop_dict(self):
+        """Returns a dictionary mapping property names to their live object values."""
+        serial = self.serialize(shallow=True, clean=True)
+
+        return {prop: getattr(self, prop) for prop in serial}
     
     def _rename_validators(self, validators:dict):
         """
