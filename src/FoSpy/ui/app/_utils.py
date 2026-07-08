@@ -5,9 +5,9 @@ import subprocess
 import importlib.metadata
 import urllib.request
 from urllib.error import URLError, HTTPError
-from ...blocks.files import EXT_MAP
+from ...blocks.files import EXT_READ_MAP
 
-SUPPORTED_EXTENSIONS = ["." + ext for ext in EXT_MAP]
+SUPPORTED_EXTENSIONS = ["." + ext for ext in EXT_READ_MAP]
 
 def _get_label(blk, i=None):        
     id_key, id_txt = blk.get_id()

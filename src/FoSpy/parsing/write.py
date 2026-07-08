@@ -151,7 +151,7 @@ def expand_lists(key, val, indent, looped=False):
 
 
 
-def write_dict_to_file(blocks, filepath):
+def write_dict_to_file(blocks, filepath, **kwargs):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     blocks = blocks.copy()
     block_comments = blocks.pop(mk["comments"])

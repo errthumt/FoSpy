@@ -381,12 +381,12 @@ class MainWindow(QMainWindow):
         self._create_help_menu(menu_bar)
     
     def _open_dlg(self, copy=False):
-        from ...blocks.files import EXT_MAP
+        from ...blocks.files import EXT_READ_MAP
 
         if not self._unsaved_dlg("opening a new file"):
             return
 
-        ext_list = [f"*.{ext}" for ext in EXT_MAP]
+        ext_list = [f"*.{ext}" for ext in EXT_READ_MAP]
         ext_str = f'({" ".join(ext_list)})'
 
 
@@ -617,9 +617,9 @@ class MainWindow(QMainWindow):
         return True
     
     def save_dlg(self, *args):
-        from ...blocks.files import EXT_MAP
+        from ...blocks.files import EXT_READ_MAP
 
-        ext_list = [f"*.{ext}" for ext in EXT_MAP]
+        ext_list = [f"*.{ext}" for ext in EXT_READ_MAP]
         ext_str = f'({" ".join(ext_list)})'
 
         path, _ = QFileDialog.getSaveFileName(

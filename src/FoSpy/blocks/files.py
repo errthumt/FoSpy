@@ -11,8 +11,20 @@ import tempfile
 from pathlib import Path
 
 EXT_MAP = {
-    "fos": dict_from_file,
-    "json": lambda fp: json.load(open(fp, "r"))
+    "fos": (dict_from_file, write_dict_to_file),
+    "json": (
+        lambda fp: json.load(open(fp, "r")),
+        lambda blockDict, fp, **kwargs: 
+            json.dump(blockDict, open(fp, "w"), indent=kwargs.pop("json_indent",4), **kwargs)
+    )
+}
+
+EXT_READ_MAP = {
+    k: v[0] for k, v in EXT_MAP.items()
+}
+
+EXT_WRITE_MAP = {
+    k: v[1] for k, v in EXT_MAP.items()
 }
 
 class FileBlock(SingleBlock):
@@ -69,10 +81,10 @@ class FileBlock(SingleBlock):
         except IndexError:
             raise ValueError(f"Could not determine extension for filepath: {pathstr}")
 
-        if ext not in EXT_MAP:
-            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_MAP.keys())}")
+        if ext not in EXT_READ_MAP:
+            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_READ_MAP.keys())}")
 
-        blockDict = EXT_MAP[ext](abspath)
+        blockDict = EXT_READ_MAP[ext](abspath)
         if "metadata" not in blockDict:
             raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
         
@@ -128,19 +140,15 @@ class FileBlock(SingleBlock):
             except IndexError:
                 raise ValueError(f"Could not determine extension for filepath: {pathstr}")
 
-            ext_map = {
-                "fos": write_dict_to_file,
-                "json": lambda blockDict, fp, **kwargs: json.dump(blockDict, open(fp, "w"), indent=json_indent, **kwargs)
-            }
 
             ext = str(filepath).lower().split(".")[-1]
 
-            if ext not in ext_map:
-                raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
+            if ext not in EXT_WRITE_MAP:
+                raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_WRITE_MAP.keys())}")
 
             blockDict = self.serialize(clean=ext!="fos")
 
-            ext_map[ext](blockDict, self._sourceFile, **kwargs)
+            EXT_WRITE_MAP[ext](blockDict, self._sourceFile, json_indent=json_indent, **kwargs)
 
         except Exception as e:
             if not saving_as:
@@ -207,4 +215,6 @@ class FileBlock(SingleBlock):
         zip_fp.rename(fosx_fp)
 
         shutil.rmtree(pkg_dir)
+
+
     
