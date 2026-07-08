@@ -714,8 +714,12 @@ class SingleBlock(Block):
     def get_prop_dict(self):
         """Returns a dictionary mapping property names to their live object values."""
         serial = self.serialize(shallow=True, clean=True)
-
-        return {prop: getattr(self, prop) for prop in serial}
+        out = {}
+        for prop in serial:
+            if "$" in prop:
+                prop = prop.split("$")[0]
+            out[prop] = getattr(self, prop)
+        return out
     
     def _rename_validators(self, validators:dict):
         """
