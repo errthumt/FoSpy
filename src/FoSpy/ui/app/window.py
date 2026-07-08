@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QActionGroup
 from PySide6.QtWidgets import (
+    QApplication,
     QMainWindow,
     QSplitter,
     QTreeView,
@@ -10,13 +11,17 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QFileDialog
 )
+import qdarktheme
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
 from ._utils import _get_label
-
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
 WIDGET_DATA_ROLE = Qt.ItemDataRole.UserRole + 1
+
+AVAILABLE_THEMES = ["auto"] if hasattr(qdarktheme, "setup_theme") else []
+AVAILABLE_THEMES.extend(["light", "dark"])
+DEFAULT_THEME = AVAILABLE_THEMES[0]
 
 class TextContentWidget(QWidget):
     """A simple content widget to display a title and description."""
@@ -203,10 +208,57 @@ class MainWindow(QMainWindow):
         open_action.triggered.connect(self._open_dlg)
         file_menu.addAction(open_action)
 
+        # Save
+        save_action = QAction("&Save", self)
+        save_action.setShortcut("Ctrl+S")
+        save_action.triggered.connect(self.save)
+        file_menu.addAction(save_action)
+
+        # Save As
+        save_as_action = QAction("&Save As...", self)
+        save_as_action.setShortcut("Ctrl+Shift+S")
+        save_as_action.triggered.connect(self.save_dlg)
+        file_menu.addAction(save_as_action)
+
         # Exit
         exit_action = QAction("&Exit", self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
+
+    def _create_view_menu(self, menu_bar):
+        view_menu = menu_bar.addMenu("&View")
+        self.menus["view"] = view_menu
+
+        theme_submenu = view_menu.addMenu("Theme")
+
+        theme_group = QActionGroup(self)
+        theme_group.setExclusive(True)
+
+        for theme_id in AVAILABLE_THEMES:
+            label = theme_id.capitalize()
+
+            action = QAction(label, self)
+            action.setCheckable(True)
+
+            if theme_id == DEFAULT_THEME:
+                self._choose_theme(theme_id)
+                action.setChecked(True)
+            
+            action.triggered.connect(lambda *args, t=theme_id: self._choose_theme(t))
+
+            theme_submenu.addAction(action)
+            theme_group.addAction(action)
+    
+    def _choose_theme(self, theme_id):
+        app = QApplication.instance()
+        if not app:
+            return
+        
+        try:
+            qdarktheme.setup_theme(theme_id)
+        except AttributeError:
+            app.setStyleSheet(qdarktheme.load_stylesheet(theme_id))
+
 
     def _create_menu_bar(self):
         """Dropdown menu ribbon."""
@@ -216,9 +268,7 @@ class MainWindow(QMainWindow):
 
         self._create_file_menu(menu_bar)
 
-        # View Menu
-        view_menu = menu_bar.addMenu("&View")
-        self.menus["view"] = view_menu
+        self._create_view_menu(menu_bar)
 
         # Help Menu
         help_menu = menu_bar.addMenu("&Help")
@@ -297,6 +347,71 @@ class MainWindow(QMainWindow):
                 return widget(label, blk, self)
         
         return QLabel("ERROR: No Widget Found")
+    
+    def _get_item_path(self, item:QStandardItem):
+        path = []
+
+        while item is not None:
+            path.append(item.row())
+            item = item.parent()
+        
+        return list(reversed(path))
+    
+    def _get_item_from_path(self, path:list[int]):
+        if not path:
+            return None
+        
+        item = self.tree_model.item(path[0])
+
+        for row in path[1:]:
+            if item is None:
+                return None
+            
+            item = item.child(row)
+        
+        return item
+
+    def save(self, *args,path:str=None):
+        if not self.root_block:
+            return
+        
+        self.root_block.save(filepath=path)
+
+        # cache current tree selection
+        current_idx = self.tree_view.currentIndex()
+        cached_path = None
+        if current_idx.isValid():
+            current_item = self.tree_model.itemFromIndex(current_idx)
+            if current_item is not None:
+                cached_path = self._get_item_path(current_item)
+
+        self._open_file(self.root_block._sourceFile)
+
+        # restore tree selection
+        if cached_path:
+            new_item = self._get_item_from_path(cached_path)
+            if new_item:
+                new_idx = self.tree_model.indexFromItem(new_item)
+                if new_idx.isValid():
+                    self.tree_view.setCurrentIndex(new_idx)
+                    self.tree_view.scrollTo(new_idx)
+                    self._on_tree_selection(new_idx)
+    
+    def save_dlg(self, *args):
+        from ...blocks.files import EXT_MAP
+
+        ext_list = [f"*.{ext}" for ext in EXT_MAP]
+        ext_str = f'({" ".join(ext_list)})'
+
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save FoS-style file",
+            "",
+            f"FoS Files {ext_str};;All Files (*)"
+        )
+
+        if path:
+            self.save(path=path)
 
 
 

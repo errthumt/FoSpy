@@ -1,7 +1,7 @@
 from ..available import validate_ui, UINotAvailable
 available = False
 try:
-    validate_ui("pyside6")
+    validate_ui("app")
     from . import window
     available = True
 except UINotAvailable as e:

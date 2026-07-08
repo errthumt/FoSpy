@@ -23,7 +23,7 @@ def _check_requirement(req:str|list|tuple) -> bool:
 
 _UI_REQUIREMENTS = {
     "pyqtgraph": ("pyqtgraph", ["PySide6", "PyQt6", "PySide2", "PyQt5"]),
-    "pyside6": "PySide6",
+    "app": ("PySide6", "qdarktheme"),
     "native": ("tkinter", "matplotlib")
 }
 
