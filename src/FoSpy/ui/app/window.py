@@ -7,7 +7,8 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QWidget,
     QLabel,
-    QVBoxLayout
+    QVBoxLayout,
+    QFileDialog
 )
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
@@ -41,13 +42,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(WINDOW_TITLE)
         self.resize(*WINDOW_DIMENSIONS)
 
-        if open_path is not None:
-            fb = FileBlock.fromFile(open_path)
-        else:
-            fb = None
-
-        self.root_block = fb
-
         # map of block -> tree item
         self.tree_items = {}
 
@@ -64,10 +58,21 @@ class MainWindow(QMainWindow):
         self.content_stack = QStackedWidget()
         main_splitter.addWidget(self.content_stack)
 
-        self._initialize_views()
-
         main_splitter.setStretchFactor(0, 1)
         main_splitter.setStretchFactor(1, 4)
+
+        self._open_file(open_path=open_path)
+
+    def _open_file(self, open_path=None):
+        if open_path is not None:
+            fb = FileBlock.fromFile(open_path)
+        else:
+            fb = None
+
+        self.root_block = fb
+        self.refresh_tree()
+        self._initialize_views()
+
 
     def _build_tree(self):
         """Builds the tree view with the given file block."""
@@ -81,9 +86,6 @@ class MainWindow(QMainWindow):
         # wiring
         self.tree_view.clicked.connect(self._on_tree_selection)
         self.splitter.addWidget(self.tree_view)
-
-        self.refresh_tree()
-
 
 
     def refresh_tree(self, blk:Block=None, target_item:QStandardItem=None):
@@ -107,11 +109,18 @@ class MainWindow(QMainWindow):
             self._clear_views(target_item)
             target_item.removeRows(0, target_item.rowCount())
 
+        self.tree_items[blk] = target_item
         self._register_view(target_item, blk)
         self._populate_tree_nodes(target_item, blk)
     
     def _populate_tree_nodes(self, parent_item:QStandardItem, blk:Block):
         """Recursively adds child nodes to a QStandardItem."""
+
+        if not isinstance(blk, Block):
+            return
+        
+        if not hasattr(blk, "__GUI_FLAGS__"):
+            blk.__GUI_FLAGS__ = {}
 
         if isinstance(blk, ListBlock):
             for i, blk_i in enumerate(blk._objs):
@@ -131,6 +140,25 @@ class MainWindow(QMainWindow):
                     child_item = QStandardItem(prop)
                     self._add_tree_item(child_item, parent_item, obj)
 
+    def _set_flag(self, blk:Block, flag:str, value:bool):
+        blk.__GUI_FLAGS__[flag] = value
+        item = self.tree_items[blk]
+
+        if flag == "edited":
+            txt = item.text()
+            if value and "*" not in txt:
+                item.setText(f"*{txt}")
+            elif not value:
+                txt = txt.replace("*", "")
+                item.setText(txt)    
+
+    def _flag_edited(self, blk):
+        self._set_flag(blk, "edited", True)
+
+        if hasattr(blk, "_parent_block") and blk._parent_block is not None:
+            self._flag_edited(blk._parent_block)
+
+
     def _add_tree_item(self, child_item:QStandardItem, parent_item:QStandardItem, blk:Block):
         """Adds a single child item with corresponding block to a parent."""
         parent_item.appendRow(child_item)
@@ -138,6 +166,8 @@ class MainWindow(QMainWindow):
         self._populate_tree_nodes(child_item, blk)
 
         self.tree_items[blk] = child_item
+        for flag, value in blk.__GUI_FLAGS__.items():
+            self._set_flag(blk, flag, value)
 
     def _register_view(self, item:QStandardItem, blk:Block):
 
@@ -164,7 +194,19 @@ class MainWindow(QMainWindow):
                         self.content_stack.removeWidget(widget)
                         widget.deleteLater()
 
+    def _create_file_menu(self, menu_bar):
+        file_menu = menu_bar.addMenu("&File")
 
+        # Open
+        open_action = QAction("&Open...", self)
+        open_action.setShortcut("Ctrl+O")
+        open_action.triggered.connect(self._open_dlg)
+        file_menu.addAction(open_action)
+
+        # Exit
+        exit_action = QAction("&Exit", self)
+        exit_action.triggered.connect(self.close)
+        file_menu.addAction(exit_action)
 
     def _create_menu_bar(self):
         """Dropdown menu ribbon."""
@@ -172,13 +214,7 @@ class MainWindow(QMainWindow):
 
         menu_bar = self.menuBar()
 
-        # File Menu
-        file_menu = menu_bar.addMenu("&File")
-        exit_action = QAction("&Exit", self)
-        exit_action.triggered.connect(self.close)
-        file_menu.addAction(exit_action)
-        self.menus["file"] = file_menu
-
+        self._create_file_menu(menu_bar)
 
         # View Menu
         view_menu = menu_bar.addMenu("&View")
@@ -187,8 +223,28 @@ class MainWindow(QMainWindow):
         # Help Menu
         help_menu = menu_bar.addMenu("&Help")
         self.menus["help"] = help_menu
+    
+    def _open_dlg(self):
+        from ...blocks.files import EXT_MAP
+
+        ext_list = [f"*.{ext}" for ext in EXT_MAP]
+        ext_str = f'({" ".join(ext_list)})'
+
+
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Open FoS-style file",
+            "",
+            f"FoS Files {ext_str};;All Files (*)"
+        )
+
+        if file_path:
+            self._open_file(open_path=file_path)
 
     def _initialize_views(self):
+        if self.root_block is not None:
+            return self.go_to_block(self.root_block)
+        
         self.no_file = TextContentWidget(
             "No File Selected",
             "Open a FoS file to view its contents.\n"

@@ -51,6 +51,7 @@ class SingleBlockWidget(QWidget):
         scroll.setWidget(scroll_content)
         sidebar.addWidget(scroll)
 
+        self.prop_labels = {}
         self._refresh_properties()
 
     def _refresh_properties(self):
@@ -82,6 +83,7 @@ class SingleBlockWidget(QWidget):
                 label = QLabel(f"<b>{prop}:</b>")
                 label.setMinimumWidth(120)
                 row_layout.addWidget(label)
+                self.prop_labels[prop] = label
 
                 txt = val.serialize() if hasattr(val, "serialize") else str(val)
                 line_edit = QLineEdit(txt)
@@ -94,8 +96,20 @@ class SingleBlockWidget(QWidget):
     def _on_primitive_edit(self, prop:str, line_edit:QLineEdit):
         new_text = line_edit.text()
 
+        old_val = getattr(self.blk, prop)
+        old_txt = old_val.serialize() if hasattr(old_val, "serialize") else str(old_val)
+
+        if new_text == old_txt:
+            return
+
         try:
             setattr(self.blk, prop, new_text)
+
+            self.win._flag_edited(self.blk)
+            label = self.prop_labels[prop]
+            if "*" not in label.text():
+                label.setText("*" + label.text())
+
         except Exception:
             # TODO: pass exceptions to user
             line_edit.setText(str(getattr(self.blk, prop)))

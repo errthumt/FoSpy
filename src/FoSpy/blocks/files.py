@@ -10,6 +10,10 @@ import os
 import tempfile
 from pathlib import Path
 
+EXT_MAP = {
+    "fos": dict_from_file,
+    "json": lambda fp: json.load(open(fp, "r"))
+}
 
 class FileBlock(SingleBlock):
     """
@@ -65,15 +69,10 @@ class FileBlock(SingleBlock):
         except IndexError:
             raise ValueError(f"Could not determine extension for filepath: {pathstr}")
 
-        ext_map = {
-            "fos": dict_from_file,
-            "json": lambda fp: json.load(open(fp, "r"))
-        }
+        if ext not in EXT_MAP:
+            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_MAP.keys())}")
 
-        if ext not in ext_map:
-            raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(ext_map.keys())}")
-
-        blockDict = ext_map[ext](abspath)
+        blockDict = EXT_MAP[ext](abspath)
         if "metadata" not in blockDict:
             raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
         
