@@ -61,6 +61,70 @@ def register_app() -> bool:
     
     Returns True if registration succeeded, False otherwise.
     """
+
+    success = _main_registration()
+    if not success:
+        return False
+    
+    from FoSpy.config import values as cfg, save_all as cfg_save
+    cfg.APP.registered = True
+    cfg_save(prompt=False)
+    return True
+
+def register_dlg():
+    from ...config import values as cfg, save_all as cfg_save
+    from .window import MainWindow, DLG_ESCAPE
+
+    if not cfg.get("APP.registered", False):
+        response = MainWindow._custom_popup(
+            "FoSpy GUI - Registration Recommended",
+            "This GUI is not registered as a handler for FoS-style file extensions. "
+            "Would you like to register it now?\n\n"
+
+            "After registration, supported files can be opened with\n"
+            f"right-click > \"Open With\" > {_get_executable(full=False)}\n"
+            "(Or similar)\n\n"
+
+            "You can always register later with\n"
+            "Help > Add to Apps",
+
+            ("Yes", True),
+            ("No", False),
+            ("No, and don't ask again", DLG_ESCAPE),
+            default=1,
+            cancel=False
+        )
+
+        if response is DLG_ESCAPE:
+            cfg.APP.registered = True
+            cfg_save(prompt=False)
+
+        elif response:
+            register_app()
+
+def _get_executable(full=True):
+    executable_path = sys.executable
+
+    current_os = platform.system()
+    # Fallback/Development environment handling for raw script invocation
+    if executable_path.endswith(('python', 'python.exe', 'python3')):
+        if current_os == "Windows":
+            # Convert standard python.exe path to pip's console/gui script wrapper entry
+            executable_path = executable_path.replace("python.exe", "fospy-app.exe")
+        else:
+            executable_path = executable_path.replace(os.path.basename(executable_path), "fospy-app")
+
+    # Double check that our generated wrapper exists, fallback to standard pathing if not found
+    if not os.path.exists(executable_path):
+        executable_path = sys.executable
+
+    if full:
+        return executable_path
+    
+    return os.path.basename(executable_path)
+
+
+def _main_registration():
     print("Registering FoSpy GUI as a handler for the following extensions...")
     for ext in SUPPORTED_EXTENSIONS:
         print("*"+ext)
@@ -74,19 +138,8 @@ def register_app() -> bool:
     # --- 1. Find the target executable platform-agnostically ---
     # If frozen via PyInstaller, sys.executable is the compiled binary wrapper.
     # If running via pip entry points, it will point to an executable entry script wrapper.
-    executable_path = sys.executable
+    executable_path = _get_executable()
 
-    # Fallback/Development environment handling for raw script invocation
-    if executable_path.endswith(('python', 'python.exe', 'python3')):
-        if current_os == "Windows":
-            # Convert standard python.exe path to pip's console/gui script wrapper entry
-            executable_path = executable_path.replace("python.exe", "fospy-app.exe")
-        else:
-            executable_path = executable_path.replace(os.path.basename(executable_path), "fospy-app")
-
-    # Double check that our generated wrapper exists, fallback to standard pathing if not found
-    if not os.path.exists(executable_path):
-        executable_path = sys.executable
 
     # --- 2. Windows Implementation ---
     if current_os == "Windows":

@@ -23,6 +23,12 @@ def main():
 
     sys.exit(app.exec())
 
+def setup():
+    from ._utils import register_dlg
+
+    register_dlg()
+
+
 if __name__ == "__main__":
     main()
 

@@ -17,7 +17,7 @@ import os
 from typing import Any
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
-from ._utils import _get_label
+from ._utils import _get_label, register_dlg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
@@ -87,6 +87,8 @@ class MainWindow(QMainWindow):
             copy = False
 
         self._open_file(open_path=open_path, copy=copy)
+
+        register_dlg()
 
     def _startup_copy_dlg(self, open_path):
         if open_path is None:
@@ -395,7 +397,8 @@ class MainWindow(QMainWindow):
         if file_path:
             self._open_file(open_path=file_path, copy=copy)
 
-    def _custom_popup(self, title, text, *btns:str|tuple[str, Any], default=0, cancel=True):
+    @classmethod
+    def _custom_popup(cls, title, text, *btns:str|tuple[str, Any], default=0, cancel=True):
         msg_box = QMessageBox()
         msg_box.setWindowTitle(title)
         msg_box.setText(text)
