@@ -90,6 +90,13 @@ class Attachment(SingleBlock):
                 return cls(blockDict, _dispatched=True, **kwargs)
 
         return NewAttachment.dispatch_subclass(blockDict, **kwargs)
+    
+    def find_attachments(self):
+        attachments = super().find_attachments()
+        if self not in attachments:
+            attachments.append(self)
+
+        return attachments
 
 class EmbeddedFile(Attachment):
     def _write_to_temp(self, encoding="utf-8"):

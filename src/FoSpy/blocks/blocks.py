@@ -1411,6 +1411,22 @@ class SingleBlock(Block):
                 elif isinstance(val, Attachment) and hasattr(val, "refresh"):
                     val.refresh(new_copy=new_copy, overwrite=overwrite, **kwargs)
 
+    def find_attachments(self):
+        attachments = []
+        for propVal in self.get_prop_dict().values():
+            if isinstance(propVal, ListBlock):
+                for obj in propVal._objs:
+                    attachments.extend([
+                        o for o in obj.find_attachments()
+                        if o not in attachments
+                    ])
+            elif isinstance(propVal, SingleBlock):
+                attachments.extend([
+                    o for o in propVal.find_attachments()
+                    if o not in attachments
+                ])
+        return attachments
+
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
