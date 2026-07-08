@@ -136,6 +136,7 @@ class ListBlockWidget(QWidget):
 
         tabs = QTabWidget(self)
         tabs.setMovable(False)
+        self.tabs = tabs
 
         for i, child_blk in enumerate(self.blk._objs):
             label = _get_label(child_blk, i)
@@ -143,7 +144,17 @@ class ListBlockWidget(QWidget):
             tab_content = SingleBlockWidget(label, child_blk, window)
             tabs.addTab(tab_content, label)
 
+        tabs.currentChanged.connect(self.on_tab_changed)
+
         main_layout.addWidget(tabs)
+
+    def on_tab_changed(self, index:int):
+        blk = self.blk._objs[index]
+        self.win.go_to_block(blk)
+
+    def go_to_tab(self, blk):
+        idx = self.blk._objs.index(blk)
+        self.tabs.setCurrentIndex(idx)
 
 widget_map[ListBlock] = ListBlockWidget
 

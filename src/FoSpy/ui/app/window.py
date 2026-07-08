@@ -1,5 +1,5 @@
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QActionGroup
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QActionGroup, QDesktopServices
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -9,12 +9,16 @@ from PySide6.QtWidgets import (
     QWidget,
     QLabel,
     QVBoxLayout,
-    QFileDialog
+    QFileDialog,
+    QMessageBox
 )
 import qdarktheme
+import os
+from typing import Any
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
 from ._utils import _get_label
+
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
 WIDGET_DATA_ROLE = Qt.ItemDataRole.UserRole + 1
@@ -22,6 +26,17 @@ WIDGET_DATA_ROLE = Qt.ItemDataRole.UserRole + 1
 AVAILABLE_THEMES = ["auto"] if hasattr(qdarktheme, "setup_theme") else []
 AVAILABLE_THEMES.extend(["light", "dark"])
 DEFAULT_THEME = AVAILABLE_THEMES[0]
+
+class EscapeFlag:
+    def __bool__(self):
+        return False
+    def __repr__(self):
+        if hasattr(self, "__name__") and self.__name__ is not None:
+            return f"<{self.__name__} escape flag>"
+        else:
+            return "<escape flag>"
+
+DLG_ESCAPE = EscapeFlag()
 
 class TextContentWidget(QWidget):
     """A simple content widget to display a title and description."""
@@ -66,17 +81,43 @@ class MainWindow(QMainWindow):
         main_splitter.setStretchFactor(0, 1)
         main_splitter.setStretchFactor(1, 4)
 
-        self._open_file(open_path=open_path)
+        copy = self._startup_copy_dlg(open_path)
+        if copy is DLG_ESCAPE:
+            open_path = None
+            copy = False
 
-    def _open_file(self, open_path=None):
+        self._open_file(open_path=open_path, copy=copy)
+
+    def _startup_copy_dlg(self, open_path):
+        if open_path is None:
+            return False
+        
+        path_str = os.path.abspath(open_path)
+
+        return self._custom_popup(
+            "FoSpy GUI -File Opened on Startup",
+            "You are opening the file below on startup. "
+            "Do you want to edit the file directly or make a copy?\n\n"
+            + path_str,
+            ("Edit A Copy", True),
+            ("Edit Original File", False),
+            cancel=True
+        )
+
+    def _open_file(self, open_path=None, copy=False):
         if open_path is not None:
             fb = FileBlock.fromFile(open_path)
+            if copy:
+                fb = fb.copy()
         else:
             fb = None
 
         self.root_block = fb
         self.refresh_tree()
         self._initialize_views()
+
+        if fb._sourceFile is None:
+            self._flag_edited(fb)
 
 
     def _build_tree(self):
@@ -93,14 +134,17 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.tree_view)
 
 
-    def refresh_tree(self, blk:Block=None, target_item:QStandardItem=None):
+    def refresh_tree(self, blk:Block=None):
         """Refreshes or builds tree nodes.
         If target_item is given, only that sub-tree branch is cleared and rebuilt"""
-
+        print("Debug: refreshing tree...")
         if blk is None:
             blk = self.root_block
             if blk is None:
                 return
+            target_item = None
+        else:
+            target_item = self.tree_items.get(blk, None)
         
         if target_item is None:
             self._clear_views(self.tree_model.invisibleRootItem())
@@ -127,6 +171,7 @@ class MainWindow(QMainWindow):
         if not hasattr(blk, "__GUI_FLAGS__"):
             blk.__GUI_FLAGS__ = {}
 
+
         if isinstance(blk, ListBlock):
             for i, blk_i in enumerate(blk._objs):
                 label = _get_label(blk_i, i)
@@ -144,10 +189,13 @@ class MainWindow(QMainWindow):
                 if isinstance(obj, Block):
                     child_item = QStandardItem(prop)
                     self._add_tree_item(child_item, parent_item, obj)
+        self._set_flag(blk, "refresh", False)
 
     def _set_flag(self, blk:Block, flag:str, value:bool):
         blk.__GUI_FLAGS__[flag] = value
-        item = self.tree_items[blk]
+        item = self.tree_items.get(blk, None)
+        if item is None:
+            return
 
         if flag == "edited":
             txt = item.text()
@@ -155,10 +203,14 @@ class MainWindow(QMainWindow):
                 item.setText(f"*{txt}")
             elif not value:
                 txt = txt.replace("*", "")
-                item.setText(txt)    
+                item.setText(txt)
+
+    def _get_flag(self, blk:Block, flag:str):
+        return blk.__GUI_FLAGS__.get(flag, False)    
 
     def _flag_edited(self, blk):
         self._set_flag(blk, "edited", True)
+        self._set_flag(blk, "refresh", True)
 
         if hasattr(blk, "_parent_block") and blk._parent_block is not None:
             self._flag_edited(blk._parent_block)
@@ -180,7 +232,8 @@ class MainWindow(QMainWindow):
 
         view_data = {
             "builder": lambda lbl=label,b=blk: self._build_widget(lbl,b),
-            "widget": None
+            "widget": None,
+            "block": blk
         }
 
         item.setData(view_data, WIDGET_DATA_ROLE)
@@ -207,6 +260,18 @@ class MainWindow(QMainWindow):
         open_action.setShortcut("Ctrl+O")
         open_action.triggered.connect(self._open_dlg)
         file_menu.addAction(open_action)
+
+        # Open A Copy
+        open_copy_action = QAction("&Open A Copy...", self)
+        open_copy_action.setShortcut("Ctrl+Shift+O")
+        open_copy_action.triggered.connect(lambda *_: self._open_dlg(copy=True))
+        file_menu.addAction(open_copy_action)
+
+        # Edit A Copy
+        edit_copy_action = QAction("&Edit A Copy", self)
+        edit_copy_action.setShortcut("Ctrl+Shift+E")
+        edit_copy_action.triggered.connect(self._edit_copy)
+        file_menu.addAction(edit_copy_action)
 
         # Save
         save_action = QAction("&Save", self)
@@ -249,6 +314,44 @@ class MainWindow(QMainWindow):
             theme_submenu.addAction(action)
             theme_group.addAction(action)
     
+    def _create_help_menu(self, menu_bar):
+        from ._utils import register_file_extensions
+        help_menu = menu_bar.addMenu("&Help")
+        self.menus["help"] = help_menu
+
+        doc_menu = help_menu.addMenu("&Documentation")
+
+        doc_site_action = QAction("&Docs Site", self)
+        doc_site_action.triggered.connect(self._open_docs_site)
+        doc_menu.addAction(doc_site_action)
+
+        doc_gh_action = QAction("&Github", self)
+        doc_gh_action.triggered.connect(lambda *_:
+            QDesktopServices.openUrl(QUrl("https://github.com/errthumt/FoSpy")))
+        doc_menu.addAction(doc_gh_action)
+        
+        register_action = QAction("&Register File Extensions", self)
+        register_action.triggered.connect(register_file_extensions)
+        help_menu.addAction(register_action)
+
+    def _open_docs_site(self):
+        from ._utils import _get_version, _find_docs_url
+
+        version = _get_version()
+        url = _find_docs_url(version)
+
+        if url.endswith("latest/"):
+            if not self._custom_popup(
+                "Documentation for version not found",
+                f"A documentation URL for version {version} could not be found.\n\n"
+                "Redirecting to the latest version instead:\n"
+                + url,
+                cancel=True
+            ):
+                return
+
+        QDesktopServices.openUrl(QUrl(url))
+
     def _choose_theme(self, theme_id):
         app = QApplication.instance()
         if not app:
@@ -270,12 +373,13 @@ class MainWindow(QMainWindow):
 
         self._create_view_menu(menu_bar)
 
-        # Help Menu
-        help_menu = menu_bar.addMenu("&Help")
-        self.menus["help"] = help_menu
+        self._create_help_menu(menu_bar)
     
-    def _open_dlg(self):
+    def _open_dlg(self, copy=False):
         from ...blocks.files import EXT_MAP
+
+        if not self._unsaved_dlg("opening a new file"):
+            return
 
         ext_list = [f"*.{ext}" for ext in EXT_MAP]
         ext_str = f'({" ".join(ext_list)})'
@@ -285,11 +389,87 @@ class MainWindow(QMainWindow):
             self,
             "Open FoS-style file",
             "",
-            f"FoS Files {ext_str};;All Files (*)"
+            f"FoS Style {ext_str};;All Files (*)"
         )
 
         if file_path:
-            self._open_file(open_path=file_path)
+            self._open_file(open_path=file_path, copy=copy)
+
+    def _custom_popup(self, title, text, *btns:str|tuple[str, Any], default=0, cancel=True):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle(title)
+        msg_box.setText(text)
+
+        if len(btns) == 0:
+            btns = [("OK", True)]
+
+        results = {}
+
+        if not (
+            (default>=0 and default<len(btns)) or 
+            (default is DLG_ESCAPE and cancel)
+        ):
+            default = 0
+
+        for i, btn in enumerate(btns):
+            if isinstance(btn, tuple):
+                btn_txt = btn[0]
+                result = btn[1]
+            else:
+                btn_txt = btn
+                result = i
+
+            btn = msg_box.addButton(btn_txt, QMessageBox.ActionRole)
+            if i == default:
+                msg_box.setDefaultButton(btn)
+                default = btn
+            results[btn] = result
+        
+        if cancel:
+            btn = msg_box.addButton("Cancel", QMessageBox.ActionRole)
+            results[btn] = DLG_ESCAPE
+            if default is DLG_ESCAPE:
+                msg_box.setDefaultButton(btn)
+                default = btn
+
+        msg_box.exec()
+
+        clicked = msg_box.clickedButton() or default
+
+        return results[clicked]
+
+
+    def _unsaved_dlg(self, pending_action="exiting"):
+        if not self._get_flag(self.root_block, "edited"):
+            return True
+        
+        options = [
+            ("Save", self.save),
+            ("Save As...", self.save_dlg),
+            ("Discard", lambda: True)
+        ]
+
+        result = self._custom_popup(
+            "Unsaved Changes",
+            f"You have unsaved changes. What would you like to do before {pending_action}?",
+            *options,
+            default=1,
+            cancel=True
+        )
+
+        if result is DLG_ESCAPE:
+            return result
+        
+        return result()
+        
+
+    def _edit_copy(self):
+        if (self.root_block is None or
+            not self._unsaved_dlg("switching to a copy")):
+            return
+        
+        self._open_file(open_path=self.root_block._sourceFile, copy=True)
+        
 
     def _initialize_views(self):
         if self.root_block is not None:
@@ -310,15 +490,26 @@ class MainWindow(QMainWindow):
         item = self.tree_model.itemFromIndex(idx)
         if not item:
             return
+        
+
                 
         widget_data = item.data(WIDGET_DATA_ROLE)
         if widget_data is None:
             return
+        
+        blk = widget_data.get("block", None)
+        if self._get_flag(blk, "refresh"):
+            self._set_flag(blk, "refresh", False)
+            self.refresh_tree(blk)
 
         if widget_data.get("widget", None) is None:
-            widget_data["widget"] = widget_data.get("builder", lambda: None)()
+            widget = widget_data.get("builder", lambda: None)()
+            if widget is None:
+                return
+            widget_data["widget"] = widget
             self.content_stack.addWidget(widget_data["widget"])
         
+        item.setData(widget_data, WIDGET_DATA_ROLE)
         self.content_stack.setCurrentWidget(widget_data["widget"])
     
     def go_to_block(self, blk:Block):
@@ -339,8 +530,26 @@ class MainWindow(QMainWindow):
 
 
     def _build_widget(self, label, blk:Block):
-        """Stub: Build a widget for the given block."""
+        """Build a widget for the given block or navigate to tab in parent's widget.
+
+        Default behavior: Build widget for block and return it.
+
+        If block's parent is a ListBlock: switch to block's tab and return None instead."""
         from .widgets import widget_map
+
+        if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
+            self.go_to_block(blk._parent_block)
+
+            parent_item = self.tree_items[blk._parent_block]
+            parent_widget = parent_item.data(WIDGET_DATA_ROLE)["widget"]
+            parent_widget.go_to_tab(blk)
+
+            blk_item = self.tree_items[blk]
+            idx = self.tree_model.indexFromItem(blk_item)
+            self.tree_view.setCurrentIndex(idx)
+            self.tree_view.scrollTo(idx)
+
+            return None
 
         for typ, widget in widget_map.items():
             if isinstance(blk, typ):
@@ -375,6 +584,9 @@ class MainWindow(QMainWindow):
         if not self.root_block:
             return
         
+        if path is None and self.root_block._sourceFile is None:
+            return self.save_dlg()
+
         self.root_block.save(filepath=path)
 
         # cache current tree selection
@@ -396,6 +608,7 @@ class MainWindow(QMainWindow):
                     self.tree_view.setCurrentIndex(new_idx)
                     self.tree_view.scrollTo(new_idx)
                     self._on_tree_selection(new_idx)
+        return True
     
     def save_dlg(self, *args):
         from ...blocks.files import EXT_MAP
@@ -412,6 +625,9 @@ class MainWindow(QMainWindow):
 
         if path:
             self.save(path=path)
+            return True
+
+        return False
 
 
 
