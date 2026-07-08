@@ -315,7 +315,7 @@ class MainWindow(QMainWindow):
             theme_group.addAction(action)
     
     def _create_help_menu(self, menu_bar):
-        from ._utils import register_file_extensions
+        from ._utils import register_app
         help_menu = menu_bar.addMenu("&Help")
         self.menus["help"] = help_menu
 
@@ -330,8 +330,8 @@ class MainWindow(QMainWindow):
             QDesktopServices.openUrl(QUrl("https://github.com/errthumt/FoSpy")))
         doc_menu.addAction(doc_gh_action)
         
-        register_action = QAction("&Register File Extensions", self)
-        register_action.triggered.connect(register_file_extensions)
+        register_action = QAction("&Add to Apps", self)
+        register_action.triggered.connect(register_app)
         help_menu.addAction(register_action)
 
     def _open_docs_site(self):
