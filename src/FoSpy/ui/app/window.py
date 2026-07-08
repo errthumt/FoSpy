@@ -359,6 +359,7 @@ class MainWindow(QMainWindow):
 
     def _choose_theme(self, theme_id):
         app = QApplication.instance()
+        app.setQuitOnLastWindowClosed(True)
         if not app:
             return
         
@@ -603,7 +604,7 @@ class MainWindow(QMainWindow):
             if current_item is not None:
                 cached_path = self._get_item_path(current_item)
 
-        self._open_file(self.root_block._sourceFile)
+        self._open_file(path)
 
         # restore tree selection
         if cached_path:
