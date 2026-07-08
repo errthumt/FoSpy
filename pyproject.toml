@@ -42,16 +42,17 @@ cif2xrd = [
     "FoSpy[diffraction]",
     "cif2xrd >= 1.0.3"
 ]
-Qt = [
+qt-plotting = [
     "pyqtgraph",
 ]
 PySide = [
-    "FoSpy[Qt]",
+    "FoSpy[qt-plotting]",
     "PySide6-essentials"
 ]
+app = ["FoSpy[PySide]", "pyqtdarktheme"]
 all = ["FoSpy[cif2xrd, PySide]"]
 DEV-TEST = ["questionary"]
-DEV = ["questionary", "FoSpy[all]"]
+DEV = ["FoSpy[DEV_TEST, all]"]
 
 [project.urls]
 Homepage = "https://github.com/errthumt/FoSpy"
