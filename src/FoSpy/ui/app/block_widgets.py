@@ -30,11 +30,14 @@ widget_map = {
 
 def _get_editor(value):
     if type(value) in widget_map:
-        editor, allow_direct = widget_map[type(value)]
-        if callable(allow_direct):
-            allow_direct = allow_direct(value)
+        editor, enabler = widget_map[type(value)]
+
+        if not callable(enabler):
+             def static_enabler(val, e=enabler):
+                 return e
+             enabler = static_enabler
         
-        return editor, allow_direct
+        return editor, enabler
 
     if hasattr(value, "serialize") and callable(value.serialize):
         return _get_editor(value.serialize())
@@ -62,7 +65,10 @@ class SingleBlockWidget(QWidget):
         self.editor = editor
         main_layout.addWidget(editor, stretch=1)
 
-        self.inactive = QLabel("Select a property or comment editor to inspect it in more detail.")
+        self.inactive = QLabel(
+            "Select a property or comment editor to inspect it in more detail.\n\n"
+            "Greyed-out properties can only be edited in the inspector."
+            )
         editor.addWidget(self.inactive)
         
         self.active = QTabWidget()
@@ -162,13 +168,23 @@ class SingleBlockWidget(QWidget):
             txt = val.serialize() if hasattr(val, "serialize") else str(val)
             line_edit = QLineEdit(txt)
             line_edit.setCursorPosition(0)
-            line_edit.editingFinished.connect(
-                lambda p=prop, e=line_edit: self._on_primitive_edit(p,e)
-            )
 
-            editor, enabled = _get_editor(val)
-            line_edit.setEnabled(enabled)
-            editor = editor(self, line_edit)
+            editor, enabler = _get_editor(val)
+            line_edit.setEnabled(enabler(txt))
+            def on_apply(p=prop, e=line_edit, en=enabler):
+                self._on_primitive_edit(p, e, en)
+
+            def direct_edit(apply=on_apply):
+                try:
+                    apply()
+                except Exception:
+                    # TODO: pass to user
+                    pass
+
+
+            line_edit.editingFinished.connect(on_apply)
+
+            editor = editor(self, line_edit, on_apply)
 
             btn = QPushButton("✏️")
             btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=p))
@@ -179,7 +195,7 @@ class SingleBlockWidget(QWidget):
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
             self.prop_layout.addLayout(row_layout)
 
-    def _on_primitive_edit(self, prop:str, line_edit:QLineEdit):
+    def _on_primitive_edit(self, prop:str, line_edit:QLineEdit, enabler:callable):
         new_text = line_edit.text()
 
         old_val = getattr(self.blk, prop)
@@ -188,19 +204,27 @@ class SingleBlockWidget(QWidget):
         if new_text == old_txt:
             return
 
+        error = None
         try:
             setattr(self.blk, prop, new_text)
+
+            enabled = enabler(new_text)
+            line_edit.setEnabled(enabled)
 
             self.win._flag_edited(self.blk)
             label = self.prop_labels[prop]
             if "*" not in label.text():
                 label.setText("*" + label.text())
 
-        except Exception:
+        except Exception as e:
             # TODO: pass exceptions to user
-            line_edit.setText(str(getattr(self.blk, prop)))
+            line_edit.setText(old_txt)
+            error = e
 
         line_edit.setCursorPosition(0)
+
+        if error is not None:
+            raise error
 
 widget_map[SingleBlock] = SingleBlockWidget
 
