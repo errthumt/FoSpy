@@ -542,7 +542,7 @@ class MainWindow(QMainWindow):
         Default behavior: Build widget for block and return it.
 
         If block's parent is a ListBlock: switch to block's tab and return None instead."""
-        from .widgets import widget_map
+        from .block_widgets import widget_map
 
         if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
             self.go_to_block(blk._parent_block)
