@@ -6,10 +6,11 @@ from PySide6.QtWidgets import (
 )
 
 class BaseEditorWidget(QWidget):
-    def __init__(self, parent_widget, editor_widget):
-        super().__init__(parent_widget)
+    def __init__(self, block_widget, line_edit, editor_widget):
+        super().__init__()
 
-        self.parent_ref = parent_widget
+        self.blk_widget = block_widget
+        self.line_edit = line_edit
 
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)

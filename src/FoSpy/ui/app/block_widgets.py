@@ -166,9 +166,9 @@ class SingleBlockWidget(QWidget):
                 lambda p=prop, e=line_edit: self._on_primitive_edit(p,e)
             )
 
-            editor, allow_direct = _get_editor(val)
-            editor = editor(line_edit)
-            editor.blk_widget = self
+            editor, enabled = _get_editor(val)
+            line_edit.setEnabled(enabled)
+            editor = editor(self, line_edit)
 
             btn = QPushButton("✏️")
             btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=p))
