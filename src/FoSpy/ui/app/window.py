@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
         """Initialize the FoSpy viewer app window.
 
         Args:
-            open_path (os.PathLike, optional):
+            open_path (pathlib.Path|str, optional):
                 Open the file at this path on startup. Defaults to None.
             copy (bool, optional):
                 - True: Open the editor with an unsaved copy of the file.
