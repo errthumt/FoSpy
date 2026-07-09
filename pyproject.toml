@@ -91,7 +91,7 @@ ignore_names = [
 
 [project.scripts]
 fos-dev-test = "FoSpy._dev.testing.cli:main"
-fospy-app = "FoSpy.ui.app.__main__:main"
+fospy-app = "FoSpy.ui.app.__main__:main_cli"
 fospy-app-setup = "FoSpy.ui.app.__main__:setup"
 
 

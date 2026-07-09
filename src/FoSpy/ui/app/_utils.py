@@ -4,10 +4,169 @@ import platform
 import subprocess
 import importlib.metadata
 import urllib.request
+import argparse
+import inspect
+
+import types
+from typing import Any, Union, get_args, get_origin
 from urllib.error import URLError, HTTPError
 from ...blocks.files import EXT_READ_MAP
 
+SKIP_ARG = object()
+
 SUPPORTED_EXTENSIONS = ["." + ext for ext in EXT_READ_MAP]
+
+
+def _resolve_param_type(annotation: Any) -> Any:
+    """Extracts a callable scalar type from Unions or standard type hints."""
+    if annotation == inspect.Parameter.empty:
+        return str
+
+    origin = get_origin(annotation)
+    
+    # Check for Union types (e.g., Union[int, str] or int | str)
+    if origin is Union or (hasattr(types, "UnionType") and origin is types.UnionType):
+        args = get_args(annotation)
+        # Filter out NoneType to handle Optional types gracefully (e.g., int | None)
+        non_none_args = [arg for arg in args if arg is not type(None)]
+        
+        if non_none_args:
+            # Take the first available type in the Union
+            first_type = non_none_args[0]
+            # Handle nested generics if necessary (like list[int] or PathLike[str])
+            nested_origin = get_origin(first_type)
+            return nested_origin if nested_origin is not None else first_type
+            
+        return str
+
+    # Handle standard single types with generics (like os.PathLike[str])
+    if origin is not None:
+        return origin
+
+    return annotation
+
+
+def _get_parser(desc, func:Any, *shortcuts:tuple[str, str]):
+    parser = argparse.ArgumentParser(description=desc, formatter_class=argparse.RawTextHelpFormatter)
+
+    shortcut_map = {long: short for long, short in shortcuts}
+
+    signature = inspect.signature(func)
+
+    req_in_front = {name: param for name, param in signature.parameters.items() if param.default == inspect.Parameter.empty}
+    req_in_front.update(signature.parameters)
+
+    for name, param in req_in_front.items():
+        is_required = param.default == inspect.Parameter.empty
+
+        if name in ("self", "cls"):
+            continue
+
+        param_type = _resolve_param_type(param.annotation) if param.annotation != inspect.Parameter.empty else str
+
+        cli_name = name.lstrip("_").replace("_", "-")
+        flags = ["--" + cli_name]
+        if name in shortcut_map:
+            flags.insert(0, "-" + shortcut_map[name])
+
+        if param_type is bool:
+            default_val = param.default if param.default != inspect.Parameter.empty else False
+            parser.set_defaults(**{name: default_val})
+
+            group = parser.add_mutually_exclusive_group(required=is_required)
+            group.add_argument(
+                *flags,
+                action="store_true",
+                dest=name,
+                help=f"Enable {name} (Default: {default_val})"
+            )
+
+            group.add_argument(
+                f"--no-{cli_name}" if not cli_name.startswith("no") else f"--{cli_name[2:].lstrip('-')}",
+                action="store_false",
+                dest=name,
+                help=f"Disable {name} (Default: {default_val})"
+            )
+
+        else:
+            pos_dest = f"__pos__{name}"
+            flag_dest = f"__flag_{name}"
+
+            group = parser.add_mutually_exclusive_group(
+                required=is_required
+            )
+
+            if not is_required:
+                group.add_argument(
+                    *flags,
+                    action="store",
+                    type=param_type,
+                    dest=flag_dest,
+                    metavar=cli_name,
+                    help=f"Set {name} (Default: {param.default})",
+                    default=SKIP_ARG
+                )
+
+            group.add_argument(
+                pos_dest,
+                metavar=cli_name,
+                nargs=1 if is_required else "?",
+                action="store",
+                type=param_type,
+                help=f"Positional arg for {name}"
+            )
+
+
+    return parser
+
+def _find_doc(func):
+    if isinstance(func, type):
+        return inspect.getdoc(func.__init__)
+    return inspect.getdoc(func)
+
+def add_parser(*shortcuts:tuple[str, str], desc:str="CLI Parser for FoSpy function.", args_to:callable=None) -> callable:
+    def decorator(func, shortcuts=shortcuts, desc=desc, args_to=args_to):
+        func_doc = _find_doc(func)
+        args_to_doc = _find_doc(args_to) or ""
+
+        if func_doc is None:
+            func_doc = ""
+
+        if args_to is None:
+            args_to = func
+        elif func_doc != "":
+            func_doc += "\n\n===== Arguments sent to: =====\n\n"
+
+        func_doc += args_to_doc
+
+        if desc != "":
+            desc += "\n\n" + func_doc
+
+
+        parser = _get_parser(desc, args_to, *shortcuts)
+
+        def decorated(*args, __parser__=parser, **kwargs):
+            if args or kwargs:
+                return func(*args, **kwargs)
+            
+            args = __parser__.parse_args()
+            args = vars(args)
+
+            cleaned = {}
+            for k, v in args.items():
+                if k.startswith(("__pos__", "__flag_")):
+                    k = k[7:]
+                cleaned[k] = v
+
+            return func(**cleaned)
+
+        return decorated
+    return decorator
+
+
+
+
+
 
 def _get_label(blk, i=None):        
     id_key, id_txt = blk.get_id()

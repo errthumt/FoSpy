@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 import qdarktheme
 import os
 from typing import Any
+import pathlib
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
 from ._utils import _get_label, register_dlg
@@ -56,7 +57,17 @@ class TextContentWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, open_path=None):
+    def __init__(self, open_path:pathlib.Path|str=None, copy:bool=None):
+        """Initialize the FoSpy viewer app window.
+
+        Args:
+            open_path (os.PathLike, optional):
+                Open the file at this path on startup. Defaults to None.
+            copy (bool, optional):
+                - True: Open the editor with an unsaved copy of the file.
+                - False: Open the editor with the original file.
+                - None: GUI prompt.
+        """
         super().__init__()
 
         self.setWindowTitle(WINDOW_TITLE)
@@ -81,10 +92,11 @@ class MainWindow(QMainWindow):
         main_splitter.setStretchFactor(0, 1)
         main_splitter.setStretchFactor(1, 4)
 
-        copy = self._startup_copy_dlg(open_path)
-        if copy is DLG_ESCAPE:
-            open_path = None
-            copy = False
+        if copy is None:
+            copy = self._startup_copy_dlg(open_path)
+            if copy is DLG_ESCAPE:
+                open_path = None
+                copy = False
 
         self._open_file(open_path=open_path, copy=copy)
 
@@ -211,6 +223,8 @@ class MainWindow(QMainWindow):
                 item.setText(txt)
 
     def _get_flag(self, blk:Block, flag:str):
+        if blk is None:
+            return False
         return blk.__GUI_FLAGS__.get(flag, False)    
 
     def _flag_edited(self, blk):

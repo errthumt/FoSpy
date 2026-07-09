@@ -1,27 +1,26 @@
 from PySide6.QtWidgets import QApplication
-import argparse
 import sys
 
 from .window import MainWindow
+from ._utils import add_parser
 
-def main():
-    parser = argparse.ArgumentParser(description='Fospy App Launcher')
-
-    parser.add_argument(
-        "filepath",
-        nargs="?",
-        default=None,
-        help="Path to the initial FoS-style format to load on startup."
-    )
-
-    args = parser.parse_args()
-
+@add_parser(
+    ("copy", "c"),
+    ("open_path", "o"),
+    desc="CLI Entry for FoSpy App",
+    args_to=MainWindow
+)
+def main_cli(**kwargs):
     app = QApplication(sys.argv)
 
-    window = MainWindow(args.filepath)
+    window = MainWindow(**kwargs)
     window.show()
 
     sys.exit(app.exec())
+
+
+def main():
+    main_cli()
 
 def setup():
     from ._utils import register_dlg
@@ -30,6 +29,6 @@ def setup():
 
 
 if __name__ == "__main__":
-    main()
+    main_cli()
 
     
