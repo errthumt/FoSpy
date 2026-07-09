@@ -11,8 +11,11 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QScrollArea,
     QPushButton,
-    QTabWidget
+    QTabWidget,
+    QStackedWidget
 )
+
+SIDEBAR_WIDTH = 600
 
 widget_map = {ListBlock: lambda label, blk, window: QLabel("ListBlock Placeholder")}
 
@@ -31,7 +34,11 @@ class SingleBlockWidget(QWidget):
         sidebar = QVBoxLayout()
         self.sidebar = sidebar
         sidebar.setContentsMargins(10, 10, 10, 10)
-        main_layout.addLayout(sidebar)
+        main_layout.addLayout(sidebar, stretch=0)
+
+        editor = QStackedWidget()
+        self.editor = editor
+        main_layout.addWidget(editor, stretch=1)
 
         header = QLabel(f"<h3>Properties | {label}</h3>")
         subhead = QLabel(f"<h4>({type(blk).__name__})</h4>")
@@ -42,6 +49,7 @@ class SingleBlockWidget(QWidget):
         scroll = QScrollArea(self)
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll.setMaximumWidth(SIDEBAR_WIDTH)
 
         scroll_content = QWidget()
         prop_layout = QVBoxLayout(scroll_content)
@@ -87,6 +95,7 @@ class SingleBlockWidget(QWidget):
 
                 txt = val.serialize() if hasattr(val, "serialize") else str(val)
                 line_edit = QLineEdit(txt)
+                line_edit.setCursorPosition(0)
                 line_edit.editingFinished.connect(
                     lambda p=prop, e=line_edit: self._on_primitive_edit(p,e)
                 )
@@ -113,6 +122,8 @@ class SingleBlockWidget(QWidget):
         except Exception:
             # TODO: pass exceptions to user
             line_edit.setText(str(getattr(self.blk, prop)))
+
+        line_edit.setCursorPosition(0)
 
 widget_map[SingleBlock] = SingleBlockWidget
 
