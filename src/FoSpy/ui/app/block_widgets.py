@@ -15,7 +15,10 @@ from PySide6.QtWidgets import (
     QStackedWidget
 )
 
-SIDEBAR_WIDTH = 600
+SIDEBAR_WIDTH = 400
+SIDEBAR_MARGINS = (10,10,10,10)
+
+SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
 
 widget_map = {ListBlock: lambda label, blk, window: QLabel("ListBlock Placeholder")}
 
@@ -33,12 +36,20 @@ class SingleBlockWidget(QWidget):
 
         sidebar = QVBoxLayout()
         self.sidebar = sidebar
-        sidebar.setContentsMargins(10, 10, 10, 10)
+        sidebar.setContentsMargins(*SIDEBAR_MARGINS)
         main_layout.addLayout(sidebar, stretch=0)
 
         editor = QStackedWidget()
         self.editor = editor
         main_layout.addWidget(editor, stretch=1)
+
+        self.inactive = QLabel("Select a property or comment editor to inspect it in more detail.")
+        editor.addWidget(self.inactive)
+        
+        self.active = QTabWidget()
+        editor.addWidget(self.active)
+
+        self.deactivate_editor()
 
         header = QLabel(f"<h3>Properties | {label}</h3>")
         subhead = QLabel(f"<h4>({type(blk).__name__})</h4>")
@@ -46,12 +57,22 @@ class SingleBlockWidget(QWidget):
         sidebar.addWidget(header)
         sidebar.addWidget(subhead)
 
+        sidebar_w = max(
+            SIDEBAR_WIDTH,
+            header.sizeHint().width(),
+            subhead.sizeHint().width()
+        )
+
+        scroll_w = sidebar_w - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
+
         scroll = QScrollArea(self)
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QScrollArea.Shape.NoFrame)
-        scroll.setMaximumWidth(SIDEBAR_WIDTH)
+        scroll.setMinimumWidth(scroll_w)
+        scroll.setContentsMargins(0,0,0,0)
 
         scroll_content = QWidget()
+        scroll_content.setMinimumWidth(scroll_w)
         prop_layout = QVBoxLayout(scroll_content)
         prop_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.prop_layout = prop_layout
@@ -61,6 +82,9 @@ class SingleBlockWidget(QWidget):
 
         self.prop_labels = {}
         self._refresh_properties()
+
+    def deactivate_editor(self):
+        self.editor.setCurrentWidget(self.inactive)
 
     def _refresh_properties(self):
         # TODO: needs to clear self.prop_layout
@@ -90,7 +114,7 @@ class SingleBlockWidget(QWidget):
 
                 label = QLabel(f"<b>{prop}:</b>")
                 label.setMinimumWidth(120)
-                row_layout.addWidget(label)
+                row_layout.addWidget(label, stretch=0)
                 self.prop_labels[prop] = label
 
                 txt = val.serialize() if hasattr(val, "serialize") else str(val)
@@ -99,7 +123,7 @@ class SingleBlockWidget(QWidget):
                 line_edit.editingFinished.connect(
                     lambda p=prop, e=line_edit: self._on_primitive_edit(p,e)
                 )
-                row_layout.addWidget(line_edit)
+                row_layout.addWidget(line_edit, stretch=1)
                 self.prop_layout.addLayout(row_layout)
 
     def _on_primitive_edit(self, prop:str, line_edit:QLineEdit):
