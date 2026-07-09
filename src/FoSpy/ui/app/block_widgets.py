@@ -147,9 +147,9 @@ class SingleBlockWidget(QWidget):
 
             if isinstance(val, Block):
                 btn_txt = f"Go to {prop}"
-                btn = QPushButton(btn_txt)
-                btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
-                self.prop_layout.addWidget(btn)
+                edit_btn = QPushButton(btn_txt)
+                edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
+                self.prop_layout.addWidget(edit_btn)
                 continue
 
             
@@ -186,12 +186,12 @@ class SingleBlockWidget(QWidget):
 
             editor = editor(self, line_edit, on_apply)
 
-            btn = QPushButton("✏️")
-            btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=p))
+            edit_btn = QPushButton("✏️")
+            edit_btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=f"✏️ {p}"))
 
 
             row_layout.addWidget(line_edit, stretch=1)
-            row_layout.addWidget(btn, stretch=0)
+            row_layout.addWidget(edit_btn, stretch=0)
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
             self.prop_layout.addLayout(row_layout)
 

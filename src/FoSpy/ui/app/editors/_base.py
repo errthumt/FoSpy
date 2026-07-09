@@ -6,15 +6,11 @@ from PySide6.QtWidgets import (
     QLabel
 )
 
-
-
-class BasePropEditor(QWidget):
-    def __init__(self, block_widget, line_edit, editor_widget, on_apply):
+class BaseEditorWidget(QWidget):
+    def __init__(self, block_widget, editor_widget):
         super().__init__()
 
-        self.on_apply = on_apply
         self.blk_widget = block_widget
-        self.line_edit = line_edit
 
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -22,8 +18,9 @@ class BasePropEditor(QWidget):
 
         self.editor = editor_widget
         self.refresh_editor()
-
         self.layout.addWidget(self.editor, stretch=0)
+
+        self.setLayout(self.layout)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
@@ -65,6 +62,9 @@ class BasePropEditor(QWidget):
             self.hint(str(e), "Failed to apply changes:")
         self.refresh_editor()
 
+    def refresh_editor(self):
+        pass
+
     def hint(self, text="", header=None):
 
         txt = f"<h4>{header}</h4>\n" if header else ""
@@ -73,5 +73,12 @@ class BasePropEditor(QWidget):
 
         self.hintPanel.setText(txt)
 
-    def refresh_editor(self):
-        pass
+
+class BasePropEditor(BaseEditorWidget):
+    def __init__(self, block_widget, line_edit, editor_widget, on_apply):
+        self.on_apply = on_apply
+        self.line_edit = line_edit
+        
+        super().__init__(block_widget, editor_widget)
+
+
