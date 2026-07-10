@@ -1119,7 +1119,6 @@ class SingleBlock(Block):
             ## to run at serialization
         ```
         """
-        from functools import wraps
 
         func = self._resolve_relative_path(path)
         if not getattr(func, "_is_calc_routine", False):
@@ -1127,9 +1126,8 @@ class SingleBlock(Block):
 
         self._meta.routine_paths.append(path)
 
-        @wraps(func)
-        def wrapped():
-            return func(**kwargs)
+        def wrapped(f=func, k=kwargs):
+            return f(**k)
 
         self._calc_routines.append(wrapped)
 
