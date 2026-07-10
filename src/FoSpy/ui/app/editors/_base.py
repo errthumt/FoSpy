@@ -12,15 +12,15 @@ class BaseEditorWidget(QWidget):
 
         self.blk_widget = block_widget
 
-        self.layout = QVBoxLayout(self)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(10)
+        self.base_layout = QVBoxLayout(self)
+        self.base_layout.setContentsMargins(0, 0, 0, 0)
+        self.base_layout.setSpacing(10)
 
         self.editor = editor_widget
         self.refresh_editor()
-        self.layout.addWidget(self.editor, stretch=0)
+        self.base_layout.addWidget(self.editor, stretch=0)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.base_layout)
 
         button_layout = QHBoxLayout()
         button_layout.addStretch()
@@ -37,12 +37,12 @@ class BaseEditorWidget(QWidget):
         self.cancel_btn.clicked.connect(self.cancel)
         button_layout.addWidget(self.cancel_btn)
 
-        self.layout.addLayout(button_layout, stretch=0)
+        self.base_layout.addLayout(button_layout, stretch=0)
 
         self.hintPanel = QLabel()
-        self.layout.addWidget(self.hintPanel, stretch=1)
+        self.base_layout.addWidget(self.hintPanel, stretch=1)
 
-        self.setLayout(self.layout)
+        self.setLayout(self.base_layout)
 
     def ok(self):
         self.apply()
@@ -78,7 +78,7 @@ class BasePropEditor(BaseEditorWidget):
     def __init__(self, block_widget, line_edit, editor_widget, on_apply):
         self.on_apply = on_apply
         self.line_edit = line_edit
-        
+
         super().__init__(block_widget, editor_widget)
 
 

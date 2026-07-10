@@ -2,6 +2,7 @@ from .window import MainWindow
 from ...blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
 from ._utils import _get_label
 from . import editors
+from .editors.comments import CommentEditorWidget
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -123,11 +124,19 @@ class SingleBlockWidget(QWidget):
         if self.active.count() == 0 or editor is None:
             self.editor.setCurrentWidget(self.inactive)
 
+        if hasattr(editor, "btn"):
+            editor.btn.setText(editor.btn.text().replace("*",""))
+
     def activate_editor(self, editor, label="MISSING"):
         tabs = [
             self.active.widget(i) for
             i in range(self.active.count())
         ]
+
+        if hasattr(editor, "btn"):
+            txt = editor.btn.text()
+            if "*" not in txt:
+                editor.btn.setText(txt+"*")
 
         if editor not in tabs:
             self.active.addTab(editor, label)
@@ -185,13 +194,17 @@ class SingleBlockWidget(QWidget):
             line_edit.editingFinished.connect(on_apply)
 
             editor = editor(self, line_edit, on_apply)
-
             edit_btn = QPushButton("✏️")
             edit_btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=f"✏️ {p}"))
 
+            comment_btn = QPushButton("🗩")
+            comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
+            comment_editor.refresh_editor()
+            comment_btn.clicked.connect(lambda *_, e=comment_editor, p=prop: self.activate_editor(e, label=f"🗩 {p}"))
 
             row_layout.addWidget(line_edit, stretch=1)
             row_layout.addWidget(edit_btn, stretch=0)
+            row_layout.addWidget(comment_btn, stretch=0)
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
             self.prop_layout.addLayout(row_layout)
 
