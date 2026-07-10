@@ -18,13 +18,21 @@ class Attachment(SingleBlock):
         self._filepath = None
 
     def __setattr__(self, name, value):
-        if name == "_extension" and hasattr(self, "_extension"):
-            from warnings import warn
-            warn("You cannot change the extension of an attachment after construction. Skipping change.", RuntimeWarning)
-            return
+        if name == "_extension":
+            if value is None:
+                return
+            if hasattr(self, "_extension") and value != self._extension:
+                from warnings import warn
+                warn("You cannot change the extension of an attachment after construction. Skipping change.", RuntimeWarning)
+                return
 
-        if name != "file_name":
-            return super().__setattr__(name, value)
+        if name == "file_name":
+            old_ext = self._extension if hasattr(self, "_extension") else None
+            value, new_ext = self._validate_filename(value, old_ext)
+            self._extension = new_ext
+
+        return super().__setattr__(name, value)
+
 
         if "." not in value and hasattr(self, "_extension"):
             value = f"{value}{self._extension}"
@@ -42,6 +50,32 @@ class Attachment(SingleBlock):
                  f"be changed after construction. The current extension ('{self._extenstion}') "
                  f"will be appended to the new filename to form: '{new}'.", RuntimeWarning)
             return super().__setattr__("file_name", new)
+
+    @classmethod
+    def _validate_filename(cls, filename:str, ext:str=None):
+        filename = str(filename)
+        if ext is None:
+            ext = f".{filename.rsplit('.')[-1]}" if "." in filename else ""
+            # delegate to base validator routine to verify extension
+            return filename, ext
+        
+        if "." not in filename:
+            new_ext = ext
+        else:
+            new_ext = f".{filename.rsplit('.')[-1]}"
+        
+        if new_ext != ext:
+            filename = filename + ext
+            from warnings import warn
+            warn(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
+                 f"be changed after construction. The current extension ('{ext}') "
+                 f"will be appended to the new filename to form: '{filename}'.", RuntimeWarning)
+        
+        return filename, new_ext
+
+ 
+    
+
 
     def _get_filepath(self):
         """
@@ -195,6 +229,15 @@ class PathFile(Attachment):
             else:
                 _debug.msg(f"Could not refresh attachment: {e}. Configured to ignore.")
 
+    def change_path(self, new_path):
+        from pathlib import Path
+        abspath = Path(new_path).resolve()
+
+        if not abspath.is_file():
+            raise ValueError(f"Cannot change path to file that does not exist: {abspath}")
+        
+        self.path = abspath.relative_to(self._get_filedir(),walk_up=True)
+        self._filepath = abspath
     
     def _get_filepath(self, rf_new_copy=False, rf_overwrite=False, **kwargs):
         if self._filepath is None:
