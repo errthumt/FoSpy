@@ -25,6 +25,10 @@ basePath = type(Path(""))
     ]
 )
 class PathPosix(basePath):
+    def __init__(self, path):
+        if isinstance(path, str):
+            path = path.replace(" ", "")
+        super().__init__(path)
     def serialize(self, *args, **kwargs):
         return self.as_posix()
 

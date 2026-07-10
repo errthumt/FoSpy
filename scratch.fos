@@ -163,9 +163,7 @@ group Cmcm]
 
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
-path: [;;;
-../AppData/Local/Temp/tmpkm8vouyy/../../../../FoSpy/mkdocs/docs/examples/synthes
-is]
+path: mkdocs/docs/examples/synthesis
 
 [Rename]
 materials: reagents

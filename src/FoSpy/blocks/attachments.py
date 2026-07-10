@@ -140,7 +140,7 @@ class PathFile(Attachment):
     def _get_filedir(self):
         from pathlib import Path
         fileblock = self.find_fileblock()
-        return Path(fileblock._sourceFile).parent
+        return Path(fileblock._sourceFile).parent.resolve()
 
     def exists(self):
         return self._filepath.is_file() if self._filepath is not None else False
@@ -179,7 +179,7 @@ class PathFile(Attachment):
                         self._filepath = new_path
 
                 else:
-                    new_path = self._filepath.parent.relative_to(self._get_filedir(),walk_up=True)
+                    new_path = self._filepath.parent.resolve().relative_to(self._get_filedir(),walk_up=True)
                     self.path = str(new_path)
 
             checkpath = self._get_abspath()

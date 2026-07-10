@@ -630,7 +630,11 @@ class MainWindow(QMainWindow):
         if path is None and self.root_block._sourceFile is None:
             return self.save_dlg()
 
-        if not path.endswith(".fosx"):
+        if path is not None and path.endswith(".fosx"):
+            copy = self.root_block.copy()
+            copy.save(filepath=path)
+            
+        else:
             self.root_block.save(filepath=path)
             # cache current tree selection
             current_idx = self.tree_view.currentIndex()
@@ -651,9 +655,6 @@ class MainWindow(QMainWindow):
                         self.tree_view.setCurrentIndex(new_idx)
                         self.tree_view.scrollTo(new_idx)
                         self._on_tree_selection(new_idx)
-        else:
-            copy = self.root_block.copy()
-            copy.save(filepath=path)
 
         return True
     
