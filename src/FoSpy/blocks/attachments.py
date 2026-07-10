@@ -33,24 +33,6 @@ class Attachment(SingleBlock):
 
         return super().__setattr__(name, value)
 
-
-        if "." not in value and hasattr(self, "_extension"):
-            value = f"{value}{self._extension}"
-
-        super().__setattr__(name, value)
-
-        fn = self.file_name()
-        ext = f".{fn.rsplit('.', 1)[1]}"
-        if not hasattr(self, "_extension"):
-            self._extension = f".{fn.rsplit('.', 1)[1]}"
-        elif ext != self._extension:
-            from warnings import warn
-            new = f"{fn}{self._extension}"
-            warn(f"New filename contains a different extension: '{ext}'. Extensions cannot "
-                 f"be changed after construction. The current extension ('{self._extenstion}') "
-                 f"will be appended to the new filename to form: '{new}'.", RuntimeWarning)
-            return super().__setattr__("file_name", new)
-
     @classmethod
     def _validate_filename(cls, filename:str, ext:str=None):
         filename = str(filename)
