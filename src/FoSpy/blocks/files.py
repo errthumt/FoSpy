@@ -257,15 +257,19 @@ class FileBlock(SingleBlock):
                 raise e
         return True
     
-    def copy(self):
+    def copy(self, path=None):
         """
         Returns a deep copy of self by saving to a temp file and reloading.
 
         Save/Reload allows attachment tracking to remain intact where
         serialization/reconstruction would normally desync.
         """
-        # get temporary save location
-        loc = self._temppath / "~temp~.fos"
+        if path is None:
+            # get temporary save location
+            loc = self._temppath / "~temp~.fos"
+        else:
+            path = Path(path)
+            loc = path
 
         # cache current source file
         src = self._sourceFile
@@ -277,7 +281,7 @@ class FileBlock(SingleBlock):
         # load copy from temp file
         copy = self.fromFile(loc)
         # desync copy from temp file
-        copy._sourceFile = None
+        copy._sourceFile = path
         return copy
     
     def check_attachments(self):
