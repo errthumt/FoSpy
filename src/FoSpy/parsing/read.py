@@ -164,7 +164,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
         elif embedding:
             if rx.EMBEDDED_END.match(line):
                 embedding = False
-                out_dict[nested_key] = nested_lines
+                out_dict[nested_key] = "".join(nested_lines)
                 nested_lines = []
                 nested_key = None
                 nested_type = None

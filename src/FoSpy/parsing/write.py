@@ -118,8 +118,7 @@ def expand_lists(key, val, indent, looped=False):
 
     if key == "embedded":
         lines.append(fm.format_embed_start(key, indent, looped))
-        for line in val:
-            lines.append(line.rstrip())
+        lines.append(val.rstrip())
         lines.append(f'{SYNTAX["embedded"]["prefix"]*20} {SYNTAX["embedded"]["close"]}')
     elif isinstance(val, list):
         if len(val) == 0:

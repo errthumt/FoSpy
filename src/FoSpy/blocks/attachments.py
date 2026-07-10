@@ -123,7 +123,7 @@ class EmbeddedFile(Attachment):
         "embedded" key to the full list of embedded lines instead of a string.
         """
         serial = super().serialize(**kwargs)
-        serial["embedded"] = self.embedded.copy()
+        #serial["embedded"] = self.embedded.copy()
         return serial
 Attachment.dispatch["embedded"] = EmbeddedFile
 

@@ -30,10 +30,10 @@ class PathPosix(basePath):
 
 @_validator_rules(
     "Mutually exclusive with `path` property.",
-    "Attachment content as a list of raw `utf-8` line strings."
+    "Attachment content as a raw `utf-8` string."
 )
-def embedded_lines(lines):
-    return list(lines)
+def embedded(txt):
+    return str(txt)
 
 
 @_validator_rules(
