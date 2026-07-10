@@ -71,7 +71,10 @@ def open_fosx(fosx_path, **kwargs):
     )
     
     load = FileBlock.fromFile(fos_path)
-    return load.serialize()
+
+    serial = load.serialize()
+    serial["_sourceFile"] = fos_path
+    return serial
 
 EXT_MAP = {
     "fos": (dict_from_file, write_dict_to_file),
@@ -159,6 +162,7 @@ class FileBlock(SingleBlock):
             raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_READ_MAP.keys())}")
 
         blockDict = EXT_READ_MAP[ext](abspath)
+        abspath = blockDict.pop("_sourceFile", abspath)
         if "metadata" not in blockDict:
             raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
         

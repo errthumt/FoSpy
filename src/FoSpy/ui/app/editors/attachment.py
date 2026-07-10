@@ -55,7 +55,7 @@ class FilePathPanel(QWidget):
             self.choose_btn.setEnabled(True)
             self.path_display.setEnabled(True)
         else:
-            current = "<Path Cannot be Set until the parent FileBlock is saved>"
+            current = "<Path cannot be set until the parent FoS file is saved>"
             self.choose_btn.setEnabled(False)
             self.path_display.setEnabled(False)
         self.path_display.setText(str(current))

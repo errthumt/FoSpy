@@ -133,9 +133,9 @@ class PathFile(Attachment):
         
 
     def _get_abspath(self):
-        filedir = self._get_filedir()
+        filedir = self._get_filedir().resolve()
 
-        return filedir / str(self.path) / self.file_name()
+        return (filedir / str(self.path) / self.file_name()).resolve()
     
     def _get_filedir(self):
         from pathlib import Path
