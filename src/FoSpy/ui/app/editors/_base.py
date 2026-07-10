@@ -75,10 +75,49 @@ class BaseEditorWidget(QWidget):
 
 
 class BasePropEditor(BaseEditorWidget):
-    def __init__(self, block_widget, line_edit, editor_widget, on_apply):
+    def __init__(self, block_widget, line_edit, editor_widget, on_apply, prop_name):
         self.on_apply = on_apply
         self.line_edit = line_edit
+        self.prop_name = prop_name
 
         super().__init__(block_widget, editor_widget)
+
+    def _hard_refresh(self, func:callable=lambda:None):
+        from ..window import WIDGET_DATA_ROLE, DLG_ESCAPE
+
+        blk = self.blk_widget.blk
+        parent = blk._parent_block if hasattr(blk, "_parent_block") else None
+        win = self.blk_widget.win
+
+        if (self.blk_widget.active.count() > 1 and
+            not win._custom_popup(
+                "Warning!",
+                "This change requires a refresh of the entire window for this block. "
+                "You will lose changes made in other editor tabs.\n\n"
+                "Continue?",
+                ("Apply Changes and Refresh", True),
+                cancel=True
+        )):
+            return
+
+        func()
+
+        # Refresh tree
+        win.refresh_tree(blk._parent_block if hasattr(blk, "_parent_block") else None)
+        win.go_to_block(parent)
+        win.go_to_block(blk)
+
+        # This editor is desynced. Find new editor
+        tree_item = win.tree_items[blk]
+        blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
+
+        # If block is in ListBlock, it's widget is stored in ListBlockWidget
+        if blk_widget is None:
+            listblk_item = win.tree_items[parent]
+            listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
+            blk_widget = listblk_widget.blk_widgets[blk]
+
+        blk_widget.activate_prop_editor(self.prop_name)
+        return blk_widget
 
 

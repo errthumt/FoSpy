@@ -29,6 +29,7 @@ class SingleBlockWidget(QWidget):
         self.win = window
         self.blk = blk
         parent = window.splitter
+        self.editor_map = {"props": {}, "comments": {}}
 
         super().__init__(parent)
 
@@ -88,6 +89,7 @@ class SingleBlockWidget(QWidget):
         self.prop_labels = {}
         self._refresh_properties()
 
+
     def _get_tabs(self):
         return [
             self.active.widget(i) for
@@ -122,6 +124,14 @@ class SingleBlockWidget(QWidget):
 
         self.active.setCurrentIndex(self.active.indexOf(editor))
         self.editor.setCurrentWidget(self.active)
+
+    def activate_prop_editor(self, prop_name):
+        editor = self.editor_map["props"][prop_name]
+        self.activate_editor(editor, label=f"✏️ {prop_name}")
+
+    def activate_comment_editor(self, prop_name):
+        editor = self.editor_map["comments"][prop_name]
+        self.activate_editor(editor, label=f"🗩 {prop_name}")
 
     def _refresh_properties(self):
         # TODO: needs to clear self.prop_layout
@@ -174,15 +184,17 @@ class SingleBlockWidget(QWidget):
             row_layout.addWidget(line_edit, stretch=1)
 
             if editor:
-                editor = editor(self, line_edit, on_apply)
+                editor = editor(self, line_edit, on_apply, prop)
+                self.editor_map["props"][prop] = editor
                 edit_btn = QPushButton("✏️")
-                edit_btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=f"✏️ {p}"))
+                edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
                 row_layout.addWidget(edit_btn, stretch=0)
 
             comment_btn = QPushButton("🗩")
             comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
+            self.editor_map["comments"][prop] = comment_editor
             comment_editor.refresh_editor()
-            comment_btn.clicked.connect(lambda *_, e=comment_editor, p=prop: self.activate_editor(e, label=f"🗩 {p}"))
+            comment_btn.clicked.connect(lambda *_, p=prop: self.activate_comment_editor(p))
             row_layout.addWidget(comment_btn, stretch=0)
             
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -224,6 +236,7 @@ class ListBlockWidget(QWidget):
         self.win = window
         self.blk = blk
         parent = window.splitter
+        self.blk_widgets = {}
 
         super().__init__(parent)
 
@@ -245,7 +258,9 @@ class ListBlockWidget(QWidget):
             label = _get_label(child_blk, i)
             widget = _get_widget(child_blk)
 
+
             tab_content = widget(label, child_blk, window)
+            self.blk_widgets[child_blk] = tab_content
             tabs.addTab(tab_content, label)
 
         tabs.currentChanged.connect(self.on_tab_changed)

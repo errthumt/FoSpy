@@ -77,12 +77,12 @@ class FilePathPanel(QWidget):
 
 
 class FilePathEditor(BasePropEditor):
-    def __init__(self, block_widget, line_edit, on_apply=None):
+    def __init__(self, block_widget, line_edit, on_apply=None, prop_name="file_name"):
         panel = FilePathPanel(block_widget)
 
         # BasePropEditor signature:
         # BasePropEditor(block_widget, line_edit, editor_widget, on_apply)
-        super().__init__(block_widget, line_edit, panel, on_apply)
+        super().__init__(block_widget, line_edit, panel, on_apply, prop_name)
 
     # ------------------------------------------------------------
     # Stub apply method — you fill in the real logic later
@@ -93,16 +93,39 @@ class FilePathEditor(BasePropEditor):
         Pull the selected path from the panel, convert to Path,
         process it, then eventually set attributes on self.blk_widget.blk.
         """
-        path_obj = self.editor.get_selected_path()
 
-        # Example processing stub:
-        # (You replace this with your real logic)
-        if path_obj is not None:
-            print("Selected path:", path_obj)
-            # e.g. self.blk_widget.blk.filepath = path_obj
+        def set_path(s=self):
+            path_obj = s.editor.get_selected_path()
 
-        # Call BaseEditorWidget.apply() to run on_apply + hint + refresh
-        super().apply()
+            blk = s.blk_widget.blk
+            blk.change_path(path_obj)
+
+            win = s.blk_widget.win
+            win._flag_edited(blk)
+
+        return self._hard_refresh(set_path)
+
+        # parent = blk._parent_block if hasattr(blk, "_parent_block") else None
+
+        # # Refresh tree
+        # win = self.blk_widget.win
+        # win.refresh_tree(blk._parent_block if hasattr(blk, "_parent_block") else None)
+        # win.go_to_block(parent)
+        # win.go_to_block(blk)
+
+        # # This editor is desynced. Find new editor
+        # tree_item = win.tree_items[blk]
+        # blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
+
+        # if blk_widget is None:
+        #     listblk_item = win.tree_items[parent]
+        #     listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
+        #     blk_widget = listblk_widget.blk_widgets[blk]
+
+        # blk_widget.activate_prop_editor("file_name")
+
+        # # Call BaseEditorWidget.apply() to run on_apply + hint + refresh
+        # # super().apply()
 
     def is_changed(self):
         return self.editor.get_selected_path() != self.line_edit.text()

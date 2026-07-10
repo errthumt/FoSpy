@@ -34,7 +34,7 @@ class Attachment(SingleBlock):
         return super().__setattr__(name, value)
 
     @classmethod
-    def _validate_filename(cls, filename:str, ext:str=None):
+    def _validate_filename(cls, filename:str, ext:str=None, warn=True):
         filename = str(filename)
         if ext is None:
             ext = f".{filename.rsplit('.')[-1]}" if "." in filename else ""
@@ -47,11 +47,15 @@ class Attachment(SingleBlock):
             new_ext = f".{filename.rsplit('.')[-1]}"
         
         if new_ext != ext:
-            filename = filename + ext
-            from warnings import warn
-            warn(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
-                 f"be changed after construction. The current extension ('{ext}') "
-                 f"will be appended to the new filename to form: '{filename}'.", RuntimeWarning)
+            if warn:
+                filename = filename + ext
+                from warnings import warn
+                warn(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
+                    f"be changed after construction. The current extension ('{ext}') "
+                    f"will be appended to the new filename to form: '{filename}'.", RuntimeWarning)
+            else:
+                raise ValueError(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
+                                 "be changed after attachment construction.")
         
         return filename, new_ext
 
@@ -213,13 +217,24 @@ class PathFile(Attachment):
 
     def change_path(self, new_path):
         from pathlib import Path
+        import warnings
         abspath = Path(new_path).resolve()
+
+        parent = abspath.parent
+        filename = abspath.name
+        ext = self._extension if hasattr(self, "_extension") else None
+
+        warnings.simplefilter("always")
+        filename, ext = self._validate_filename(filename, ext, warn=False) 
+        abspath = parent / filename
 
         if not abspath.is_file():
             raise ValueError(f"Cannot change path to file that does not exist: {abspath}")
         
-        self.path = abspath.relative_to(self._get_filedir(),walk_up=True)
+        self.file_name = filename
+        self.path = str(abspath.parent.relative_to(self._get_filedir(),walk_up=True))
         self._filepath = abspath
+        self.refresh()
     
     def _get_filepath(self, rf_new_copy=False, rf_overwrite=False, **kwargs):
         if self._filepath is None:

@@ -636,6 +636,7 @@ class MainWindow(QMainWindow):
             
         else:
             self.root_block.save(filepath=path)
+            src = self.root_block._sourceFile
             # cache current tree selection
             current_idx = self.tree_view.currentIndex()
             cached_path = None
@@ -644,7 +645,7 @@ class MainWindow(QMainWindow):
                 if current_item is not None:
                     cached_path = self._get_item_path(current_item)
 
-            self._open_file(path)
+            self._open_file(src, copy=False)
 
             # restore tree selection
             if cached_path:

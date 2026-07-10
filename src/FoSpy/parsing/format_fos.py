@@ -42,7 +42,7 @@ def format_key_str(key:str, val:str, ind=0, looped=False, char_width=80):
                 lines.append("")
             lines.extend([
                 _indent(_ln, ind) for _ln in
-                textwrap.wrap(ln, width=char_width-indent_len)
+                textwrap.wrap(ln, width=char_width-indent_len, break_long_words=False)
                 ])
 
 
