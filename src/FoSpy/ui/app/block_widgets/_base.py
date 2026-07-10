@@ -1,8 +1,10 @@
-from .window import MainWindow
-from ...blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
-from ._utils import _get_label
-from . import editors
-from .editors.comments import CommentEditorWidget
+from ._utils import _get_editor
+
+from ..window import MainWindow
+from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
+from .._utils import _get_label
+from .. import editors
+from ..editors.comments import CommentEditorWidget
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -21,29 +23,6 @@ SIDEBAR_WIDTH = 400
 SIDEBAR_MARGINS = (10,10,10,10)
 
 SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
-
-widget_map = {
-    str:(
-        editors.text_editor.TextEditorWidget,
-        lambda value: "\n" not in value
-    )
-}
-
-def _get_editor(value):
-    if type(value) in widget_map:
-        editor, enabler = widget_map[type(value)]
-
-        if not callable(enabler):
-             def static_enabler(val, e=enabler):
-                 return e
-             enabler = static_enabler
-        
-        return editor, enabler
-
-    if hasattr(value, "serialize") and callable(value.serialize):
-        return _get_editor(value.serialize())
-    
-    return _get_editor(str(value))
 
 class SingleBlockWidget(QWidget):
     def __init__(self, label:str,blk:SingleBlock, window:MainWindow):
@@ -239,8 +218,6 @@ class SingleBlockWidget(QWidget):
         if error is not None:
             raise error
 
-widget_map[SingleBlock] = SingleBlockWidget
-
 class ListBlockWidget(QWidget):
     def __init__(self, label:str, blk:ListBlock, window:MainWindow):
         self.win = window
@@ -280,6 +257,4 @@ class ListBlockWidget(QWidget):
     def go_to_tab(self, blk):
         idx = self.blk._objs.index(blk)
         self.tabs.setCurrentIndex(idx)
-
-widget_map[ListBlock] = ListBlockWidget
 
