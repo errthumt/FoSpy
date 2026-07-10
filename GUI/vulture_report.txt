@@ -2,7 +2,7 @@ src/FoSpy/blocks/files.py:145: unused attribute '_ext_dir' (60% confidence, 1 li
 src/FoSpy/blocks/files.py:148: unused attribute '_ext_dir' (60% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:4: unused variable 'line_comment' (60% confidence, 1 line)
 src/FoSpy/parsing/syntax.py:5: unused variable 'key_delimiter' (60% confidence, 1 line)
-src/FoSpy/parsing/validators/filenames.py:73: unused variable 'EXT_RE' (60% confidence, 1 line)
+src/FoSpy/parsing/validators/filenames.py:77: unused variable 'EXT_RE' (60% confidence, 1 line)
 src/FoSpy/plotting/diffraction/engines/dans_diffraction.py:17: unused variable 'reflections' (60% confidence, 1 line)
 src/FoSpy/ui/app/_utils.py:229: unused attribute 'registered' (60% confidence, 1 line)
 src/FoSpy/ui/app/_utils.py:258: unused attribute 'registered' (60% confidence, 1 line)
