@@ -40,12 +40,15 @@ def save_fosx(blockDict, filepath, **kwargs):
     new_file = FileBlock.fromFile(temp_path)
     new_file.package(filepath)
 
-def _get_ext_dir(fosx_path):
+def _get_ext_dir(fosx_path, ext_dir=None):
     val_path = Path(fosx_path)
     parent = val_path.parent
-
     i = 0
-    ext_dir = None
+    if ext_dir is not None:
+        cleanup = False
+        ext_dir = Path(ext_dir)/ f"{val_path.stem}_extracted"
+    else:
+        cleanup = True
     while (ext_dir is None or 
         (str(ext_dir) in temp_dirs and ext_dir.exists())):
         i += 1
@@ -53,22 +56,28 @@ def _get_ext_dir(fosx_path):
         ext_dir = parent / stem
 
     ext_dir.mkdir(exist_ok=True)
-    _clear_path_contents(ext_dir)
-    temp_dirs.append(str(ext_dir))
-    atexit.register(lambda d=ext_dir: shutil.rmtree(d))
+    if cleanup:
+        _clear_path_contents(ext_dir)
+        temp_dirs.append(str(ext_dir))
+        atexit.register(lambda d=ext_dir: shutil.rmtree(d))
 
     fos_path = ext_dir / (val_path.stem + ".fos")
 
     return ext_dir, fos_path
 
-def open_fosx(fosx_path, **kwargs):
-    ext_dir, fos_path = _get_ext_dir(fosx_path)
+def open_fosx(fosx_path, ext_dir=None, **kwargs):
+    returning_path = ext_dir is not None
+
+    ext_dir, fos_path = _get_ext_dir(fosx_path, ext_dir=ext_dir)
 
     shutil.unpack_archive(
         filename=fosx_path,
         extract_dir=ext_dir,
         format="zip"
     )
+
+    if returning_path:
+        return fos_path
     
     load = FileBlock.fromFile(fos_path)
 
@@ -77,12 +86,15 @@ def open_fosx(fosx_path, **kwargs):
     return serial
 
 EXT_MAP = {
-    "fos": (dict_from_file, write_dict_to_file),
-    "fosx": (open_fosx, save_fosx),
+    "fos": (dict_from_file, write_dict_to_file,
+            "FoS Format"),
+    "fosx": (open_fosx, save_fosx,
+            "FoSX Package"),
     "json": (
         lambda fp: json.load(open(fp, "r")),
         lambda blockDict, fp, **kwargs: 
-            json.dump(blockDict, open(fp, "w"), indent=kwargs.pop("json_indent",4), **kwargs)
+            json.dump(blockDict, open(fp, "w"), indent=kwargs.pop("json_indent",4), **kwargs),
+        "FoS-style JSON"
     )
 }
 
@@ -92,6 +104,10 @@ EXT_READ_MAP = {
 
 EXT_WRITE_MAP = {
     k: v[1] for k, v in EXT_MAP.items()
+}
+
+EXT_DESC_MAP = {
+    k: v[2] for k, v in EXT_MAP.items()
 }
 
 class FileBlock(SingleBlock):

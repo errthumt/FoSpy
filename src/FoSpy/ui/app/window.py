@@ -396,24 +396,49 @@ class MainWindow(QMainWindow):
         self._create_help_menu(menu_bar)
     
     def _open_dlg(self, copy=False):
-        from ...blocks.files import EXT_READ_MAP
+        from ...blocks.files import EXT_DESC_MAP
 
         if not self._unsaved_dlg("opening a new file"):
             return
 
-        ext_list = [f"*.{ext}" for ext in EXT_READ_MAP]
-        ext_str = f'({" ".join(ext_list)})'
-
+        all_ext = [f"*.{ext}" for ext in EXT_DESC_MAP]
+        ext_list = [f'All FoS-style Files ({" ".join(all_ext)})']
+        ext_list.extend([f"{desc} (*.{ext})" for ext, desc in EXT_DESC_MAP.items()])
+        ext_list.append("All Files (*)")
 
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Open FoS-style file",
             "",
-            f"FoS Style {ext_str};;All Files (*)"
+            ";;".join(ext_list)
         )
+
+        if file_path and file_path.endswith("fosx"):
+            from ...blocks.files import open_fosx
+
+            ext_dir = self._open_fosx_dlg()
+            file_path = open_fosx(file_path, ext_dir)
+            copy = True
 
         if file_path:
             self._open_file(open_path=file_path, copy=copy)
+
+    def _open_fosx_dlg(self):
+        response = self._custom_popup(
+            "Opening a FoSX file",
+            "You are about to open a FoSX file. FoSX is a packaged format and must be extracted before opening.\n\n"
+            "Would you like to choose the extraction location, or open a copy from a temporary location?",
+            ("Choose Location", True),
+            ("Temporary Location", None),
+            cancel=True
+        )
+
+        if response:
+            return QFileDialog.getExistingDirectory(
+                self, "Select Extraction Location for FoSX file..."
+            )
+        
+        return None
 
     @classmethod
     def _custom_popup(cls, title, text, *btns:str|tuple[str, Any], default=0, cancel=True):
@@ -605,43 +630,58 @@ class MainWindow(QMainWindow):
         if path is None and self.root_block._sourceFile is None:
             return self.save_dlg()
 
-        self.root_block.save(filepath=path)
+        if not path.endswith(".fosx"):
+            self.root_block.save(filepath=path)
+            # cache current tree selection
+            current_idx = self.tree_view.currentIndex()
+            cached_path = None
+            if current_idx.isValid():
+                current_item = self.tree_model.itemFromIndex(current_idx)
+                if current_item is not None:
+                    cached_path = self._get_item_path(current_item)
 
-        # cache current tree selection
-        current_idx = self.tree_view.currentIndex()
-        cached_path = None
-        if current_idx.isValid():
-            current_item = self.tree_model.itemFromIndex(current_idx)
-            if current_item is not None:
-                cached_path = self._get_item_path(current_item)
+            self._open_file(path)
 
-        self._open_file(path)
+            # restore tree selection
+            if cached_path:
+                new_item = self._get_item_from_path(cached_path)
+                if new_item:
+                    new_idx = self.tree_model.indexFromItem(new_item)
+                    if new_idx.isValid():
+                        self.tree_view.setCurrentIndex(new_idx)
+                        self.tree_view.scrollTo(new_idx)
+                        self._on_tree_selection(new_idx)
+        else:
+            copy = self.root_block.copy()
+            copy.save(filepath=path)
 
-        # restore tree selection
-        if cached_path:
-            new_item = self._get_item_from_path(cached_path)
-            if new_item:
-                new_idx = self.tree_model.indexFromItem(new_item)
-                if new_idx.isValid():
-                    self.tree_view.setCurrentIndex(new_idx)
-                    self.tree_view.scrollTo(new_idx)
-                    self._on_tree_selection(new_idx)
         return True
     
     def save_dlg(self, *args):
-        from ...blocks.files import EXT_READ_MAP
-
-        ext_list = [f"*.{ext}" for ext in EXT_READ_MAP]
-        ext_str = f'({" ".join(ext_list)})'
+        from ...blocks.files import EXT_DESC_MAP
+        all_ext = [f"*.{ext}" for ext in EXT_DESC_MAP]
+        ext_list = [f"{desc} (*.{ext})" for ext, desc in EXT_DESC_MAP.items()]
+        ext_list.append(f'All FoS-style Files ({" ".join(all_ext)})')
+        ext_list.append("All Files (*)")
 
         path, _ = QFileDialog.getSaveFileName(
             self,
             "Save FoS-style file",
             "",
-            f"FoS Files {ext_str};;All Files (*)"
+            ";;".join(ext_list)
         )
 
         if path:
+            if path.endswith(".fosx"):
+                if not self._custom_popup(
+                    "Packaging File",
+                    "You are about to package this file as a FoSX archive. "
+                    "FoSX-packaged files cannot be edited directly. "
+                    "You will be returned to the non-packaged file after saving.",
+                    cancel=True
+                ):
+                    return
+
             self.save(path=path)
             return True
 
