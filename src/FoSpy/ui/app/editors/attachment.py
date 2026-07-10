@@ -103,3 +103,6 @@ class FilePathEditor(BasePropEditor):
 
         # Call BaseEditorWidget.apply() to run on_apply + hint + refresh
         super().apply()
+
+    def is_changed(self):
+        return self.editor.get_selected_path() != self.line_edit.text()

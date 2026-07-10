@@ -28,6 +28,13 @@ class CommentEditorWidget(BaseEditorWidget):
         self.editor.send_comments()
         super().apply()
 
+    def is_changed(self):
+        blk_comments = self.editor.get_comments()
+
+        editor_comments = list(self.editor.comment_rows.values())
+
+        return blk_comments != editor_comments
+
 class CommentsEditorPanel(QWidget):
     def __init__(self, blk, prop_name):
         super().__init__()
@@ -95,9 +102,11 @@ class CommentsEditorPanel(QWidget):
             txt = txt.replace("!", "")
             self.btn.setText(txt)
 
+
     def set_comment(self, comment_edit):
         txt = comment_edit.text()
         self.comment_rows[comment_edit] = txt
+        
 
     def _add_comment(self, txt=""):
         row_layout = QHBoxLayout()

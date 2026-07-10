@@ -12,3 +12,6 @@ class TextEditorWidget(BasePropEditor):
     def apply(self):
         self.line_edit.setText(self.editor.toPlainText())
         super().apply()
+
+    def is_changed(self):
+        return self.editor.toPlainText() != self.line_edit.text()
