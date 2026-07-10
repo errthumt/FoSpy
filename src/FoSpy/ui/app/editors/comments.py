@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QScrollArea,
     QLineEdit,
-    QSizePolicy
 )
 
 from ._base import BaseEditorWidget

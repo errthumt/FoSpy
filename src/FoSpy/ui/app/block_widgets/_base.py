@@ -24,7 +24,7 @@ SIDEBAR_MARGINS = (10,10,10,10)
 SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
 
 class SingleBlockWidget(QWidget):
-    widget_map = None
+    prop_map = None
     def __init__(self, label:str,blk:SingleBlock, window:MainWindow):
         self.win = window
         self.blk = blk
@@ -157,7 +157,7 @@ class SingleBlockWidget(QWidget):
             line_edit = QLineEdit(txt)
             line_edit.setCursorPosition(0)
 
-            editor, enabler = _get_editor(val)
+            editor, enabler = _get_editor(val, self, prop)
             line_edit.setEnabled(enabler(txt))
             def on_apply(p=prop, e=line_edit, en=enabler):
                 self._on_primitive_edit(p, e, en)
@@ -171,19 +171,20 @@ class SingleBlockWidget(QWidget):
 
 
             line_edit.editingFinished.connect(on_apply)
+            row_layout.addWidget(line_edit, stretch=1)
 
-            editor = editor(self, line_edit, on_apply)
-            edit_btn = QPushButton("✏️")
-            edit_btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=f"✏️ {p}"))
+            if editor:
+                editor = editor(self, line_edit, on_apply)
+                edit_btn = QPushButton("✏️")
+                edit_btn.clicked.connect(lambda *_, e=editor, p=prop: self.activate_editor(e, label=f"✏️ {p}"))
+                row_layout.addWidget(edit_btn, stretch=0)
 
             comment_btn = QPushButton("🗩")
             comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
             comment_editor.refresh_editor()
             comment_btn.clicked.connect(lambda *_, e=comment_editor, p=prop: self.activate_editor(e, label=f"🗩 {p}"))
-
-            row_layout.addWidget(line_edit, stretch=1)
-            row_layout.addWidget(edit_btn, stretch=0)
             row_layout.addWidget(comment_btn, stretch=0)
+            
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
             self.prop_layout.addLayout(row_layout)
 

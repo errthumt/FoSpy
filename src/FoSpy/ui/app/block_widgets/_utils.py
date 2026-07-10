@@ -3,10 +3,14 @@ from PySide6.QtWidgets import QLabel
 def _widget_not_found(*_):
     return QLabel("ERROR: No Widget Found")
 
-def _get_editor(value, blk_widget=None):
-    widget_map = blk_widget.widget_map if hasattr(blk_widget, "widget_map") else None
+def _get_editor(value, blk_widget=None, prop=None):
+    prop_map = blk_widget.prop_map if (
+        blk_widget is not None and
+        hasattr(blk_widget, "prop_map")
+    ) else None
 
-    builder = _get_widget(value, widget_map)
+    builder = _get_widget(value, prop_map, prop)
+    
     if builder is _widget_not_found:
         if hasattr(value, "serialize") and callable(value.serialize):
             return _get_editor(value.serialize())
@@ -23,16 +27,13 @@ def _get_editor(value, blk_widget=None):
     return editor, enabler
 
 
-def _get_widget(blk, widget_map=None):
-    from . import widget_map as defaults
-
-    if widget_map is None:
-        widget_map = defaults
-    else:
-        for k, v in defaults.items():
-            if k not in widget_map:
-                widget_map[k] = v
-
+def _get_widget(blk, prop_map=None, prop=None):
+    if prop_map is not None:
+        if prop in prop_map:
+            return prop_map[prop]
+        
+    from . import widget_map
+        
     for k, v in widget_map.items():
         if isinstance(blk, k):
             return v
