@@ -556,7 +556,7 @@ class MainWindow(QMainWindow):
         Default behavior: Build widget for block and return it.
 
         If block's parent is a ListBlock: switch to block's tab and return None instead."""
-        from .block_widgets import widget_map
+        from .block_widgets._utils import _get_widget
 
         if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
             self.go_to_block(blk._parent_block)
@@ -571,12 +571,9 @@ class MainWindow(QMainWindow):
             self.tree_view.scrollTo(idx)
 
             return None
-
-        for typ, widget in widget_map.items():
-            if isinstance(blk, typ):
-                return widget(label, blk, self)
         
-        return QLabel("ERROR: No Widget Found")
+        return _get_widget(blk)(label, blk, self)
+
     
     def _get_item_path(self, item:QStandardItem):
         path = []

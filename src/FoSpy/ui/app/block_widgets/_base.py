@@ -1,9 +1,8 @@
-from ._utils import _get_editor
+from ._utils import _get_editor, _get_widget
 
 from ..window import MainWindow
 from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
 from .._utils import _get_label
-from .. import editors
 from ..editors.comments import CommentEditorWidget
 
 from PySide6.QtCore import Qt
@@ -25,6 +24,7 @@ SIDEBAR_MARGINS = (10,10,10,10)
 SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
 
 class SingleBlockWidget(QWidget):
+    widget_map = None
     def __init__(self, label:str,blk:SingleBlock, window:MainWindow):
         self.win = window
         self.blk = blk
@@ -242,8 +242,9 @@ class ListBlockWidget(QWidget):
 
         for i, child_blk in enumerate(self.blk._objs):
             label = _get_label(child_blk, i)
+            widget = _get_widget(child_blk)
 
-            tab_content = SingleBlockWidget(label, child_blk, window)
+            tab_content = widget(label, child_blk, window)
             tabs.addTab(tab_content, label)
 
         tabs.currentChanged.connect(self.on_tab_changed)
