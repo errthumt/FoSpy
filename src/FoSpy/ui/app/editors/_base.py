@@ -91,15 +91,6 @@ class BaseEditorWidget(QWidget):
         else:
             self.hintButton.hide()
 
-
-class BasePropEditor(BaseEditorWidget):
-    def __init__(self, block_widget, line_edit, editor_widget, on_apply, prop_name):
-        self.on_apply = on_apply
-        self.line_edit = line_edit
-        self.prop_name = prop_name
-
-        super().__init__(block_widget, editor_widget)
-
     def _hard_refresh(self, func:callable=lambda:None):
         from ..window import WIDGET_DATA_ROLE
 
@@ -137,5 +128,14 @@ class BasePropEditor(BaseEditorWidget):
 
         blk_widget.activate_prop_editor(self.prop_name)
         return blk_widget
+
+
+class BasePropEditor(BaseEditorWidget):
+    def __init__(self, block_widget, line_edit, editor_widget, on_apply, prop_name):
+        self.on_apply = on_apply
+        self.line_edit = line_edit
+        self.prop_name = prop_name
+
+        super().__init__(block_widget, editor_widget)
 
 
