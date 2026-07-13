@@ -39,8 +39,16 @@ class BaseEditorWidget(QWidget):
 
         self.base_layout.addLayout(button_layout, stretch=0)
 
-        self.hintPanel = QLabel()
-        self.base_layout.addWidget(self.hintPanel, stretch=1)
+        self.hintPanel = QVBoxLayout()
+        self.hintLabel = QLabel()
+        self.hintButton = QPushButton("More...")
+
+        self.hintPanel.addWidget(self.hintLabel)
+        self.hintPanel.addWidget(self.hintButton)
+        self.hintButton.hide()
+        self.hintPanel.addStretch()
+
+        self.base_layout.addLayout(self.hintPanel, stretch=1)
 
         self.setLayout(self.base_layout)
 
@@ -59,19 +67,29 @@ class BaseEditorWidget(QWidget):
             self.on_apply()
             self.hint()
         except Exception as e:
-            self.hint(str(e), "Failed to apply changes:")
+            self.hint(str(e), "Failed to apply changes:", exc=e)
         self.refresh_editor()
 
     def refresh_editor(self):
         pass
 
-    def hint(self, text="", header=None):
+    def hint(self, text="", header=None, exc=None):
 
         txt = f"<h4>{header}</h4>\n" if header else ""
 
         txt += text
 
-        self.hintPanel.setText(txt)
+        self.hintLabel.setText(txt)
+
+        if exc is not None:
+            self.hintButton.show()
+
+            def raise_exc(*_, e=exc):
+                raise e
+
+            self.hintButton.clicked.connect(raise_exc)
+        else:
+            self.hintButton.hide()
 
 
 class BasePropEditor(BaseEditorWidget):
@@ -83,7 +101,7 @@ class BasePropEditor(BaseEditorWidget):
         super().__init__(block_widget, editor_widget)
 
     def _hard_refresh(self, func:callable=lambda:None):
-        from ..window import WIDGET_DATA_ROLE, DLG_ESCAPE
+        from ..window import WIDGET_DATA_ROLE
 
         blk = self.blk_widget.blk
         parent = blk._parent_block if hasattr(blk, "_parent_block") else None

@@ -10,12 +10,15 @@ from PySide6.QtWidgets import (
     QLabel,
     QVBoxLayout,
     QFileDialog,
-    QMessageBox
+    QMessageBox,
+    QHeaderView
 )
 import qdarktheme
 import os
+import sys
 from typing import Any
 import pathlib
+import traceback
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
 from ._utils import _get_label, register_dlg
@@ -82,15 +85,13 @@ class MainWindow(QMainWindow):
         main_splitter = QSplitter(Qt.Orientation.Horizontal)
         self.setCentralWidget(main_splitter)
         self.splitter = main_splitter
+        
 
         self._build_tree()
 
         # content area
         self.content_stack = QStackedWidget()
         main_splitter.addWidget(self.content_stack)
-
-        main_splitter.setStretchFactor(0, 1)
-        main_splitter.setStretchFactor(1, 4)
 
         if copy is None:
             copy = self._startup_copy_dlg(open_path)
@@ -101,6 +102,41 @@ class MainWindow(QMainWindow):
         self._open_file(open_path=open_path, copy=copy)
 
         register_dlg()
+
+        sys.excepthook = self.handle_exception
+        self.tree_visible = True
+
+    def closeEvent(self, event):
+        if not self._unsaved_dlg("exiting"):
+            return event.ignore()
+
+        return super().closeEvent(event)
+
+    def handle_exception(self, exctype, value, tb):
+        resp = self._custom_popup(
+            "Error!",
+            "An error has occurred:\n\n"
+            f"{exctype.__name__}: {value}",
+            ("Continue", False),
+            ("View Full Error Details", True),
+            cancel=False
+        )
+
+        if resp:
+            import sys
+            import subprocess
+            import tempfile
+
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8")
+            tmp.write("".join(traceback.format_exception(exctype, value, tb)))
+            tmp.close()
+
+            if sys.platform.startswith("win"):
+                os.startfile(tmp.name)
+            elif sys.platform.startswith("darwin"):
+                subprocess.call(["open", tmp.name])
+            else:
+                QDesktopServices.openUrl(QUrl.fromLocalFile(tmp.name))
 
     def _startup_copy_dlg(self, open_path):
         if open_path is None:
@@ -150,6 +186,8 @@ class MainWindow(QMainWindow):
         self.tree_view.clicked.connect(self._on_tree_selection)
         self.splitter.addWidget(self.tree_view)
 
+        self.tree_view.resizeColumnToContents(0)
+
 
     def refresh_tree(self, blk:Block=None):
         """Refreshes or builds tree nodes.
@@ -178,6 +216,7 @@ class MainWindow(QMainWindow):
         self.tree_items[blk] = target_item
         self._register_view(target_item, blk)
         self._populate_tree_nodes(target_item, blk)
+
     
     def _populate_tree_nodes(self, parent_item:QStandardItem, blk:Block):
         """Recursively adds child nodes to a QStandardItem."""
@@ -557,6 +596,14 @@ class MainWindow(QMainWindow):
         
         item.setData(widget_data, WIDGET_DATA_ROLE)
         self.content_stack.setCurrentWidget(widget_data["widget"])
+
+        self.tree_view.resizeColumnToContents(0)
+
+        if self.tree_visible:
+            tree_width = self.tree_view.sizeHint().width()
+            splitter_width = self.splitter.sizeHint().width()
+
+            self.splitter.setSizes([tree_width, splitter_width - tree_width])
     
     def go_to_block(self, blk:Block):
         """Programmatically select a block in the tree."""
