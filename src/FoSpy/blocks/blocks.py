@@ -1,4 +1,4 @@
-
+import inspect
 from ._containers import SimpleWrapper, SubContainer
 from ..config import values as cfg
 from ..parsing.syntax import (
@@ -246,6 +246,7 @@ class SingleBlock(Block):
     dispatch = {}
     _aliases = None
     _id_key = None
+
     @classmethod
     def print_summary(cls, mode="cli"):
         from .._docs.properties import get_summary
@@ -412,6 +413,8 @@ class SingleBlock(Block):
         for i in range(len(req_mro)):
             merged = _merge_vals(merged, req_mro, i)
 
+        merged.pop("__all__")
+
         return merged
 
     @classmethod
@@ -446,6 +449,8 @@ class SingleBlock(Block):
         for i in range(len(req_mro)): # req_mro and opt_mro are the same length
             merged = _merge_vals(merged, req_mro, i)
             merged = _merge_vals(merged, opt_mro, i)
+
+        cls.universal_val = lambda _cls, *_,_m=merged.pop("__all__"), **__: _m(*_, **__)
 
         return merged
     
@@ -598,8 +603,9 @@ class SingleBlock(Block):
         self._constructed = True
 
     def _update_src(self):
-        if self._constructed:
+        if self._constructed and self._props_changed:
             self._sourceDict = self.serialize(clean=True)
+            self._props_changed = False
 
         return self._sourceDict   
      
@@ -643,7 +649,6 @@ class SingleBlock(Block):
         
         from ..parsing.format_fos import format_field
         from .template import TemplateField, TemplateBlock
-        from inspect import signature as sign
         
         validators = self.get_validators()
         
@@ -673,22 +678,35 @@ class SingleBlock(Block):
                 self._key_overrides[name] = val
 
         if name in validators:
+            universal_val = self.universal_val
+
             validator = validators[name]
-            val_kwargs = {}
-            for kw, arg_func in (("sourceDict", self._update_src),("cls", lambda:type(self))):
-                try:
-                    if kw in sign(validator).parameters:
-                        val_kwargs[kw] = arg_func()
-                #TODO: find a better way to handle this
-                except Exception:
-                    pass
+            # val_kwargs = {}
+            # for kw, arg_func in (("sourceDict", self._update_src),("cls", lambda:type(self))):
+            #     try:
+            #         if kw in sign(validator).parameters:
+            #             val_kwargs[kw] = arg_func()
+            #     #TODO: find a better way to handle this
+            #     except Exception:
+            #         pass
+
+            val_kwargs = {
+                "sourceDict": self._update_src(),
+                "blk_cls": type(self),
+                "prop_name": name
+            }
                 
+            value = universal_val(value, **val_kwargs)
 
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
                     validator = validator.dispatch_subclass
+                    val_kwargs = {}
                     value = _unwrap_block(value)
                     pass
+                elif issubclass(validator, ListBlock):
+                    val_kwargs = {}
+
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
@@ -697,9 +715,17 @@ class SingleBlock(Block):
                         raise err.FailedValidatorError(name, self, e, blockDict=self._update_src(), hint="Template field passed to non-template property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
+            
+            try:
+                sig = inspect.signature(validator)
+                needs_kwargs = any(
+                    p.kind==p.VAR_KEYWORD for p in sig.parameters.values()
+                )
+            except Exception:
+                needs_kwargs = False
 
             try:  
-                val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
+                val = validator(value, **val_kwargs) if needs_kwargs else validator(value)
             except Exception as e:
                 raise err.FailedValidatorError(name, self, e, blockDict=self._update_src())
                 
@@ -843,6 +869,8 @@ class SingleBlock(Block):
             attr_obj._reserved.append(method_name)
             bound = method.__get__(attr_obj, type(attr_obj))
             setattr(attr_obj, method_name, bound)
+
+        self._props_changed = True
         
     
     def add_comments(self, *comments):

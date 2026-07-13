@@ -6,7 +6,7 @@ from ..._docs.properties import _validator_rules
     "Any Unit recognizable by [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/)."
 )
 class FOSUnit(Unit):
-    def __init__(self, unitlike, allow_dims=[]):
+    def __init__(self, unitlike, allow_dims=[], **kwargs):
         super().__init__(units=unitlike)
         if not isinstance(allow_dims, list):
             allow_dims = [allow_dims]
@@ -30,7 +30,7 @@ class FOSUnit(Unit):
             "Allowed dimensions:",
             dim_rules
         )
-        def constructor(unitlike):
+        def constructor(unitlike, **kwargs):
             return cls(unitlike, allow_dims=allow_dims)
         return constructor
 
@@ -55,7 +55,7 @@ class FOSTempUnit(FOSUnit):
     "with more flexibility for recognizing temperature units.",
     "Must be a recognizable unit for temperature *over time*."
 )
-def temp_rate_unit(unitlike):
+def temp_rate_unit(unitlike, **kwargs):
     one = FOSQuantity(1, FOSTempUnit(unitlike, rate=True))
     zero = FOSQuantity(0, FOSTempUnit(unitlike, rate=True))
     diff = one - zero
@@ -65,14 +65,14 @@ class FOSQuantity(Quantity):
     def serialize(self, **kwargs):
         return str(self.magnitude)
 
-def attach_unit(value, value_key, cls, sourceDict):
+def attach_unit(value, value_key, blk_cls, sourceDict, **kwargs):
     unit_key = f"{value_key}_unit"
     if unit_key not in sourceDict:
         raise ValueError(f"Could not find required unit for: '{value_key}'")
     
     unit = sourceDict[unit_key]
     
-    validators = cls.build_validators()
+    validators = blk_cls.build_validators()
     unit_validator = validators.get(unit_key, Unit)
 
     unit = unit_validator(unit)

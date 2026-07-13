@@ -127,12 +127,30 @@ def _get_prop_mro(cls, keyDict):
     return [keyDict.get(k, {}) for k in mro]
 
 def _merge_vals(current, prop_mro, idx):
+    from .._docs.properties import _validator_rules, val_rules
+
     merged = current.copy()
 
     if idx >= len(prop_mro):
         return merged
+    
+    validators = prop_mro[idx].copy()
+    rules = []
 
-    for key, validator in prop_mro[idx].items():
+    current_universal = merged.pop("__all__", lambda val, *_, **__: val)
+    rules.extend(val_rules.get(current_universal, []))
+
+    next_universal = validators.pop("__all__", lambda val, *_, **__: val)
+    rules.extend(val_rules.get(next_universal, []))
+
+    @_validator_rules(*rules)
+    def universal(val, *args, _u=current_universal,_n=next_universal, **kwargs):
+        new_val = _u(val, *args, **kwargs)
+        return _n(new_val, *args, **kwargs)
+    
+    merged["__all__"] = universal
+
+    for key, validator in validators.items():
         if isinstance(validator, bool):
             new_val = merged.pop(key, validator)
 
