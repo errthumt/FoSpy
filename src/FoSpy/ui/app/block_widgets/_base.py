@@ -34,9 +34,21 @@ def _add_header(widget:QWidget,label, view_name=None):
     header_row.setContentsMargins(0, 0, 0, 0)
 
     preamble = f"{view_name} | " if view_name else ""
+    post = None
+
+    prop = blk.get_parent_prop()
+    if prop is not None and "[" not in prop:
+        rename_dict = blk._parent_block.rename_dict()
+        if prop in rename_dict.values():
+            renamed_from = next(k for k,v in rename_dict.items() if v == prop)
+            label += " |"
+            post = f"<i>(Renamed from {renamed_from})</i>"
 
     header = QLabel(f"<h3>{preamble}{label}</h3>")
     header_row.addWidget(header)
+    if post is not None:
+        header_row.addWidget(QLabel(post))
+
     base_layout.addLayout(header_row)
 
     subhead = QLabel(f"<h4>Block Type: <code>{type(blk).__name__}</code></h4>")
@@ -47,6 +59,26 @@ def _add_header(widget:QWidget,label, view_name=None):
 
     return header_row, base_layout
 
+def _unicode_superscript(i:int):
+    uni_map = ["⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"]
+
+    base = i // 10
+
+    if i >= 10:
+        i = i % 10
+
+    txt = uni_map[i]
+    if base > 0:
+        txt += _unicode_superscript(base)
+
+    return txt
+
+def _footnote_iter():
+    i = 1
+    while True:
+        yield i
+        i += 1
+
 
 class SingleBlockWidget(QWidget):
     prop_map = None
@@ -55,14 +87,21 @@ class SingleBlockWidget(QWidget):
         self.blk = blk
         parent = window.splitter
         self.editor_map = {"props": {}, "comments": {}}
+        self.footnote_iter = _footnote_iter()
 
         super().__init__(parent)
 
         self.header_row, base_layout = _add_header(self, label, "Properties")
+        self.base_layout = base_layout
 
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
+
         base_layout.addLayout(main_layout)
+
+        self.footnotes = QVBoxLayout()
+        self.footnotes.setContentsMargins(0, 0, 0, 0)
+        base_layout.addLayout(self.footnotes)
 
         sidebar = QVBoxLayout()
         self.sidebar = sidebar
@@ -105,6 +144,14 @@ class SingleBlockWidget(QWidget):
 
         self.prop_labels = {}
         self._refresh_properties()
+
+    def _add_footnote(self, txt):
+        i = next(self.footnote_iter)
+
+        footnote = QLabel(f"<sup>{i}</sup> {txt}")
+        self.footnotes.addWidget(footnote)
+
+        return i
 
     def _get_tabs(self):
         return [
@@ -153,14 +200,20 @@ class SingleBlockWidget(QWidget):
         # TODO: needs to clear self.prop_layout
 
         prop_dict = self.blk.get_prop_dict()
+        rename_dict = self.blk.rename_dict()
+        renamed_from = {v:k for k,v in rename_dict.items()}
 
         for prop, val in prop_dict.items():
+            prop_txt = prop
+            if prop in renamed_from:
+                fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
+                prop_txt += _unicode_superscript(fn_i)
             
             if isinstance(val, blk_cont.SimpleWrapper):
                 val = val()
 
             if isinstance(val, Block):
-                btn_txt = f"Go to {prop}"
+                btn_txt = f"Go to {prop_txt}"
                 edit_btn = QPushButton(btn_txt)
                 edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
                 self.prop_layout.addWidget(edit_btn)
@@ -174,7 +227,7 @@ class SingleBlockWidget(QWidget):
 
             row_layout = QHBoxLayout()
 
-            label = QLabel(f"<b>{prop}:</b>")
+            label = QLabel(f"<b>{prop_txt}:</b>")
             label.setMinimumWidth(120)
             row_layout.addWidget(label, stretch=0)
             self.prop_labels[prop] = label

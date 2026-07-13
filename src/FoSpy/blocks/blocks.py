@@ -706,13 +706,16 @@ class SingleBlock(Block):
         no matching attribute, a matching attribute of `self.ext` can be
         returned instead.
         """
-        rename_dict = self.rename.serialize(shallow=True, clean=True)
-        if name in rename_dict:
-            return getattr(self, rename_dict[name])
 
         try:
+            if name not in ("rename", "ext") and hasattr(self, "rename"):
+                rename_dict = self.rename.serialize(shallow=True, clean=True)
+                if name in rename_dict:
+                    return getattr(self, rename_dict[name])
+                
             if name != 'ext':
                 return getattr(self.ext, name)
+            
             raise AttributeError()
         except AttributeError:
             raise AttributeError(
@@ -749,6 +752,11 @@ class SingleBlock(Block):
         
     def __hash__(self):
         return id(self)
+
+    def rename_dict(self):
+        if not hasattr(self, "rename"):
+            return {}
+        return self.rename.serialize(shallow=True, clean=True)
     
     def get_id(self):
         """Returns an easily recognizable identifier for self. Non-unique."""
