@@ -23,6 +23,31 @@ SIDEBAR_MARGINS = (10,10,10,10)
 
 SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
 
+def _add_header(widget:QWidget,label, view_name=None):
+    blk = widget.blk
+
+    base_layout = QVBoxLayout(widget)
+    base_layout.setContentsMargins(0, 0, 0, 0)
+    widget.setLayout(base_layout)
+
+    header_row = QHBoxLayout()
+    header_row.setContentsMargins(0, 0, 0, 0)
+
+    preamble = f"{view_name} | " if view_name else ""
+
+    header = QLabel(f"<h3>{preamble}{label}</h3>")
+    header_row.addWidget(header)
+    base_layout.addLayout(header_row)
+
+    subhead = QLabel(f"<h4>Block Type: <code>{type(blk).__name__}</code></h4>")
+    pathtxt = blk.get_prop_path().replace("<","&lt;").replace(">","&gt;")
+    pathhead = QLabel(f"<h4>Full Path: <code>{pathtxt}</code></h4>")
+    base_layout.addWidget(subhead)
+    base_layout.addWidget(pathhead)
+
+    return header_row, base_layout
+
+
 class SingleBlockWidget(QWidget):
     prop_map = None
     def __init__(self, label:str,blk:SingleBlock, window:MainWindow):
@@ -33,9 +58,11 @@ class SingleBlockWidget(QWidget):
 
         super().__init__(parent)
 
-        main_layout = QHBoxLayout(self)
+        self.header_row, base_layout = _add_header(self, label, "Properties")
+
+        main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(main_layout)
+        base_layout.addLayout(main_layout)
 
         sidebar = QVBoxLayout()
         self.sidebar = sidebar
@@ -57,17 +84,7 @@ class SingleBlockWidget(QWidget):
 
         self.deactivate_editor()
 
-        header = QLabel(f"<h3>Properties | {label}</h3>")
-        subhead = QLabel(f"<h4>({type(blk).__name__})</h4>")
-
-        sidebar.addWidget(header)
-        sidebar.addWidget(subhead)
-
-        sidebar_w = max(
-            SIDEBAR_WIDTH,
-            header.sizeHint().width(),
-            subhead.sizeHint().width()
-        )
+        sidebar_w = SIDEBAR_WIDTH
 
         scroll_w = sidebar_w - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
 
@@ -88,7 +105,6 @@ class SingleBlockWidget(QWidget):
 
         self.prop_labels = {}
         self._refresh_properties()
-
 
     def _get_tabs(self):
         return [
@@ -240,15 +256,11 @@ class ListBlockWidget(QWidget):
 
         super().__init__(parent)
 
-        main_layout = QVBoxLayout(self)
+        self.header_row, base_layout = _add_header(self, label, "Tab View")
+
+        main_layout = QVBoxLayout()
         main_layout.setContentsMargins(10, 10, 10, 10)
-        self.setLayout(main_layout)
-
-        header = QLabel(f"<h3>Tab View | {label}</h3>")
-        subhead = QLabel(f"<h4>({type(blk).__name__})</h4>")
-
-        main_layout.addWidget(header)
-        main_layout.addWidget(subhead)
+        base_layout.addLayout(main_layout)
 
         tabs = QTabWidget(self)
         tabs.setMovable(False)

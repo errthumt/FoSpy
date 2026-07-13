@@ -90,6 +90,46 @@ class Block:
                 blk = None
         raise FileBlockNotFoundError("Could not find a FileBlock containing the current object")
     
+    def get_prop_path(self):
+        from .files import FileBlock
+
+        if not hasattr(self, "_parent_block"):
+            if isinstance(self, FileBlock):
+                root_path = f"<{str(self.get_file_name())}>"
+            else:
+                root_path = f"<Root {type(self).__name__}"
+                if isinstance(self, SingleBlock):
+                    id_key, id_txt = self.get_id()
+                    if id_key is not None:
+                        root_path += f" ({id_key}={id_txt})"
+                root_path += ">"
+            return root_path
+        
+        parent_path = self._parent_block.get_prop_path()
+        parent_prop = self.get_parent_prop()
+
+        if "[" not in parent_prop:
+            return parent_path + "." + parent_prop
+        
+        return parent_path + parent_prop
+    
+    def get_parent_prop(self):
+        if not hasattr(self, "_parent_block"):
+            return None
+        parent_blk = self._parent_block
+        
+        if isinstance(parent_blk, SingleBlock):
+            for prop, val in parent_blk.get_prop_dict().items():
+                if val is self:
+                    return prop
+        
+            raise err.FoSpyStructureError(f"Block {self} points to a parent block {parent_blk} that does not contain it as a property.")
+        
+        elif isinstance(parent_blk, ListBlock):
+            return f"[{parent_blk.get_idx(self)}]"
+        
+        raise err.FoSpyStructureError(f"Block {self} has an unknown parent block type: {type(parent_blk)}")
+    
     def add_comments(self, *comments):
         """
         Attach comments to self in the parent block.
@@ -735,7 +775,7 @@ class SingleBlock(Block):
                 [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators]
         """
         if hasattr(self, "rename"):
-            for name, rename in self.rename.serialize(shallow=True).items():
+            for name, rename in self.rename.serialize(shallow=True, clean=True).items():
                 if name in validators and rename not in validators:
                     val = validators.pop(name)
                     validators[rename] = val
@@ -1582,6 +1622,12 @@ class ListBlock(Block):
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
+
+    def get_idx(self, blk):
+        try:
+            return self._objs.index(blk)
+        except ValueError:
+            raise err.FoSpyStructureError(f"Block {blk} is not in {self}")
 
     def append(self, obj:SingleBlock):
         """

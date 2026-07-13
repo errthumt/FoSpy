@@ -257,6 +257,17 @@ class FileBlock(SingleBlock):
                 raise e
         return True
     
+    def get_file_name(self):
+        if self._sourceFile is None:
+            return "<Unsaved FileBlock>"
+        
+        if hasattr(self, "_ext_file") and self._ext_file is not None:
+            filepath = self._ext_file
+        else:
+            filepath = self._sourceFile
+
+        return os.path.basename(filepath)
+    
     def copy(self, path=None):
         """
         Returns a deep copy of self by saving to a temp file and reloading.

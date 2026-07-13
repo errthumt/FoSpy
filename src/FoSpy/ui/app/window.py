@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QFileDialog,
     QMessageBox,
-    QHeaderView
+    QPushButton
 )
 import qdarktheme
 import os
@@ -73,6 +73,8 @@ class MainWindow(QMainWindow):
         """
         super().__init__()
 
+        self.tree_visible = True
+
         self.setWindowTitle(WINDOW_TITLE)
         self.resize(*WINDOW_DIMENSIONS)
 
@@ -104,7 +106,6 @@ class MainWindow(QMainWindow):
         register_dlg()
 
         sys.excepthook = self.handle_exception
-        self.tree_visible = True
 
     def closeEvent(self, event):
         if not self._unsaved_dlg("exiting"):
@@ -644,7 +645,14 @@ class MainWindow(QMainWindow):
 
             return None
         
-        return _get_widget(blk)(label, blk, self)
+        widget = _get_widget(blk)(label, blk, self)
+        if hasattr(blk, "_parent_block") and blk._parent_block is not None:
+            parent_btn = QPushButton("↑")
+            parent_btn.clicked.connect(lambda *_: self.go_to_block(blk._parent_block))
+            widget.header_row.addWidget(parent_btn)
+            widget.header_row.addStretch()
+
+        return widget
 
     
     def _get_item_path(self, item:QStandardItem):

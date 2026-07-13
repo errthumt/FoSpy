@@ -7,6 +7,9 @@ class AttachmentTypeError(Exception):
 class FileBlockNotFoundError(Exception):
     pass
 
+class FoSpyStructureError(Exception):
+    pass
+
 def _summarize_exception_group(exc: Exception, indent: int = 0) -> list[str]:
     """Return a list of summary lines for an ExceptionGroup or PropertyError."""
     pad = "  " * indent
