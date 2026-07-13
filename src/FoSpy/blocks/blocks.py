@@ -706,6 +706,10 @@ class SingleBlock(Block):
         no matching attribute, a matching attribute of `self.ext` can be
         returned instead.
         """
+        rename_dict = self.rename.serialize(shallow=True, clean=True)
+        if name in rename_dict:
+            return getattr(self, rename_dict[name])
+
         try:
             if name != 'ext':
                 return getattr(self.ext, name)
