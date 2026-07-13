@@ -73,7 +73,8 @@ ______________________________________________________________________
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -93,6 +94,7 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
 | program | The temperatures and gradients used during annealing. | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
@@ -121,7 +123,8 @@ ______________________________________________________________________
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
@@ -164,7 +167,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
@@ -182,6 +186,12 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -198,7 +208,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | amount | The sign-sensitive amount of this chemical that was added (positive) or removed (negative). | <ul><li>Positive decimal value</li></ul> |
 | amount_unit | Units for comp change amount. | <ul><li>Any text entry</li></ul> |
@@ -219,7 +230,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 
 #### Optional properties
@@ -238,7 +250,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | changes | A list of chemicals that were added or removed from the active reaction in this step. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`ChemChange` objects.](#chemchange)</li></ul> |
 
@@ -263,7 +276,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | time | How long the temperature was kept constant in this section. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | time_unit | Units for dwell time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
@@ -284,7 +298,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
@@ -302,6 +317,12 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -318,7 +339,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | name | Name of the experimenter | <ul><li>Any text entry</li></ul> |
 | affiliation | Lab/University/Research Group/etc. | <ul><li>Any text entry</li></ul> |
 
@@ -339,7 +361,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------|-----------------------------------------------------|
+|---------------|---------------------------------------------------|-----------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
@@ -358,7 +381,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|----------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -374,6 +398,12 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -386,6 +416,12 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 [Class Documentation][blockdocs-LabConditions]
 
 **[Subclass of `SingleBlock`](#singleblock)**
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 
 #### Optional properties
 
@@ -403,7 +439,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | name | A unique name for the material. | <ul><li>Any text entry</li></ul> |
 | type | How it was used in the synthesis (e.g., reagent, flux, solvent) | <ul><li>Any text entry</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
@@ -432,7 +469,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------|
+|---------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
 | fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
@@ -453,7 +491,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
@@ -474,7 +513,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|--------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | name | A unique name for the product. | <ul><li>Any text entry</li></ul> |
 | expected | Whether or not the product was expected from the synthesis. | <ul><li>True or False</li></ul> |
@@ -503,7 +543,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | medium | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
 
@@ -531,7 +572,8 @@ During construction of a `Ramp` object, it is required to have at least 2 of the
 If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dispatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -563,7 +605,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -588,7 +631,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -613,7 +657,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -639,6 +684,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 |---------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | nominal_formula | Total expected chemical composition from all final products. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | nominal_amount | Total amount expected to be recovered from all final products. | <ul><li>Positive decimal value</li></ul> |
 | nominal_amount_unit | Units for reaction nominal amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -655,6 +701,12 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 [Class Documentation][blockdocs-SingleBlock]
 
 **[Subclass of `Block`][blockdocs-Block]**
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 
 #### Optional properties
 
@@ -673,6 +725,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 |---------------|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
 | experimenters | Experimenters who participated in any treatments described in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
 | reaction | General information applying to the entire synthetic reaction. | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
@@ -700,7 +753,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------|
+|---------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
 | fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
@@ -723,7 +777,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|----------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
@@ -744,7 +799,8 @@ Instances of the base `TemplateBlock` class are usually constructed by calling t
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------|-----------------------------------------------------|
+|---------------|---------------------------------------------------|-----------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
@@ -768,6 +824,12 @@ Developers are currently working on ways to flexibly allow any template list in 
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
@@ -784,7 +846,8 @@ Developers are currently working on ways to flexibly allow any template list in 
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
 
