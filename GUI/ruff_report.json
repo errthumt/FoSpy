@@ -1,1 +1,37 @@
-[]
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 16,
+      "row": 14
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from PySide6.QtWidgets import (\n    QApplication,\n    QMainWindow,\n    QSplitter,\n    QTreeView,\n    QStackedWidget,\n    QWidget,\n    QLabel,\n    QVBoxLayout,\n    QFileDialog,\n    QMessageBox\n)",
+          "end_location": {
+            "column": 2,
+            "row": 15
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Remove unused import: `PySide6.QtWidgets.QHeaderView`"
+    },
+    "location": {
+      "column": 5,
+      "row": 14
+    },
+    "message": "`PySide6.QtWidgets.QHeaderView` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 14,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]
