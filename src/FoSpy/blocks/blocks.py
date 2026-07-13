@@ -524,6 +524,7 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        self._constructed = False
         property_errors = []
 
         if not _dispatched:
@@ -593,8 +594,14 @@ class SingleBlock(Block):
 
         if property_errors:
             raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
-
         
+        self._constructed = True
+
+    def _update_src(self):
+        if self._constructed:
+            self._sourceDict = self.serialize(clean=True)
+
+        return self._sourceDict   
      
     def __setattr__(self, name:str, value):
         """
@@ -631,13 +638,12 @@ class SingleBlock(Block):
                 - If a template field is found when constructing a non-template
                   subclass.
         """
-        from ..parsing.format_fos import format_field
-        from .template import TemplateField, TemplateBlock
-
-        from inspect import signature as sign
-
         if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
+        
+        from ..parsing.format_fos import format_field
+        from .template import TemplateField, TemplateBlock
+        from inspect import signature as sign
         
         validators = self.get_validators()
         
@@ -645,17 +651,20 @@ class SingleBlock(Block):
             try:
                 name, alias = name.split("$")
             except Exception:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict, hint="Unable to parse a block alias from key containing '$' character: ")
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(), hint="Unable to parse a block alias from key containing '$' character: ")
             
             try:
                 val = self._aliases[alias]
             except KeyError:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(),
                                              hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
                                              posthint=f"Valid aliases: {list(self._aliases.keys())}")
             
             if name in validators and val != validators[name]:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(),
                                              hint=f"Cannot apply '{alias}' alias override to property: ",
                                              posthint="That property is already assigned to a validator. "
                                              f"The following properties are reserved: {list(validators.keys())}")
@@ -666,10 +675,10 @@ class SingleBlock(Block):
         if name in validators:
             validator = validators[name]
             val_kwargs = {}
-            for kw, arg in (("sourceDict", self._sourceDict),("cls", type(self))):
+            for kw, arg_func in (("sourceDict", self._update_src),("cls", lambda:type(self))):
                 try:
                     if kw in sign(validator).parameters:
-                        val_kwargs[kw] = arg
+                        val_kwargs[kw] = arg_func()
                 #TODO: find a better way to handle this
                 except Exception:
                     pass
@@ -685,14 +694,14 @@ class SingleBlock(Block):
                         validator = TemplateField
                     else:       
                         e = ValueError("You cannot assign a template field as a property for a non-template object.")
-                        raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
+                        raise err.FailedValidatorError(name, self, e, blockDict=self._update_src(), hint="Template field passed to non-template property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
 
             try:  
                 val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
             except Exception as e:
-                raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict)
+                raise err.FailedValidatorError(name, self, e, blockDict=self._update_src())
                 
             return self._assign_and_inject(name, val)
         else:
