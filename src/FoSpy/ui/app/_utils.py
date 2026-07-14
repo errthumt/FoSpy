@@ -6,11 +6,18 @@ import importlib.metadata
 import urllib.request
 import argparse
 import inspect
+import pathlib
 
 import types
 from typing import Any, Union, get_args, get_origin
 from urllib.error import URLError, HTTPError
 from ...blocks.files import EXT_READ_MAP
+
+asset_dir = pathlib.Path(__file__).parent / "assets"
+
+ASSETS = {
+    "splash": asset_dir / "splash.png",
+}
 
 SKIP_ARG = object()
 
@@ -225,13 +232,13 @@ def register_app() -> bool:
     if not success:
         return False
     
-    from FoSpy.config import values as cfg, save_all as cfg_save
+    from FoSpy.config import values as cfg
     cfg.APP.registered = True
-    cfg_save(prompt=False)
+    cfg.APP.save()
     return True
 
 def register_dlg():
-    from ...config import values as cfg, save_all as cfg_save
+    from ...config import values as cfg
     from .window import MainWindow, DLG_ESCAPE
 
     if not cfg.get("APP.registered", False):
@@ -256,7 +263,7 @@ def register_dlg():
 
         if response is DLG_ESCAPE:
             cfg.APP.registered = True
-            cfg_save(prompt=False)
+            cfg.APP.save()
 
         elif response:
             register_app()

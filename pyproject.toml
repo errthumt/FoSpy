@@ -77,7 +77,8 @@ version-file = "_version.py"
 [tool.hatch.build]
 include = [
     "src/FoSpy/config/*.json",
-    "src/FoSpy/_docs/**/*"
+    "src/FoSpy/_docs/**/*",
+    "src/FoSpy/app/assets/**/*"
 ]
 exclude = [
     "src/FoSpy/config/user.json"
