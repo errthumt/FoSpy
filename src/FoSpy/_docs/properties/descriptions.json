@@ -189,7 +189,7 @@
     },
     "SingleBlock": {
         "rename": {
-            "desc": "Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `\"experimenters\"` might be mapped to the more generic `\"collaborators\"` for computational or meta-contexted FOS files.)"
+            "desc": "See [`Rename` documentation](#rename)"
         }
     },
     "Synthesis": {

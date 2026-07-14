@@ -73,8 +73,8 @@ ______________________________________________________________________
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Annealing`
@@ -97,8 +97,8 @@ ______________________________________________________________________
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|-----------------------|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -123,8 +123,8 @@ ______________________________________________________________________
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
@@ -167,8 +167,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
@@ -188,8 +188,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `ChemChange`
@@ -210,8 +210,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Chemical`
@@ -230,8 +230,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `CompChange`
@@ -251,8 +251,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|-----------------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -278,8 +278,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `EmbeddedFile`
@@ -298,8 +298,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
@@ -319,8 +319,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Experimenter`
@@ -340,8 +340,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|------------------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
 
 ---
@@ -361,8 +361,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `FlexTemplate`
@@ -371,20 +371,21 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `TemplateBlock`](#templateblock)**
 
+The `FlexTemplate` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses with other [`SingleBlock` subclasses](#singleblock), similar to the [`TemplateBlock` class](#templateblock). Unlike `TemplateBlock`s, `FlexTemplate`s dynamically determine what required properties are missing at construction time, and return a `TemplateBlock` instance with those properties marked as template fields.
+
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
 |---------------|---------------------------------------------------|--------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-The `FlexTemplate` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses with other [`SingleBlock` subclasses](#singleblock), similar to the [`TemplateBlock` class](#templateblock). Unlike `TemplateBlock`s, `FlexTemplate`s dynamically determine what required properties are missing at construction time, and return a `TemplateBlock` instance with those properties marked as template fields.---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `GasFlow`
 
 [Class Documentation][blockdocs-GasFlow]
@@ -400,8 +401,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `LabConditions`
@@ -419,8 +420,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Material`
@@ -447,8 +448,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | purity | 0 < purity <= 1 | <ul><li>Decimal value within range:<ul><li>0 < val <= 1</li></ul></li></ul> |
 | treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
@@ -471,8 +472,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `PathFile`
@@ -491,8 +492,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 | path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
@@ -517,8 +518,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|----------------------|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | expected_amount | How much of the product was nominally expected to be obtained from the synthesis | <ul><li>Positive decimal value</li><li>Requires that `expected_amount_unit` also be present</li></ul> |
 | expected_amount_unit | Units for product expected amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
 | obtained_amount | How much of the product was actually obtained from the synthesis.. | <ul><li>Positive decimal value</li><li>Requires that `obtained_amount_unit` also be present</li></ul> |
@@ -544,8 +545,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Ramp`
@@ -572,8 +573,8 @@ If all three are provided, the last one found during reading will be discarded a
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -605,8 +606,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -631,8 +632,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -657,8 +658,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -685,8 +686,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Rename`
@@ -695,32 +696,40 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+Any [`SingleBlock` object](#singleblock) can have `rename` as one of its properties, which contains an instance of a `Rename` block. These can be used to alter the expected (required *or* optional) property names to custom names instead. This is useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `\"experimenters\"` might be mapped to the more generic `\"collaborators\"` for computational or meta-contexted FOS files.)
+
+`Rename` blocks are available as a "stop-gap" for scientists who are trying to make use of the FoS format, but whose areas of expertise are significantly deviated from the context FoS was designed for. Renaming is not intended as a long-term solution.
+
+- **If the descriptions/validation routines for the renamed property are still appropriate, but the property name itself is inaccurate:** Consider reaching out to developers about altering the FoS standards to better reflect the growing community.
+- **If you are working with a very niche application that requires fundamental alteration of the FoS standards:** Consider [modifying validation at runtime](#modifying-property-validation-at-runtime) or creating a fork of the [GitHub](https://github.com/errthumt/FoSpy) to make changes to the sourcecode.
+
+Note that renaming a property will keep all relevant validation rules attached to the new custom name (e.g., for the aforementioned example, the same rules that apply to the `\"experimenters\"` property now apply to the new `\"collaborators\"` property instead.). This allows researchers to make modifications for *clarity purposes only*, without bypassing any FoS standards.
+
 #### Required properties
 
 | Property | Description | Validation Rules |
 |---------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li></ul> |
-
----
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li></ul> |---
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]
 
 **[Subclass of `Block`][blockdocs-Block]**
 
+`SingleBlock` is the parent class of all block classes representing a single entity. `SingleBlock`s are rarely constructed without subclassing, but may be used if you want to take advantage of the rigorous attribute assignment and methods that all other block classes inherit, without defining any expected properties.
+
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
 |---------------|---------------------------------------------------|--------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-`SingleBlock` is the parent class of all block classes representing a single entity. `SingleBlock`s are rarely constructed without subclassing, but may be used if you want to take advantage of the rigorous attribute assignment and methods that all other block classes inherit, without defining any expected properties.---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `Synthesis`
 
 [Class Documentation][blockdocs-Synthesis]
@@ -742,8 +751,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|-----------------------|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | cif | A single attached CIF file applicable to the entire synthesis. | <ul><li>[A `CIFFile` object.](#ciffile)</li></ul><ul></ul> |
 | cifs | Multiple attached CIF files applicable to the entire synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
 | laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
@@ -770,8 +779,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `TemplateBlock`
@@ -780,27 +789,34 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+The `TemplateBlock` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
+
+Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block. To construct a a `TemplateBlock` from an incomplete property dictionary, it is recommended to use [`FlexTemplate` instead.](#flextemplate)
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
 |---------------|---------------------------------------------------|--------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-The `TemplateBlock` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
-
-Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block. To construct a a `TemplateBlock` from an incomplete property dictionary, it is recommended to use [`FlexTemplate` instead.](#flextemplate)---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `TemplateSet`
 
 [Class Documentation][blockdocs-TemplateSet]
 
 **[Subclass of `FileBlock`](#fileblock)**
+
+In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) dynamically determines template fields using the [`FlexTemplate` subclass](#flextemplate)
+
+Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.
+
+
+
 
 #### Required properties
 
@@ -808,22 +824,17 @@ Instances of the base `TemplateBlock` class are usually constructed by calling t
 |---------------|---------------------------------------------------|-----------------------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|-----------------|-----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | experimenters | A list of incomplete templates describing experimenters. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Experimenter` *templates.*](#experimenter)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | materials | A list of incomplete templates describing materials. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Material` *templates.*](#material)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | treatments | A list of incomplete templates describing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Treatment` *templates.*](#treatment)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | annealings | A list of incomplete templates describing annealing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Annealing` *templates.*](#annealing)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | anneal_sections | A list of incomplete templates describing annealing sections. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`AnnealSection` *templates.*](#annealsection)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
-| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
-
-In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) dynamically determines template fields using the [`FlexTemplate` subclass](#flextemplate)
-
-Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.---
+| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |---
 ### `TraceData`
 
 [Class Documentation][blockdocs-TraceData]
@@ -839,8 +850,8 @@ Developers are currently working on ways to flexibly allow any template list in 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Treatment`
@@ -860,8 +871,8 @@ Developers are currently working on ways to flexibly allow any template list in 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+|-----------------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
