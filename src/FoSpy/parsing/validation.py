@@ -156,7 +156,7 @@ optional_keys = {
         "path": validators.filenames.PathPosix
     }, 
     b.SingleBlock: {
-        "rename": validators.rename.rename_dict
+        "rename": b.Rename
     },
     b.Synthesis: {
         "cif": b.Attachment.enforce_subtype(b.CIFFile),
