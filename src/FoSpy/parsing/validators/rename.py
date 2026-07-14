@@ -1,5 +1,10 @@
 from ..._docs.properties import _validator_rules
 
+RESERVED = [
+    "rename",
+    "metadata"
+]
+
 @_validator_rules(
     "Each property of a `Rename` object renames its parent's expected "
     "property of the same name to the provided value.",
@@ -8,7 +13,9 @@ from ..._docs.properties import _validator_rules
         "For unexpected (custom) keys, adding a rename mapping is not necessary.",
         "(There is no required/optional validator to redirect to.)"
     ],
-    "You cannot rename a property to a different expected property. (Unexpected names only.)"
+    "You cannot rename a property to a different expected property. (Unexpected names only.)",
+    "The following reserved properties cannot be renamed:",
+    [f"`{name}`" for name in RESERVED]
 )
 def rename_value(val, blk_cls, prop_name, **kwargs):
     if val.startswith("_"):
@@ -21,6 +28,9 @@ def rename_value(val, blk_cls, prop_name, **kwargs):
         raise ValueError(error, f"'{prop_name}' is not an expected key.")
     if val in validators:
         raise ValueError(error, f"'{val}' is already a registered key.")
+    
+    if prop_name in RESERVED:
+        raise ValueError(error, f"Property '{prop_name}' cannot be renamed.")
 
     return val
 

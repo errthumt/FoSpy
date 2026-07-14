@@ -32,16 +32,23 @@ AVAILABLE_THEMES = ["auto"] if hasattr(qdarktheme, "setup_theme") else []
 AVAILABLE_THEMES.extend(["light", "dark"])
 DEFAULT_THEME = AVAILABLE_THEMES[0]
 
-class EscapeFlag:
+class Sentinel:
+    def __init__(self, hint, bool_val=True):
+        self.hint = hint
+        self.bool_val = bool_val
     def __bool__(self):
-        return False
+        return self.bool_val
     def __repr__(self):
-        if hasattr(self, "__name__") and self.__name__ is not None:
-            return f"<{self.__name__} escape flag>"
-        else:
-            return "<escape flag>"
+        return f"<{self.hint}>"
 
-DLG_ESCAPE = EscapeFlag()
+class EscapeFlag(Sentinel):
+    def __init__(self, hint=""):
+        super().__init__(hint, bool_val=False)
+        if self.hint:
+            self.hint += " "
+        self.hint += "Escape Flag"
+
+DLG_ESCAPE = EscapeFlag("Dialog")
 
 class TextContentWidget(QWidget):
     """A simple content widget to display a title and description."""

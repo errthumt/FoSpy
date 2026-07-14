@@ -11,11 +11,23 @@ from PySide6.QtWidgets import (
 )
 
 from ._base import BaseEditorWidget
+from ..window import Sentinel
+from ....parsing.validators.rename import RESERVED
 
 class RenameEditorWidget(BaseEditorWidget):
+    editor_id = Sentinel("rename editor id")
     def __init__(self, block_widget):
         panel = RenameEditorPanel(block_widget.blk)
         super().__init__(block_widget, panel)
+        self.okay_btn.setVisible(False)
+        self.cancel_btn.setVisible(False)
+
+    def apply(self):
+        rename_from = self.editor.selector.currentText()
+        rename_to = self.editor.input.text()
+        self.editor.parent_blk.rename_block(rename_from, rename_to)
+        self.blk_widget.win._flag_edited(self.editor.parent_blk)
+        self._hard_refresh()
 
 
 
@@ -36,6 +48,9 @@ class RenameEditorPanel(QWidget):
         desc.setWordWrap(True)
 
         blk_props = parent_blk.get_prop_dict()
+        for prop in RESERVED:
+            blk_props.pop(prop, None)
+            
         rename_dict = parent_blk.rename_dict()
 
         selector_list = []

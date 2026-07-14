@@ -1,9 +1,10 @@
 from ._utils import _get_editor, _get_widget
 
-from ..window import MainWindow
+from ..window import MainWindow, Sentinel
 from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
 from .._utils import _get_label
 from ..editors.comments import CommentEditorWidget
+from ..editors._base import BaseEditorWidget
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -86,7 +87,7 @@ class SingleBlockWidget(QWidget):
         self.win = window
         self.blk = blk
         parent = window.splitter
-        self.editor_map = {"props": {}, "comments": {}}
+        self.editor_map = {"props": {}, "comments": {}, "misc": {}}
         self.footnote_iter = _footnote_iter()
 
         super().__init__(parent)
@@ -188,6 +189,20 @@ class SingleBlockWidget(QWidget):
 
         self.active.setCurrentIndex(self.active.indexOf(editor))
         self.editor.setCurrentWidget(self.active)
+
+    def _register_misc_editor(self, editor, label="Misc Editor", editor_id:Sentinel=None):
+        if editor_id is None:
+            # instantiate unique ID object
+            from ..window import Sentinel
+            editor_id = Sentinel("misc editor id")
+        
+        self.editor_map["misc"][editor_id] = (editor, label)
+
+        return editor_id
+
+    def activate_misc_editor(self, editor_id:Sentinel):
+        editor, label = self.editor_map["misc"][editor_id]
+        self.activate_editor(editor, label)
 
     def activate_prop_editor(self, prop_name):
         editor = self.editor_map["props"][prop_name]

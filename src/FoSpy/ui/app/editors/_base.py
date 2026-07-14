@@ -93,6 +93,7 @@ class BaseEditorWidget(QWidget):
 
     def _hard_refresh(self, func:callable=lambda:None):
         from ..window import WIDGET_DATA_ROLE
+        from .comments import CommentEditorWidget
 
         blk = self.blk_widget.blk
         parent = blk._parent_block if hasattr(blk, "_parent_block") else None
@@ -125,8 +126,14 @@ class BaseEditorWidget(QWidget):
             listblk_item = win.tree_items[parent]
             listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
             blk_widget = listblk_widget.blk_widgets[blk]
+            
+        if isinstance(self, BasePropEditor):
+            blk_widget.activate_prop_editor(self.prop_name)
+        elif isinstance(self, CommentEditorWidget):
+            blk_widget.activate_comment_editor(self.editor.prop_name)
+        else:
+            blk_widget.activate_misc_editor(self.editor_id)
 
-        blk_widget.activate_prop_editor(self.prop_name)
         return blk_widget
 
 

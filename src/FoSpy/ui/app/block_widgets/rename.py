@@ -14,5 +14,7 @@ class RenameWidget(SingleBlockWidget):
 
         self.main_editor = RenameEditorWidget(self)
 
-        self.activate_editor(self.main_editor, "Rename Properties")
+        self._register_misc_editor(self.main_editor, "Rename Properties", RenameEditorWidget.editor_id)
+
+        self.activate_misc_editor(RenameEditorWidget.editor_id)
         
