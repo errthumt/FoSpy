@@ -22,139 +22,34 @@
     "cell": null,
     "code": "F401",
     "end_location": {
-      "column": 30,
-      "row": 1
+      "column": 58,
+      "row": 25
     },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/editors/rename.py",
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
     "fix": {
       "applicability": "safe",
       "edits": [
         {
-          "content": "",
+          "content": "from ...config import values as cfg",
           "end_location": {
-            "column": 1,
-            "row": 2
+            "column": 58,
+            "row": 25
           },
           "location": {
             "column": 1,
-            "row": 1
+            "row": 25
           }
         }
       ],
-      "message": "Remove unused import: `PySide6.QtCore.Qt`"
+      "message": "Remove unused import: `...config.save_all`"
     },
     "location": {
-      "column": 28,
-      "row": 1
+      "column": 50,
+      "row": 25
     },
-    "message": "`PySide6.QtCore.Qt` imported but unused",
+    "message": "`...config.save_all` imported but unused",
     "name": "unused-import",
-    "noqa_row": 1,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-import"
-  },
-  {
-    "cell": null,
-    "code": "F401",
-    "end_location": {
-      "column": 16,
-      "row": 4
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/editors/rename.py",
-    "fix": {
-      "applicability": "safe",
-      "edits": [
-        {
-          "content": "from PySide6.QtWidgets import (\n    QVBoxLayout,\n    QWidget,\n    QLabel,\n    QLineEdit,\n    QComboBox\n)",
-          "end_location": {
-            "column": 2,
-            "row": 11
-          },
-          "location": {
-            "column": 1,
-            "row": 2
-          }
-        }
-      ],
-      "message": "Remove unused import"
-    },
-    "location": {
-      "column": 5,
-      "row": 4
-    },
-    "message": "`PySide6.QtWidgets.QPushButton` imported but unused",
-    "name": "unused-import",
-    "noqa_row": 4,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-import"
-  },
-  {
-    "cell": null,
-    "code": "F401",
-    "end_location": {
-      "column": 16,
-      "row": 5
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/editors/rename.py",
-    "fix": {
-      "applicability": "safe",
-      "edits": [
-        {
-          "content": "from PySide6.QtWidgets import (\n    QVBoxLayout,\n    QWidget,\n    QLabel,\n    QLineEdit,\n    QComboBox\n)",
-          "end_location": {
-            "column": 2,
-            "row": 11
-          },
-          "location": {
-            "column": 1,
-            "row": 2
-          }
-        }
-      ],
-      "message": "Remove unused import"
-    },
-    "location": {
-      "column": 5,
-      "row": 5
-    },
-    "message": "`PySide6.QtWidgets.QHBoxLayout` imported but unused",
-    "name": "unused-import",
-    "noqa_row": 5,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-import"
-  },
-  {
-    "cell": null,
-    "code": "F401",
-    "end_location": {
-      "column": 16,
-      "row": 8
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/editors/rename.py",
-    "fix": {
-      "applicability": "safe",
-      "edits": [
-        {
-          "content": "from PySide6.QtWidgets import (\n    QVBoxLayout,\n    QWidget,\n    QLabel,\n    QLineEdit,\n    QComboBox\n)",
-          "end_location": {
-            "column": 2,
-            "row": 11
-          },
-          "location": {
-            "column": 1,
-            "row": 2
-          }
-        }
-      ],
-      "message": "Remove unused import"
-    },
-    "location": {
-      "column": 5,
-      "row": 8
-    },
-    "message": "`PySide6.QtWidgets.QScrollArea` imported but unused",
-    "name": "unused-import",
-    "noqa_row": 8,
+    "noqa_row": 25,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   }
