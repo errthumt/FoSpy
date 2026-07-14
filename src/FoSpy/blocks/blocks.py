@@ -1994,6 +1994,10 @@ class ListBlock(Block):
         cls = type(self)
         return cls(self.serialize(override_list_type=False))
     
+    def remove_block(self, blk):
+        if blk in self._objs:
+            self._objs.remove(blk)
+    
     def remove_any(self, **kwargs):
         """
         Remove any objects from self._objs with attributes matching `kwargs`
