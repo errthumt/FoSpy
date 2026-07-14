@@ -1459,11 +1459,20 @@ class SingleBlock(Block):
         if old in self._key_overrides:
             val = self._key_overrides.pop(old)
             self._key_overrides[new] = val
+
         else:
-            _debug.msg(f"Registering '{old}':'{new}' into rename block")
             if not hasattr(self,"rename"):
                 self.rename = {}
-            setattr(self.rename, old, new)
+
+            rename_dict = self.rename_dict()
+            rename_from = {v:k for k,v in rename_dict.items()}
+            if old in rename_from:
+                base = rename_from[old]
+            else:
+                base = old
+
+            _debug.msg(f"Registering '{base}':'{new}' into rename block")
+            setattr(self.rename, base, new)
         _debug.msg(f"Moving '{old}' over to '{new}'.")
         setattr(self,new,getattr(self, old))
         delattr(self,old)
