@@ -1,11 +1,7 @@
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QVBoxLayout,
-    QPushButton,
-    QHBoxLayout,
     QWidget,
     QLabel,
-    QScrollArea,
     QLineEdit,
     QComboBox
 )
@@ -50,7 +46,7 @@ class RenameEditorPanel(QWidget):
         blk_props = parent_blk.get_prop_dict()
         for prop in RESERVED:
             blk_props.pop(prop, None)
-            
+
         rename_dict = parent_blk.rename_dict()
 
         selector_list = []

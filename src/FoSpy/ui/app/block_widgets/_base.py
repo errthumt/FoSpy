@@ -1,10 +1,9 @@
 from ._utils import _get_editor, _get_widget
 
 from ..window import MainWindow, Sentinel
-from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont
+from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont, Rename
 from .._utils import _get_label
 from ..editors.comments import CommentEditorWidget
-from ..editors._base import BaseEditorWidget
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
@@ -92,8 +91,18 @@ class SingleBlockWidget(QWidget):
 
         super().__init__(parent)
 
+
         self.header_row, base_layout = _add_header(self, label, "Properties")
         self.base_layout = base_layout
+
+        if not isinstance(blk, Rename):
+            if not hasattr(blk, "rename"):
+                blk.rename = {}
+            rename_btn = QPushButton("Rename Properties")
+            rename_btn.clicked.connect(
+                lambda *_, b=blk.rename: self.win.go_to_block(b)
+            )
+            self.header_row.addWidget(rename_btn)
 
         main_layout = QHBoxLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
@@ -137,14 +146,13 @@ class SingleBlockWidget(QWidget):
 
         scroll_content = QWidget()
         scroll_content.setMinimumWidth(scroll_w)
-        prop_layout = QVBoxLayout(scroll_content)
-        prop_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.prop_layout = prop_layout
+        self.scroll_content = scroll_content
 
         scroll.setWidget(scroll_content)
         sidebar.addWidget(scroll)
 
         self.prop_labels = {}
+
         self._refresh_properties()
 
     def _add_footnote(self, txt):
@@ -212,14 +220,36 @@ class SingleBlockWidget(QWidget):
         editor = self.editor_map["comments"][prop_name]
         self.activate_editor(editor, label=f"🗩 {prop_name}")
 
-    def _refresh_properties(self):
-        # TODO: needs to clear self.prop_layout
+    def _refresh_properties(self, pending:callable=lambda:None):
+        if self.active.count() > 0 and not self.win._custom_popup(
+            "Refresh Required",
+            "This action requires a refresh of the current block. This will close all open editor tabs. Continue?",
+            ("Continue", True),
+            cancel=True
+        ):
+            return
+        
+        pending()
+
+        if hasattr(self, "prop_layout"):
+            dummy = QWidget()
+            dummy.setLayout(self.prop_layout)
+            dummy.deleteLater()
+
+        prop_layout = QVBoxLayout(self.scroll_content)
+        prop_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.prop_layout = prop_layout
 
         prop_dict = self.blk.get_prop_dict()
         rename_dict = self.blk.rename_dict()
         renamed_from = {v:k for k,v in rename_dict.items()}
 
+        req_props = self.blk.get_req_validators().keys()
+
         for prop, val in prop_dict.items():
+            if prop == "rename":
+                continue
+
             prop_txt = prop
             if prop in renamed_from:
                 fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
@@ -228,19 +258,6 @@ class SingleBlockWidget(QWidget):
             if isinstance(val, blk_cont.SimpleWrapper):
                 val = val()
 
-            if isinstance(val, Block):
-                btn_txt = f"Go to {prop_txt}"
-                edit_btn = QPushButton(btn_txt)
-                edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
-                self.prop_layout.addWidget(edit_btn)
-                continue
-
-            
-            # TODO: add support for non-primitive builtins (list, dict)
-            # Non-primitive editing will use a different kind of widget
-            # displayed to the right of the sidebar
-
-
             row_layout = QHBoxLayout()
 
             label = QLabel(f"<b>{prop_txt}:</b>")
@@ -248,32 +265,44 @@ class SingleBlockWidget(QWidget):
             row_layout.addWidget(label, stretch=0)
             self.prop_labels[prop] = label
 
-            txt = val.serialize() if hasattr(val, "serialize") else str(val)
-            line_edit = QLineEdit(txt)
-            line_edit.setCursorPosition(0)
+            if isinstance(val, Block):
+                btn_txt = "Go to Block"
+                edit_btn = QPushButton(btn_txt)
+                edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
+                row_layout.addWidget(edit_btn, stretch=1)
 
-            editor, enabler = _get_editor(val, self, prop)
-            line_edit.setEnabled(enabler(txt))
-            def on_apply(p=prop, e=line_edit, en=enabler):
-                self._on_primitive_edit(p, e, en)
+            else:
+                txt = val.serialize() if hasattr(val, "serialize") else str(val)
+                line_edit = QLineEdit(txt)
+                line_edit.setCursorPosition(0)
 
-            def direct_edit(apply=on_apply):
-                try:
-                    apply()
-                except Exception:
-                    # TODO: pass to user
-                    pass
+                editor, enabler = _get_editor(val, self, prop)
+                line_edit.setEnabled(enabler(txt))
+                def on_apply(p=prop, e=line_edit, en=enabler):
+                    self._on_primitive_edit(p, e, en)
+
+                def direct_edit(apply=on_apply):
+                    try:
+                        apply()
+                    except Exception:
+                        # TODO: pass to user
+                        pass
 
 
-            line_edit.editingFinished.connect(on_apply)
-            row_layout.addWidget(line_edit, stretch=1)
+                line_edit.editingFinished.connect(on_apply)
+                row_layout.addWidget(line_edit, stretch=1)
 
-            if editor:
-                editor = editor(self, line_edit, on_apply, prop)
-                self.editor_map["props"][prop] = editor
-                edit_btn = QPushButton("✏️")
-                edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
-                row_layout.addWidget(edit_btn, stretch=0)
+                if editor:
+                    editor = editor(self, line_edit, on_apply, prop)
+                    self.editor_map["props"][prop] = editor
+                    edit_btn = QPushButton("✏️")
+                    edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
+                    row_layout.addWidget(edit_btn, stretch=0)
+
+            if prop not in req_props:
+                del_btn = QPushButton("🗑")
+                del_btn.clicked.connect(lambda *_, p=prop: self.delete_prop(p))
+                row_layout.addWidget(del_btn, stretch=0)
 
             comment_btn = QPushButton("🗩")
             comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
@@ -284,6 +313,12 @@ class SingleBlockWidget(QWidget):
             
             row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
             self.prop_layout.addLayout(row_layout)
+
+    def delete_prop(self, prop):
+        def pending_delete(p=prop):
+            delattr(self.blk, p)
+            self.win._flag_edited(self.blk)
+        self._refresh_properties(pending_delete)
 
     def _on_primitive_edit(self, prop:str, line_edit:QLineEdit, enabler:callable):
         new_text = line_edit.text()

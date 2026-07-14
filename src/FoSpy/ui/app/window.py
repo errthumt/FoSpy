@@ -20,7 +20,7 @@ from typing import Any
 import pathlib
 import traceback
 
-from ...blocks import FileBlock, Block, SingleBlock, ListBlock
+from ...blocks import FileBlock, Block, SingleBlock, ListBlock, Rename
 from ._utils import _get_label, register_dlg
 from ...config import values as cfg
 
@@ -41,14 +41,7 @@ class Sentinel:
     def __repr__(self):
         return f"<{self.hint}>"
 
-class EscapeFlag(Sentinel):
-    def __init__(self, hint=""):
-        super().__init__(hint, bool_val=False)
-        if self.hint:
-            self.hint += " "
-        self.hint += "Escape Flag"
-
-DLG_ESCAPE = EscapeFlag("Dialog")
+DLG_ESCAPE = Sentinel("Dialog Escape Flag", bool_val=False)
 
 class TextContentWidget(QWidget):
     """A simple content widget to display a title and description."""
@@ -299,6 +292,12 @@ class MainWindow(QMainWindow):
     def _add_tree_item(self, child_item:QStandardItem, parent_item:QStandardItem, blk:Block):
         """Adds a single child item with corresponding block to a parent."""
         parent_item.appendRow(child_item)
+
+        if isinstance(blk, Rename):
+            idx = child_item.index()
+            self.tree_view.setRowHidden(idx.row(), idx.parent(), True)
+            # child_item.setVisible(False) equivalent
+
         self._register_view(child_item, blk)
         self._populate_tree_nodes(child_item, blk)
 
@@ -671,7 +670,7 @@ class MainWindow(QMainWindow):
             parent_btn = QPushButton("↑")
             parent_btn.clicked.connect(lambda *_: self.go_to_block(blk._parent_block))
             widget.header_row.addWidget(parent_btn)
-            widget.header_row.addStretch()
+        widget.header_row.addStretch()
 
         return widget
 
