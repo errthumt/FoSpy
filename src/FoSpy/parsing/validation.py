@@ -35,6 +35,12 @@ aliases = {
 """Maps alias names to block classes for use in non-template
 [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] blocks."""
 
+for attr in b.__all__:
+    blk_cls = getattr(b, attr)
+    if isinstance(blk_cls, type) and issubclass(blk_cls, b.Block):
+        aliases[attr.lower()] = blk_cls
+
+
 required_keys = {
     b.SingleBlock: {
             "ext" : SubContainer

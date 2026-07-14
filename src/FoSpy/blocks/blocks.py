@@ -8,7 +8,6 @@ from ..parsing.syntax import (
 
 from .. import _errors as err
 
-
 from ._blockUtils import _unwrap_block
 
 from .._debug import Debug
@@ -536,6 +535,7 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        self._staged_templates = {}
         self._constructed = False
         property_errors = []
 
@@ -794,6 +794,91 @@ class SingleBlock(Block):
         
     def __hash__(self):
         return id(self)
+
+    def stage_template(self, prop_name, template:Block|dict=None):
+        from .template import TemplateBlock
+        if template is None:
+            template = {}
+
+        if not isinstance(template, (TemplateBlock, dict)):
+            raise ValueError("Template must be a TemplateBlock or dictionary.")
+
+        if hasattr(self, prop_name):
+            raise ValueError(f"Property {prop_name} already exists. You cannot stage a template for a property that already exists.")
+        
+        validators = self.build_validators()
+        validator = validators.get(prop_name, None)
+        alias = None
+        if isinstance(validator, type) and issubclass(validator, ListBlock):
+            raise ValueError(f"{prop_name} is a list property. You cannot stage a template for a list property. "
+                             "Instead, set the property to an empty list and then stage a template to that list.")
+        
+        if "$" in prop_name and validator is not None:
+            prop, alias = prop_name.split("$",1)
+            raise ValueError(f"The property {prop} already has a validator. You cannot alias a different validator for the same property.")
+
+        if validator is None:
+            if "$" not in prop_name:
+                raise ValueError(f"The property {prop_name} is unexpected. In order to stage a template "
+                                 "for and unexpected property, you must specify the validator with a '$' alias "
+                                 "in the property name.")
+            
+            prop_name, alias = prop_name.split("$",1)
+
+            try:
+                validator = self._aliases[alias]
+            except KeyError:
+                raise err.PropertyAliasError(prop_name, self, blockDict={prop_name: "<staged template>"},
+                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
+                                             posthint=f"Valid aliases: {list(self._aliases.keys())}")
+            
+        if not (isinstance(validator, type) and issubclass(validator, SingleBlock)):
+            raise ValueError("Templates can only be staged for SingleBlock validators")
+
+        if not isinstance(template, (dict, validator)):
+            raise ValueError(f"{prop_name} is mapped to an incompatible validator for the staged template.")
+
+        if isinstance(template, dict):
+            template = validator.reflex(serialize=False, include_temp_names=True, clean=False, **template)
+
+        if alias is not None:
+            self._key_overrides[prop_name] = validator
+            
+        self._staged_templates[prop_name] = template
+
+        return prop_name, template
+    
+    def fill_staged_template(self, prop_name, **kwargs):
+        prop_key = prop_name.split("$")[0] if "$" in prop_name else prop_name
+
+        template = self._staged_templates.pop(prop_key, None)
+        if template is None:
+            prop_name, _ = self.stage_template(prop_name)
+            return self.fill_staged_template(prop_name, **kwargs)
+
+        prop_name = prop_key
+
+        try:
+            filled = template.fill(**kwargs)
+        except Exception:
+            partial = template.fill(incomplete=True, **kwargs)
+            self._staged_templates[prop_name] = partial
+            return prop_name, partial
+        
+        try:
+            setattr(self, prop_name, filled)
+        except Exception as e:
+            raise Exception(f"Template was filled but could not be assigned {prop_name}") from e
+        
+        return prop_name, filled
+
+    def has_staged(self):
+        if len(self._staged_templates) > 0:
+            return True
+        
+        for val in self.get_prop_dict().values():
+            if hasattr(val, "has_staged") and val.has_staged():
+                return True
 
     def rename_dict(self):
         if not hasattr(self, "rename"):
@@ -1687,6 +1772,9 @@ class ListBlock(Block):
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
+
+    def has_staged(self):
+        return any(blk.has_staged() for blk in self)
 
     def get_idx(self, blk):
         try:
