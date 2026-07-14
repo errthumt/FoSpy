@@ -135,6 +135,10 @@ def _merge_vals(current, prop_mro, idx):
         return merged
     
     validators = prop_mro[idx].copy()
+
+    if "__all__" in validators:
+        pass
+
     rules = []
 
     current_universal = merged.pop("__all__", lambda val, *_, **__: val)

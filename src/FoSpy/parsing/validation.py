@@ -138,6 +138,10 @@ required_keys = {
 
     b.Attachment: {
         "file_name": validators.filenames.file_name
+    },
+
+    b.Rename: {
+        "__all__": validators.rename.rename_value
     }
 }
 """Maps block classes to dictionaries of required keys and their validators.
@@ -198,6 +202,10 @@ optional_keys = {
         "temp_unit": validators.units.FOSTempUnit,
         "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
         "rate_unit": validators.units.temp_rate_unit
+    },
+
+    b.Rename: {
+        "rename": False
     },
 
     b.TemplateSet: TemplateLists

@@ -433,6 +433,7 @@ class SingleBlock(Block):
         """
         from ..parsing.validation import required_keys, optional_keys
         from ._blockUtils import _merge_vals, _get_prop_mro
+        from .._docs.properties import _validator_rules
         merged = {}
         # for base in reversed(cls.__mro__):
         #     for key_set in (required_keys, optional_keys):
@@ -450,7 +451,13 @@ class SingleBlock(Block):
             merged = _merge_vals(merged, req_mro, i)
             merged = _merge_vals(merged, opt_mro, i)
 
-        cls.universal_val = lambda _cls, *_,_m=merged.pop("__all__"), **__: _m(*_, **__)
+        universal_val = merged.pop("__all__")
+
+        @_validator_rules(inherit_from=universal_val)
+        def universal_val_method(cls, *_, _m=universal_val, **__):
+            return _m(*_, **__)
+
+        cls.universal_val = universal_val_method
 
         return merged
     

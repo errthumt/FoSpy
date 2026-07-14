@@ -689,6 +689,19 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
 
 ---
+### `Rename`
+
+[Class Documentation][blockdocs-Rename]
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li></ul> |
+
+---
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]

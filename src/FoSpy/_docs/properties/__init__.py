@@ -184,6 +184,7 @@ Possible Validators:
 """
 
 def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
+    from ...blocks.metadata import Rename
     _load_all_validators()
     def empty_gen():
         while True:
@@ -234,6 +235,7 @@ def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
             out[key]["Validation Rules"].append(val_rule)
         except Exception as e:
             exceptions.append(e)
+
 
     universal_val = cls.universal_val
     add_to_table("req", "**Universal**", universal_val,
@@ -744,10 +746,17 @@ def write_prop_md(md_path, delay=False, enforce=False):
         raise exc
 
 
-def _validator_rules(*args):
+def _validator_rules(*args, inherit_from=None):
     from ..._docs.properties import val_rules
-    def decorator(func, a=args):
-        val_rules[func] = a
+    def decorator(func, a=args, ih=inherit_from):
+        inherited = val_rules.get(ih, [])
+        a = list(a)
+        a.extend(inherited)
+        a = tuple(a)
+
+        if len(a) > 0:
+            val_rules[func] = a
+
         return func
     return decorator
 

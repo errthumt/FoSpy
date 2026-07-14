@@ -72,6 +72,15 @@ documentation](../full/index.md).
         summary:
            functions: true
 ---
+[](){ #blockdocs-Rename }
+### `Rename`
+::: FoSpy.blocks.metadata.Rename
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-SynthesisMeta }
 ### `SynthesisMeta`
 ::: FoSpy.blocks.metadata.SynthesisMeta

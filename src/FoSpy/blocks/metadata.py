@@ -70,3 +70,7 @@ class Equipment(SingleBlock):
     pass
 
 EquipmentList = ListBlock.Simple(Equipment)
+
+
+class Rename(SingleBlock):
+    pass
