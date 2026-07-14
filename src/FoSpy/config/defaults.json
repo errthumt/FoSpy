@@ -57,5 +57,8 @@
     },
     "ui":{
         "default": "native"
+    },
+    "APP": {
+        "theme": "light"
     }
 }

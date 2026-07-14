@@ -22,7 +22,7 @@ import traceback
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock, Rename
 from ._utils import _get_label, register_dlg
-from ...config import values as cfg
+from ...config import values as cfg, save_all as save_cfg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
@@ -30,7 +30,9 @@ WIDGET_DATA_ROLE = Qt.ItemDataRole.UserRole + 1
 
 AVAILABLE_THEMES = ["auto"] if hasattr(qdarktheme, "setup_theme") else []
 AVAILABLE_THEMES.extend(["light", "dark"])
-DEFAULT_THEME = AVAILABLE_THEMES[0]
+
+cfg_theme = cfg.APP.theme
+DEFAULT_THEME = cfg_theme if cfg_theme in AVAILABLE_THEMES else AVAILABLE_THEMES[0]
 
 class Sentinel:
     def __init__(self, hint, bool_val=True):
@@ -437,6 +439,9 @@ class MainWindow(QMainWindow):
         if not app:
             return
         
+        cfg.APP.theme = theme_id
+        cfg.APP.save()
+
         try:
             qdarktheme.setup_theme(theme_id)
         except AttributeError:
