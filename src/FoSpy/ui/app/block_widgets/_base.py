@@ -376,6 +376,12 @@ class ListBlockWidget(QWidget):
 
 
             tab_content = widget(label, child_blk, window)
+
+            delete_btn = QPushButton("Delete this Block")
+            delete_btn.clicked.connect(lambda *_, blk=child_blk: self.remove_block(blk))
+            tab_content.header_row.addWidget(delete_btn)
+            tab_content.header_row.addStretch()
+
             self.blk_widgets[child_blk] = tab_content
             tabs.addTab(tab_content, label)
 
@@ -390,4 +396,21 @@ class ListBlockWidget(QWidget):
     def go_to_tab(self, blk):
         idx = self.blk._objs.index(blk)
         self.tabs.setCurrentIndex(idx)
+
+    def remove_block(self, blk):
+        if not self.win._custom_popup(
+            "Delete this block?",
+            "Are you sure you want to delete this block? "
+            "Deleted blocks cannot be recovered once any changes are saved.",
+            ("Delete", True),
+            cancel=True
+        ):
+            return
+
+
+        self.blk.remove_block(blk)
+        self.win._flag_edited(self.blk)
+        if hasattr(self.blk, "_parent_block"):
+            self.win.go_to_block(self.blk._parent_block)
+        self.win.go_to_block(self.blk)
 
