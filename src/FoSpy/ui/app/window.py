@@ -22,6 +22,7 @@ import traceback
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock
 from ._utils import _get_label, register_dlg
+from ...config import values as cfg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
@@ -114,14 +115,27 @@ class MainWindow(QMainWindow):
         return super().closeEvent(event)
 
     def handle_exception(self, exctype, value, tb):
+        options = [
+            ("Continue", False),
+            ("View Full Error Details", True)
+        ]
+
+        if cfg.get("APP.debug"):
+            exc = exctype(value)
+            exc.__traceback__ = tb
+            options.append(("Raise Exception", exc))
+
+
         resp = self._custom_popup(
             "Error!",
             "An error has occurred:\n\n"
             f"{exctype.__name__}: {value}",
-            ("Continue", False),
-            ("View Full Error Details", True),
+            *options,
             cancel=False
         )
+
+        if isinstance(resp, Exception):
+            raise resp
 
         if resp:
             import sys
