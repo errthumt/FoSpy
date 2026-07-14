@@ -1,11 +1,12 @@
 
-from ....blocks import SingleBlock, ListBlock, PathFile
+from .... import blocks as b
 
 from .. import editors
 
 from ._base import SingleBlockWidget, ListBlockWidget
 from . import (
-    attachment
+    attachment,
+    rename
 )
 
 widget_map = {
@@ -13,12 +14,13 @@ widget_map = {
         editors.text_editor.TextEditorWidget,
         lambda value: "\n" not in value
     ),
-    PathFile: attachment.PathFileWidget
+    b.PathFile: attachment.PathFileWidget,
+    b.Rename: rename.RenameWidget
 }
 
 # assign defaults last
-widget_map[SingleBlock] = SingleBlockWidget
-widget_map[ListBlock] = ListBlockWidget
+widget_map[b.SingleBlock] = SingleBlockWidget
+widget_map[b.ListBlock] = ListBlockWidget
 
 
 

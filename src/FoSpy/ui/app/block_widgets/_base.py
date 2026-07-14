@@ -116,6 +116,7 @@ class SingleBlockWidget(QWidget):
             "Select a property or comment editor to inspect it in more detail.\n\n"
             "Greyed-out properties can only be edited in the inspector."
             )
+        self.inactive.setWordWrap(True)
         editor.addWidget(self.inactive)
         
         self.active = QTabWidget()

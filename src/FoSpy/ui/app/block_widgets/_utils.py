@@ -31,6 +31,8 @@ def _get_widget(blk, prop_map=None, prop=None):
     if prop_map is not None:
         if prop in prop_map:
             return prop_map[prop]
+        elif "__all__" in prop_map:
+            return prop_map["__all__"]
         
     from . import widget_map
         
