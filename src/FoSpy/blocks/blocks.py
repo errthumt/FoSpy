@@ -1660,6 +1660,7 @@ class ListBlock(Block):
         if not isinstance(blockList, list):
             blockList = [blockList]
         self._objs = blockList
+        self._staged_templates = {}
 
         
         # for blockDict in blockList:
@@ -1774,7 +1775,51 @@ class ListBlock(Block):
             )
 
     def has_staged(self):
-        return any(blk.has_staged() for blk in self)
+        return len(self._staged_templates) > 0 or any(blk.has_staged() for blk in self)
+    
+    def stage_template(self, temp_id, template:Block|dict=None):
+        from .template import TemplateBlock
+        if template is None:
+            template = {}
+
+        if "$" in temp_id:
+            raise ValueError("ListBlock Template IDs cannot contain '$'. "
+                             "The block type must match the required class for the ListBlock.")
+
+        if not isinstance(template, (TemplateBlock, dict)):
+            raise ValueError("Template must be a TemplateBlock or dictionary.")
+        
+        if isinstance(template, dict):
+            template = self._reqCls.reflex(**template)
+        elif not isinstance(template, self._reqCls):
+            raise ValueError("Template must be a TemplateBlock subclass of the same type as this ListBlock.")
+        
+        if temp_id in self._staged_templates:
+            raise ValueError(f"A Template has already been staged for {temp_id}.")
+        
+        self._staged_templates[temp_id] = template
+
+        return temp_id, template
+    
+    def fill_staged_template(self, temp_id, idx=None, **kwargs):
+        template = self._staged_templates.pop(temp_id, None)
+        if template is None:
+            temp_id, _ = self.stage_template(temp_id)
+            return self.fill_staged_template(temp_id, **kwargs)
+        
+        try:
+            filled = template.fill(**kwargs)
+        except Exception as e:
+            partial = template.fill(incomplete=True, **kwargs)
+            return self.stage_template(temp_id, partial)
+        
+        if idx is None:
+            self.append(filled)
+        else:
+            self.insert(idx, filled)
+        
+        return temp_id, filled
+
 
     def get_idx(self, blk):
         try:
