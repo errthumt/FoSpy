@@ -20,6 +20,76 @@
   },
   {
     "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 30,
+      "row": 1812
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 30,
+            "row": 1812
+          },
+          "location": {
+            "column": 25,
+            "row": 1812
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `e`"
+    },
+    "location": {
+      "column": 29,
+      "row": 1812
+    },
+    "message": "Local variable `e` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 1812,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 66,
+      "row": 24
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from ._utils import _get_label, register_dlg",
+          "end_location": {
+            "column": 66,
+            "row": 24
+          },
+          "location": {
+            "column": 1,
+            "row": 24
+          }
+        }
+      ],
+      "message": "Remove unused import: `._utils._get_template_label`"
+    },
+    "location": {
+      "column": 47,
+      "row": 24
+    },
+    "message": "`._utils._get_template_label` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 24,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
     "code": "F401",
     "end_location": {
       "column": 58,
