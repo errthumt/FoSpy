@@ -185,6 +185,17 @@ def _get_label(blk, i=None):
 
     return label
 
+def _get_template_label(blk):
+    id_key, id_txt = blk.get_id()
+
+    label = "🏷️"
+    label += id_txt
+
+    if id_key is None:
+        label += " Object"
+
+    return label
+
 def _get_version():
     try:
         vers = importlib.metadata.version("FoSpy")

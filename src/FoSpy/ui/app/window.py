@@ -21,7 +21,7 @@ import pathlib
 import traceback
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock, Rename
-from ._utils import _get_label, register_dlg
+from ._utils import _get_label, register_dlg, _get_template_label
 from ...config import values as cfg, save_all as save_cfg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
