@@ -7,7 +7,7 @@ class TemplateBlockWidget(SingleBlockWidget):
         super().__init__(label, blk, window)
 
         disclaimer = QLabel("This block is a <i>staged template</i>. It will be attached to the parent block once all fields are filled in.")
-        self.header_row.layout().insertWidget(1, disclaimer)
+        self.layout().insertWidget(1, disclaimer)
 
     def _on_primitive_edit(self, prop, line_edit, enabler):
         super()._on_primitive_edit(prop, line_edit, enabler)

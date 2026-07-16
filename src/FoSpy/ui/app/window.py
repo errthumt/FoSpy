@@ -25,7 +25,7 @@ from ._utils import _get_label, register_dlg, _get_template_label
 from ...config import values as cfg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
-WINDOW_DIMENSIONS = (1000, 700)
+WINDOW_DIMENSIONS = (1200, 900)
 WIDGET_DATA_ROLE = Qt.ItemDataRole.UserRole + 1
 
 AVAILABLE_THEMES = ["auto"] if hasattr(qdarktheme, "setup_theme") else []
