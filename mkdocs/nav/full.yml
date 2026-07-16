@@ -111,17 +111,21 @@ nav:
       - app/__init__: full/ui/app/__init__.md
       - __main__: full/ui/app/__main__.md
       - _utils: full/ui/app/_utils.md
+      - console: full/ui/app/console.md
       - window: full/ui/app/window.md
       - block_widgets:
         - block_widgets/__init__: full/ui/app/block_widgets/__init__.md
         - _base: full/ui/app/block_widgets/_base.md
         - _utils: full/ui/app/block_widgets/_utils.md
         - attachment: full/ui/app/block_widgets/attachment.md
+        - rename: full/ui/app/block_widgets/rename.md
+        - template: full/ui/app/block_widgets/template.md
       - editors:
         - editors/__init__: full/ui/app/editors/__init__.md
         - _base: full/ui/app/editors/_base.md
         - attachment: full/ui/app/editors/attachment.md
         - comments: full/ui/app/editors/comments.md
+        - rename: full/ui/app/editors/rename.md
         - text_editor: full/ui/app/editors/text_editor.md
     - sliders:
       - sliders/__init__: full/ui/sliders/__init__.md

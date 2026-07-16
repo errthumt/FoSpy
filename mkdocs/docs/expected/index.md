@@ -123,10 +123,10 @@ ______________________________________________________________________
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 #### Additional Requirements
 
@@ -137,20 +137,24 @@ In addition to the required properties above, all `Attachment` objects must be c
 
 The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the [attachments guide](../guides/attachments.md) for more information
 
+##### Attachment Types
+
+- [`EmbeddedFile` (Embedded text content)](#embeddedfile)
+- [`PathFile` (Referenced by relative path)](#pathfile)
+
+
+##### File Types
+
+- [`CIFFile` (Crystallographic Information File)](#ciffile)
+
+
 #### Attachment Method Subclasses
 
 Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`](../blocks/attachments.md#FoSpy.blocks.attachments.PathFile._get_filepath) simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`](../blocks/attachments.md#FoSpy.blocks.attachments.EmbeddedFile._get_filepath) objects create a temporary file to print their embedded lines to before returning its filepath.
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
-##### Attachment Types
-
-- `EmbeddedFile`
-- `PathFile`
-
-##### File Types
-
-- `CIFFile`---
+---
 ### `CIFFile`
 
 [Class Documentation][blockdocs-CIFFile]
@@ -167,12 +171,13 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
----
+#### Additional Requirements
+`CIFFile`s also have additional requirements to follow according to their attachment type designation. Refer to [the `Attachment` class](#attachment).---
 ### `CSVdata`
 
 [Class Documentation][blockdocs-CSVdata]
@@ -294,14 +299,14 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| embedded |  | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
 ---
 ### `Equipment`
@@ -485,17 +490,17 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| path |  | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 ---
 ### `Product`
@@ -708,8 +713,8 @@ Note that renaming a property will keep all relevant validation rules attached t
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|---------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li></ul> |---
+|---------------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li><li>The following reserved properties cannot be renamed:<ul><li>`rename`</li><li>`metadata`</li></ul></li></ul> |---
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]
