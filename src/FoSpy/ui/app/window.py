@@ -22,7 +22,7 @@ import traceback
 
 from ...blocks import FileBlock, Block, SingleBlock, ListBlock, Rename
 from ._utils import _get_label, register_dlg, _get_template_label
-from ...config import values as cfg, save_all as save_cfg
+from ...config import values as cfg
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1000, 700)
@@ -251,6 +251,12 @@ class MainWindow(QMainWindow):
 
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, blk_i)
+
+            for blk in blk._staged_templates.values():
+                label = _get_template_label(blk)
+
+                child_item = QStandardItem(label)
+                self._add_tree_item(child_item, parent_item, blk)
         
         elif isinstance(blk, SingleBlock):
             # get dict of property name -> live object
