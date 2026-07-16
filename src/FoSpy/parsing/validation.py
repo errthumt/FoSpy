@@ -145,7 +145,12 @@ required_keys = {
     b.Attachment: {
         "file_name": validators.filenames.file_name
     },
-
+    b.PathFile: {
+        "path": validators.filenames.PathPosix
+    },
+    b.EmbeddedFile: {
+        "embedded": validators.filenames.embedded
+    },
     b.Rename: {
         "__all__": validators.rename.rename_value
     }
@@ -155,12 +160,11 @@ Validators can be types (e.g. `str`, `int`),
 [`Block`][FoSpy.blocks.blocks.Block] constructors, or custom validator
 functions."""
 
-
 optional_keys = {
     b.Attachment: {
-        "embedded": validators.filenames.embedded,
-        "path": validators.filenames.PathPosix
-    }, 
+        "path": validators.filenames.PathPosix,
+        "embedded": validators.filenames.embedded
+    },
     b.SingleBlock: {
         "rename": b.Rename
     },
