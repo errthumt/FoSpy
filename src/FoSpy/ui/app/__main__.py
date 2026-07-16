@@ -27,10 +27,16 @@ def main_cli(**kwargs):
 
     splash = QSplashScreen(scaled, Qt.WindowStaysOnTopHint)
     splash.show()
-    app.processEvents()
 
-    window = MainWindow(**kwargs)
-    window.show()
+    try:
+        app.processEvents()
+
+        window = MainWindow(**kwargs)
+        window.show()
+    except Exception as e:
+        splash.finish(window)
+        raise e
+    
     splash.finish(window)
 
     sys.exit(app.exec())

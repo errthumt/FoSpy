@@ -6,7 +6,8 @@ from .. import editors
 from ._base import SingleBlockWidget, ListBlockWidget
 from . import (
     attachment,
-    rename
+    rename,
+    template
 )
 
 widget_map = {
@@ -14,6 +15,7 @@ widget_map = {
         editors.text_editor.TextEditorWidget,
         lambda value: "\n" not in value
     ),
+    b.TemplateBlock: template.TemplateBlockWidget,
     b.PathFile: attachment.PathFileWidget,
     b.Rename: rename.RenameWidget
 }

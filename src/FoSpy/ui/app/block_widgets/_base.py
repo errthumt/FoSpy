@@ -342,7 +342,6 @@ class SingleBlockWidget(QWidget):
                 label.setText("*" + label.text())
 
         except Exception as e:
-            # TODO: pass exceptions to user
             line_edit.setText(old_txt)
             error = e
 

@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QLabel
+from ....blocks.template import TemplateBlock
 
 def _widget_not_found(*_):
     return QLabel("ERROR: No Widget Found")
@@ -28,6 +29,8 @@ def _get_editor(value, blk_widget=None, prop=None):
 
 
 def _get_widget(blk, prop_map=None, prop=None):
+    if isinstance(blk, TemplateBlock):
+        return _get_template_widget(blk, prop_map, prop)
     if prop_map is not None:
         if prop in prop_map:
             return prop_map[prop]
@@ -39,5 +42,41 @@ def _get_widget(blk, prop_map=None, prop=None):
     for k, v in widget_map.items():
         if isinstance(blk, k):
             return v
+        
+    return _widget_not_found
+
+def _get_template_widget(blk, prop_map=None, prop=None):
+    if prop_map is not None:
+        if prop in prop_map:
+            return prop_map[prop]
+        elif "__all__" in prop_map:
+            return prop_map["__all__"]
+        
+    from . import widget_map
+
+    template_widget = None
+    full_widget = None
+        
+    for k, v in widget_map.items():
+        if isinstance(blk, k):
+            if issubclass(k, TemplateBlock):
+                template_widget = v
+            elif issubclass(blk._full_class, k):
+                full_widget = v
+
+            if None not in (template_widget, full_widget):
+                prop_map = full_widget.prop_map
+                if prop_map is None:
+                    prop_map = {}
+                
+                new_prop_map = prop_map.copy()
+                
+                new_prop_map["template_name"] = (False, lambda value: False)
+
+                class HybridTemplateWidget(template_widget, full_widget):
+                    prop_map = new_prop_map
+                    pass
+
+                return HybridTemplateWidget
         
     return _widget_not_found

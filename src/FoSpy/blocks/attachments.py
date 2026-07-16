@@ -59,7 +59,20 @@ class Attachment(SingleBlock):
         
         return filename, new_ext
 
- 
+    @classmethod
+    def reflex(cls, serialize=True, clean=False, **kwargs:dict):
+        if "file_name" not in kwargs:
+            kwargs["file_name"] = "template_attachment.txt"
+            kwargs.pop("path", None)
+            add_embedded = "embedded" not in kwargs
+
+        elif not any(k in kwargs for k in ("path", "embedded")):
+            add_embedded = True
+
+        if add_embedded:
+            kwargs["embedded"] = "Embedded content goes here."
+
+        return super().reflex(serialize=serialize, clean=clean, **kwargs)
     
 
 
@@ -119,6 +132,7 @@ class Attachment(SingleBlock):
         return attachments
 
 class EmbeddedFile(Attachment):
+    dispatch = {}
     def _write_to_temp(self, encoding="utf-8"):
         try:
             temppath = self.find_temppath()
@@ -148,6 +162,7 @@ class EmbeddedFile(Attachment):
 Attachment.dispatch["embedded"] = EmbeddedFile
 
 class PathFile(Attachment):
+    dispatch = {}
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         

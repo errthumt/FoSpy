@@ -68,10 +68,23 @@ class TemplateBlock(SingleBlock):
         self._full_class = None
         super().__init__(blockDict, _dispatched=_dispatched)
 
-    def fill(self,incomplete=False,**kwargs):
+    def find_staged_id(self):
+        if not (hasattr(self, "_staged_parent")
+                and self._staged_parent.has_staged()):
+            return False
+        
+        staged_dict = self._staged_parent._staged_templates
+        staged_reversed = {v:k for k,v in staged_dict.items()}
+
+        return staged_reversed.get(self, False)
+
+    def fill(self,incomplete=False,staged=False,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
-
+        
+        staged_id = self.find_staged_id()
+        if staged_id and not staged:
+            return self._staged_parent.fill_staged_template(staged_id, **kwargs)
 
         serial = self.serialize(keepListType=True)
         serial.pop("template_name",None)
@@ -106,6 +119,13 @@ class TemplateBlock(SingleBlock):
             out[key] = serial[key]
 
         return out
+    
+    @classmethod
+    def dispatch_subclass(cls, *args, **kwargs):
+        try:
+            return super().dispatch_subclass(*args, **kwargs)
+        except Exception:
+            return cls(*args, **kwargs, _dispatched=True)
 
 class FlexTemplate(TemplateBlock):
     _baseReq = None #injected by TemplateList.Simple.Flex

@@ -840,6 +840,9 @@ class SingleBlock(Block):
 
         if isinstance(template, dict):
             template = validator.reflex(serialize=False, include_temp_names=True, clean=False, **template)
+            template.template_name = prop_name
+
+        template._staged_parent = self
 
         if alias is not None:
             self._key_overrides[prop_name] = validator
@@ -1790,13 +1793,15 @@ class ListBlock(Block):
             raise ValueError("Template must be a TemplateBlock or dictionary.")
         
         if isinstance(template, dict):
-            template = self._reqCls.reflex(**template)
+            template = self._reqCls.reflex(serialize=False,**template)
+            template.template_name = temp_id
         elif not isinstance(template, self._reqCls):
             raise ValueError("Template must be a TemplateBlock subclass of the same type as this ListBlock.")
         
         if temp_id in self._staged_templates:
             raise ValueError(f"A Template has already been staged for {temp_id}.")
         
+        template._staged_parent = self
         self._staged_templates[temp_id] = template
 
         return temp_id, template
@@ -1808,9 +1813,9 @@ class ListBlock(Block):
             return self.fill_staged_template(temp_id, **kwargs)
         
         try:
-            filled = template.fill(**kwargs)
-        except Exception as e:
-            partial = template.fill(incomplete=True, **kwargs)
+            filled = template.fill(staged=True,**kwargs)
+        except Exception:
+            partial = template.fill(staged=True,incomplete=True, **kwargs)
             return self.stage_template(temp_id, partial)
         
         if idx is None:
