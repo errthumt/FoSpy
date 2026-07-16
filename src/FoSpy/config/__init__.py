@@ -179,7 +179,7 @@ class NestedConfig(types.ModuleType):
         # only falls back to this method if the attribute doesn't already exist
 
         if key.startswith("_"):
-            raise ValueError(f"Config attribute '{key}' does not exist, and you cannot create a nested config module with a name that starts with an underscore.")
+            raise AttributeError() from ValueError(f"Config attribute '{key}' does not exist, and you cannot create a nested config module with a name that starts with an underscore.")
 
         # Auto-create nested modules
         mod = NestedConfig({}, key, parent_name=self.__name__, path=self._path)
