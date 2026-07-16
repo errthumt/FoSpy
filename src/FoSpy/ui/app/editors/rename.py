@@ -18,12 +18,12 @@ class RenameEditorWidget(BaseEditorWidget):
         self.okay_btn.setVisible(False)
         self.cancel_btn.setVisible(False)
 
+    @BaseEditorWidget.hard_refresh
     def apply(self):
         rename_from = self.editor.selector.currentText()
         rename_to = self.editor.input.text()
         self.editor.parent_blk.rename_block(rename_from, rename_to)
         self.blk_widget.win._flag_edited(self.editor.parent_blk)
-        self._hard_refresh()
 
 
 
