@@ -22,6 +22,41 @@
     "cell": null,
     "code": "F401",
     "end_location": {
+      "column": 86,
+      "row": 4
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont",
+          "end_location": {
+            "column": 86,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `....blocks.Rename`"
+    },
+    "location": {
+      "column": 80,
+      "row": 4
+    },
+    "message": "`....blocks.Rename` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
       "column": 29,
       "row": 2
     },
