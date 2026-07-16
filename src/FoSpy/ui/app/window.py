@@ -266,14 +266,33 @@ class MainWindow(QMainWindow):
         elif isinstance(blk, SingleBlock):
             # get dict of property name -> live object
             prop_dict = blk.get_prop_dict()
-
             for prop, obj in prop_dict.items():
                 # only Block instances get added to tree. Primitives are edited
                 # in the SingleBlock's own widget
                 if isinstance(obj, Block):
                     child_item = QStandardItem(prop)
                     self._add_tree_item(child_item, parent_item, obj)
+
+            for prop, obj in blk._staged_templates.items():
+                label = "🏷️" + prop
+
+                child_item = QStandardItem(label)
+                self._add_tree_item(child_item, parent_item, obj)
+
         self._set_flag(blk, "refresh", False)
+
+    # def find_widget(self, blk:Block):
+    #     tree_item = self.tree_items[blk]
+    #     blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
+
+    #     # If block is in ListBlock, it's widget is stored in ListBlockWidget
+    #     if blk_widget is None:
+    #         parent = parent_blk._parent_block
+    #         listblk_item = win.tree_items[parent]
+    #         listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
+    #         blk_widget = listblk_widget.blk_widgets[parent_blk]
+  
+    #     blk_widget.push_filled()
 
     def _set_flag(self, blk:Block, flag:str, value:bool):
         if not hasattr(blk, "__GUI_FLAGS__"):
@@ -649,8 +668,10 @@ class MainWindow(QMainWindow):
 
         if widget_data.get("widget", None) is None:
             widget = widget_data.get("builder", lambda: None)()
-            if widget is None:
-                return
+
+            # Builders can return a navigation function instead of a widget
+            if callable(widget):
+                return widget()
             widget_data["widget"] = widget
             self.content_stack.addWidget(widget_data["widget"])
         
@@ -685,24 +706,28 @@ class MainWindow(QMainWindow):
     def _build_widget(self, label, blk:Block):
         """Build a widget for the given block or navigate to tab in parent's widget.
 
-        Default behavior: Build widget for block and return it.
+        Default behavior:
+            Build widget for block and return it.
 
-        If block's parent is a ListBlock: switch to block's tab and return None instead."""
+        If block's parent is a ListBlock:
+            Return a function that switches to parent's tab corresponding to block."""
         from .block_widgets._utils import _get_widget
 
         if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
-            self.go_to_block(blk._parent_block)
+            def go_to_tab(b=blk, s=self):
+                s.go_to_block(b._parent_block)
 
-            parent_item = self.tree_items[blk._parent_block]
-            parent_widget = parent_item.data(WIDGET_DATA_ROLE)["widget"]
-            parent_widget.go_to_tab(blk)
+                parent_item = s.tree_items[b._parent_block]
+                parent_widget = parent_item.data(WIDGET_DATA_ROLE)["widget"]
+                parent_widget.go_to_tab(b)
 
-            blk_item = self.tree_items[blk]
-            idx = self.tree_model.indexFromItem(blk_item)
-            self.tree_view.setCurrentIndex(idx)
-            self.tree_view.scrollTo(idx)
+                blk_item = s.tree_items[b]
+                idx = s.tree_model.indexFromItem(blk_item)
+                s.tree_view.setCurrentIndex(idx)
+                s.tree_view.scrollTo(idx)
+                return None
 
-            return None
+            return go_to_tab
         
         widget = _get_widget(blk)(label, blk, self)
         if hasattr(blk, "_parent_block") and blk._parent_block is not None:
