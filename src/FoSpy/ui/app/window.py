@@ -664,7 +664,7 @@ class MainWindow(QMainWindow):
                 return None
             
             item = self.tree_items.get(blk, None)
-            return self.find_widget(item=item)
+            return self.find_widget(item=item, go_to=go_to)
         
 
         
@@ -754,6 +754,41 @@ class MainWindow(QMainWindow):
             return w
 
         return find_widget
+    
+    def hard_refresh(self, blk, func=lambda: None, to_editor=None):
+        max_tabs = 1 if to_editor is not None else 0
+        current_blk_widget = self.find_widget(blk=blk, go_to=False)
+
+        if (current_blk_widget.active.count() > max_tabs and
+            not self._custom_popup(
+                "Warning!",
+                "This change requires a refresh of the entire window for this block. "
+                "You will lose changes made in other editor tabs.\n\n"
+                "Continue?",
+                ("Apply Changes and Refresh", True),
+                cancel=True
+        )):
+            return None
+
+        out = func()
+
+        root = self.root_block
+        self._set_flag(root, "refresh", True)
+        self.go_to_block(root)
+
+        new_blk_widget = self.find_widget(blk=blk, go_to=True)
+
+        if to_editor is not None:
+            from .editors._base import BasePropEditor
+            from .editors.comments import CommentEditorWidget
+            if isinstance(to_editor, BasePropEditor):
+                new_blk_widget.activate_prop_editor(to_editor.prop_name)
+            elif isinstance(self, CommentEditorWidget):
+                new_blk_widget.activate_comment_editor(to_editor.editor.prop_name)
+            else:
+                new_blk_widget.activate_misc_editor(to_editor.editor_id)
+
+        return out
 
     
     def _get_item_path(self, item:QStandardItem):

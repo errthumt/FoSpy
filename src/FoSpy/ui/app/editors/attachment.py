@@ -88,22 +88,20 @@ class FilePathEditor(BasePropEditor):
     # Stub apply method — you fill in the real logic later
     # ------------------------------------------------------------
 
+    @BasePropEditor.hard_refresh
     def apply(self):
         """
         Pull the selected path from the panel, convert to Path,
         process it, then eventually set attributes on self.blk_widget.blk.
         """
 
-        def set_path(s=self):
-            path_obj = s.editor.get_selected_path()
+        path_obj = self.editor.get_selected_path()
 
-            blk = s.blk_widget.blk
-            blk.change_path(path_obj)
+        blk = self.blk_widget.blk
+        blk.change_path(path_obj)
 
-            win = s.blk_widget.win
-            win._flag_edited(blk)
-
-        return self._hard_refresh(set_path)
+        win = self.blk_widget.win
+        win._flag_edited(blk)
 
         # parent = blk._parent_block if hasattr(blk, "_parent_block") else None
 

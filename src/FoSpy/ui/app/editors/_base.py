@@ -91,12 +91,21 @@ class BaseEditorWidget(QWidget):
         else:
             self.hintButton.hide()
 
+    @staticmethod
+    def hard_refresh(func):
+        def decorated(self, *args, **kwargs):
+            def pending(f=func, *a, **k):
+                f(self,*a, **k)
+
+            win = self.blk_widget.win
+            blk = self.blk_widget.blk
+            return win.hard_refresh(blk, func=pending, to_editor=self)
+        return decorated
+
     def _hard_refresh(self, func:callable=lambda:None):
-        from ..window import WIDGET_DATA_ROLE
         from .comments import CommentEditorWidget
 
         blk = self.blk_widget.blk
-        parent = blk._parent_block if hasattr(blk, "_parent_block") else None
         win = self.blk_widget.win
 
         if (self.blk_widget.active.count() > 1 and
@@ -112,20 +121,10 @@ class BaseEditorWidget(QWidget):
 
         func()
 
-        # Refresh tree
-        win.refresh_tree(blk._parent_block if hasattr(blk, "_parent_block") else None)
-        win.go_to_block(parent)
-        win.go_to_block(blk)
+        win._set_flag(win.root_block, "refresh", True)
+        win.go_to_block(win.root_block)
 
-        # This editor is desynced. Find new editor
-        tree_item = win.tree_items[blk]
-        blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
-
-        # If block is in ListBlock, it's widget is stored in ListBlockWidget
-        if blk_widget is None:
-            listblk_item = win.tree_items[parent]
-            listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
-            blk_widget = listblk_widget.blk_widgets[blk]
+        blk_widget = win.find_widget(blk=blk, go_to=True)
             
         if isinstance(self, BasePropEditor):
             blk_widget.activate_prop_editor(self.prop_name)
