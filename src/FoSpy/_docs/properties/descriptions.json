@@ -19,8 +19,14 @@
         }
     },
     "Attachment": {
+        "embedded": {
+            "desc": "Attachment content embedded as raw `utf-8` line strings."
+        },
         "file_name": {
             "desc": "The name of the attached file (with extension)"
+        },
+        "path": {
+            "desc": "The filepath to the attached file, relative to the directory containing the parent `FileBlock`."
         }
     },
     "ChemChange": {
@@ -47,11 +53,6 @@
         },
         "time_unit": {
             "desc": "Units for dwell time."
-        }
-    },
-    "EmbeddedFile": {
-        "embedded": {
-            "desc": "Attachment content embedded as raw `utf-8` line strings."
         }
     },
     "Experimenter": {
@@ -113,11 +114,7 @@
             "desc": "What type of `FileBlock` subclass the file should be interpreted as."
         }
     },
-    "PathFile": {
-        "path": {
-            "desc": "The filepath to the attached file, relative to the directory containing the parent `FileBlock`."
-        }
-    },
+
     "Product": {
         "characterizations": {
             "desc": "Description of characterization methods used to determine/quantitate the product."
