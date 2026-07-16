@@ -755,7 +755,7 @@ class MainWindow(QMainWindow):
 
         return find_widget
     
-    def hard_refresh(self, blk, func=lambda: None, to_editor=None):
+    def hard_refresh(self, blk, func=lambda: None, to_editor=None, to_blk=True):
         max_tabs = 1 if to_editor is not None else 0
         current_blk_widget = self.find_widget(blk=blk, go_to=False)
 
@@ -776,17 +776,18 @@ class MainWindow(QMainWindow):
         self._set_flag(root, "refresh", True)
         self.go_to_block(root)
 
-        new_blk_widget = self.find_widget(blk=blk, go_to=True)
+        if to_blk:
+            new_blk_widget = self.find_widget(blk=blk, go_to=True)
 
-        if to_editor is not None:
-            from .editors._base import BasePropEditor
-            from .editors.comments import CommentEditorWidget
-            if isinstance(to_editor, BasePropEditor):
-                new_blk_widget.activate_prop_editor(to_editor.prop_name)
-            elif isinstance(self, CommentEditorWidget):
-                new_blk_widget.activate_comment_editor(to_editor.editor.prop_name)
-            else:
-                new_blk_widget.activate_misc_editor(to_editor.editor_id)
+            if to_editor is not None:
+                from .editors._base import BasePropEditor
+                from .editors.comments import CommentEditorWidget
+                if isinstance(to_editor, BasePropEditor):
+                    new_blk_widget.activate_prop_editor(to_editor.prop_name)
+                elif isinstance(self, CommentEditorWidget):
+                    new_blk_widget.activate_comment_editor(to_editor.editor.prop_name)
+                else:
+                    new_blk_widget.activate_misc_editor(to_editor.editor_id)
 
         return out
 

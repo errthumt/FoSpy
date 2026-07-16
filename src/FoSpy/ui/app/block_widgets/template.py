@@ -9,6 +9,22 @@ class TemplateBlockWidget(SingleBlockWidget):
         disclaimer = QLabel("This block is a <i>staged template</i>. It will be attached to the parent block once all fields are filled in.")
         self.layout().insertWidget(1, disclaimer)
 
+    @staticmethod
+    def hard_refresh(func):
+        def decorated(self, *args, **kwargs):
+            def pending(f=func, a=args, k=kwargs):
+                return f(self, *a, **k)
+            
+            result = self.win.hard_refresh(blk=self.blk, func=pending, to_blk=False)
+            if result is None:
+                return
+            
+            if hasattr(self, "filled") and self.filled is not None:
+                self.win.go_to_block(self.filled)
+
+            return result
+        return decorated
+
     def _on_primitive_edit(self, prop, line_edit, enabler):
         super()._on_primitive_edit(prop, line_edit, enabler)
 
@@ -18,6 +34,7 @@ class TemplateBlockWidget(SingleBlockWidget):
 
         self.push_filled(**fill_props)
 
+    @hard_refresh
     def push_filled(self, **props):
         from ....blocks import TemplateBlock
 
@@ -33,30 +50,14 @@ class TemplateBlockWidget(SingleBlockWidget):
 
         if isinstance(filled, TemplateBlock):
             filled.template_name = temp_id
-        
-        self.win.refresh_tree(staged_parent)
-
-        self.win.go_to_block(filled)
 
         if not hasattr(filled, "_parent_block") or isinstance(filled, TemplateBlock) or not isinstance(filled._parent_block, TemplateBlock):
-            return
+            self.filled = filled
+            return filled
         
-        # TODO: window should have method for finding block widget
-        from ..window import WIDGET_DATA_ROLE
+        parent_widget = self.win.find_widget(filled._parent_block)
+        parent_widget.push_filled()
         
-        parent_blk = filled._parent_block
-        win = self.win
 
-        tree_item = win.tree_items[parent_blk]
-        blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
-
-        # If block is in ListBlock, it's widget is stored in ListBlockWidget
-        if blk_widget is None:
-            parent = parent_blk._parent_block
-            listblk_item = win.tree_items[parent]
-            listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
-            blk_widget = listblk_widget.blk_widgets[parent_blk]
-  
-        blk_widget.push_filled()
 
         

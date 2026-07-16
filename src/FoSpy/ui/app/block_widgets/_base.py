@@ -155,6 +155,15 @@ class SingleBlockWidget(QWidget):
 
         self._refresh_properties()
 
+    @staticmethod
+    def hard_refresh(func):
+        def decorated(self, *args, **kwargs):
+            def pending(f=func, a=args, k=kwargs):
+                f(self, *a, **k)
+
+            self.win.hard_refresh(self.blk, func=pending)
+        return decorated
+
     def _add_footnote(self, txt):
         i = next(self.footnote_iter)
 
