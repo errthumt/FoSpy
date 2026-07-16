@@ -10,7 +10,9 @@ _debug = Debug()
 class TemplateField:
     def __init__(self, *args, **kwargs):
         pass
-    def serialize(self,keepListType=None, clean=False):
+
+    @classmethod
+    def serialize(cls,keepListType=None, clean=False):
         from ..parsing.format_fos import format_field
         return format_field("template")
 
