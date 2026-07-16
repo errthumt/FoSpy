@@ -61,8 +61,9 @@ class Attachment(SingleBlock):
 
     @classmethod
     def reflex(cls, serialize=True, clean=False, **kwargs:dict):
+        from .template import TemplateField
         if "file_name" not in kwargs:
-            kwargs["file_name"] = "template_attachment.txt"
+            kwargs["file_name"] = TemplateField.serialize()
             kwargs.pop("path", None)
             add_embedded = "embedded" not in kwargs
 
@@ -70,7 +71,7 @@ class Attachment(SingleBlock):
             add_embedded = True
 
         if add_embedded:
-            kwargs["embedded"] = "Embedded content goes here."
+            kwargs["embedded"] = TemplateField.serialize()
 
         return super().reflex(serialize=serialize, clean=clean, **kwargs)
     
