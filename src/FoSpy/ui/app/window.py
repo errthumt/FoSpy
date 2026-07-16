@@ -717,8 +717,14 @@ class MainWindow(QMainWindow):
             Return a function that switches to parent's tab corresponding to block."""
         from .block_widgets._utils import _get_widget
 
-        if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
+        if hasattr(blk, "_parent_block") and blk._parent_block is not None:
             parent_blk = blk._parent_block
+        elif hasattr(blk, "_staged_parent") and blk._staged_parent is not None:
+            parent_blk = blk._staged_parent
+        else:
+            parent_blk = None
+
+        if isinstance(parent_blk, ListBlock):
             parent_widget = self.find_widget(blk=parent_blk, go_to=False)
 
             def find_widget_tab(b=blk, pb=parent_blk, pw=parent_widget, s=self, go_to=False):
@@ -738,10 +744,12 @@ class MainWindow(QMainWindow):
         
         widget = _get_widget(blk)(label, blk, self)
         self.content_stack.addWidget(widget)
-        if hasattr(blk, "_parent_block") and blk._parent_block is not None:
+
+        if parent_blk is not None:
             parent_btn = QPushButton("↑")
-            parent_btn.clicked.connect(lambda *_: self.go_to_block(blk._parent_block))
+            parent_btn.clicked.connect(lambda *_: self.go_to_block(parent_blk))
             widget.header_row.addWidget(parent_btn)
+
         widget.header_row.addStretch()
 
         # widget only gets cached to item data if it's not in a ListBlock

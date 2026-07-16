@@ -2155,6 +2155,10 @@ class ListBlock(Block):
     def remove_block(self, blk):
         if blk in self._objs:
             self._objs.remove(blk)
+
+        if blk in self._staged_templates.values():
+            self._staged_templates.pop(blk)
+            
     
     def remove_any(self, **kwargs):
         """

@@ -2,7 +2,7 @@ from ._utils import _get_editor, _get_widget
 
 from ..window import MainWindow, Sentinel
 from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont, Rename
-from .._utils import _get_label
+from .._utils import _get_label, _get_template_label
 from ..editors.comments import CommentEditorWidget
 
 from PySide6.QtCore import Qt
@@ -248,6 +248,7 @@ class SingleBlockWidget(QWidget):
         self.prop_layout = prop_layout
 
         prop_dict = self.blk.get_prop_dict()
+        prop_dict.pop("rename", None)
         rename_dict = self.blk.rename_dict()
         renamed_from = {v:k for k,v in rename_dict.items()}
 
@@ -465,20 +466,45 @@ class ListBlockWidget(QWidget):
             self.blk_widgets[child_blk] = tab_content
             tabs.addTab(tab_content, label)
 
+        for temp_id, template in self.blk._staged_templates.items():
+            label = _get_template_label(template)
+            widget = _get_widget(template)
+
+            tab_content = widget(label, template, window)
+            delete_btn = QPushButton("Delete this Template")
+            delete_btn.clicked.connect(lambda *_, blk=template: self.remove_block(blk))
+            tab_content.header_row.addWidget(delete_btn)
+            tab_content.header_row.addStretch()
+
+            self.blk_widgets[template] = tab_content
+            tabs.addTab(tab_content, label)
+
         tabs.currentChanged.connect(self.on_tab_changed)
 
         main_layout.addWidget(tabs)
 
+    def _find_block(self, idx):
+        if idx < len(self.blk._objs):
+            return self.blk._objs[idx]
+        else:
+            return list(self.blk._staged_templates.values())[idx - len(self.blk._objs)]
+        
+    def _find_idx(self, blk):
+        if blk in self.blk._objs:
+            return self.blk._objs.index(blk)
+        else:
+            return len(self.blk._objs) + list(self.blk._staged_templates.values()).index(blk)
+
     def on_tab_changed(self, index:int):
-        blk = self.blk._objs[index]
+        blk = self._find_block(index)
         self.win.go_to_block(blk)
 
     def go_to_tab(self, blk):
-        idx = self.blk._objs.index(blk)
+        idx = self._find_idx(blk)
         self.tabs.setCurrentIndex(idx)
 
     def find_widget(self, blk):
-        idx = self.blk._objs.index(blk)
+        idx = self._find_idx(blk)
         return self.tabs.widget(idx)
 
     def remove_block(self, blk):
