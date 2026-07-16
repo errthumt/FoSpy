@@ -535,6 +535,7 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        from .metadata import Rename, MetaData
         self._staged_templates = {}
         self._constructed = False
         property_errors = []
@@ -564,6 +565,8 @@ class SingleBlock(Block):
         rename = blockDict.pop("rename",None)
         if rename:
             setattr(self, "rename", _unwrap_block(rename))
+        elif not isinstance(self, (Rename, MetaData)):
+            setattr(self, "rename", {})
 
         req = self.get_req_validators()
         req.pop("ext",None)
@@ -1157,6 +1160,9 @@ class SingleBlock(Block):
             for key, val in scan.items():
                 if key.startswith("_") or val is None:
                     out.pop(key)
+
+        if not any(k for k in out.get("rename", {}) if not k.startswith("_")):
+            out.pop("rename", None)
 
         return out
     

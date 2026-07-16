@@ -264,6 +264,7 @@ class MainWindow(QMainWindow):
                 self._add_tree_item(child_item, parent_item, blk)
         
         elif isinstance(blk, SingleBlock):
+
             # get dict of property name -> live object
             prop_dict = blk.get_prop_dict()
             for prop, obj in prop_dict.items():

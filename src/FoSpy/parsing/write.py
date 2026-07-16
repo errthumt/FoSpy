@@ -41,7 +41,7 @@ def block_list_to_lines(blocklist:list, indent=0):
             if not comments: 
                 continue
             for key in loop_keys:
-                for comment in comments[key]:
+                for comment in comments.get(key, []):
                     key_comments[key].append(comment)
         
         template_keys = []

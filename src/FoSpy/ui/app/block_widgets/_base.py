@@ -95,9 +95,7 @@ class SingleBlockWidget(QWidget):
         self.header_row, base_layout = _add_header(self, label, "Properties")
         self.base_layout = base_layout
 
-        if not isinstance(blk, Rename):
-            if not hasattr(blk, "rename"):
-                blk.rename = {}
+        if hasattr(blk, "rename"):
             rename_btn = QPushButton("Rename Properties")
             rename_btn.clicked.connect(
                 lambda *_, b=blk.rename: self.win.go_to_block(b)
@@ -254,74 +252,148 @@ class SingleBlockWidget(QWidget):
         renamed_from = {v:k for k,v in rename_dict.items()}
 
         req_props = self.blk.get_req_validators().keys()
-
+        staged_templates = self.blk._staged_templates
         for prop, val in prop_dict.items():
-            if prop == "rename":
-                continue
+            self._add_prop_row(prop, val, renamed_from, req_props)
 
-            prop_txt = prop
-            if prop in renamed_from:
-                fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
-                prop_txt += _unicode_superscript(fn_i)
+        for prop, val in staged_templates.items():
+            self._add_prop_row(prop, val, renamed_from, req_props, staged=True)
+            # if prop == "rename":
+            #     continue
+
+            # prop_txt = prop
+            # if prop in renamed_from:
+            #     fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
+            #     prop_txt += _unicode_superscript(fn_i)
             
-            if isinstance(val, blk_cont.SimpleWrapper):
-                val = val()
+            # if isinstance(val, blk_cont.SimpleWrapper):
+            #     val = val()
 
-            row_layout = QHBoxLayout()
+            # row_layout = QHBoxLayout()
 
-            label = QLabel(f"<b>{prop_txt}:</b>")
-            label.setMinimumWidth(120)
-            row_layout.addWidget(label, stretch=0)
-            self.prop_labels[prop] = label
+            # label = QLabel(f"<b>{prop_txt}:</b>")
+            # label.setMinimumWidth(120)
+            # row_layout.addWidget(label, stretch=0)
+            # self.prop_labels[prop] = label
 
-            if isinstance(val, Block):
-                btn_txt = "Go to Block"
-                edit_btn = QPushButton(btn_txt)
-                edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
-                row_layout.addWidget(edit_btn, stretch=1)
+            # if isinstance(val, Block):
+            #     btn_txt = "Go to Block"
+            #     edit_btn = QPushButton(btn_txt)
+            #     edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
+            #     row_layout.addWidget(edit_btn, stretch=1)
 
-            else:
-                txt = val.serialize() if hasattr(val, "serialize") else str(val)
-                line_edit = QLineEdit(txt)
-                line_edit.setCursorPosition(0)
+            # else:
+            #     txt = val.serialize() if hasattr(val, "serialize") else str(val)
+            #     line_edit = QLineEdit(txt)
+            #     line_edit.setCursorPosition(0)
 
-                editor, enabler = _get_editor(val, self, prop)
-                line_edit.setEnabled(enabler(txt))
-                def on_apply(p=prop, e=line_edit, en=enabler):
-                    self._on_primitive_edit(p, e, en)
+            #     editor, enabler = _get_editor(val, self, prop)
+            #     line_edit.setEnabled(enabler(txt))
+            #     def on_apply(p=prop, e=line_edit, en=enabler):
+            #         self._on_primitive_edit(p, e, en)
 
-                def direct_edit(apply=on_apply):
-                    try:
-                        apply()
-                    except Exception:
-                        # TODO: pass to user
-                        pass
+            #     def direct_edit(apply=on_apply):
+            #         try:
+            #             apply()
+            #         except Exception:
+            #             # TODO: pass to user
+            #             pass
 
 
-                line_edit.editingFinished.connect(on_apply)
-                row_layout.addWidget(line_edit, stretch=1)
+            #     line_edit.editingFinished.connect(on_apply)
+            #     row_layout.addWidget(line_edit, stretch=1)
 
-                if editor:
-                    editor = editor(self, line_edit, on_apply, prop)
-                    self.editor_map["props"][prop] = editor
-                    edit_btn = QPushButton("✏️")
-                    edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
-                    row_layout.addWidget(edit_btn, stretch=0)
+            #     if editor:
+            #         editor = editor(self, line_edit, on_apply, prop)
+            #         self.editor_map["props"][prop] = editor
+            #         edit_btn = QPushButton("✏️")
+            #         edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
+            #         row_layout.addWidget(edit_btn, stretch=0)
 
-            if prop not in req_props:
-                del_btn = QPushButton("🗑")
-                del_btn.clicked.connect(lambda *_, p=prop: self.delete_prop(p))
-                row_layout.addWidget(del_btn, stretch=0)
+            # if prop not in req_props:
+            #     del_btn = QPushButton("🗑")
+            #     del_btn.clicked.connect(lambda *_, p=prop: self.delete_prop(p))
+            #     row_layout.addWidget(del_btn, stretch=0)
 
+            # comment_btn = QPushButton("🗩")
+            # comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
+            # self.editor_map["comments"][prop] = comment_editor
+            # comment_editor.refresh_editor()
+            # comment_btn.clicked.connect(lambda *_, p=prop: self.activate_comment_editor(p))
+            # row_layout.addWidget(comment_btn, stretch=0)
+            
+            # row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+            # self.prop_layout.addLayout(row_layout)
+
+    def _add_prop_row(self, prop, val, renamed_from, req_props, staged=False):
+        prop_txt = prop
+        if prop in renamed_from:
+            fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
+            prop_txt += _unicode_superscript(fn_i)
+
+        if staged:
+            #unicode tag
+            prop_txt = "🏷️" + prop_txt
+        
+        if isinstance(val, blk_cont.SimpleWrapper):
+            val = val()
+
+        row_layout = QHBoxLayout()
+
+        label = QLabel(f"<b>{prop_txt}:</b>")
+        label.setMinimumWidth(120)
+        row_layout.addWidget(label, stretch=0)
+        self.prop_labels[prop] = label
+
+        if isinstance(val, Block):
+            btn_txt = "Go to Block"
+            edit_btn = QPushButton(btn_txt)
+            edit_btn.clicked.connect(lambda _, v=val: self.win.go_to_block(v))
+            row_layout.addWidget(edit_btn, stretch=1)
+
+        else:
+            txt = val.serialize() if hasattr(val, "serialize") else str(val)
+            line_edit = QLineEdit(txt)
+            line_edit.setCursorPosition(0)
+
+            editor, enabler = _get_editor(val, self, prop)
+            line_edit.setEnabled(enabler(txt))
+            def on_apply(p=prop, e=line_edit, en=enabler):
+                self._on_primitive_edit(p, e, en)
+
+            def direct_edit(apply=on_apply):
+                try:
+                    apply()
+                except Exception:
+                    # TODO: pass to user
+                    pass
+
+
+            line_edit.editingFinished.connect(on_apply)
+            row_layout.addWidget(line_edit, stretch=1)
+
+            if editor:
+                editor = editor(self, line_edit, on_apply, prop)
+                self.editor_map["props"][prop] = editor
+                edit_btn = QPushButton("✏️")
+                edit_btn.clicked.connect(lambda *_, p=prop: self.activate_prop_editor(p))
+                row_layout.addWidget(edit_btn, stretch=0)
+
+        if prop not in req_props:
+            del_btn = QPushButton("🗑")
+            del_btn.clicked.connect(lambda *_, p=prop: self.delete_prop(p))
+            row_layout.addWidget(del_btn, stretch=0)
+
+        if not staged:
             comment_btn = QPushButton("🗩")
             comment_editor = CommentEditorWidget(self, self.blk, prop, comment_btn)
             self.editor_map["comments"][prop] = comment_editor
             comment_editor.refresh_editor()
             comment_btn.clicked.connect(lambda *_, p=prop: self.activate_comment_editor(p))
             row_layout.addWidget(comment_btn, stretch=0)
-            
-            row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
-            self.prop_layout.addLayout(row_layout)
+        
+        row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.prop_layout.addLayout(row_layout)
 
     def delete_prop(self, prop):
         def pending_delete(p=prop):
