@@ -407,3 +407,31 @@ def _main_registration():
             return False
 
     return False
+
+def _clear_layout(layout):
+    """Recursively delete all widgets, child layouts, and spacers inside a layout"""
+    if layout is None:
+        return
+
+    while layout.count():
+        item = layout.takeAt(0)
+
+        # Case 1: widget
+        widget = item.widget()
+        if widget is not None:
+            widget.setParent(None)
+            widget.deleteLater()
+            continue
+
+        # Case 2: nested layout
+        child_layout = item.layout()
+        if child_layout is not None:
+            _clear_layout(child_layout)
+            child_layout.setParent(None)
+            continue
+
+        # Case 3: spacer item
+        # No parent, but removing it is enough
+        # (Qt will clean it up automatically)
+        # Nothing else needed
+

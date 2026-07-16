@@ -222,7 +222,9 @@ class MainWindow(QMainWindow):
             self._clear_views(self.tree_model.invisibleRootItem())
             self.tree_model.clear()
 
-            target_item = QStandardItem(_get_label(blk))
+            label = "*" if self._get_flag(blk, "edited") else ""
+            label += _get_label(blk)
+            target_item = QStandardItem(label)
 
             self.tree_model.appendRow(target_item)
         
@@ -233,6 +235,9 @@ class MainWindow(QMainWindow):
         self.tree_items[blk] = target_item
         self._register_view(target_item, blk)
         self._populate_tree_nodes(target_item, blk)
+
+        if blk is self.root_block and blk is not None:
+            self.go_to_block(blk)
 
     
     def _populate_tree_nodes(self, parent_item:QStandardItem, blk:Block):
@@ -285,7 +290,7 @@ class MainWindow(QMainWindow):
                 item.setText(txt)
 
     def _get_flag(self, blk:Block, flag:str):
-        if blk is None:
+        if blk is None or not hasattr(blk, "__GUI_FLAGS__"):
             return False
         return blk.__GUI_FLAGS__.get(flag, False)    
 
@@ -421,6 +426,39 @@ class MainWindow(QMainWindow):
         register_action.triggered.connect(register_app)
         help_menu.addAction(register_action)
 
+    def _create_tools_menu(self, menu_bar):
+        tools_menu = menu_bar.addMenu("&Tools")
+
+        console_action = QAction("Python Console", self)
+        console_action.triggered.connect(self._open_console)
+        tools_menu.addAction(console_action)
+
+    def _create_menu_bar(self):
+        """Dropdown menu ribbon."""
+        self.menus = {}
+
+        menu_bar = self.menuBar()
+
+        self._create_file_menu(menu_bar)
+
+        self._create_view_menu(menu_bar)
+
+        self._create_help_menu(menu_bar)
+
+        self._create_tools_menu(menu_bar)
+
+    def _open_console(self):
+        if hasattr(self, "__python_console__") and self.__python_console__ is not None:
+            return self.__python_console__.show()
+
+        from .console import PythonConsole
+        local_vars = {
+            "win": (self, "Application Window"),
+            "file": (self.root_block, "Current Open File")
+        }
+        console = PythonConsole(parent=self, persistent=True, **local_vars)
+        console.exec()
+
     def _open_docs_site(self):
         from ._utils import _get_version, _find_docs_url
 
@@ -453,18 +491,6 @@ class MainWindow(QMainWindow):
         except AttributeError:
             app.setStyleSheet(qdarktheme.load_stylesheet(theme_id))
 
-
-    def _create_menu_bar(self):
-        """Dropdown menu ribbon."""
-        self.menus = {}
-
-        menu_bar = self.menuBar()
-
-        self._create_file_menu(menu_bar)
-
-        self._create_view_menu(menu_bar)
-
-        self._create_help_menu(menu_bar)
     
     def _open_dlg(self, copy=False):
         from ...blocks.files import EXT_DESC_MAP
