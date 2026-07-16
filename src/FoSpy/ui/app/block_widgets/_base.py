@@ -396,6 +396,10 @@ class ListBlockWidget(QWidget):
         idx = self.blk._objs.index(blk)
         self.tabs.setCurrentIndex(idx)
 
+    def find_widget(self, blk):
+        idx = self.blk._objs.index(blk)
+        return self.tabs.widget(idx)
+
     def remove_block(self, blk):
         if not self.win._custom_popup(
             "Delete this block?",

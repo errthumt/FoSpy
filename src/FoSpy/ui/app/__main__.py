@@ -34,7 +34,7 @@ def main_cli(**kwargs):
         window = MainWindow(**kwargs)
         window.show()
     except Exception as e:
-        splash.finish(window)
+        splash.hide()
         raise e
     
     splash.finish(window)

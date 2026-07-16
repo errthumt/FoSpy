@@ -281,18 +281,6 @@ class MainWindow(QMainWindow):
 
         self._set_flag(blk, "refresh", False)
 
-    # def find_widget(self, blk:Block):
-    #     tree_item = self.tree_items[blk]
-    #     blk_widget = tree_item.data(WIDGET_DATA_ROLE)["widget"]
-
-    #     # If block is in ListBlock, it's widget is stored in ListBlockWidget
-    #     if blk_widget is None:
-    #         parent = parent_blk._parent_block
-    #         listblk_item = win.tree_items[parent]
-    #         listblk_widget = listblk_item.data(WIDGET_DATA_ROLE)["widget"]
-    #         blk_widget = listblk_widget.blk_widgets[parent_blk]
-  
-    #     blk_widget.push_filled()
 
     def _set_flag(self, blk:Block, flag:str, value:bool):
         if not hasattr(blk, "__GUI_FLAGS__"):
@@ -310,7 +298,8 @@ class MainWindow(QMainWindow):
                 txt = txt.replace("*", "")
                 item.setText(txt)
 
-    def _get_flag(self, blk:Block, flag:str):
+    @classmethod
+    def _get_flag(cls, blk:Block, flag:str):
         if blk is None or not hasattr(blk, "__GUI_FLAGS__"):
             return False
         return blk.__GUI_FLAGS__.get(flag, False)    
@@ -344,7 +333,7 @@ class MainWindow(QMainWindow):
         label = item.text()
 
         view_data = {
-            "builder": lambda lbl=label,b=blk: self._build_widget(lbl,b),
+            "builder": lambda lbl=label,b=blk, i=item: self._build_widget(lbl,b,i),
             "widget": None,
             "block": blk
         }
@@ -655,28 +644,7 @@ class MainWindow(QMainWindow):
         if not item:
             return
         
-
-                
-        widget_data = item.data(WIDGET_DATA_ROLE)
-        if widget_data is None:
-            return
-        
-        blk = widget_data.get("block", None)
-        if self._get_flag(blk, "refresh"):
-            self._set_flag(blk, "refresh", False)
-            self.refresh_tree(blk)
-
-        if widget_data.get("widget", None) is None:
-            widget = widget_data.get("builder", lambda: None)()
-
-            # Builders can return a navigation function instead of a widget
-            if callable(widget):
-                return widget()
-            widget_data["widget"] = widget
-            self.content_stack.addWidget(widget_data["widget"])
-        
-        item.setData(widget_data, WIDGET_DATA_ROLE)
-        self.content_stack.setCurrentWidget(widget_data["widget"])
+        self.find_widget(item=item, go_to=True)
 
         self.tree_view.resizeColumnToContents(0)
 
@@ -685,6 +653,41 @@ class MainWindow(QMainWindow):
             splitter_width = self.splitter.sizeHint().width()
 
             self.splitter.setSizes([tree_width, splitter_width - tree_width])
+
+    def find_widget(self, item=None, blk:Block=None, go_to=False):
+        """Find and return the widget associated with a block or tree item.
+        
+        If both item and block are provided, item takes precedence.
+        """
+        if item is None:
+            if blk is None:
+                return None
+            
+            item = self.tree_items.get(blk, None)
+            return self.find_widget(item=item)
+        
+
+        
+        widget_data = item.data(WIDGET_DATA_ROLE)
+        if widget_data is None:
+            return None
+        
+        blk = widget_data["block"]
+        if self._get_flag(blk, "refresh"):
+            self._set_flag(blk, "refresh", False)
+            self.refresh_tree(blk)
+
+        widget = widget_data.get("widget", None)
+        if widget is not None:
+            if go_to:
+                self.content_stack.setCurrentWidget(widget)
+            return widget
+        
+        builder = widget_data["builder"]
+        widget_finder = builder()
+        widget = widget_finder(go_to=go_to)
+
+        return widget
     
     def go_to_block(self, blk:Block):
         """Programmatically select a block in the tree."""
@@ -703,7 +706,7 @@ class MainWindow(QMainWindow):
         self._on_tree_selection(idx)
 
 
-    def _build_widget(self, label, blk:Block):
+    def _build_widget(self, label, blk:Block, item:QStandardItem):
         """Build a widget for the given block or navigate to tab in parent's widget.
 
         Default behavior:
@@ -714,29 +717,43 @@ class MainWindow(QMainWindow):
         from .block_widgets._utils import _get_widget
 
         if hasattr(blk, "_parent_block") and isinstance(blk._parent_block, ListBlock):
-            def go_to_tab(b=blk, s=self):
-                s.go_to_block(b._parent_block)
+            parent_blk = blk._parent_block
+            parent_widget = self.find_widget(blk=parent_blk, go_to=False)
 
-                parent_item = s.tree_items[b._parent_block]
-                parent_widget = parent_item.data(WIDGET_DATA_ROLE)["widget"]
-                parent_widget.go_to_tab(b)
+            def find_widget_tab(b=blk, pb=parent_blk, pw=parent_widget, s=self, go_to=False):
 
-                blk_item = s.tree_items[b]
-                idx = s.tree_model.indexFromItem(blk_item)
-                s.tree_view.setCurrentIndex(idx)
-                s.tree_view.scrollTo(idx)
-                return None
+                blk_widget = pw.find_widget(b)
+                if go_to:
+                    s.go_to_block(pb)
+                    parent_widget.go_to_tab(b)
 
-            return go_to_tab
+                    blk_item = s.tree_items[b]
+                    idx = s.tree_model.indexFromItem(blk_item)
+                    s.tree_view.setCurrentIndex(idx)
+                    s.tree_view.scrollTo(idx)
+                return blk_widget
+
+            return find_widget_tab
         
         widget = _get_widget(blk)(label, blk, self)
+        self.content_stack.addWidget(widget)
         if hasattr(blk, "_parent_block") and blk._parent_block is not None:
             parent_btn = QPushButton("↑")
             parent_btn.clicked.connect(lambda *_: self.go_to_block(blk._parent_block))
             widget.header_row.addWidget(parent_btn)
         widget.header_row.addStretch()
 
-        return widget
+        # widget only gets cached to item data if it's not in a ListBlock
+        widget_data = item.data(WIDGET_DATA_ROLE)
+        widget_data["widget"] = widget
+        item.setData(widget_data, WIDGET_DATA_ROLE)
+
+        def find_widget(s=self, w=widget, go_to=False):
+            if go_to:
+                s.content_stack.setCurrentWidget(w)
+            return w
+
+        return find_widget
 
     
     def _get_item_path(self, item:QStandardItem):
