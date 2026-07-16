@@ -1529,7 +1529,7 @@ class SingleBlock(Block):
     def rename_block(self, old, new):
         validators = self.get_validators()
         req = self.get_req_validators()
-        if True in [name.startswith("_") for name in (old, new)]:
+        if any(name.startswith("_") for name in (old, new)):
             raise ValueError("You cannot set private attributes (starting with '_') using obj.rename_block()")
         
         if old in req and new in validators:
@@ -1543,6 +1543,9 @@ class SingleBlock(Block):
         
         if "rename" in (old, new):
             raise ValueError("obj.rename property cannot be set or changed by obj.rename_block()")
+        
+        if hasattr(self, "rename") and hasattr(self.rename, old):
+            old = getattr(self.rename, old)()
 
         if old in self._key_overrides:
             val = self._key_overrides.pop(old)
