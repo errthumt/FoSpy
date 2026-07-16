@@ -276,6 +276,8 @@ class MainWindow(QMainWindow):
         self._set_flag(blk, "refresh", False)
 
     def _set_flag(self, blk:Block, flag:str, value:bool):
+        if not hasattr(blk, "__GUI_FLAGS__"):
+            blk.__GUI_FLAGS__ = {}
         blk.__GUI_FLAGS__[flag] = value
         item = self.tree_items.get(blk, None)
         if item is None:

@@ -78,9 +78,14 @@ class TemplateBlock(SingleBlock):
 
         return staged_reversed.get(self, False)
 
-    def fill(self,incomplete=False,staged=False,**kwargs):
+    def fill(self,incomplete=False,staged=False,in_place=False,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
+        
+        if in_place:
+            for kw, arg in kwargs.items():
+                setattr(self,kw,arg)
+            return self
         
         staged_id = self.find_staged_id()
         if staged_id and not staged:
