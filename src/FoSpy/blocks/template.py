@@ -84,6 +84,9 @@ class TemplateBlock(SingleBlock):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
         
+        if not incomplete and self.has_staged():
+            raise ValueError("A template cannot be filled to a full block with staged templates.")
+        
         if in_place:
             for kw, arg in kwargs.items():
                 setattr(self,kw,arg)
@@ -99,7 +102,12 @@ class TemplateBlock(SingleBlock):
             serial[kw] = arg
 
         if incomplete:
-            return self._full_class.reflex(serialize=False,**serial)
+            new_template = self._full_class.reflex(serialize=False,**serial)
+            new_template.template_name = self.template_name
+            for temp_id, template in self._staged_templates.items():
+                new_template.stage_template(temp_id, template)
+            return new_template
+
         return self._full_class.dispatch_subclass(serial)
     
     def serialize(self,keepListType=False, shallow=False, clean=False):

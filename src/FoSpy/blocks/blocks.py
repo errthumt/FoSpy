@@ -819,11 +819,18 @@ class SingleBlock(Block):
 
         if validator is None:
             if "$" not in prop_name:
-                raise ValueError(f"The property {prop_name} is unexpected. In order to stage a template "
-                                 "for and unexpected property, you must specify the validator with a '$' alias "
-                                 "in the property name.")
-            
-            prop_name, alias = prop_name.split("$",1)
+                if isinstance(template, dict):
+                    alias = None
+                else:
+                    alias = next(k for k, v in self._aliases.items() if isinstance(template, v))
+
+                if alias is None:
+                    raise ValueError(f"The property {prop_name} is unexpected. In order to stage a template "
+                                    "for and unexpected property, you must specify the validator with a '$' alias "
+                                    "in the property name, or stage a pre-constructed template of an aliasable validator.")
+
+            else:
+                prop_name, alias = prop_name.split("$",1)
 
             try:
                 validator = self._aliases[alias]
@@ -852,6 +859,7 @@ class SingleBlock(Block):
         return prop_name, template
     
     def fill_staged_template(self, prop_name, **kwargs):
+        from .template import TemplateBlock
         prop_key = prop_name.split("$")[0] if "$" in prop_name else prop_name
 
         template = self._staged_templates.pop(prop_key, None)
@@ -862,9 +870,9 @@ class SingleBlock(Block):
         prop_name = prop_key
 
         try:
-            filled = template.fill(**kwargs)
+            filled = template.fill(staged=True,**kwargs)
         except Exception:
-            partial = template.fill(incomplete=True, **kwargs)
+            partial = template.fill(staged=True,incomplete=True, **kwargs)
             self._staged_templates[prop_name] = partial
             return prop_name, partial
         
@@ -872,6 +880,9 @@ class SingleBlock(Block):
             setattr(self, prop_name, filled)
         except Exception as e:
             raise Exception(f"Template was filled but could not be assigned {prop_name}") from e
+        
+        if isinstance(self, TemplateBlock):
+            self.fill()
         
         return prop_name, filled
 
