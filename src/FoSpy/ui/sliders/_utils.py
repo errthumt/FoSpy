@@ -1,4 +1,4 @@
-from .._utils import _ceil_to, _floor_to
+from ..._utils import _ceil_to, _floor_to
 
 
 def _round_spec(x, digits, key=None, include=True):
@@ -21,6 +21,6 @@ def _round_spec(x, digits, key=None, include=True):
     
 DEF_DIGITS = 2
 def _get_digits(spec):
-    from ..config import values as cfg
+    from ...config import values as cfg
     default = cfg.get("slider_digits.default", DEF_DIGITS)
     return spec.get("digits", default)

@@ -14,6 +14,7 @@ def dict_from_file(filepath):
     current_block = "metadata"
     current_type = "single"
     embedding = False
+    multiline = False
     break_line = None
     break_num = 0
     with open(filepath, "r", encoding="utf-8") as f:
@@ -33,8 +34,16 @@ def dict_from_file(filepath):
                 continue
 
             txt = line.strip()     
-            if txt == "" or rx.CALC_COMMENT_LINE.match(txt):
+            if rx.CALC_COMMENT_LINE.match(txt) or (
+                txt == "" and not multiline
+            ):
                 continue
+
+            if txt.endswith(";;;"):
+                multiline = True
+
+            if multiline and SYNTAX["nested"]["close"] in txt:
+                multiline = False
 
             if rx.EMBEDDED_START.match(txt):
                 _debug.msg(f"Starting Embedding on line: {txt}")
@@ -107,6 +116,19 @@ def dict_from_file(filepath):
 
     return blocks
 
+def _create_multiline_str(lines):
+    out = ""
+
+    for i, ln in enumerate(lines):
+        stripped = ln.strip()
+        if stripped == "":
+            out += "\n\n"
+        else:
+            out += stripped + " "
+
+    return out.strip()
+
+
 def create_single_block_dict(lines, _list_type="explicit"):
     """"""
 
@@ -119,8 +141,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
     
     # Single string mode, process block as a multiline string instead of key: value pairs
     if lines[0].strip() == ";;;":
-        return " ".join([ln.strip() for ln in lines[1:]]).strip()
-
+        return _create_multiline_str(lines[1:])
 
     open_br = SYNTAX["nested"]["open"]
     close_br = SYNTAX["nested"]["close"]
@@ -143,7 +164,7 @@ def create_single_block_dict(lines, _list_type="explicit"):
         elif embedding:
             if rx.EMBEDDED_END.match(line):
                 embedding = False
-                out_dict[nested_key] = nested_lines
+                out_dict[nested_key] = "".join(nested_lines)
                 nested_lines = []
                 nested_key = None
                 nested_type = None
@@ -151,6 +172,8 @@ def create_single_block_dict(lines, _list_type="explicit"):
             else:
                 nested_lines.append(line)
         elif nested==0:
+            if line.strip() == "" and not embedding:
+                continue
             m = rx.KEY_VALUE.match(line)
             if m:
                 key, val = m.group("key"), m.group("val")

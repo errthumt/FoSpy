@@ -378,112 +378,7 @@ Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)
     "cifs": [
         {
             "file_name": "Ba2Zn5Sb6_ICSD.cif",
-            "embedded": [
-                "\n",
-                "#(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.\n",
-                "data_71031-ICSD\n",
-                "_database_code_ICSD 71031\n",
-                "_audit_creation_date 2023-08-01\n",
-                "_chemical_name_common 'Barium zinc antimonide (2/5/6)'\n",
-                "_chemical_formula_structural 'Ba2 Zn5 Sb6'\n",
-                "_chemical_formula_sum 'Ba2 Sb6 Zn5'\n",
-                "_exptl_crystal_density_diffrn 6.13\n",
-                "_diffrn_ambient_temperature 100.\n",
-                "_citation_title\n",
-                ";\n",
-                "New trick for an old dog: from prediction to properties of  hidden clathrates \n",
-                "\\(Ba_2 Zn_5As_6\\) and \\(Ba_2 Zn_5Sb_6\\)\n",
-                ";\n",
-                "loop_\n",
-                "_citation_id\n",
-                "_citation_journal_full\n",
-                "_citation_year\n",
-                "_citation_journal_volume\n",
-                "_citation_page_first\n",
-                "_citation_page_last\n",
-                "_citation_journal_id_ASTM\n",
-                "primary 'Journal of the American Chemical Society' 2023 145 4638 4646 JACSAT\n",
-                "loop_\n",
-                "_citation_author_citation_id\n",
-                "_citation_author_name\n",
-                "primary 'Yox, Philip'\n",
-                "primary 'Cerasoli, Frank'\n",
-                "primary 'Sarkar, Arka'\n",
-                "primary 'Kyveryga, Victoria'\n",
-                "primary 'Viswanathan, Gayatri'\n",
-                "primary 'Donadio, Davide'\n",
-                "primary 'Kovnir, Kirill'\n",
-                "_cell_length_a 11.4154(5)\n",
-                "_cell_length_b 10.0135(4)\n",
-                "_cell_length_c 12.6172(5)\n",
-                "_cell_angle_alpha 90\n",
-                "_cell_angle_beta 90\n",
-                "_cell_angle_gamma 90\n",
-                "_cell_volume 1442.24\n",
-                "_cell_formula_units_Z 4\n",
-                "_space_group_name_H-M_alt 'P m n a'\n",
-                "_space_group_IT_number 53\n",
-                "loop_\n",
-                "_space_group_symop_id\n",
-                "_space_group_symop_operation_xyz\n",
-                "1 'x+1/2, y, -z+1/2'\n",
-                "2 'x+1/2, -y, z+1/2'\n",
-                "3 '-x, y, z'\n",
-                "4 '-x, -y, -z'\n",
-                "5 '-x+1/2, -y, z+1/2'\n",
-                "6 '-x+1/2, y, -z+1/2'\n",
-                "7 'x, -y, -z'\n",
-                "8 'x, y, z'\n",
-                "loop_\n",
-                "_atom_type_symbol\n",
-                "_atom_type_oxidation_number\n",
-                "Ba0+ 0\n",
-                "Sb0+ 0\n",
-                "Zn0+ 0\n",
-                "loop_\n",
-                "_atom_site_label\n",
-                "_atom_site_type_symbol\n",
-                "_atom_site_symmetry_multiplicity\n",
-                "_atom_site_Wyckoff_symbol\n",
-                "_atom_site_fract_x\n",
-                "_atom_site_fract_y\n",
-                "_atom_site_fract_z\n",
-                "_atom_site_U_iso_or_equiv\n",
-                "_atom_site_occupancy\n",
-                "Ba1 Ba0+ 4 h 0.5 0.23891(4) 0.64640(3) 0.00367(9) 1\n",
-                "Ba2 Ba0+ 4 g 0.75 0.71608(4) 0.75 0.00794(10) 1\n",
-                "Sb1 Sb0+ 4 f 0.32061(4) 0.5 0.5 0.00275(10) 1\n",
-                "Sb2 Sb0+ 4 h 0.5 0.86799(4) 0.61427(3) 0.00219(10) 1\n",
-                "Sb3 Sb0+ 4 h 0.5 0.73181(4) 0.93973(3) 0.00287(10) 1\n",
-                "Sb4 Sb0+ 8 i 0.19164(3) 0.10079(3) 0.65092(2) 0.00228(8) 1\n",
-                "Sb5 Sb0+ 4 h 0.5 0.50694(4) 0.80966(3) 0.00258(10) 1\n",
-                "Zn1 Zn0+ 4 h 0.5 0.94723(7) 0.81658(6) 0.00330(16) 1\n",
-                "Zn2 Zn0+ 4 e 0.33104(7) 0. 0.5 0.00356(16) 1\n",
-                "Zn3 Zn0+ 4 h 0.5 0.60202(7) 0.61084(6) 0.00339(16) 1\n",
-                "Zn4 Zn0+ 8 i 0.15880(5) 0.65041(5) 0.41232(4) 0.00452(13) 1\n",
-                "loop_\n",
-                "_atom_site_aniso_label\n",
-                "_atom_site_aniso_type_symbol\n",
-                "_atom_site_aniso_U_11\n",
-                "_atom_site_aniso_U_22\n",
-                "_atom_site_aniso_U_33\n",
-                "_atom_site_aniso_U_12\n",
-                "_atom_site_aniso_U_13\n",
-                "_atom_site_aniso_U_23\n",
-                "Ba1 Ba0+ 0.0056(2) 0.00269(19) 0.00270(18) 0. 0. -0.00066(15)\n",
-                "Ba2 Ba0+ 0.0031(2) 0.0110(2) 0.0097(2) 0. -0.00029(16) 0.\n",
-                "Sb1 Sb0+ 0.0025(2) 0.0026(2) 0.0031(2) 0. 0. 0.00002(17)\n",
-                "Sb2 Sb0+ 0.0037(2) 0.0013(2) 0.0015(2) 0. 0. -0.00028(17)\n",
-                "Sb3 Sb0+ 0.0053(2) 0.0017(2) 0.0016(2) 0. 0. -0.00002(17)\n",
-                "Sb4 Sb0+ 0.00259(16) 0.00227(16) 0.00198(14) 0.00013(12) 0.00028(12)\n",
-                "-0.00016(12)\n",
-                "Sb5 Sb0+ 0.0043(2) 0.0014(2) 0.0020(2) 0. 0. 0.00017(17)\n",
-                "Zn1 Zn0+ 0.0041(4) 0.0027(4) 0.0032(4) 0. 0. 0.0000(3)\n",
-                "Zn2 Zn0+ 0.0034(4) 0.0039(4) 0.0034(4) 0. 0. -0.0007(3)\n",
-                "Zn3 Zn0+ 0.0043(4) 0.0023(4) 0.0036(4) 0. 0. 0.0006(3)\n",
-                "Zn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)\n",
-                "#End of TTdata_71031-ICSD\n"
-            ]
+            "embedded": "\n#(C) 2025 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.\ndata_71031-ICSD\n_database_code_ICSD 71031\n_audit_creation_date 2023-08-01\n_chemical_name_common 'Barium zinc antimonide (2/5/6)'\n_chemical_formula_structural 'Ba2 Zn5 Sb6'\n_chemical_formula_sum 'Ba2 Sb6 Zn5'\n_exptl_crystal_density_diffrn 6.13\n_diffrn_ambient_temperature 100.\n_citation_title\n;\nNew trick for an old dog: from prediction to properties of  hidden clathrates \n\\(Ba_2 Zn_5As_6\\) and \\(Ba_2 Zn_5Sb_6\\)\n;\nloop_\n_citation_id\n_citation_journal_full\n_citation_year\n_citation_journal_volume\n_citation_page_first\n_citation_page_last\n_citation_journal_id_ASTM\nprimary 'Journal of the American Chemical Society' 2023 145 4638 4646 JACSAT\nloop_\n_citation_author_citation_id\n_citation_author_name\nprimary 'Yox, Philip'\nprimary 'Cerasoli, Frank'\nprimary 'Sarkar, Arka'\nprimary 'Kyveryga, Victoria'\nprimary 'Viswanathan, Gayatri'\nprimary 'Donadio, Davide'\nprimary 'Kovnir, Kirill'\n_cell_length_a 11.4154(5)\n_cell_length_b 10.0135(4)\n_cell_length_c 12.6172(5)\n_cell_angle_alpha 90\n_cell_angle_beta 90\n_cell_angle_gamma 90\n_cell_volume 1442.24\n_cell_formula_units_Z 4\n_space_group_name_H-M_alt 'P m n a'\n_space_group_IT_number 53\nloop_\n_space_group_symop_id\n_space_group_symop_operation_xyz\n1 'x+1/2, y, -z+1/2'\n2 'x+1/2, -y, z+1/2'\n3 '-x, y, z'\n4 '-x, -y, -z'\n5 '-x+1/2, -y, z+1/2'\n6 '-x+1/2, y, -z+1/2'\n7 'x, -y, -z'\n8 'x, y, z'\nloop_\n_atom_type_symbol\n_atom_type_oxidation_number\nBa0+ 0\nSb0+ 0\nZn0+ 0\nloop_\n_atom_site_label\n_atom_site_type_symbol\n_atom_site_symmetry_multiplicity\n_atom_site_Wyckoff_symbol\n_atom_site_fract_x\n_atom_site_fract_y\n_atom_site_fract_z\n_atom_site_U_iso_or_equiv\n_atom_site_occupancy\nBa1 Ba0+ 4 h 0.5 0.23891(4) 0.64640(3) 0.00367(9) 1\nBa2 Ba0+ 4 g 0.75 0.71608(4) 0.75 0.00794(10) 1\nSb1 Sb0+ 4 f 0.32061(4) 0.5 0.5 0.00275(10) 1\nSb2 Sb0+ 4 h 0.5 0.86799(4) 0.61427(3) 0.00219(10) 1\nSb3 Sb0+ 4 h 0.5 0.73181(4) 0.93973(3) 0.00287(10) 1\nSb4 Sb0+ 8 i 0.19164(3) 0.10079(3) 0.65092(2) 0.00228(8) 1\nSb5 Sb0+ 4 h 0.5 0.50694(4) 0.80966(3) 0.00258(10) 1\nZn1 Zn0+ 4 h 0.5 0.94723(7) 0.81658(6) 0.00330(16) 1\nZn2 Zn0+ 4 e 0.33104(7) 0. 0.5 0.00356(16) 1\nZn3 Zn0+ 4 h 0.5 0.60202(7) 0.61084(6) 0.00339(16) 1\nZn4 Zn0+ 8 i 0.15880(5) 0.65041(5) 0.41232(4) 0.00452(13) 1\nloop_\n_atom_site_aniso_label\n_atom_site_aniso_type_symbol\n_atom_site_aniso_U_11\n_atom_site_aniso_U_22\n_atom_site_aniso_U_33\n_atom_site_aniso_U_12\n_atom_site_aniso_U_13\n_atom_site_aniso_U_23\nBa1 Ba0+ 0.0056(2) 0.00269(19) 0.00270(18) 0. 0. -0.00066(15)\nBa2 Ba0+ 0.0031(2) 0.0110(2) 0.0097(2) 0. -0.00029(16) 0.\nSb1 Sb0+ 0.0025(2) 0.0026(2) 0.0031(2) 0. 0. 0.00002(17)\nSb2 Sb0+ 0.0037(2) 0.0013(2) 0.0015(2) 0. 0. -0.00028(17)\nSb3 Sb0+ 0.0053(2) 0.0017(2) 0.0016(2) 0. 0. -0.00002(17)\nSb4 Sb0+ 0.00259(16) 0.00227(16) 0.00198(14) 0.00013(12) 0.00028(12)\n-0.00016(12)\nSb5 Sb0+ 0.0043(2) 0.0014(2) 0.0020(2) 0. 0. 0.00017(17)\nZn1 Zn0+ 0.0041(4) 0.0027(4) 0.0032(4) 0. 0. 0.0000(3)\nZn2 Zn0+ 0.0034(4) 0.0039(4) 0.0034(4) 0. 0. -0.0007(3)\nZn3 Zn0+ 0.0043(4) 0.0023(4) 0.0036(4) 0. 0. 0.0006(3)\nZn4 Zn0+ 0.0051(3) 0.0030(3) 0.0054(3) -0.0001(2) -0.0003(2) 0.0010(2)\n#End of TTdata_71031-ICSD\n"
         }
     ]
 }
@@ -636,7 +531,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -879,7 +774,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -1124,7 +1019,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -1372,7 +1267,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -1627,7 +1522,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -1883,7 +1778,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_
@@ -2152,7 +2047,7 @@ _exptl_crystal_density_diffrn 6.13
 _diffrn_ambient_temperature 100.
 _citation_title
 ;
-New trick for an old dog: from prediction to properties of  hidden clathrates
+New trick for an old dog: from prediction to properties of  hidden clathrates 
 \(Ba_2 Zn_5As_6\) and \(Ba_2 Zn_5Sb_6\)
 ;
 loop_

@@ -3,6 +3,7 @@ from .blocks import ListBlock
 
 
 class Product(Chemical):
+    _id_key = "name"
     pass
 
 ProductList = ListBlock.Simple(Product)

@@ -217,24 +217,18 @@ class SliderPlot:
 
 
 def AssembleSlider(subcls, ui=None):
-    from . import matplotlib, pyqtgraph
-    from ..config import values as full_cfg
-    ui_opts = {
-        'matplotlib': matplotlib,
-        'pyqtgraph': pyqtgraph
-    }
+    from ..available import get_valid_ui, discover_ui_options
 
-    if ui is None:
-        ui = full_cfg.get('ui.default')
+    # look for existing slider bindings
+    ui_opts = discover_ui_options(__package__)
 
-    plot_module = ui_opts.get(ui, matplotlib)
+    # validate ui and route to correct module
+    ui = get_valid_ui(ui, options=ui_opts.keys())
+    plot_module = ui_opts[ui]
 
-    if not plot_module.available:
-        plot_module = matplotlib
-
+    # construct hybrid class with slider routines and ui bindings
     class SliderPlot(subcls, plot_module.SliderPlot):
         pass
-
 
     return SliderPlot
 

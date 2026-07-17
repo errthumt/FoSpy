@@ -35,6 +35,12 @@ aliases = {
 """Maps alias names to block classes for use in non-template
 [`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] blocks."""
 
+for attr in b.__all__:
+    blk_cls = getattr(b, attr)
+    if isinstance(blk_cls, type) and issubclass(blk_cls, b.Block):
+        aliases[attr.lower()] = blk_cls
+
+
 required_keys = {
     b.SingleBlock: {
             "ext" : SubContainer
@@ -90,8 +96,8 @@ required_keys = {
 
     b.Product: {
         "name": str,
-        "expected" : bool,
-        "obtained" : bool,
+        "expected" : validators.boolstr.str_to_bool,
+        "obtained" : validators.boolstr.str_to_bool,
         "observations": str,
     },
 
@@ -138,6 +144,15 @@ required_keys = {
 
     b.Attachment: {
         "file_name": validators.filenames.file_name
+    },
+    b.PathFile: {
+        "path": validators.filenames.PathPosix
+    },
+    b.EmbeddedFile: {
+        "embedded": validators.filenames.embedded
+    },
+    b.Rename: {
+        "__all__": validators.rename.rename_value
     }
 }
 """Maps block classes to dictionaries of required keys and their validators.
@@ -145,14 +160,19 @@ Validators can be types (e.g. `str`, `int`),
 [`Block`][FoSpy.blocks.blocks.Block] constructors, or custom validator
 functions."""
 
-
 optional_keys = {
     b.Attachment: {
-        "embedded": validators.filenames.embedded_lines,
-        "path": validators.filenames.PathPosix
-    }, 
+        "path": validators.filenames.PathPosix,
+        "embedded": validators.filenames.embedded
+    },
+    b.PathFile: {
+        "embedded": False
+    },
+    b.EmbeddedFile: {
+        "path": False
+    },
     b.SingleBlock: {
-        "rename": validators.rename.rename_dict
+        "rename": b.Rename
     },
     b.Synthesis: {
         "cif": b.Attachment.enforce_subtype(b.CIFFile),
@@ -198,6 +218,10 @@ optional_keys = {
         "temp_unit": validators.units.FOSTempUnit,
         "time_unit": validators.units.FOSUnit.enforce_dims("[time]"),
         "rate_unit": validators.units.temp_rate_unit
+    },
+
+    b.Rename: {
+        "rename": False
     },
 
     b.TemplateSet: TemplateLists

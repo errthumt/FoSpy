@@ -7,6 +7,9 @@ class AttachmentTypeError(Exception):
 class FileBlockNotFoundError(Exception):
     pass
 
+class FoSpyStructureError(Exception):
+    pass
+
 def _summarize_exception_group(exc: Exception, indent: int = 0) -> list[str]:
     """Return a list of summary lines for an ExceptionGroup or PropertyError."""
     pad = "  " * indent
@@ -50,8 +53,8 @@ def _get_block_info(blockObj, blockDict={}):
     typ = type(blockObj)
     typ_nm = typ.__name__
 
-    if hasattr(typ, "id_key"):
-        id_key = typ.id_key
+    if hasattr(typ, "_id_key"):
+        id_key = typ._id_key
         block_id = blockDict.get(id_key, None)
     else:
         id_key = None
@@ -84,9 +87,9 @@ class MissingPropertyError(PropertyError):
         self.summary = f"Missing '{key}'"
 
 class FailedValidatorError(PropertyError):
-    def __init__(self, key, blockObj, cause:Exception, *args, blockDict={}, **kwargs):
+    def __init__(self, key, blockObj, cause:Exception, *args, blockDict={}, hint="Failed to validate property: ", **kwargs):
         
-        super().__init__(key, blockObj, *args, blockDict=blockDict, hint="Failed to validate property: ", **kwargs)
+        super().__init__(key, blockObj, *args, blockDict=blockDict, hint=hint, **kwargs)
 
         self.cause = cause
 

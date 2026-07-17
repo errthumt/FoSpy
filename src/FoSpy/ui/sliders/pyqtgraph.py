@@ -1,14 +1,26 @@
-from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
-from ._utils import _get_digits
+from ..available import validate_ui, UINotAvailable
 
-available = True
 try:
+    validate_ui("pyqtgraph")
     import pyqtgraph as pg
     from pyqtgraph.Qt import QtWidgets, QtCore
-
-except ImportError as e:
+    from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
+    from ._utils import _get_digits
+    available = True
+    import_e = None
+except UINotAvailable as e:
     available = False
     import_e = e
+except Exception as e:
+    available = False
+
+    import_e = ImportError("PyQtGraph UI not available for unexpected exception")
+    import_e.__cause__ = e
+
+def _import_gate():
+    global available, import_e
+    if not available:
+        raise import_e
 
 
 TB_WIDTH = 60
@@ -29,6 +41,9 @@ def _separator():
 
 class ControlPanel(QtWidgets.QWidget, AbstractControl):
     def __init__(self, rows=CTRL_ROWS, parent=None):
+        _import_gate()
+
+
         super().__init__(parent)
         AbstractControl.__init__(self, rows=rows)
 
@@ -76,6 +91,8 @@ class ControlPanel(QtWidgets.QWidget, AbstractControl):
 # TODO: abstract _build_controls
 class SliderPlot(AbstractSlider):
     def __init__(self, title="Interactive Plot", specs={}, cfg={}, x_label=None, y_label=None, x_ticks=True, y_ticks=True):
+        _import_gate()
+        
         if not available:
             raise ImportError(f"One or more required modules could not be imported. Exception:\n{import_e}")
         

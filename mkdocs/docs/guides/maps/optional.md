@@ -7,9 +7,9 @@
 
 ```JSON
 {
-    "rename": "rename",
+    "rename": {},
     "metadata": {
-        "rename": "metadata.rename",
+        "rename": {},
         "fos_id": "metadata.fos_id",
         "fos_type": "metadata.fos_type",
         "description": "metadata.description",
@@ -18,27 +18,27 @@
     },
     "experimenters": [
         {
-            "rename": "experimenters[0].rename",
+            "rename": {},
             "name": "experimenters[0].name",
             "affiliation": "experimenters[0].affiliation",
             "orcid": "experimenters[0].orcid"
         },
         {
-            "rename": "experimenters[1].rename",
+            "rename": {},
             "name": "experimenters[1].name",
             "affiliation": "experimenters[1].affiliation",
             "orcid": "experimenters[1].orcid"
         }
     ],
     "reaction": {
-        "rename": "reaction.rename",
+        "rename": {},
         "nominal_formula": "reaction.nominal_formula",
         "nominal_amount": "reaction.nominal_amount",
         "nominal_amount_unit": "reaction.nominal_amount_unit"
     },
     "products": [
         {
-            "rename": "products[0].rename",
+            "rename": {},
             "formula": "products[0].formula",
             "name": "products[0].name",
             "expected": "products[0].expected",
@@ -52,7 +52,7 @@
             "structure_comments": "products[0].structure_comments"
         },
         {
-            "rename": "products[1].rename",
+            "rename": {},
             "formula": "products[1].formula",
             "name": "products[1].name",
             "expected": "products[1].expected",
@@ -68,7 +68,7 @@
     ],
     "materials": [
         {
-            "rename": "materials[0].rename",
+            "rename": {},
             "name": "materials[0].name",
             "type": "materials[0].type",
             "formula": "materials[0].formula",
@@ -81,7 +81,7 @@
             "purity": "materials[0].purity",
             "treatments": [
                 {
-                    "rename": "materials[0].treatments[0].rename",
+                    "rename": {},
                     "type": "materials[0].treatments[0].type",
                     "repeats": "materials[0].treatments[0].repeats",
                     "observations": "materials[0].treatments[0].observations",
@@ -91,7 +91,7 @@
                     "end_time": "materials[0].treatments[0].end_time"
                 },
                 {
-                    "rename": "materials[0].treatments[1].rename",
+                    "rename": {},
                     "type": "materials[0].treatments[1].type",
                     "repeats": "materials[0].treatments[1].repeats",
                     "observations": "materials[0].treatments[1].observations",
@@ -103,7 +103,7 @@
             ]
         },
         {
-            "rename": "materials[1].rename",
+            "rename": {},
             "name": "materials[1].name",
             "type": "materials[1].type",
             "formula": "materials[1].formula",
@@ -116,7 +116,7 @@
             "purity": "materials[1].purity",
             "treatments": [
                 {
-                    "rename": "materials[1].treatments[0].rename",
+                    "rename": {},
                     "type": "materials[1].treatments[0].type",
                     "repeats": "materials[1].treatments[0].repeats",
                     "observations": "materials[1].treatments[0].observations",
@@ -126,7 +126,7 @@
                     "end_time": "materials[1].treatments[0].end_time"
                 },
                 {
-                    "rename": "materials[1].treatments[1].rename",
+                    "rename": {},
                     "type": "materials[1].treatments[1].type",
                     "repeats": "materials[1].treatments[1].repeats",
                     "observations": "materials[1].treatments[1].observations",
@@ -140,7 +140,7 @@
     ],
     "treatments": [
         {
-            "rename": "treatments[0].rename",
+            "rename": {},
             "type": "treatments[0].type",
             "repeats": "treatments[0].repeats",
             "observations": "treatments[0].observations",
@@ -150,7 +150,7 @@
             "end_time": "treatments[0].end_time"
         },
         {
-            "rename": "treatments[1].rename",
+            "rename": {},
             "type": "treatments[1].type",
             "repeats": "treatments[1].repeats",
             "observations": "treatments[1].observations",
@@ -161,34 +161,34 @@
         }
     ],
     "cif": {
-        "rename": "cif.rename",
+        "rename": {},
         "file_name": "cif.file_name",
-        "embedded": "cif.embedded",
-        "path": "cif.path"
+        "path": "cif.path",
+        "embedded": "cif.embedded"
     },
     "cifs": [
         {
-            "rename": "cifs[0].rename",
+            "rename": {},
             "file_name": "cifs[0].file_name",
-            "embedded": "cifs[0].embedded",
-            "path": "cifs[0].path"
+            "path": "cifs[0].path",
+            "embedded": "cifs[0].embedded"
         },
         {
-            "rename": "cifs[1].rename",
+            "rename": {},
             "file_name": "cifs[1].file_name",
-            "embedded": "cifs[1].embedded",
-            "path": "cifs[1].path"
+            "path": "cifs[1].path",
+            "embedded": "cifs[1].embedded"
         }
     ],
     "laboratory_conditions": {
-        "rename": "laboratory_conditions.rename"
+        "rename": {}
     },
     "equipment": [
         {
-            "rename": "equipment[0].rename"
+            "rename": {}
         },
         {
-            "rename": "equipment[1].rename"
+            "rename": {}
         }
     ]
 }

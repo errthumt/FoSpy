@@ -11,36 +11,71 @@ _debug = Debug()
 class Attachment(SingleBlock):
     dispatch={}
     extensions={}
-    enforced_subtype=None  
+    enforced_subtype=None
+    _id_key = "file_name"  
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         self._filepath = None
 
     def __setattr__(self, name, value):
-        if name == "_extension" and hasattr(self, "_extension"):
-            from warnings import warn
-            warn("You cannot change the extension of an attachment after construction. Skipping change.", RuntimeWarning)
-            return
+        if name == "_extension":
+            if value is None:
+                return
+            if hasattr(self, "_extension") and value != self._extension:
+                from warnings import warn
+                warn("You cannot change the extension of an attachment after construction. Skipping change.", RuntimeWarning)
+                return
 
-        if name != "file_name":
-            return super().__setattr__(name, value)
+        if name == "file_name":
+            old_ext = self._extension if hasattr(self, "_extension") else None
+            value, new_ext = self._validate_filename(value, old_ext)
+            self._extension = new_ext
 
-        if "." not in value and hasattr(self, "_extension"):
-            value = f"{value}{self._extension}"
+        return super().__setattr__(name, value)
 
-        super().__setattr__(name, value)
+    @classmethod
+    def _validate_filename(cls, filename:str, ext:str=None, warn=True):
+        filename = str(filename)
+        if ext is None:
+            ext = f".{filename.rsplit('.')[-1]}" if "." in filename else ""
+            # delegate to base validator routine to verify extension
+            return filename, ext
+        
+        if "." not in filename:
+            new_ext = ext
+        else:
+            new_ext = f".{filename.rsplit('.')[-1]}"
+        
+        if new_ext != ext:
+            if warn:
+                filename = filename + ext
+                from warnings import warn
+                warn(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
+                    f"be changed after construction. The current extension ('{ext}') "
+                    f"will be appended to the new filename to form: '{filename}'.", RuntimeWarning)
+            else:
+                raise ValueError(f"New filename contains a different extension: '{new_ext}'. Extensions cannot "
+                                 "be changed after attachment construction.")
+        
+        return filename, new_ext
 
-        fn = self.file_name()
-        ext = f".{fn.rsplit('.', 1)[1]}"
-        if not hasattr(self, "_extension"):
-            self._extension = f".{fn.rsplit('.', 1)[1]}"
-        elif ext != self._extension:
-            from warnings import warn
-            new = f"{fn}{self._extension}"
-            warn(f"New filename contains a different extension: '{ext}'. Extensions cannot "
-                 f"be changed after construction. The current extension ('{self._extenstion}') "
-                 f"will be appended to the new filename to form: '{new}'.", RuntimeWarning)
-            return super().__setattr__("file_name", new)
+    @classmethod
+    def reflex(cls, serialize=True, clean=False, **kwargs:dict):
+        from .template import TemplateField
+        if "file_name" not in kwargs:
+            kwargs["file_name"] = TemplateField.serialize()
+            kwargs.pop("path", None)
+            add_embedded = "embedded" not in kwargs
+
+        elif not any(k in kwargs for k in ("path", "embedded")):
+            add_embedded = True
+
+        if add_embedded:
+            kwargs["embedded"] = TemplateField.serialize()
+
+        return super().reflex(serialize=serialize, clean=clean, **kwargs)
+    
+
 
     def _get_filepath(self):
         """
@@ -89,8 +124,16 @@ class Attachment(SingleBlock):
                 return cls(blockDict, _dispatched=True, **kwargs)
 
         return NewAttachment.dispatch_subclass(blockDict, **kwargs)
+    
+    def find_attachments(self):
+        attachments = super().find_attachments()
+        if self not in attachments:
+            attachments.append(self)
+
+        return attachments
 
 class EmbeddedFile(Attachment):
+    dispatch = {}
     def _write_to_temp(self, encoding="utf-8"):
         try:
             temppath = self.find_temppath()
@@ -115,24 +158,25 @@ class EmbeddedFile(Attachment):
         "embedded" key to the full list of embedded lines instead of a string.
         """
         serial = super().serialize(**kwargs)
-        serial["embedded"] = self.embedded.copy()
+        #serial["embedded"] = self.embedded.copy()
         return serial
 Attachment.dispatch["embedded"] = EmbeddedFile
 
 class PathFile(Attachment):
+    dispatch = {}
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         
 
     def _get_abspath(self):
-        filedir = self._get_filedir()
+        filedir = self._get_filedir().resolve()
 
-        return filedir / str(self.path) / self.file_name()
+        return (filedir / str(self.path) / self.file_name()).resolve()
     
     def _get_filedir(self):
         from pathlib import Path
         fileblock = self.find_fileblock()
-        return Path(fileblock._sourceFile).parent
+        return Path(fileblock._sourceFile).parent.resolve()
 
     def exists(self):
         return self._filepath.is_file() if self._filepath is not None else False
@@ -171,7 +215,7 @@ class PathFile(Attachment):
                         self._filepath = new_path
 
                 else:
-                    new_path = self._filepath.parent.relative_to(self._get_filedir(),walk_up=True)
+                    new_path = self._filepath.parent.resolve().relative_to(self._get_filedir(),walk_up=True)
                     self.path = str(new_path)
 
             checkpath = self._get_abspath()
@@ -187,6 +231,26 @@ class PathFile(Attachment):
             else:
                 _debug.msg(f"Could not refresh attachment: {e}. Configured to ignore.")
 
+    def change_path(self, new_path):
+        from pathlib import Path
+        import warnings
+        abspath = Path(new_path).resolve()
+
+        parent = abspath.parent
+        filename = abspath.name
+        ext = self._extension if hasattr(self, "_extension") else None
+
+        warnings.simplefilter("always")
+        filename, ext = self._validate_filename(filename, ext, warn=False) 
+        abspath = parent / filename
+
+        if not abspath.is_file():
+            raise ValueError(f"Cannot change path to file that does not exist: {abspath}")
+        
+        self.file_name = filename
+        self.path = str(abspath.parent.relative_to(self._get_filedir(),walk_up=True))
+        self._filepath = abspath
+        self.refresh()
     
     def _get_filepath(self, rf_new_copy=False, rf_overwrite=False, **kwargs):
         if self._filepath is None:

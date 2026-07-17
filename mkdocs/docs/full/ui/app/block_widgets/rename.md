@@ -8,7 +8,7 @@ be imported from, [review the sourcecode on the
 github.](https://github.com/errthumt/FoSpy/tree/main/src/FoSpy)
 
 
-::: FoSpy.ui.abstract
+::: FoSpy.ui.app.block_widgets.rename
     options:
         members: true
         show_if_no_docstring: true

@@ -1,10 +1,9 @@
 import os
-import textwrap
 
 from .._debug import Debug
 
 from . import format_fos as fm
-from .format_fos import _indent
+
 from .syntax import SYNTAX
 from .syntax import meta_keys as mk
 
@@ -42,7 +41,7 @@ def block_list_to_lines(blocklist:list, indent=0):
             if not comments: 
                 continue
             for key in loop_keys:
-                for comment in comments[key]:
+                for comment in comments.get(key, []):
                     key_comments[key].append(comment)
         
         template_keys = []
@@ -119,8 +118,7 @@ def expand_lists(key, val, indent, looped=False):
 
     if key == "embedded":
         lines.append(fm.format_embed_start(key, indent, looped))
-        for line in val:
-            lines.append(line.rstrip())
+        lines.append(val.rstrip())
         lines.append(f'{SYNTAX["embedded"]["prefix"]*20} {SYNTAX["embedded"]["close"]}')
     elif isinstance(val, list):
         if len(val) == 0:
@@ -134,15 +132,9 @@ def expand_lists(key, val, indent, looped=False):
     elif isinstance(val, dict):
         return expand_lists(key, [val], indent, looped)
     elif isinstance(val, str):
-        key_val = fm.format_key_value(key, val, indent, looped)
-        key_val_width = len(key_val)
-        if key_val_width <= CHAR_WIDTH:
-            lines.append(key_val)
-        else:
-            indent_width = len(_indent("", indent))
-            lines.append(fm.format_key_value(key, f"{fm.empty_nested(False)[0]};;;", indent, looped))
-            for line in textwrap.wrap(val+fm.empty_nested(False)[1:], width=CHAR_WIDTH-indent_width):
-                lines.append(_indent(line, indent))
+        key_val = fm.format_key_str(key, val, indent, looped, CHAR_WIDTH)
+
+        lines.append(key_val)
 
     else:
         lines.append(fm.format_key_value(key, val, indent, looped))
@@ -151,7 +143,7 @@ def expand_lists(key, val, indent, looped=False):
 
 
 
-def write_dict_to_file(blocks, filepath):
+def write_dict_to_file(blocks, filepath, **kwargs):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     blocks = blocks.copy()
     block_comments = blocks.pop(mk["comments"])

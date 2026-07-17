@@ -1,4 +1,4 @@
-
+import inspect
 from ._containers import SimpleWrapper, SubContainer
 from ..config import values as cfg
 from ..parsing.syntax import (
@@ -7,7 +7,6 @@ from ..parsing.syntax import (
 )
 
 from .. import _errors as err
-
 
 from ._blockUtils import _unwrap_block
 
@@ -69,6 +68,11 @@ class Block:
     """
     The base class for any set of data found in a FOS file.
     """
+    @classmethod
+    def inspect(self):
+        # for breaking to debugger from gui
+        raise Exception("put a break point here")
+
     def find_fileblock(self):
         """
         Finds the parent file object.
@@ -89,6 +93,46 @@ class Block:
             else:
                 blk = None
         raise FileBlockNotFoundError("Could not find a FileBlock containing the current object")
+    
+    def get_prop_path(self):
+        from .files import FileBlock
+
+        if not hasattr(self, "_parent_block"):
+            if isinstance(self, FileBlock):
+                root_path = f"<{str(self.get_file_name())}>"
+            else:
+                root_path = f"<Root {type(self).__name__}"
+                if isinstance(self, SingleBlock):
+                    id_key, id_txt = self.get_id()
+                    if id_key is not None:
+                        root_path += f" ({id_key}={id_txt})"
+                root_path += ">"
+            return root_path
+        
+        parent_path = self._parent_block.get_prop_path()
+        parent_prop = self.get_parent_prop()
+
+        if "[" not in parent_prop:
+            return parent_path + "." + parent_prop
+        
+        return parent_path + parent_prop
+    
+    def get_parent_prop(self):
+        if not hasattr(self, "_parent_block"):
+            return None
+        parent_blk = self._parent_block
+        
+        if isinstance(parent_blk, SingleBlock):
+            for prop, val in parent_blk.get_prop_dict().items():
+                if val is self:
+                    return prop
+        
+            raise err.FoSpyStructureError(f"Block {self} points to a parent block {parent_blk} that does not contain it as a property.")
+        
+        elif isinstance(parent_blk, ListBlock):
+            return f"[{parent_blk.get_idx(self)}]"
+        
+        raise err.FoSpyStructureError(f"Block {self} has an unknown parent block type: {type(parent_blk)}")
     
     def add_comments(self, *comments):
         """
@@ -205,7 +249,8 @@ class SingleBlock(Block):
     """
     dispatch = {}
     _aliases = None
-   
+    _id_key = None
+
     @classmethod
     def print_summary(cls, mode="cli"):
         from .._docs.properties import get_summary
@@ -372,6 +417,8 @@ class SingleBlock(Block):
         for i in range(len(req_mro)):
             merged = _merge_vals(merged, req_mro, i)
 
+        merged.pop("__all__")
+
         return merged
 
     @classmethod
@@ -390,6 +437,7 @@ class SingleBlock(Block):
         """
         from ..parsing.validation import required_keys, optional_keys
         from ._blockUtils import _merge_vals, _get_prop_mro
+        from .._docs.properties import _validator_rules
         merged = {}
         # for base in reversed(cls.__mro__):
         #     for key_set in (required_keys, optional_keys):
@@ -406,6 +454,14 @@ class SingleBlock(Block):
         for i in range(len(req_mro)): # req_mro and opt_mro are the same length
             merged = _merge_vals(merged, req_mro, i)
             merged = _merge_vals(merged, opt_mro, i)
+
+        universal_val = merged.pop("__all__")
+
+        @_validator_rules(inherit_from=universal_val)
+        def universal_val_method(cls, *_, _m=universal_val, **__):
+            return _m(*_, **__)
+
+        cls.universal_val = universal_val_method
 
         return merged
     
@@ -484,6 +540,9 @@ class SingleBlock(Block):
                 or by list index.
 
         """
+        from .metadata import Rename, MetaData
+        self._staged_templates = {}
+        self._constructed = False
         property_errors = []
 
         if not _dispatched:
@@ -511,6 +570,8 @@ class SingleBlock(Block):
         rename = blockDict.pop("rename",None)
         if rename:
             setattr(self, "rename", _unwrap_block(rename))
+        elif not isinstance(self, (Rename, MetaData)):
+            setattr(self, "rename", {})
 
         req = self.get_req_validators()
         req.pop("ext",None)
@@ -553,8 +614,15 @@ class SingleBlock(Block):
 
         if property_errors:
             raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
-
         
+        self._constructed = True
+
+    def _update_src(self):
+        if self._constructed and self._props_changed:
+            self._sourceDict = self.serialize(clean=True)
+            self._props_changed = False
+
+        return self._sourceDict   
      
     def __setattr__(self, name:str, value):
         """
@@ -591,13 +659,11 @@ class SingleBlock(Block):
                 - If a template field is found when constructing a non-template
                   subclass.
         """
-        from ..parsing.format_fos import format_field
-        from .template import TemplateField, TemplateBlock
-
-        from inspect import signature as sign
-
         if name.startswith("_") or name in self._reserved:
             return super().__setattr__(name, value)
+        
+        from ..parsing.format_fos import format_field
+        from .template import TemplateField, TemplateBlock
         
         validators = self.get_validators()
         
@@ -605,17 +671,20 @@ class SingleBlock(Block):
             try:
                 name, alias = name.split("$")
             except Exception:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict, hint="Unable to parse a block alias from key containing '$' character: ")
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(), hint="Unable to parse a block alias from key containing '$' character: ")
             
             try:
                 val = self._aliases[alias]
             except KeyError:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(),
                                              hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
                                              posthint=f"Valid aliases: {list(self._aliases.keys())}")
             
             if name in validators and val != validators[name]:
-                raise err.PropertyAliasError(name, self, blockDict=self._sourceDict,
+                self._update_src()
+                raise err.PropertyAliasError(name, self, blockDict=self._update_src(),
                                              hint=f"Cannot apply '{alias}' alias override to property: ",
                                              posthint="That property is already assigned to a validator. "
                                              f"The following properties are reserved: {list(validators.keys())}")
@@ -624,35 +693,56 @@ class SingleBlock(Block):
                 self._key_overrides[name] = val
 
         if name in validators:
+            universal_val = self.universal_val
+
             validator = validators[name]
-            val_kwargs = {}
-            for kw, arg in (("sourceDict", self._sourceDict),("cls", type(self))):
-                try:
-                    if kw in sign(validator).parameters:
-                        val_kwargs[kw] = arg
-                #TODO: find a better way to handle this
-                except Exception:
-                    pass
+            # val_kwargs = {}
+            # for kw, arg_func in (("sourceDict", self._update_src),("cls", lambda:type(self))):
+            #     try:
+            #         if kw in sign(validator).parameters:
+            #             val_kwargs[kw] = arg_func()
+            #     #TODO: find a better way to handle this
+            #     except Exception:
+            #         pass
+
+            val_kwargs = {
+                "sourceDict": self._update_src(),
+                "blk_cls": type(self),
+                "prop_name": name
+            }
                 
+            value = universal_val(value, **val_kwargs)
 
             if isinstance(validator, type):
                 if issubclass(validator, SingleBlock):
                     validator = validator.dispatch_subclass
+                    val_kwargs = {}
                     value = _unwrap_block(value)
                     pass
+                elif issubclass(validator, ListBlock):
+                    val_kwargs = {}
+
                 elif value == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
                     else:       
                         e = ValueError("You cannot assign a template field as a property for a non-template object.")
-                        raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict, hint="Template field passed to non-template property: ")
+                        raise err.FailedValidatorError(name, self, e, blockDict=self._update_src(), hint="Template field passed to non-template property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
+            
+            try:
+                sig = inspect.signature(validator)
+                needs_kwargs = any(
+                    p.kind==p.VAR_KEYWORD for p in sig.parameters.values()
+                )
+            except Exception:
+                needs_kwargs = False
 
             try:  
-                val = validator(value, **val_kwargs) if val_kwargs != {} else validator(value)
+                val = validator(value, **val_kwargs) if needs_kwargs else validator(value)
             except Exception as e:
-                raise err.FailedValidatorError(name, self, e, blockDict=self._sourceDict)
+                raise err.FailedValidatorError(name, self, e, blockDict=self._update_src())
                 
             return self._assign_and_inject(name, val)
         else:
@@ -666,9 +756,16 @@ class SingleBlock(Block):
         no matching attribute, a matching attribute of `self.ext` can be
         returned instead.
         """
+
         try:
+            if name not in ("rename", "ext") and hasattr(self, "rename"):
+                rename_dict = self.rename.serialize(shallow=True, clean=True)
+                if name in rename_dict:
+                    return getattr(self, rename_dict[name])
+                
             if name != 'ext':
                 return getattr(self.ext, name)
+            
             raise AttributeError()
         except AttributeError:
             raise AttributeError(
@@ -705,6 +802,128 @@ class SingleBlock(Block):
         
     def __hash__(self):
         return id(self)
+
+    def stage_template(self, prop_name, template:Block|dict=None):
+        from .template import TemplateBlock
+        if template is None:
+            template = {}
+
+        if not isinstance(template, (TemplateBlock, dict)):
+            raise ValueError("Template must be a TemplateBlock or dictionary.")
+
+        if hasattr(self, prop_name):
+            raise ValueError(f"Property {prop_name} already exists. You cannot stage a template for a property that already exists.")
+        
+        validators = self.build_validators()
+        validator = validators.get(prop_name, None)
+        alias = None
+        if isinstance(validator, type) and issubclass(validator, ListBlock):
+            raise ValueError(f"{prop_name} is a list property. You cannot stage a template for a list property. "
+                             "Instead, set the property to an empty list and then stage a template to that list.")
+        
+        if "$" in prop_name and validator is not None:
+            prop, alias = prop_name.split("$",1)
+            raise ValueError(f"The property {prop} already has a validator. You cannot alias a different validator for the same property.")
+
+        if validator is None:
+            if "$" not in prop_name:
+                if isinstance(template, dict):
+                    alias = None
+                else:
+                    alias = next(k for k, v in self._aliases.items() if isinstance(template, v))
+
+                if alias is None:
+                    raise ValueError(f"The property {prop_name} is unexpected. In order to stage a template "
+                                    "for and unexpected property, you must specify the validator with a '$' alias "
+                                    "in the property name, or stage a pre-constructed template of an aliasable validator.")
+
+            else:
+                prop_name, alias = prop_name.split("$",1)
+
+            try:
+                validator = self._aliases[alias]
+            except KeyError:
+                raise err.PropertyAliasError(prop_name, self, blockDict={prop_name: "<staged template>"},
+                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
+                                             posthint=f"Valid aliases: {list(self._aliases.keys())}")
+            
+        if not (isinstance(validator, type) and issubclass(validator, SingleBlock)):
+            raise ValueError("Templates can only be staged for SingleBlock validators")
+
+        if not isinstance(template, (dict, validator)):
+            raise ValueError(f"{prop_name} is mapped to an incompatible validator for the staged template.")
+
+        if isinstance(template, dict):
+            template = validator.reflex(serialize=False, include_temp_names=True, clean=False, **template)
+            template.template_name = prop_name
+
+        template._staged_parent = self
+
+        if alias is not None:
+            self._key_overrides[prop_name] = validator
+            
+        self._staged_templates[prop_name] = template
+
+        return prop_name, template
+    
+    def fill_staged_template(self, prop_name, **kwargs):
+        from .template import TemplateBlock
+        prop_key = prop_name.split("$")[0] if "$" in prop_name else prop_name
+
+        template = self._staged_templates.pop(prop_key, None)
+        if template is None:
+            prop_name, _ = self.stage_template(prop_name)
+            return self.fill_staged_template(prop_name, **kwargs)
+
+        prop_name = prop_key
+
+        try:
+            filled = template.fill(staged=True,**kwargs)
+        except Exception:
+            partial = template.fill(staged=True,incomplete=True, **kwargs)
+            self._staged_templates[prop_name] = partial
+            partial._staged_parent = self
+            return prop_name, partial
+        
+        try:
+            setattr(self, prop_name, filled)
+        except Exception as e:
+            raise Exception(f"Template was filled but could not be assigned {prop_name}") from e
+        
+        filled = getattr(self, prop_name)
+
+        if isinstance(self, TemplateBlock):
+            self.fill()
+        
+        return prop_name, filled
+
+    def has_staged(self):
+        if len(self._staged_templates) > 0:
+            return True
+        
+        for val in self.get_prop_dict().values():
+            if hasattr(val, "has_staged") and val.has_staged():
+                return True
+
+    def rename_dict(self):
+        if not hasattr(self, "rename"):
+            return {}
+        return self.rename.serialize(shallow=True, clean=True)
+    
+    def get_id(self):
+        """Returns an easily recognizable identifier for self. Non-unique."""
+        id_txt = str(getattr(self, self._id_key)) if self._id_key is not None else type(self).__name__
+        return self._id_key, id_txt
+    
+    def get_prop_dict(self):
+        """Returns a dictionary mapping property names to their live object values."""
+        serial = self.serialize(shallow=True, clean=True)
+        out = {}
+        for prop in serial:
+            if "$" in prop:
+                prop = prop.split("$")[0]
+            out[prop] = getattr(self, prop)
+        return out
     
     def _rename_validators(self, validators:dict):
         """
@@ -720,7 +939,7 @@ class SingleBlock(Block):
                 [`build_req_validators`][FoSpy.blocks.blocks.SingleBlock.build_req_validators]
         """
         if hasattr(self, "rename"):
-            for name, rename in self.rename.serialize(shallow=True).items():
+            for name, rename in self.rename.serialize(shallow=True, clean=True).items():
                 if name in validators and rename not in validators:
                     val = validators.pop(name)
                     validators[rename] = val
@@ -767,6 +986,8 @@ class SingleBlock(Block):
             attr_obj._reserved.append(method_name)
             bound = method.__get__(attr_obj, type(attr_obj))
             setattr(attr_obj, method_name, bound)
+
+        self._props_changed = True
         
     
     def add_comments(self, *comments):
@@ -888,9 +1109,9 @@ class SingleBlock(Block):
 
 
         def try_serial(obj):
-            serialize = getattr(obj, "serialize", None)
             if isinstance(obj, SimpleWrapper):
                 obj = obj()
+            serialize = getattr(obj, "serialize", None)
             if callable(serialize) and not shallow:
                 return obj.serialize(clean=clean)
             if isinstance(obj, list):
@@ -947,6 +1168,9 @@ class SingleBlock(Block):
             for key, val in scan.items():
                 if key.startswith("_") or val is None:
                     out.pop(key)
+
+        if not any(k for k in out.get("rename", {}) if not k.startswith("_")):
+            out.pop("rename", None)
 
         return out
     
@@ -1104,7 +1328,6 @@ class SingleBlock(Block):
             ## to run at serialization
         ```
         """
-        from functools import wraps
 
         func = self._resolve_relative_path(path)
         if not getattr(func, "_is_calc_routine", False):
@@ -1112,9 +1335,8 @@ class SingleBlock(Block):
 
         self._meta.routine_paths.append(path)
 
-        @wraps(func)
-        def wrapped():
-            return func(**kwargs)
+        def wrapped(f=func, k=kwargs):
+            return f(**k)
 
         self._calc_routines.append(wrapped)
 
@@ -1332,7 +1554,7 @@ class SingleBlock(Block):
     def rename_block(self, old, new):
         validators = self.get_validators()
         req = self.get_req_validators()
-        if True in [name.startswith("_") for name in (old, new)]:
+        if any(name.startswith("_") for name in (old, new)):
             raise ValueError("You cannot set private attributes (starting with '_') using obj.rename_block()")
         
         if old in req and new in validators:
@@ -1346,15 +1568,27 @@ class SingleBlock(Block):
         
         if "rename" in (old, new):
             raise ValueError("obj.rename property cannot be set or changed by obj.rename_block()")
+        
+        if hasattr(self, "rename") and hasattr(self.rename, old):
+            old = getattr(self.rename, old)()
 
         if old in self._key_overrides:
             val = self._key_overrides.pop(old)
             self._key_overrides[new] = val
+
         else:
-            _debug.msg(f"Registering '{old}':'{new}' into rename block")
             if not hasattr(self,"rename"):
                 self.rename = {}
-            setattr(self.rename, old, new)
+
+            rename_dict = self.rename_dict()
+            rename_from = {v:k for k,v in rename_dict.items()}
+            if old in rename_from:
+                base = rename_from[old]
+            else:
+                base = old
+
+            _debug.msg(f"Registering '{base}':'{new}' into rename block")
+            setattr(self.rename, base, new)
         _debug.msg(f"Moving '{old}' over to '{new}'.")
         setattr(self,new,getattr(self, old))
         delattr(self,old)
@@ -1395,6 +1629,22 @@ class SingleBlock(Block):
                     val.refresh_attachments(new_copy=new_copy, overwrite=overwrite, **kwargs)
                 elif isinstance(val, Attachment) and hasattr(val, "refresh"):
                     val.refresh(new_copy=new_copy, overwrite=overwrite, **kwargs)
+
+    def find_attachments(self):
+        attachments = []
+        for propVal in self.get_prop_dict().values():
+            if isinstance(propVal, ListBlock):
+                for obj in propVal._objs:
+                    attachments.extend([
+                        o for o in obj.find_attachments()
+                        if o not in attachments
+                    ])
+            elif isinstance(propVal, SingleBlock):
+                attachments.extend([
+                    o for o in propVal.find_attachments()
+                    if o not in attachments
+                ])
+        return attachments
 
 class ListBlock(Block):
     """
@@ -1441,6 +1691,7 @@ class ListBlock(Block):
         if not isinstance(blockList, list):
             blockList = [blockList]
         self._objs = blockList
+        self._staged_templates = {}
 
         
         # for blockDict in blockList:
@@ -1553,6 +1804,83 @@ class ListBlock(Block):
                 f"Each list item is an item in {type(self).__name__}._objs which can be edited individually, "
                 f"Or you can replace {type(self).__name__}._objs with a new list of objects."
             )
+
+    def has_staged(self):
+        return len(self._staged_templates) > 0 or any(blk.has_staged() for blk in self)
+    
+    def stage_template(self, temp_id, template:Block|dict=None):
+        from .template import TemplateBlock
+        if template is None:
+            template = {}
+
+        if "$" in temp_id:
+            raise ValueError("ListBlock Template IDs cannot contain '$'. "
+                             "The block type must match the required class for the ListBlock.")
+
+        if not isinstance(template, (TemplateBlock, dict)):
+            raise ValueError("Template must be a TemplateBlock or dictionary.")
+        
+        if isinstance(template, dict):
+            template = self._reqCls.reflex(serialize=False,**template)
+            template.template_name = temp_id
+        elif not isinstance(template, self._reqCls):
+            raise ValueError("Template must be a TemplateBlock subclass of the same type as this ListBlock.")
+        
+        if temp_id in self._staged_templates:
+            raise ValueError(f"A Template has already been staged for {temp_id}.")
+        
+        template._staged_parent = self
+        self._staged_templates[temp_id] = template
+
+        return temp_id, template
+    
+    def fill_staged_template(self, temp_id, idx=None, **kwargs):
+        template = self._staged_templates.pop(temp_id, None)
+        if template is None:
+            temp_id, _ = self.stage_template(temp_id)
+            return self.fill_staged_template(temp_id, **kwargs)
+        
+        try:
+            filled = template.fill(staged=True,**kwargs)
+        except Exception:
+            partial = template.fill(staged=True,incomplete=True, **kwargs)
+            return self.stage_template(temp_id, partial)
+        
+        if idx is None:
+            self.append(filled)
+        else:
+            self.insert(idx, filled)
+        
+        return temp_id, filled
+
+    def block_to_idx(self, blk, idx):
+        objs = self._objs.copy()
+        current_idx = None
+        if blk in objs:
+            current_idx = objs.index(blk)
+            if idx <= current_idx:
+                current_idx += 1
+        objs.insert(idx, blk)
+        objs.pop(current_idx)
+        self._objs = objs
+
+    def order_up(self, blk):
+        idx = self.get_idx(blk)
+        if idx == 0:
+            return
+        self.block_to_idx(blk, idx-1)
+
+    def order_down(self, blk):
+        idx = self.get_idx(blk)
+        if idx == len(self)-1:
+            return
+        self.block_to_idx(blk, idx+2)
+
+    def get_idx(self, blk):
+        try:
+            return self._objs.index(blk)
+        except ValueError:
+            raise err.FoSpyStructureError(f"Block {blk} is not in {self}")
 
     def append(self, obj:SingleBlock):
         """
@@ -1853,6 +2181,14 @@ class ListBlock(Block):
         """Returns a deep copy by serializing and then reconstructing."""
         cls = type(self)
         return cls(self.serialize(override_list_type=False))
+    
+    def remove_block(self, blk):
+        if blk in self._objs:
+            self._objs.remove(blk)
+
+        if blk in self._staged_templates.values():
+            self._staged_templates.pop(blk)
+            
     
     def remove_any(self, **kwargs):
         """

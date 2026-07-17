@@ -1,4 +1,5 @@
 from .syntax import SYNTAX
+import textwrap
 
 from .._debug import Debug
 _debug = Debug()
@@ -25,6 +26,28 @@ def format_key_value(key: str, val: str, ind=0, looped=False):
         key = f"{prefix}{key}"
 
     return _indent(f"{key}{delim}{'' if ' ' in delim else ' '}{val}",ind)
+
+def format_key_str(key:str, val:str, ind=0, looped=False, char_width=80):
+    first_pass = format_key_value(key, val, ind, looped)
+    if "\n" not in first_pass and len(first_pass) <= char_width:
+        return first_pass
+    
+    val += empty_nested(False)[1:]
+
+    indent_len = len(_indent("", ind))
+    lines = [f"{empty_nested(False)[0]};;;"]
+    for i, ln in enumerate(val.split("\n")):
+        if ln.strip() != "":
+            if i > 0:
+                lines.append("")
+            lines.extend([
+                _indent(_ln, ind) for _ln in
+                textwrap.wrap(ln, width=char_width-indent_len, break_long_words=False)
+                ])
+
+
+    return format_key_value(key,"\n".join(lines), ind, looped)
+
 
 def format_embed_start(key:str, ind=0, looped=False):
     prefix = SYNTAX["key_value"].get("prefix")

@@ -37,6 +37,7 @@ nav:
     - testing:
       - testing/__init__: full/_dev/testing/__init__.md
       - _utils: full/_dev/testing/_utils.md
+      - app: full/_dev/testing/app.md
       - cli: full/_dev/testing/cli.md
       - load_test: full/_dev/testing/load_test.md
       - map_guides: full/_dev/testing/map_guides.md
@@ -81,6 +82,7 @@ nav:
     - write: full/parsing/write.md
     - validators:
       - validators/__init__: full/parsing/validators/__init__.md
+      - boolstr: full/parsing/validators/boolstr.md
       - filenames: full/parsing/validators/filenames.md
       - numbers: full/parsing/validators/numbers.md
       - rename: full/parsing/validators/rename.md
@@ -106,9 +108,33 @@ nav:
         - peaks: full/plotting/diffraction/ui/peaks.md
   - ui:
     - ui/__init__: full/ui/__init__.md
-    - _utils: full/ui/_utils.md
-    - abstract: full/ui/abstract.md
-    - matplotlib: full/ui/matplotlib.md
-    - pyqtgraph: full/ui/pyqtgraph.md
+    - available: full/ui/available.md
+    - app:
+      - app/__init__: full/ui/app/__init__.md
+      - __main__: full/ui/app/__main__.md
+      - _utils: full/ui/app/_utils.md
+      - console: full/ui/app/console.md
+      - menus: full/ui/app/menus.md
+      - window: full/ui/app/window.md
+      - block_widgets:
+        - block_widgets/__init__: full/ui/app/block_widgets/__init__.md
+        - _base: full/ui/app/block_widgets/_base.md
+        - _utils: full/ui/app/block_widgets/_utils.md
+        - attachment: full/ui/app/block_widgets/attachment.md
+        - rename: full/ui/app/block_widgets/rename.md
+        - template: full/ui/app/block_widgets/template.md
+      - editors:
+        - editors/__init__: full/ui/app/editors/__init__.md
+        - _base: full/ui/app/editors/_base.md
+        - attachment: full/ui/app/editors/attachment.md
+        - comments: full/ui/app/editors/comments.md
+        - rename: full/ui/app/editors/rename.md
+        - text_editor: full/ui/app/editors/text_editor.md
+    - sliders:
+      - sliders/__init__: full/ui/sliders/__init__.md
+      - _utils: full/ui/sliders/_utils.md
+      - abstract: full/ui/sliders/abstract.md
+      - native: full/ui/sliders/native.md
+      - pyqtgraph: full/ui/sliders/pyqtgraph.md
 - For Devs: internal/index.md
 - Install with PyPI: https://pypi.org/project/FoSpy

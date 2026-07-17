@@ -1,1 +1,11 @@
 `SingleBlock` is the parent class of all block classes representing a single entity. `SingleBlock`s are rarely constructed without subclassing, but may be used if you want to take advantage of the rigorous attribute assignment and methods that all other block classes inherit, without defining any expected properties.
+
+
+
+#### Required properties
+
+<prop_table>
+
+#### Optional properties
+
+<prop_table>

@@ -12,6 +12,8 @@ class Chemical(SingleBlock):
     Additional requirements are enforced for various subclasses, including
     `Material` and `Product`.
     """
+    _id_key = "formula"
+
     @_calc_routine
     def add_MW(self):
         """
