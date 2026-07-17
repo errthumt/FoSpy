@@ -212,7 +212,7 @@ class SingleBlockWidget(QWidget):
         aliases = self.blk._aliases
 
         alias_opts = {
-            v.__name__: k for k, v in aliases.items()
+            aliases[k].__name__: k for k in sorted(aliases.keys())
         }
 
         prop_name = None

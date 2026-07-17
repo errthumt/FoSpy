@@ -68,6 +68,11 @@ class Block:
     """
     The base class for any set of data found in a FOS file.
     """
+    @classmethod
+    def inspect(self):
+        # for breaking to debugger from gui
+        raise Exception("put a break point here")
+
     def find_fileblock(self):
         """
         Finds the parent file object.
@@ -877,6 +882,7 @@ class SingleBlock(Block):
         except Exception:
             partial = template.fill(staged=True,incomplete=True, **kwargs)
             self._staged_templates[prop_name] = partial
+            partial._staged_parent = self
             return prop_name, partial
         
         try:
@@ -884,6 +890,8 @@ class SingleBlock(Block):
         except Exception as e:
             raise Exception(f"Template was filled but could not be assigned {prop_name}") from e
         
+        filled = getattr(self, prop_name)
+
         if isinstance(self, TemplateBlock):
             self.fill()
         

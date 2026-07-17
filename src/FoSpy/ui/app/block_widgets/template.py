@@ -15,7 +15,7 @@ class TemplateBlockWidget(SingleBlockWidget):
             def pending(f=func, a=args, k=kwargs):
                 return f(self, *a, **k)
             
-            result = self.win.hard_refresh(blk=self.blk, func=pending, to_blk=False)
+            result = self.win.hard_refresh(func=pending, to_blk=False)
             if result is None:
                 return
             
@@ -33,7 +33,7 @@ class TemplateBlockWidget(SingleBlockWidget):
         fill_props = {prop:new_text}
 
         new_blk = self.push_filled(**fill_props)
-        new_widget = self.win.find_widget(blk=new_blk)
+        new_widget = self.win.find_widget(blk=new_blk,go_to=True)
         new_widget.next_line(prop)
 
     @hard_refresh

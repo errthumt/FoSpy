@@ -752,9 +752,11 @@ class MainWindow(QMainWindow):
 
         out = func()
 
-        root = self.root_block
-        self._set_flag(root, "refresh", True)
-        self.go_to_block(root)
+        # root = self.root_block
+        # self._set_flag(root, "refresh", True)
+        # self.go_to_block(root)
+
+        self.refresh_tree()
 
         if to_blk:
             new_blk_widget = self.find_widget(blk=blk, go_to=True)
