@@ -299,9 +299,9 @@ class SingleBlock(Block):
                 field = TemplateField
 
             if req_val:
-                required_keys[SubTemplate][key] = False
-
-            optional_keys[SubTemplate][key] = field
+                required_keys[SubTemplate][key] = field
+            else:
+                optional_keys[SubTemplate][key] = field
 
         finished_reqs = required_keys[SubTemplate]
         finished_opts = optional_keys[SubTemplate]

@@ -144,11 +144,6 @@ class TemplateBlock(SingleBlock):
     
     def __setattr__(self, name, value):
         from .. import _errors as err
-        validator = self.get_validators().get(name, None)
-
-        if isinstance(validator, type) and issubclass(validator, TemplateBlock):
-            self.stage_template(name, value)
-            return
 
         try:
             super().__setattr__(name, value)
