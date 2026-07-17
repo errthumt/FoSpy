@@ -32,7 +32,9 @@ class TemplateBlockWidget(SingleBlockWidget):
 
         fill_props = {prop:new_text}
 
-        self.push_filled(**fill_props)
+        new_blk = self.push_filled(**fill_props)
+        new_widget = self.win.find_widget(blk=new_blk)
+        new_widget.next_line(prop)
 
     @hard_refresh
     def push_filled(self, **props):
@@ -56,7 +58,7 @@ class TemplateBlockWidget(SingleBlockWidget):
             return filled
         
         parent_widget = self.win.find_widget(filled._parent_block)
-        parent_widget.push_filled()
+        return parent_widget.push_filled()
         
 
 

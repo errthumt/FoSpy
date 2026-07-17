@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, QUrl
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QActionGroup, QDesktopServices
+from PySide6.QtGui import QStandardItemModel, QStandardItem, QDesktopServices
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -192,6 +192,31 @@ class MainWindow(QMainWindow):
 
     def _build_tree(self):
         """Builds the tree view with the given file block."""
+
+        legend = QLabel("""
+            <h4>Legend:</h4>
+                <table border="0" cellpadding="2">
+                    <tr>
+                        <td align="center">🏷️</td>
+                        <td>Unfilled Template</td>
+                    </tr>
+                    <tr>
+                        <td align="center">+</td>
+                        <td>Contains Unfilled Templates</td>
+                    </tr>
+                    <tr>
+                        <td align="center">*</td>
+                        <td>Unsaved Changes</td>
+                    </tr>
+                </table>
+        """)
+        
+        tree_widget = QWidget()
+        tree_layout = QVBoxLayout(tree_widget)
+        tree_layout.addWidget(legend)
+
+        self.splitter.addWidget(tree_widget)
+
         # tree sidebar
         self.tree_view = QTreeView()
         self.tree_view.setHeaderHidden(True)
@@ -201,7 +226,7 @@ class MainWindow(QMainWindow):
 
         # wiring
         self.tree_view.clicked.connect(self._on_tree_selection)
-        self.splitter.addWidget(self.tree_view)
+        tree_layout.addWidget(self.tree_view)
 
         self.tree_view.resizeColumnToContents(0)
 
@@ -271,12 +296,18 @@ class MainWindow(QMainWindow):
                 # only Block instances get added to tree. Primitives are edited
                 # in the SingleBlock's own widget
                 if isinstance(obj, Block):
-                    child_item = QStandardItem(prop)
+                    label = prop
+                    if obj.has_staged():
+                        label += "+"
+                    child_item = QStandardItem(label)
                     self._add_tree_item(child_item, parent_item, obj)
 
             for prop, obj in blk._staged_templates.items():
                 label = "🏷️" + prop
 
+                if obj.has_staged():
+                    label += "+"
+                    
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, obj)
 
@@ -355,108 +386,18 @@ class MainWindow(QMainWindow):
                         self.content_stack.removeWidget(widget)
                         widget.deleteLater()
 
-    def _create_file_menu(self, menu_bar):
-        file_menu = menu_bar.addMenu("&File")
-
-        # Open
-        open_action = QAction("&Open...", self)
-        open_action.setShortcut("Ctrl+O")
-        open_action.triggered.connect(self._open_dlg)
-        file_menu.addAction(open_action)
-
-        # Open A Copy
-        open_copy_action = QAction("&Open A Copy...", self)
-        open_copy_action.setShortcut("Ctrl+Shift+O")
-        open_copy_action.triggered.connect(lambda *_: self._open_dlg(copy=True))
-        file_menu.addAction(open_copy_action)
-
-        # Edit A Copy
-        edit_copy_action = QAction("&Edit A Copy", self)
-        edit_copy_action.setShortcut("Ctrl+Shift+E")
-        edit_copy_action.triggered.connect(self._edit_copy)
-        file_menu.addAction(edit_copy_action)
-
-        # Save
-        save_action = QAction("&Save", self)
-        save_action.setShortcut("Ctrl+S")
-        save_action.triggered.connect(self.save)
-        file_menu.addAction(save_action)
-
-        # Save As
-        save_as_action = QAction("&Save As...", self)
-        save_as_action.setShortcut("Ctrl+Shift+S")
-        save_as_action.triggered.connect(self.save_dlg)
-        file_menu.addAction(save_as_action)
-
-        # Exit
-        exit_action = QAction("&Exit", self)
-        exit_action.triggered.connect(self.close)
-        file_menu.addAction(exit_action)
-
-    def _create_view_menu(self, menu_bar):
-        view_menu = menu_bar.addMenu("&View")
-        self.menus["view"] = view_menu
-
-        theme_submenu = view_menu.addMenu("Theme")
-
-        theme_group = QActionGroup(self)
-        theme_group.setExclusive(True)
-
-        for theme_id in AVAILABLE_THEMES:
-            label = theme_id.capitalize()
-
-            action = QAction(label, self)
-            action.setCheckable(True)
-
-            if theme_id == DEFAULT_THEME:
-                self._choose_theme(theme_id)
-                action.setChecked(True)
-            
-            action.triggered.connect(lambda *args, t=theme_id: self._choose_theme(t))
-
-            theme_submenu.addAction(action)
-            theme_group.addAction(action)
     
-    def _create_help_menu(self, menu_bar):
-        from ._utils import register_app
-        help_menu = menu_bar.addMenu("&Help")
-        self.menus["help"] = help_menu
-
-        doc_menu = help_menu.addMenu("&Documentation")
-
-        doc_site_action = QAction("&Docs Site", self)
-        doc_site_action.triggered.connect(self._open_docs_site)
-        doc_menu.addAction(doc_site_action)
-
-        doc_gh_action = QAction("&Github", self)
-        doc_gh_action.triggered.connect(lambda *_:
-            QDesktopServices.openUrl(QUrl("https://github.com/errthumt/FoSpy")))
-        doc_menu.addAction(doc_gh_action)
-        
-        register_action = QAction("&Add to Apps", self)
-        register_action.triggered.connect(register_app)
-        help_menu.addAction(register_action)
-
-    def _create_tools_menu(self, menu_bar):
-        tools_menu = menu_bar.addMenu("&Tools")
-
-        console_action = QAction("Python Console", self)
-        console_action.triggered.connect(self._open_console)
-        tools_menu.addAction(console_action)
 
     def _create_menu_bar(self):
         """Dropdown menu ribbon."""
-        self.menus = {}
+        from .menus import MENU_BUILDERS
 
+        self.menus = {}
         menu_bar = self.menuBar()
 
-        self._create_file_menu(menu_bar)
+        for name, builder in MENU_BUILDERS.items():
+            self.menus[name] = builder(self, menu_bar)
 
-        self._create_view_menu(menu_bar)
-
-        self._create_help_menu(menu_bar)
-
-        self._create_tools_menu(menu_bar)
 
     def _open_console(self):
         if hasattr(self, "__python_console__") and self.__python_console__ is not None:
@@ -592,6 +533,14 @@ class MainWindow(QMainWindow):
 
         return results[clicked]
 
+    def _get_text_inputs(self, title, prompt, *labels, **dropdowns):
+        from ._utils import TextInputDialog
+
+        dlg = TextInputDialog(title, prompt, *labels, **dropdowns, parent=self)
+        if dlg.exec():
+            return dlg.get_results()
+        
+        return None
 
     def _unsaved_dlg(self, pending_action="exiting"):
         if not self._get_flag(self.root_block, "edited"):
@@ -764,11 +713,33 @@ class MainWindow(QMainWindow):
 
         return find_widget
     
-    def hard_refresh(self, blk, func=lambda: None, to_editor=None, to_blk=True):
-        max_tabs = 1 if to_editor is not None else 0
-        current_blk_widget = self.find_widget(blk=blk, go_to=False)
+    def hard_refresh(self, blk=None, func=lambda: None, to_editor=None, to_blk=True):
 
-        if (current_blk_widget.active.count() > max_tabs and
+        def _editor_active(widget):
+            return (hasattr(widget, "active") and
+                    widget.active is not None and
+                    widget.active.count() > 0)
+
+        # allow only one open tab if refresh is returning to an editor
+        # (usually on editors "apply" action)
+        max_tabs = 0 if to_editor is None else 1
+
+        if blk is None and to_blk:
+            # try to find current block instead
+            current_blk_widget = self.content_stack.currentWidget()
+            blk = current_blk_widget.blk
+
+            if (_editor_active(current_blk_widget) and
+                to_editor is None):
+                # return to current editor, but changes will still be lost,
+                # so don't change max_tabs
+                to_editor = current_blk_widget.active.currentWidget()
+        else:
+            current_blk_widget = self.find_widget(blk=blk, go_to=False)
+
+        # Only prompt if there are editor tabs open
+        if (_editor_active(current_blk_widget) and
+            current_blk_widget.active.count() > max_tabs and
             not self._custom_popup(
                 "Warning!",
                 "This change requires a refresh of the entire window for this block. "
@@ -793,8 +764,10 @@ class MainWindow(QMainWindow):
                 from .editors.comments import CommentEditorWidget
                 if isinstance(to_editor, BasePropEditor):
                     new_blk_widget.activate_prop_editor(to_editor.prop_name)
-                elif isinstance(self, CommentEditorWidget):
+                elif isinstance(to_editor, CommentEditorWidget):
                     new_blk_widget.activate_comment_editor(to_editor.editor.prop_name)
+                elif isinstance(to_editor, str):
+                    pass
                 else:
                     new_blk_widget.activate_misc_editor(to_editor.editor_id)
 

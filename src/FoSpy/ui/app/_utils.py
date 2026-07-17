@@ -13,6 +13,16 @@ from typing import Any, Union, get_args, get_origin
 from urllib.error import URLError, HTTPError
 from ...blocks.files import EXT_READ_MAP
 
+from PySide6.QtWidgets import(
+    QDialog,
+    QLabel,
+    QHBoxLayout,
+    QVBoxLayout,
+    QDialogButtonBox,
+    QLineEdit,
+    QComboBox,
+)
+
 asset_dir = pathlib.Path(__file__).parent / "assets"
 
 ASSETS = {
@@ -23,6 +33,81 @@ SKIP_ARG = object()
 
 SUPPORTED_EXTENSIONS = ["." + ext for ext in EXT_READ_MAP]
 
+class TextInputDialog(QDialog):
+    def __init__(self, title, prompt, *labels, parent=None, **dropdowns:list[str]|dict[str, Any]):
+        super().__init__(parent)
+        self.setWindowTitle(title)
+        self.dropdowns = dropdowns
+
+        layout = QVBoxLayout(self)
+
+        prompt_label = QLabel(prompt)
+        prompt_label.setWordWrap(True)
+        layout.addWidget(prompt_label)
+
+        self.edits = {}
+
+        for lb in labels:
+            if lb in self.edits:
+                raise ValueError("Text/Dropdown labels must be unique")
+
+            row_layout = QHBoxLayout()
+
+            label = QLabel(lb)
+            row_layout.addWidget(label)
+
+            edit = QLineEdit()
+            row_layout.addWidget(edit)
+            self.edits[lb] = edit
+
+            layout.addLayout(row_layout)
+
+        for lb, options in dropdowns.items():
+            if lb in labels:
+                raise ValueError("Text/Dropdown labels must be unique")
+            
+            row_layout = QHBoxLayout()
+
+            label = QLabel(lb)
+            row_layout.addWidget(label)
+
+            if isinstance(options, dict):
+                drop_options = list(options.keys())
+            else:
+                drop_options = options
+
+            drop = QComboBox()
+            drop.addItems(drop_options)
+            row_layout.addWidget(drop)
+            self.edits[lb] = drop
+
+            layout.addLayout(row_layout)
+
+        button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        button_box.accepted.connect(self.accept)
+        button_box.rejected.connect(self.reject)
+        layout.addWidget(button_box)
+
+    def _get_result(self, label):
+        edit = self.edits[label]
+
+        if isinstance(edit, QLineEdit):
+            return edit.text()
+
+        options = self.dropdowns[label]
+
+        if isinstance(options, list):
+            return edit.currentText()
+
+        return options[edit.currentText()]
+
+    def get_results(self):
+        results = {k: self._get_result(k) for k in self.edits}
+
+        if len(results) == 1:
+            return results[next(iter(results))]
+
+        return results
 
 def _resolve_param_type(annotation: Any) -> Any:
     """Extracts a callable scalar type from Unions or standard type hints."""
@@ -408,7 +493,7 @@ def _main_registration():
 
     return False
 
-def _clear_layout(layout):
+def _clear_layout(layout, delete=False):
     """Recursively delete all widgets, child layouts, and spacers inside a layout"""
     if layout is None:
         return
@@ -426,12 +511,10 @@ def _clear_layout(layout):
         # Case 2: nested layout
         child_layout = item.layout()
         if child_layout is not None:
-            _clear_layout(child_layout)
-            child_layout.setParent(None)
+            _clear_layout(child_layout, delete=True)
             continue
 
-        # Case 3: spacer item
-        # No parent, but removing it is enough
-        # (Qt will clean it up automatically)
-        # Nothing else needed
+    if delete:
+        layout.setParent(None)
+        layout.deleteLater()
 

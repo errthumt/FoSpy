@@ -96,8 +96,8 @@ required_keys = {
 
     b.Product: {
         "name": str,
-        "expected" : bool,
-        "obtained" : bool,
+        "expected" : validators.boolstr.str_to_bool,
+        "obtained" : validators.boolstr.str_to_bool,
         "observations": str,
     },
 
@@ -164,6 +164,12 @@ optional_keys = {
     b.Attachment: {
         "path": validators.filenames.PathPosix,
         "embedded": validators.filenames.embedded
+    },
+    b.PathFile: {
+        "embedded": False
+    },
+    b.EmbeddedFile: {
+        "path": False
     },
     b.SingleBlock: {
         "rename": b.Rename

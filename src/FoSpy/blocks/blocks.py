@@ -299,9 +299,9 @@ class SingleBlock(Block):
                 field = TemplateField
 
             if req_val:
-                required_keys[SubTemplate][key] = field
-            else:
-                optional_keys[SubTemplate][key] = field
+                required_keys[SubTemplate][key] = False
+
+            optional_keys[SubTemplate][key] = field
 
         finished_reqs = required_keys[SubTemplate]
         finished_opts = optional_keys[SubTemplate]
@@ -1845,6 +1845,28 @@ class ListBlock(Block):
         
         return temp_id, filled
 
+    def block_to_idx(self, blk, idx):
+        objs = self._objs.copy()
+        current_idx = None
+        if blk in objs:
+            current_idx = objs.index(blk)
+            if idx <= current_idx:
+                current_idx += 1
+        objs.insert(idx, blk)
+        objs.pop(current_idx)
+        self._objs = objs
+
+    def order_up(self, blk):
+        idx = self.get_idx(blk)
+        if idx == 0:
+            return
+        self.block_to_idx(blk, idx-1)
+
+    def order_down(self, blk):
+        idx = self.get_idx(blk)
+        if idx == len(self)-1:
+            return
+        self.block_to_idx(blk, idx+2)
 
     def get_idx(self, blk):
         try:

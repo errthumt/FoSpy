@@ -88,12 +88,26 @@ class SingleBlockWidget(QWidget):
         parent = window.splitter
         self.editor_map = {"props": {}, "comments": {}, "misc": {}}
         self.footnote_iter = _footnote_iter()
+        self.missing_prop_rows = {}
+        self.line_edits = {}
 
         super().__init__(parent)
 
 
         self.header_row, base_layout = _add_header(self, label, "Properties")
         self.base_layout = base_layout
+
+        custom_btn_layout = QHBoxLayout()
+        base_layout.addLayout(custom_btn_layout)
+
+        custom_txt_btn = QPushButton("Add Custom Property")
+        custom_txt_btn.clicked.connect(lambda *_: self.add_custom_prop())
+        custom_btn_layout.addWidget(custom_txt_btn)
+
+        custom_blk_btn = QPushButton("Add Custom Block")
+        custom_blk_btn.clicked.connect(lambda *_: self.add_custom_block())
+        custom_btn_layout.addWidget(custom_blk_btn)
+        custom_btn_layout.addStretch()
 
         if hasattr(blk, "rename"):
             rename_btn = QPushButton("Rename Properties")
@@ -161,6 +175,83 @@ class SingleBlockWidget(QWidget):
 
             self.win.hard_refresh(self.blk, func=pending)
         return decorated
+    
+
+    def add_custom_prop(self):
+        validators = self.blk.get_validators()
+
+        prop_name = None
+        while prop_name is None:
+            prop_name = self.win._get_text_inputs("New Custom Property",
+                "Enter the name of the property to add:\n"
+                "(Letters and underscores only)",
+                "Property Name"
+            ).replace(" ", "_").replace("-","_")
+
+            if prop_name is None:
+                return
+            
+            if prop_name in validators or hasattr(self.blk, prop_name):
+                self.win._custom_popup(
+                    "Can't add custom property",
+                    "That property is already expected in this block.",
+                    cancel=False
+                )
+                prop_name = None
+
+        def pending_refresh(s, p=prop_name):
+            setattr(s.blk, p, "")
+
+        self.hard_refresh(pending_refresh)(self)
+
+    def add_custom_block(self):
+        from ....blocks import SingleBlock, ListBlock
+
+        validators = self.blk.get_validators()
+
+        aliases = self.blk._aliases
+
+        alias_opts = {
+            v.__name__: k for k, v in aliases.items()
+        }
+
+        prop_name = None
+        while prop_name is None:
+            results = self.win._get_text_inputs("New Custom Property",
+                "Enter the name of the property to add:\n"
+                "(Letters and underscores only)",
+                "Property Name",
+                **{"Block Type": alias_opts}
+            )
+            
+            if results is None:
+                return
+            
+            prop_name = results["Property Name"].replace(" ", "_").replace("-","_")
+            alias = results["Block Type"]
+            
+            if prop_name in validators or hasattr(self.blk, prop_name):
+                self.win._custom_popup(
+                    "Can't add custom property",
+                    "That property is already expected in this block.",
+                    cancel=False
+                )
+                prop_name = None
+
+        target_type = aliases[alias]
+
+        prop_alias = prop_name + "$" + alias
+        if issubclass(target_type, SingleBlock):
+            def pending_refresh(s, p=prop_alias):
+                s.blk.stage_template(p)
+        elif issubclass(target_type, ListBlock):
+            def pending_refresh(s, p=prop_alias):
+                setattr(s.blk, p, [])
+                getattr(s.blk, p).stage_template("First Item")
+        else:
+            raise NotImplementedError("An alias was mapped to a non-Block class")
+
+        self.hard_refresh(pending_refresh)(self)
 
     def _add_footnote(self, txt):
         i = next(self.footnote_iter)
@@ -236,6 +327,7 @@ class SingleBlockWidget(QWidget):
         ):
             return
         
+        
         pending()
 
         if hasattr(self, "prop_layout"):
@@ -253,12 +345,28 @@ class SingleBlockWidget(QWidget):
         renamed_from = {v:k for k,v in rename_dict.items()}
 
         req_props = self.blk.get_req_validators().keys()
+        opt_props = self.blk.get_validators()
         staged_templates = self.blk._staged_templates
+
+        self.failed_found = False
         for prop, val in prop_dict.items():
+            opt_props.pop(prop, None)
             self._add_prop_row(prop, val, renamed_from, req_props)
 
         for prop, val in staged_templates.items():
+            opt_props.pop(prop, None)
             self._add_prop_row(prop, val, renamed_from, req_props, staged=True)
+
+        opt_props.pop('ext', None)
+        opt_props.pop('rename', None)
+
+        if len(opt_props) > 0:
+            self.opt_header = QLabel("<h4>Optional Properties Available:</h4>")
+            self.opt_header.setAlignment(Qt.AlignmentFlag.AlignRight)
+            prop_layout.addWidget(self.opt_header)
+
+        for opt in opt_props:
+            self._add_missing_prop(opt)
             # if prop == "rename":
             #     continue
 
@@ -327,6 +435,7 @@ class SingleBlockWidget(QWidget):
             # self.prop_layout.addLayout(row_layout)
 
     def _add_prop_row(self, prop, val, renamed_from, req_props, staged=False):
+
         prop_txt = prop
         if prop in renamed_from:
             fn_i = self._add_footnote(f"Renamed from {renamed_from[prop]}")
@@ -338,6 +447,7 @@ class SingleBlockWidget(QWidget):
         
         if isinstance(val, blk_cont.SimpleWrapper):
             val = val()
+
 
         row_layout = QHBoxLayout()
 
@@ -355,20 +465,13 @@ class SingleBlockWidget(QWidget):
         else:
             txt = val.serialize() if hasattr(val, "serialize") else str(val)
             line_edit = QLineEdit(txt)
+            self.line_edits[prop] = line_edit
             line_edit.setCursorPosition(0)
 
             editor, enabler = _get_editor(val, self, prop)
             line_edit.setEnabled(enabler(txt))
             def on_apply(p=prop, e=line_edit, en=enabler):
                 self._on_primitive_edit(p, e, en)
-
-            def direct_edit(apply=on_apply):
-                try:
-                    apply()
-                except Exception:
-                    # TODO: pass to user
-                    pass
-
 
             line_edit.editingFinished.connect(on_apply)
             row_layout.addWidget(line_edit, stretch=1)
@@ -392,20 +495,137 @@ class SingleBlockWidget(QWidget):
             comment_editor.refresh_editor()
             comment_btn.clicked.connect(lambda *_, p=prop: self.activate_comment_editor(p))
             row_layout.addWidget(comment_btn, stretch=0)
+
+        if hasattr(self.blk, "_val_exceptions") and prop in self.blk._val_exceptions:
+            if not self.failed_found:
+                self.failed_found = True
+                hint = QLabel("Properties marked with ❌ are invalid and need to be fixed "
+                              "before this block can be completed. Click the ❌ button to "
+                              "see more details.")
+                hint.setWordWrap(True)
+
+                self.prop_layout.insertWidget(0, hint, stretch=0)
+
+            failed_btn = QPushButton("❌")
+            exc = self.blk._val_exceptions[prop]
+
+            # let handler display on raise
+            def on_raise(*_,e=exc, p=prop):
+                raise Exception(f"A validator failed for the property '{p}'. "
+                                "View more details below.") from e
+
+            failed_btn.clicked.connect(on_raise)
+            row_layout.addWidget(failed_btn, stretch=0)
+
         
         row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
         self.prop_layout.addLayout(row_layout)
 
+    def to_line_edit(self, prop_name):
+        if prop_name not in self.line_edits:
+            return
+        line_edit = self.line_edits[prop_name]
+        line_edit.setFocus()
+        line_edit.selectAll()
+
+    def next_line(self, prop_name):
+        line_props = list(self.line_edits.keys())
+        if prop_name not in line_props:
+            return
+        line_idx = line_props.index(prop_name)
+        line_idx = (line_idx + 1) % len(line_props)
+        next_prop = line_props[line_idx]
+        self.to_line_edit(next_prop)
+        
+    def _add_missing_prop(self, prop_name):
+        #TODO: handle default values for non-primitives
+        val=""
+
+        row_layout = QHBoxLayout()
+        row_layout.addStretch()
+        label = QLabel(f"<b>{prop_name}</b>")
+        row_layout.addWidget(label, stretch=0)
+        self.prop_labels[prop_name] = label
+        
+        add_btn = QPushButton("+")
+        add_btn.clicked.connect(lambda *_, p=prop_name, v=val: self.add_prop(p, val=v))
+        row_layout.addWidget(add_btn, stretch=0)
+
+        row_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+        self.prop_layout.addLayout(row_layout)
+
+        self.missing_prop_rows[prop_name] = row_layout
+
+    def add_prop(self, prop_name, val=""):
+        from ....blocks import SingleBlock, ListBlock
+        from .._utils import _clear_layout
+
+
+        validators = self.blk.get_validators()
+        pending_refresh = None
+        validator = validators.get(prop_name, None)
+        if isinstance(validator, type) and issubclass(validator, ListBlock):
+            def pending_refresh(self,p=prop_name):
+                setattr(self.blk, p, [])
+                self.win._flag_edited(self.blk)
+
+        elif isinstance(validator, type) and issubclass(validator, SingleBlock):
+            def pending_refresh(self, p=prop_name):
+                self.stage_template(p)
+
+        if pending_refresh is not None:
+            return self.hard_refresh(pending_refresh)(self)
+
+        row_layout = self.missing_prop_rows.pop(prop_name, None)
+        if row_layout is not None:
+            _clear_layout(row_layout, delete=True)
+
+        if (len(self.missing_prop_rows) == 0 and
+            hasattr(self, "opt_header") and
+            self.opt_header is not None):
+            self.opt_header.setParent(None)
+            self.opt_header.deleteLater()
+            self.opt_header = None
+
+        self._add_prop_row(prop_name, val, {}, {})
+        self.activate_prop_editor(prop_name)
+
+    def stage_template(self,prop_name):
+        win = self.win
+        blk = self.blk
+        item = win.tree_items.get(blk, None)
+        blk.stage_template(prop_name)
+        if item is not None and "+" not in item.text():
+            item.setText(f"{item.text()}+")
+
     def delete_prop(self, prop):
-        def pending_delete(p=prop):
-            delattr(self.blk, p)
-            self.win._flag_edited(self.blk)
-        self._refresh_properties(pending_delete)
+        if not self.win._custom_popup(
+            "Delete Property",
+            f"Are you sure you want to delete the property '{prop}'?\n"
+            "Deleted properties cannot be recovered after any changes are saved.",
+            ("Yes", True),
+            cancel=True):
+            return
+
+        pending_delete = None
+        if hasattr(self.blk, prop):
+            def pending_delete(s,p=prop):
+                delattr(s.blk, p)
+                self.win._flag_edited(s.blk)
+        elif prop in self.blk._staged_templates:
+            def pending_delete(s,p=prop):
+                s.blk._staged_templates.pop(p)
+                s.win._flag_edited(s.blk)
+        if pending_delete is not None:
+            return self.hard_refresh(pending_delete)(self)
+
+        # shouldn't get here
+        raise Exception(f"Could not find property to delete: {prop}. Try Window > Refresh.")
 
     def _on_primitive_edit(self, prop:str, line_edit:QLineEdit, enabler:callable):
         new_text = line_edit.text()
 
-        old_val = getattr(self.blk, prop)
+        old_val = getattr(self.blk, prop, "")
         old_txt = old_val.serialize() if hasattr(old_val, "serialize") else str(old_val)
 
         if new_text == old_txt:
@@ -427,10 +647,10 @@ class SingleBlockWidget(QWidget):
             line_edit.setText(old_txt)
             error = e
 
-        line_edit.setCursorPosition(0)
-
         if error is not None:
             raise error
+        
+        self.next_line(prop)
 
 class ListBlockWidget(QWidget):
     def __init__(self, label:str, blk:ListBlock, window:MainWindow):
@@ -438,10 +658,26 @@ class ListBlockWidget(QWidget):
         self.blk = blk
         parent = window.splitter
         self.blk_widgets = {}
+        self.current_tab = 0
 
         super().__init__(parent)
 
         self.header_row, base_layout = _add_header(self, label, "Tab View")
+
+        lr_row = QHBoxLayout()
+        lr_row.addWidget(QLabel("<h4>Move Active Tab:</h4>"))
+
+        l_btn = QPushButton("<<")
+        l_btn.clicked.connect(self.move_tab_left)
+        lr_row.addWidget(l_btn)
+
+        r_btn = QPushButton(">>")
+        r_btn.clicked.connect(self.move_tab_right)
+        lr_row.addWidget(r_btn)
+
+        lr_row.addStretch()
+        base_layout.addLayout(lr_row)
+
 
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(10, 10, 10, 10)
@@ -479,9 +715,22 @@ class ListBlockWidget(QWidget):
             self.blk_widgets[template] = tab_content
             tabs.addTab(tab_content, label)
 
+        plus_tab = QWidget()
+        self.tabs.addTab(plus_tab, "+")
+
         tabs.currentChanged.connect(self.on_tab_changed)
 
         main_layout.addWidget(tabs)
+
+    @staticmethod
+    def hard_refresh(func):
+        def decorated(self, *args, **kwargs):
+            current_blk = self._find_block(self.tabs.currentIndex())
+            def pending(f=func, a=args, k=kwargs):
+                f(self, *a, **k)
+
+            return self.win.hard_refresh(current_blk, func=pending, to_blk=True)
+        return decorated
 
     def _find_block(self, idx):
         if idx < len(self.blk._objs):
@@ -494,10 +743,39 @@ class ListBlockWidget(QWidget):
             return self.blk._objs.index(blk)
         else:
             return len(self.blk._objs) + list(self.blk._staged_templates.values()).index(blk)
+    
+    @hard_refresh
+    def add_block(self):
+        new_name = self.win._get_text_inputs(
+            "Add New Block",
+            "Enter a nickname for the new block:",
+            "Nickname"
+        )
+
+        self.blk.stage_template(new_name)
+
+    def move_tab_left(self):
+        blk = self._find_block(self.current_tab)
+        if blk not in self.blk._objs or self.blk._objs.index(blk) == 0:
+            return
+        
+        self.hard_refresh(lambda s, b=blk: s.blk.order_up(b))(self)
+
+    def move_tab_right(self):
+        blk = self._find_block(self.current_tab)
+        if blk not in self.blk._objs or self.blk._objs.index(blk) == len(self.blk._objs) - 1:
+            return
+        
+        self.hard_refresh(lambda s, b=blk: s.blk.order_down(b))(self)
 
     def on_tab_changed(self, index:int):
+        if index == self.tabs.count() - 1:
+            self.on_tab_changed(self.current_tab)
+            return self.add_block()
+
         blk = self._find_block(index)
         self.win.go_to_block(blk)
+        self.current_tab = index
 
     def go_to_tab(self, blk):
         idx = self._find_idx(blk)
