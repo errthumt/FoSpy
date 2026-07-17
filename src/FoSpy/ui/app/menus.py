@@ -93,7 +93,8 @@ def window_menu(win, menu_bar):
 
 @add_to_menus("help")
 def help_menu(win, menu_bar):
-    from ._utils import register_app
+    from ._utils import register_app, add_to_start
+    import platform
     help_menu = menu_bar.addMenu("&Help")
     win.menus["help"] = help_menu
 
@@ -108,9 +109,15 @@ def help_menu(win, menu_bar):
         QDesktopServices.openUrl(QUrl("https://github.com/errthumt/FoSpy")))
     doc_menu.addAction(doc_gh_action)
     
-    register_action = QAction("&Add to Apps", win)
+    register_action = QAction("&Add as *.fos Editor", win)
     register_action.triggered.connect(register_app)
     help_menu.addAction(register_action)
+
+    current_os = platform.system()
+    if current_os == "Windows":
+        start_action = QAction("&Add to Start Menu", win)
+        start_action.triggered.connect(add_to_start)
+        help_menu.addAction(start_action)
 
     return help_menu
 

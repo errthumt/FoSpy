@@ -333,6 +333,17 @@ def register_app() -> bool:
     cfg.APP.save()
     return True
 
+def add_to_start():
+    success = _main_shortcut_registration()
+    if not success:
+        return False
+
+    from FoSpy.config import values as cfg
+    cfg.APP.start_menu = True
+    cfg.APP.save()
+
+    return success
+
 def register_dlg():
     from ...config import values as cfg
     from .window import MainWindow, DLG_ESCAPE
@@ -348,7 +359,7 @@ def register_dlg():
             "(Or similar)\n\n"
 
             "You can always register later with\n"
-            "Help > Add to Apps",
+            "Help > Add as *.fos Editor",
 
             ("Yes", True),
             ("No", False),
@@ -492,6 +503,59 @@ def _main_registration():
             return False
 
     return False
+
+def _main_shortcut_registration():
+    """
+    Create a Start Menu shortcut for the FoSpy GUI using the same metadata
+    used for extension registration.
+    """
+    current_os = platform.system()
+    if current_os != "Windows":
+        print("Start Menu shortcut creation is only supported on Windows.")
+        return False
+
+    try:
+        fospy_version = _get_version()
+        app_id = f"FoSpy_GUI_{fospy_version.replace(' ', '_')}"
+        description = "FoS-style viewer using the FoSpy framework"
+
+        # Same executable path logic as extension registration
+        executable_path = _get_executable()
+
+        # --- Build Start Menu target folder ---
+        start_menu_dir = os.path.join(
+            os.environ["APPDATA"],
+            r"Microsoft\Windows\Start Menu\Programs\FoSpy"
+        )
+        os.makedirs(start_menu_dir, exist_ok=True)
+
+        shortcut_path = os.path.join(start_menu_dir, f"{app_id}.lnk")
+
+        # --- Build PowerShell COM call ---
+        ps_cmd = [
+            "powershell", "-NoProfile", "-Command",
+            (
+                "$s=(New-Object -ComObject WScript.Shell).CreateShortcut('{}');"
+                "$s.TargetPath='{}';"
+                "$s.WorkingDirectory='{}';"
+                "$s.Description='{}';"
+                "$s.Save();"
+            ).format(
+                shortcut_path.replace("\\", "\\\\"),
+                executable_path.replace("\\", "\\\\"),
+                os.path.dirname(executable_path).replace("\\", "\\\\"),
+                description.replace("'", "''")
+            )
+        ]
+
+        subprocess.check_call(ps_cmd)
+        print(f"Start Menu shortcut created at: {shortcut_path}")
+        return True
+
+    except Exception as e:
+        print(f"Start Menu shortcut creation failed: {e}")
+        return False
+
 
 def _clear_layout(layout, delete=False):
     """Recursively delete all widgets, child layouts, and spacers inside a layout"""

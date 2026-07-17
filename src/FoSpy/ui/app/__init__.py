@@ -16,4 +16,3 @@ def _import_gate():
     global available, import_e
     if not available:
         raise import_e
-
