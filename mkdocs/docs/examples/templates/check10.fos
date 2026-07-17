@@ -13,6 +13,19 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
+[Generic$materials]
+template_name: A generic metal powder, purity 0.995
+-name: <!TEMPLATE-FIELD>
+type: reagent
+-formula: <!TEMPLATE-FIELD>
+supplier: Sigma Aldrich
+-cas: <!TEMPLATE-FIELD>
+form: powder
+env: Ar (g)
+-amount: <!TEMPLATE-FIELD>
+amount_unit: mol ratio
+purity: 0.995
+
 [Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
@@ -31,28 +44,6 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic$materials]
-template_name: A generic metal powder, purity 0.995
--name: <!TEMPLATE-FIELD>
-type: reagent
--formula: <!TEMPLATE-FIELD>
-supplier: Sigma Aldrich
--cas: <!TEMPLATE-FIELD>
-form: powder
-env: Ar (g)
--amount: <!TEMPLATE-FIELD>
-amount_unit: mol ratio
-purity: 0.995
-
-[Treatments]
-template_name: Empty Anneal Template
-type: anneal
--repeats: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
-start_temp: 25
-start_temp_unit: degree_Celsius
--observations: <!TEMPLATE-FIELD>
-
 [[Anneal_sections]]
 template_name: Any ramp
 type: ramp
@@ -65,6 +56,15 @@ template_name: Any dwell
 type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
+
+[Treatments]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
 
 [[Cifs]]
 file_name: Ba2Zn5Sb6_ICSD.cif
