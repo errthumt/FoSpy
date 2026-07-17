@@ -20,7 +20,7 @@ class TemplateField:
     
 class FailedTemplateField(SimpleWrapper,TemplateField):
     def serialize(self, *args, **kwargs):
-        return str(self._value)
+        return self._value
 
 class TemplateSet(FileBlock):
     """
