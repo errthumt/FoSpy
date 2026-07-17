@@ -37,6 +37,7 @@ nav:
     - testing:
       - testing/__init__: full/_dev/testing/__init__.md
       - _utils: full/_dev/testing/_utils.md
+      - app: full/_dev/testing/app.md
       - cli: full/_dev/testing/cli.md
       - load_test: full/_dev/testing/load_test.md
       - map_guides: full/_dev/testing/map_guides.md
@@ -81,6 +82,7 @@ nav:
     - write: full/parsing/write.md
     - validators:
       - validators/__init__: full/parsing/validators/__init__.md
+      - boolstr: full/parsing/validators/boolstr.md
       - filenames: full/parsing/validators/filenames.md
       - numbers: full/parsing/validators/numbers.md
       - rename: full/parsing/validators/rename.md
@@ -112,6 +114,7 @@ nav:
       - __main__: full/ui/app/__main__.md
       - _utils: full/ui/app/_utils.md
       - console: full/ui/app/console.md
+      - menus: full/ui/app/menus.md
       - window: full/ui/app/window.md
       - block_widgets:
         - block_widgets/__init__: full/ui/app/block_widgets/__init__.md

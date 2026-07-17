@@ -311,9 +311,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
 ---
 ### `Equipment`
@@ -505,9 +504,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
+|------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 ---
 ### `Product`
@@ -519,12 +517,12 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | name | A unique name for the product. | <ul><li>Any text entry</li></ul> |
-| expected | Whether or not the product was expected from the synthesis. | <ul><li>True or False</li></ul> |
-| obtained | Whether or not the product obtained from the synthesis. | <ul><li>True or False</li></ul> |
+| expected | Whether or not the product was expected from the synthesis. | <ul><li>A boolen value (True or False)</li><li>Acceptable 'True' values (not case sensitive):<ul><li>true</li><li>t</li><li>yes</li><li>y</li><li>1</li><li>on</li></ul></li><li>Acceptable 'False' values (not case sensitive):<ul><li>false</li><li>f</li><li>no</li><li>n</li><li>0</li><li>off</li></ul></li></ul> |
+| obtained | Whether or not the product obtained from the synthesis. | <ul><li>A boolen value (True or False)</li><li>Acceptable 'True' values (not case sensitive):<ul><li>true</li><li>t</li><li>yes</li><li>y</li><li>1</li><li>on</li></ul></li><li>Acceptable 'False' values (not case sensitive):<ul><li>false</li><li>f</li><li>no</li><li>n</li><li>0</li><li>off</li></ul></li></ul> |
 | observations | General observations about the product. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
