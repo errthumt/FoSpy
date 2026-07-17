@@ -663,7 +663,7 @@ def get_prop_md(enforce=False):
         if isinstance(cls, type) and issubclass(cls, blk_module.SingleBlock):
             try:
                 txt += get_summary(cls, mode="md-tb", enforce=enforce)
-                txt += "---\n"
+                txt += "\n\n---\n"
             except Exception as e:
                 exceptions.append(e)
 

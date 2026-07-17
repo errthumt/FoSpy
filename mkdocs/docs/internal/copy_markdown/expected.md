@@ -83,6 +83,8 @@ ______________________________________________________________________
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `Annealing`
 
@@ -112,6 +114,8 @@ ______________________________________________________________________
 | start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
 | end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
 | gas_flow | Consistent gas flow conditions applied during annealing. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`GasFlow` objects.](#gasflow)</li></ul> |
+
+
 
 ---
 ### `Attachment`
@@ -161,6 +165,8 @@ Attachment Subclasses are hybridized between an **attachment type** and a **file
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
+
+
 ---
 ### `CIFFile`
 
@@ -184,7 +190,9 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 #### Additional Requirements
-`CIFFile`s also have additional requirements to follow according to their attachment type designation. Refer to [the `Attachment` class](#attachment).---
+`CIFFile`s also have additional requirements to follow according to their attachment type designation. Refer to [the `Attachment` class](#attachment).
+
+---
 ### `CSVdata`
 
 [Class Documentation][blockdocs-CSVdata]
@@ -202,6 +210,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `ChemChange`
@@ -225,6 +235,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `Chemical`
 
@@ -244,6 +256,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `CompChange`
@@ -271,6 +285,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
 | end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
 
+
+
 ---
 ### `Dwell`
 
@@ -293,6 +309,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `EmbeddedFile`
 
@@ -314,6 +332,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `Equipment`
 
@@ -332,6 +352,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `Experimenter`
@@ -355,6 +377,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
 
+
+
 ---
 ### `FileBlock`
 
@@ -374,6 +398,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `FlexTemplate`
@@ -396,7 +422,9 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+---
 ### `GasFlow`
 
 [Class Documentation][blockdocs-GasFlow]
@@ -414,6 +442,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `LabConditions`
@@ -433,6 +463,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `Material`
@@ -464,6 +496,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | purity | 0 < purity <= 1 | <ul><li>Decimal value within range:<ul><li>0 < val <= 1</li></ul></li></ul> |
 | treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
+
+
 ---
 ### `MetaData`
 
@@ -486,6 +520,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `PathFile`
 
@@ -506,6 +542,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `Product`
@@ -537,6 +575,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | characterizations | Description of characterization methods used to determine/quantitate the product. | <ul><li>Any text entry</li></ul> |
 | structure_comments | General description of the structure of the product. | <ul><li>Any text entry</li></ul> |
 
+
+
 ---
 ### `Quench`
 
@@ -557,6 +597,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `Ramp`
@@ -599,6 +641,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 - `RampNoRate`: overrides [`get_rate()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_rate)
 - `RampNoTemp`: overrides [`get_temp()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_temp)
 - `RampNoTime`: overrides [`get_time()`](../blocks/treatments.md#FoSpy.blocks.treatments.RampNoRate.get_time)
+
+
 ---
 ### `RampNoRate`
 
@@ -624,6 +668,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | temp_unit | Units for ramp temperature. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature.</li></ul> |
 | time_unit | Units for ramp time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
 | rate_unit | Units for ramp rate. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) with more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature *over time*.</li></ul> |
+
+
 
 ---
 ### `RampNoTemp`
@@ -651,6 +697,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | time_unit | Units for ramp time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
 | rate_unit | Units for ramp rate. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) with more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature *over time*.</li></ul> |
 
+
+
 ---
 ### `RampNoTime`
 
@@ -677,6 +725,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 | time_unit | Units for ramp time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
 | rate_unit | Units for ramp rate. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) with more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature *over time*.</li></ul> |
 
+
+
 ---
 ### `Reaction`
 
@@ -699,6 +749,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `Rename`
 
@@ -719,7 +771,9 @@ Note that renaming a property will keep all relevant validation rules attached t
 
 | Property | Description | Validation Rules |
 |---------------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li><li>The following reserved properties cannot be renamed:<ul><li>`rename`</li><li>`metadata`</li></ul></li></ul> |---
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li><li>The following reserved properties cannot be renamed:<ul><li>`rename`</li><li>`metadata`</li></ul></li></ul> |
+
+---
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]
@@ -739,7 +793,9 @@ Note that renaming a property will keep all relevant validation rules attached t
 
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+---
 ### `Synthesis`
 
 [Class Documentation][blockdocs-Synthesis]
@@ -768,6 +824,8 @@ Note that renaming a property will keep all relevant validation rules attached t
 | laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
 | equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
 
+
+
 ---
 ### `SynthesisMeta`
 
@@ -792,6 +850,8 @@ Note that renaming a property will keep all relevant validation rules attached t
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
+
+
 ---
 ### `TemplateBlock`
 
@@ -814,7 +874,9 @@ Instances of the base `TemplateBlock` class are usually constructed by calling t
 
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+---
 ### `TemplateSet`
 
 [Class Documentation][blockdocs-TemplateSet]
@@ -844,7 +906,9 @@ Developers are currently working on ways to flexibly allow any template list in 
 | treatments | A list of incomplete templates describing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Treatment` *templates.*](#treatment)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | annealings | A list of incomplete templates describing annealing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Annealing` *templates.*](#annealing)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | anneal_sections | A list of incomplete templates describing annealing sections. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`AnnealSection` *templates.*](#annealsection)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
-| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |---
+| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
+
+---
 ### `TraceData`
 
 [Class Documentation][blockdocs-TraceData]
@@ -862,6 +926,8 @@ Developers are currently working on ways to flexibly allow any template list in 
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+
+
 
 ---
 ### `Treatment`
@@ -888,6 +954,8 @@ Developers are currently working on ways to flexibly allow any template list in 
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
 | start_time | What time the treatment was started | <ul><li>Any text entry</li></ul> |
 | end_time | What time the treatment was finished | <ul><li>Any text entry</li></ul> |
+
+
 
 ---
 
