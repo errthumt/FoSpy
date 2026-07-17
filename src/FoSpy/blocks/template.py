@@ -4,6 +4,8 @@ from .blocks import ListBlock, SingleBlock
 from ._blockUtils import _get_docs_link
 from .._docs.properties import _validator_rules
 
+from ..blocks._containers import SimpleWrapper
+
 from .._debug import Debug
 _debug = Debug()
 
@@ -15,6 +17,10 @@ class TemplateField:
     def serialize(cls,keepListType=None, clean=False):
         from ..parsing.format_fos import format_field
         return format_field("template")
+    
+class FailedTemplateField(SimpleWrapper,TemplateField):
+    def serialize(self, *args, **kwargs):
+        return str(self._value)
 
 class TemplateSet(FileBlock):
     """
@@ -134,6 +140,16 @@ class TemplateBlock(SingleBlock):
             out[key] = serial[key]
 
         return out
+    
+    def __setattr__(self, name, value):
+        from .. import _errors as err
+        try:
+            super().__setattr__(name, value)
+        except err.FailedValidatorError:
+            from ..parsing.validation import optional_keys
+            validators = optional_keys.setdefault(type(self), {})
+            validators[name] = FailedTemplateField
+            super().__setattr__(name, value)
     
     @classmethod
     def dispatch_subclass(cls, *args, **kwargs):

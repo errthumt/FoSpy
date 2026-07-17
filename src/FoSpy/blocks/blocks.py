@@ -1101,9 +1101,9 @@ class SingleBlock(Block):
 
 
         def try_serial(obj):
-            serialize = getattr(obj, "serialize", None)
             if isinstance(obj, SimpleWrapper):
                 obj = obj()
+            serialize = getattr(obj, "serialize", None)
             if callable(serialize) and not shallow:
                 return obj.serialize(clean=clean)
             if isinstance(obj, list):

@@ -87,9 +87,9 @@ class MissingPropertyError(PropertyError):
         self.summary = f"Missing '{key}'"
 
 class FailedValidatorError(PropertyError):
-    def __init__(self, key, blockObj, cause:Exception, *args, blockDict={}, **kwargs):
+    def __init__(self, key, blockObj, cause:Exception, *args, blockDict={}, hint="Failed to validate property: ", **kwargs):
         
-        super().__init__(key, blockObj, *args, blockDict=blockDict, hint="Failed to validate property: ", **kwargs)
+        super().__init__(key, blockObj, *args, blockDict=blockDict, hint=hint, **kwargs)
 
         self.cause = cause
 
