@@ -72,6 +72,6 @@ path: projects/my_cifs
 
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
-Embedded CIF Test Goes Here
+['Embedded CIF Test Goes Here\n']
 #################### END FOS EMBED }}}
 ```

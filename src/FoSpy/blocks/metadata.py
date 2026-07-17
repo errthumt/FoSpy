@@ -53,6 +53,7 @@ class Experimenter(SingleBlock):
     """
     Represents an an experimenter who worked on a synthesis.
     """
+    _id_key = "name"
     pass
 
 
@@ -69,3 +70,7 @@ class Equipment(SingleBlock):
     pass
 
 EquipmentList = ListBlock.Simple(Equipment)
+
+
+class Rename(SingleBlock):
+    pass

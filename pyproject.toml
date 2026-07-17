@@ -42,16 +42,17 @@ cif2xrd = [
     "FoSpy[diffraction]",
     "cif2xrd >= 1.0.3"
 ]
-Qt = [
+qt-plotting = [
     "pyqtgraph",
 ]
 PySide = [
-    "FoSpy[Qt]",
+    "FoSpy[qt-plotting]",
     "PySide6-essentials"
 ]
+app = ["FoSpy[PySide]", "pyqtdarktheme"]
 all = ["FoSpy[cif2xrd, PySide]"]
 DEV-TEST = ["questionary"]
-DEV = ["questionary", "FoSpy[all]"]
+DEV = ["FoSpy[DEV_TEST, all]"]
 
 [project.urls]
 Homepage = "https://github.com/errthumt/FoSpy"
@@ -76,7 +77,8 @@ version-file = "_version.py"
 [tool.hatch.build]
 include = [
     "src/FoSpy/config/*.json",
-    "src/FoSpy/_docs/**/*"
+    "src/FoSpy/_docs/**/*",
+    "src/FoSpy/app/assets/**/*"
 ]
 exclude = [
     "src/FoSpy/config/user.json"
@@ -90,5 +92,7 @@ ignore_names = [
 
 [project.scripts]
 fos-dev-test = "FoSpy._dev.testing.cli:main"
+fospy-app = "FoSpy.ui.app.__main__:main_cli"
+fospy-app-setup = "FoSpy.ui.app.__main__:setup"
 
 

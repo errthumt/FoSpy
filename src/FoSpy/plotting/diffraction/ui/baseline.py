@@ -1,7 +1,7 @@
 from pybaselines import Baseline
 from ....config import values as full_cfg
 from ._specs import get_baseline_sliders
-from ....ui.abstract import AssembleSlider
+from ....ui.sliders.abstract import AssembleSlider
 from ..phase_match._utils import convert_baseline_cfg
 
 X_LABEL = full_cfg.diffraction.x_label

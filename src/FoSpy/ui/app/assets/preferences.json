@@ -1,0 +1,20 @@
+{
+    "track_attachments": {
+        "new_copy": "Enable this option to copy relative attachments to the new relative location when the location of a FoS file is changed.",
+        "overwrite": "Enable this option to overwrite existing files when copying attachments during changes to a FoS file's location.",
+        "ignore": "Enable this option to ignore errors when tracking attachments during a change to a FoS file's location. (e.g., attachment not found, already exists in new location)"
+    },
+    "maps": {
+        "default": "Name of the default map when using JSON mapping features."
+    },
+    "diffraction": {
+        "default_engine": "Default diffraction engine to use when generating patterns from CIF files.",
+        "x_label": "X-Axis label when generating plots of theoretical diffraction patterns.",
+        "engine_parameters": {
+            "cif2xrd": "PLACEHOLDER cif2xrd calculation parameters"
+        }
+    },
+    "slider_digits": {
+        "default": "Default number of digits to display in interactive slider plots (may be overridden by individual parameters)."
+    }
+}

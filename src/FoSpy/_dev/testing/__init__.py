@@ -1,7 +1,8 @@
 from . import (
     load_test,
     map_test,
-    map_guides
+    map_guides,
+    app
 )
 
 TESTS = {
@@ -23,6 +24,9 @@ TESTS = {
         map_guides, {
             "Open Results?": ("open_result", True)
         } 
+    ),
+    "Open GUI": (
+        app, {}
     )
 }
 

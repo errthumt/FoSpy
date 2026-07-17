@@ -1,5 +1,5 @@
 from ....config import values as full_cfg
-from ....ui._utils import _round_spec
+from ....ui.sliders._utils import _round_spec
 import numpy as np
 
 

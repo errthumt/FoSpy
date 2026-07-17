@@ -2,6 +2,7 @@ import json
 import types
 import sys
 import os
+import copy
 from . import _load as load
 from ._enforce import enforce_config
 
@@ -11,13 +12,7 @@ DEFAULT_FILE = load.get_default_file()
 USER_FILE = load.get_user_file()
 
 def save_all(filepath=None, prompt=True):
-    current = module.values.to_dict()
-    defaults = _load_defaults()
-
-    if filepath is None:
-        filepath = USER_FILE
-    else:
-        filepath = os.path.abspath(filepath)
+    global values
 
     if (filepath == USER_FILE and 
         prompt and 
@@ -26,31 +21,30 @@ def save_all(filepath=None, prompt=True):
               "overrides with save(filepath) before saving.\n"
               "Proceed with saving? (y/n): ").lower() != "y"):
         return
-
-    with open(filepath, 'w') as f:
-        json.dump(_extract_user(defaults, current), f, indent=4)
-
-    if filepath == USER_FILE:
-        _restart_session()
+    
+    values.save(filepath)
 
 def load_user(filepath=None):
+    global values
     if filepath is None:
         filepath = USER_FILE
     else:
         filepath = os.path.abspath(filepath)
     with open(filepath, 'r') as f:
-        new_config = _deep_merge(module.values.to_dict(), json.load(f))
+        new_config = _deep_merge(values.to_dict(), json.load(f))
     
-    module.values = NestedConfig(new_config, "values")
+    values = NestedConfig(new_config, "values")
 
 def revert(prompt=True):
+    global values
     if prompt and input("WARNING: Reverting the config to the last saved user config will "
                         "lose any unsaved changes.\n"
                         "Proceed with reversion? (y/n): ").lower() != "y":
         return
-    module.values = NestedConfig(SESSION_START, "values")
+    values.revert()
 
 def reset(prompt=True):
+    global values
     if prompt and input("WARNING: Resetting the config to default values will delete the "
                         "existing user config and restart the session. Consider exporting "
                         "the current user overrides with save(filepath) before resetting. "
@@ -60,12 +54,15 @@ def reset(prompt=True):
     with open(USER_FILE, 'w') as f:
         f.write("{}")
     
-    _restart_session()
+    values._load_from(_load_defaults())
 
 def _restart_session():
-    global SESSION_START
-    SESSION_START = _load()
-    module.values = NestedConfig(SESSION_START, "values")
+    global values
+
+    if values is None:
+        values = NestedConfig(_load(), "values")
+    else:
+        values.revert()
 
 
 def _load_defaults():
@@ -86,7 +83,6 @@ def _extract_user(defaults, current):
     Return only the parts of `current` that differ from `defaults`,
     in a structure that can be merged back over `defaults` to recover `current`.
     """
-
 
     if isinstance(defaults, dict) and isinstance(current, dict):
         out = {}
@@ -118,18 +114,75 @@ def _load():
 
 
 class NestedConfig(types.ModuleType):
-    def __init__(self, config_dict, name, *args, parent_name =__name__,**kwargs):
+    def __init__(self, config_dict, name, *args, parent_name =__name__, path=None, **kwargs):
         super().__init__(f"{parent_name}.{name}", *args, **kwargs)
         self.__package__ = parent_name
         self.__file__ = __file__
         self.__all__ = []
         self._enforced = {}
-        for key, val in config_dict.items():
+
+        self._path = path.copy() if path is not None else []
+        self._path.append(name)
+        
+        self._load_from(config_dict)
+
+    def _load_from(self, config_dict):
+        cached = copy.deepcopy(config_dict)
+        self._cached = cached
+        for key, val in cached.items():
             setattr(self, key, val)
 
+    def save(self, filepath=None):
+        if filepath is None:
+            filepath = USER_FILE
+        else:
+            filepath = os.path.abspath(filepath)
+
+        if os.path.exists(filepath):
+            try:
+                with open(filepath, 'r') as f:
+                    user_data = json.load(f) or {}
+            except json.JSONDecodeError as e:
+                raise ValueError(f"Invalid user config file: {filepath}\n"
+                    "The specified file exists but is not readable as an "
+                    "existing config file.") from e
+            
+        local_data = self.to_dict()
+
+        root_key = "values"
+        user_data = {root_key: user_data}
+        current_level = user_data
+
+        for key in self._path[:-1]:
+            current_level = current_level.setdefault(key, {})
+
+        current_level[self._path[-1]] = local_data
+        user_data = user_data[root_key]
+
+        defaults = _load_defaults()
+
+        self._cached = copy.deepcopy(user_data)
+
+        extracted = _extract_user(defaults, user_data) or {}
+
+        with open(filepath, 'w') as f:
+            json.dump(extracted, f, indent=4)      
+
+    def revert(self):
+        for key in list(self.__all__):
+            if hasattr(self, key):
+                delattr(self, key)
+        self.__all__.clear()
+        self._load_from(self._cached)
+
     def __getattr__(self, key):
+        # only falls back to this method if the attribute doesn't already exist
+
+        if key.startswith("_"):
+            raise AttributeError() from ValueError(f"Config attribute '{key}' does not exist, and you cannot create a nested config module with a name that starts with an underscore.")
+
         # Auto-create nested modules
-        mod = NestedConfig({}, key, parent_name=self.__name__)
+        mod = NestedConfig({}, key, parent_name=self.__name__, path=self._path)
         setattr(self, key, mod)
         return mod
     
@@ -147,7 +200,7 @@ class NestedConfig(types.ModuleType):
                 self.__all__.append(key)
 
             if isinstance(val, dict):
-                val = NestedConfig(val, key, parent_name=self.__name__)
+                val = NestedConfig(val, key, parent_name=self.__name__, path=self._path)
 
         super().__setattr__(key, val)
 
@@ -184,7 +237,6 @@ class NestedConfig(types.ModuleType):
     def __call__(self):
         return self.to_dict()
     
-SESSION_START = None
 values = None
     
 _restart_session()

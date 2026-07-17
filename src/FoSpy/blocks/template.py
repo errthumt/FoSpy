@@ -4,15 +4,23 @@ from .blocks import ListBlock, SingleBlock
 from ._blockUtils import _get_docs_link
 from .._docs.properties import _validator_rules
 
+from ..blocks._containers import SimpleWrapper
+
 from .._debug import Debug
 _debug = Debug()
 
 class TemplateField:
     def __init__(self, *args, **kwargs):
         pass
-    def serialize(self,keepListType=None, clean=False):
+
+    @classmethod
+    def serialize(cls,keepListType=None, clean=False):
         from ..parsing.format_fos import format_field
         return format_field("template")
+    
+class FailedTemplateField(SimpleWrapper,TemplateField):
+    def serialize(self, *args, **kwargs):
+        return self._value
 
 class TemplateSet(FileBlock):
     """
@@ -63,14 +71,37 @@ class TemplateList(ListBlock):
         return serial
          
 class TemplateBlock(SingleBlock):
+    _id_key = "template_name"
     def __init__(self, blockDict, _dispatched=False):
         self._full_class = None
+        self._val_exceptions = {}
         super().__init__(blockDict, _dispatched=_dispatched)
 
-    def fill(self,incomplete=False,**kwargs):
+    def find_staged_id(self):
+        if not (hasattr(self, "_staged_parent")
+                and self._staged_parent.has_staged()):
+            return False
+        
+        staged_dict = self._staged_parent._staged_templates
+        staged_reversed = {v:k for k,v in staged_dict.items()}
+
+        return staged_reversed.get(self, False)
+
+    def fill(self,incomplete=False,staged=False,in_place=False,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
-
+        
+        if not incomplete and self.has_staged():
+            raise ValueError("A template cannot be filled to a full block with staged templates.")
+        
+        if in_place:
+            for kw, arg in kwargs.items():
+                setattr(self,kw,arg)
+            return self
+        
+        staged_id = self.find_staged_id()
+        if staged_id and not staged:
+            return self._staged_parent.fill_staged_template(staged_id, **kwargs)
 
         serial = self.serialize(keepListType=True)
         serial.pop("template_name",None)
@@ -78,7 +109,12 @@ class TemplateBlock(SingleBlock):
             serial[kw] = arg
 
         if incomplete:
-            return self._full_class.reflex(serialize=False,**serial)
+            new_template = self._full_class.reflex(serialize=False,**serial)
+            new_template.template_name = self.template_name
+            for temp_id, template in self._staged_templates.items():
+                new_template.stage_template(temp_id, template)
+            return new_template
+
         return self._full_class.dispatch_subclass(serial)
     
     def serialize(self,keepListType=False, shallow=False, clean=False):
@@ -105,6 +141,26 @@ class TemplateBlock(SingleBlock):
             out[key] = serial[key]
 
         return out
+    
+    def __setattr__(self, name, value):
+        from .. import _errors as err
+
+        try:
+            super().__setattr__(name, value)
+        except err.FailedValidatorError as e:
+            from ..parsing.validation import optional_keys
+            self._val_exceptions[name] = e
+
+            validators = optional_keys.setdefault(type(self), {})
+            validators[name] = FailedTemplateField
+            super().__setattr__(name, value)
+    
+    @classmethod
+    def dispatch_subclass(cls, *args, **kwargs):
+        try:
+            return super().dispatch_subclass(*args, **kwargs)
+        except Exception:
+            return cls(*args, **kwargs, _dispatched=True)
 
 class FlexTemplate(TemplateBlock):
     _baseReq = None #injected by TemplateList.Simple.Flex

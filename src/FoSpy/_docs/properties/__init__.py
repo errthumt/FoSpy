@@ -163,7 +163,7 @@ val_rules = {
     str: "Any text entry",
     float: "Any decimal number (positive or negative)",
     int: "Any integer (positive or negative)",
-    bool: "True or False",
+    bool: "Python `True` or `False`",
     list: "A list of values",
     tuple: "A tuple of values",
     dict: "A dictionary of values",
@@ -184,6 +184,7 @@ Possible Validators:
 """
 
 def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
+    from ...blocks.metadata import Rename
     _load_all_validators()
     def empty_gen():
         while True:
@@ -195,40 +196,55 @@ def build_tables(cls, descs, enforce=False, mode="cli", urls={}, crossrefs={}):
     out = {"req": next(empty), "opt": next(empty)}
 
     required = cls.build_req_validators()
-
     optional = cls.build_validators()
 
     exceptions = []
-    for (key, val_set) in (("req",required), ("opt",optional)):
-        for prop, val in val_set.items():
-            try:
-                if prop == "ext":
-                    continue
-                if key == "req":
-                    optional.pop(prop, None)
+
+    def add_to_table(key, prop, val, desc=None, fallback_rules:list=None):
+        try:
+            if prop == "ext":
+                return
+            if key == "req":
+                optional.pop(prop, None)
+
+            if desc is None:
                 desc = find_desc(cls, prop, descs)
 
-                if mode == "cli":
-                    desc, urls, crossrefs = _strip_links(desc, urls=urls, crossrefs=crossrefs)
+            if mode == "cli":
+                desc, urls, crossrefs = _strip_links(desc, urls=urls, crossrefs=crossrefs)
 
-                val_rule = val_rules.get(val, None)
-                if val_rule is None:
-                    if enforce:
-                        val_nm = val.__name__ if hasattr(val, "__name__") else str(val)
-                        raise ValueError(f"No validation rules found for {val_nm} ({prop} validator).")
-                    val_rule = "No Rules Found"
+            val_rule = val_rules.get(val, None)
+            if val_rule is None:
+                if enforce and fallback_rules is None:
+                    val_nm = val.__name__ if hasattr(val, "__name__") else str(val)
+                    raise ValueError(f"No validation rules found for {val_nm} ({prop} validator).")
+                elif fallback_rules is not None:
+                    val_rule = _val_rules_to_txt(fallback_rules, mode=mode)
                 else:
-                    val_rule = _val_rules_to_txt(val_rule, mode=mode)
-                    if mode == "cli":
-                        val_rule, urls, crossrefs = _strip_links(val_rule, urls=urls, crossrefs=crossrefs)
-                    # val_rule = val_rule.replace("\n- ", "</li><li>").replace("- ", "<li>") + "</li>"
-                    # val_rule = val_rule.replace("\n", "<br>")
-                    # val_rule = f"<ul>{val_rule}</ul>"
-                out[key]["Property"].append(prop)
-                out[key]["Description"].append(desc)
-                out[key]["Validation Rules"].append(val_rule)
-            except Exception as e:
-                exceptions.append(e)
+                    val_rule = "No Rules Found"
+            else:
+                val_rule = _val_rules_to_txt(val_rule, mode=mode)
+
+            if mode == "cli":
+                val_rule, urls, crossrefs = _strip_links(val_rule, urls=urls, crossrefs=crossrefs)
+                # val_rule = val_rule.replace("\n- ", "</li><li>").replace("- ", "<li>") + "</li>"
+                # val_rule = val_rule.replace("\n", "<br>")
+                # val_rule = f"<ul>{val_rule}</ul>"
+            out[key]["Property"].append(prop)
+            out[key]["Description"].append(desc)
+            out[key]["Validation Rules"].append(val_rule)
+        except Exception as e:
+            exceptions.append(e)
+
+
+    universal_val = cls.universal_val
+    add_to_table("req", "**Universal**", universal_val,
+                 desc="Rules that apply to all properties of this block.",
+                 fallback_rules=["No Universal Rules"])
+
+    for (key, val_set) in (("req",required), ("opt",optional)):
+        for prop, val in val_set.items():
+            add_to_table(key, prop, val)
 
     if exceptions:
         raise ExceptionGroup(f"Error(s) occured while building table for {cls.__name__}.", exceptions)
@@ -730,10 +746,17 @@ def write_prop_md(md_path, delay=False, enforce=False):
         raise exc
 
 
-def _validator_rules(*args):
+def _validator_rules(*args, inherit_from=None):
     from ..._docs.properties import val_rules
-    def decorator(func, a=args):
-        val_rules[func] = a
+    def decorator(func, a=args, ih=inherit_from):
+        inherited = val_rules.get(ih, [])
+        a = list(a)
+        a.extend(inherited)
+        a = tuple(a)
+
+        if len(a) > 0:
+            val_rules[func] = a
+
         return func
     return decorator
 

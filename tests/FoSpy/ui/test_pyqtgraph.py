@@ -1,6 +1,6 @@
 import pytest
 
-import FoSpy.ui.pyqtgraph
+import FoSpy.ui.sliders.pyqtgraph
 
 
 @pytest.mark.parametrize(

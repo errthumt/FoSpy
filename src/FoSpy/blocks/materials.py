@@ -10,6 +10,7 @@ class Material(Chemical):
     """
     Represents a material used in a synthesis
     """
+    _id_key = "name"
     pass
 
 class MaterialList(ListBlock):

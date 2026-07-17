@@ -12,7 +12,7 @@ class Treatment(SingleBlock):
     # Maps type strings to subclass constructors.
     # Populated after each subclass definition.
     dispatch = {}
-
+    _id_key = "type"
     @classmethod
     def dispatch_subclass(cls, blockDict):
         from .blocks import _unwrap_block
@@ -77,7 +77,7 @@ Treatment.dispatch["anneal"] = Annealing
 
 class AnnealSection(SingleBlock):
     dispatch = {}
-
+    _id_key = "type"
     @classmethod
     def dispatch_subclass(cls, blockDict):
         from .blocks import _unwrap_block

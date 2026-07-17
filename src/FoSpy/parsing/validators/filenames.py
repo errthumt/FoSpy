@@ -25,15 +25,19 @@ basePath = type(Path(""))
     ]
 )
 class PathPosix(basePath):
+    def __init__(self, path, **kwargs):
+        path = path.replace("%20", " ")
+        super().__init__(path)
     def serialize(self, *args, **kwargs):
-        return self.as_posix()
+        return self.as_posix().replace(" ", "%20")
+    
 
 @_validator_rules(
     "Mutually exclusive with `path` property.",
-    "Attachment content as a list of raw `utf-8` line strings."
+    "Attachment content as a raw `utf-8` string."
 )
-def embedded_lines(lines):
-    return list(lines)
+def embedded(txt, **kwargs):
+    return str(txt)
 
 
 @_validator_rules(
@@ -43,7 +47,7 @@ def embedded_lines(lines):
     "Commas are allowed, but may lead to unexpected behavior for some OS or software.",
     "Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file."
 )
-def file_name(name: str, sourceDict={}) -> str:
+def file_name(name: str, sourceDict={}, **kwargs) -> str:
     """
     Validate a filename (no path, no separators, allowed characters only).
     """

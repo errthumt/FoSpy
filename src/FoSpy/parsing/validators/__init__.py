@@ -4,6 +4,7 @@ from . import filenames
 from . import numbers
 from . import rename
 from . import units
+from . import boolstr
 
 __all__ = [
     "filenames",
@@ -11,6 +12,7 @@ __all__ = [
     "numbers",
     "rename",
     "units",
+    "boolstr"
 ]
 
     

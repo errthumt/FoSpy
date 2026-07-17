@@ -66,14 +66,15 @@ ______________________________________________________________________
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Annealing`
@@ -86,6 +87,7 @@ ______________________________________________________________________
 
 | Property | Description | Validation Rules |
 |-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
 | program | The temperatures and gradients used during annealing. | <ul><li>A [specialized `ListBlock`][blockdocs-AnnealProgram] of [`AnnealSection` objects.](#annealsection)</li></ul> |
@@ -95,8 +97,8 @@ ______________________________________________________________________
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|-----------------------|----------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -114,16 +116,17 @@ ______________________________________________________________________
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a list of raw `utf-8` line strings.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 #### Additional Requirements
 
@@ -134,20 +137,24 @@ In addition to the required properties above, all `Attachment` objects must be c
 
 The first matching property found will be used and the remainder will be discarded. The presence of one of these properties is used to identify what form of file attachment it is. Refer to the [attachments guide](../guides/attachments.md) for more information
 
+##### Attachment Types
+
+- [`EmbeddedFile` (Embedded text content)](#embeddedfile)
+- [`PathFile` (Referenced by relative path)](#pathfile)
+
+
+##### File Types
+
+- [`CIFFile` (Crystallographic Information File)](#ciffile)
+
+
 #### Attachment Method Subclasses
 
 Attachment Subclasses are hybridized between an **attachment type** and a **file type**. Attachment types share most method names to be called by *file type* methods, but method source code differs on the basis of how the file was attached. For example, `_get_filepath()` for [`PathFile`](../blocks/attachments.md#FoSpy.blocks.attachments.PathFile._get_filepath) simply returns an absolute filepath resolved from the value in its `path` attribute, whereas [`EmbeddedFile`](../blocks/attachments.md#FoSpy.blocks.attachments.EmbeddedFile._get_filepath) objects create a temporary file to print their embedded lines to before returning its filepath.
 
 Attachment types are dispatched based on which optional properties they have. File types are dispatched based on extension. Unrecognized extensions simply don't add any special file type methods.
 
-##### Attachment Types
-
-- `EmbeddedFile`
-- `PathFile`
-
-##### File Types
-
-- `CIFFile`---
+---
 ### `CIFFile`
 
 [Class Documentation][blockdocs-CIFFile]
@@ -157,29 +164,37 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a list of raw `utf-8` line strings.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+|------------|----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+| path | The directory containing the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+| embedded | Attachment content embedded as a raw `utf-8` string. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
----
+#### Additional Requirements
+`CIFFile`s also have additional requirements to follow according to their attachment type designation. Refer to [the `Attachment` class](#attachment).---
 ### `CSVdata`
 
 [Class Documentation][blockdocs-CSVdata]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `ChemChange`
@@ -191,7 +206,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | amount | The sign-sensitive amount of this chemical that was added (positive) or removed (negative). | <ul><li>Positive decimal value</li></ul> |
 | amount_unit | Units for comp change amount. | <ul><li>Any text entry</li></ul> |
@@ -199,8 +215,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Chemical`
@@ -212,14 +228,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `CompChange`
@@ -231,15 +248,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | changes | A list of chemicals that were added or removed from the active reaction in this step. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`ChemChange` objects.](#chemchange)</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|-----------------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -256,7 +274,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | time | How long the temperature was kept constant in this section. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | time_unit | Units for dwell time. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[time]</li></ul></li></ul> |
@@ -264,8 +283,8 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `EmbeddedFile`
@@ -277,16 +296,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| embedded |  | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a raw `utf-8` string.</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a list of raw `utf-8` line strings.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Equipment`
@@ -295,11 +314,17 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Experimenter`
@@ -311,15 +336,16 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | name | Name of the experimenter | <ul><li>Any text entry</li></ul> |
 | affiliation | Lab/University/Research Group/etc. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|------------------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | orcid | The experimenter's [ORCID](https://orcid.org/) | <ul><li>Any text entry</li></ul> |
 
 ---
@@ -332,14 +358,15 @@ Attachment types are dispatched based on which optional properties they have. Fi
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------|-----------------------------------------------------|
+|---------------|---------------------------------------------------|-----------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `FlexTemplate`
@@ -348,30 +375,38 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 **[Subclass of `TemplateBlock`](#templateblock)**
 
+The `FlexTemplate` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses with other [`SingleBlock` subclasses](#singleblock), similar to the [`TemplateBlock` class](#templateblock). Unlike `TemplateBlock`s, `FlexTemplate`s dynamically determine what required properties are missing at construction time, and return a `TemplateBlock` instance with those properties marked as template fields.
+
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|----------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-
-The `FlexTemplate` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses with other [`SingleBlock` subclasses](#singleblock), similar to the [`TemplateBlock` class](#templateblock). Unlike `TemplateBlock`s, `FlexTemplate`s dynamically determine what required properties are missing at construction time, and return a `TemplateBlock` instance with those properties marked as template fields.---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `GasFlow`
 
 [Class Documentation][blockdocs-GasFlow]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `LabConditions`
@@ -380,11 +415,17 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Material`
@@ -396,7 +437,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | name | A unique name for the material. | <ul><li>Any text entry</li></ul> |
 | type | How it was used in the synthesis (e.g., reagent, flux, solvent) | <ul><li>Any text entry</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
@@ -410,8 +452,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | purity | 0 < purity <= 1 | <ul><li>Decimal value within range:<ul><li>0 < val <= 1</li></ul></li></ul> |
 | treatments | Treatments that were applied to the material before use in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Treatment` objects.](#treatment)</li></ul> |
 
@@ -425,7 +467,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------|
+|---------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
 | fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
@@ -433,8 +476,8 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `PathFile`
@@ -446,16 +489,16 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | file_name | The name of the attached file (with extension) | <ul><li>A valid filename (no path, no separators, allowed characters only).</li><li>Must include a valid extension.</li><li>Allowed characters: letters, digits, '`_`', '`-`', '`.`'</li><li>Commas are allowed, but may lead to unexpected behavior for some OS or software.</li><li>Paths to nonexistent files will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li></ul> |
+| path |  | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-| embedded | Attachment content embedded as raw `utf-8` line strings. | <ul><li>Mutually exclusive with `path` property.</li><li>Attachment content as a list of raw `utf-8` line strings.</li></ul> |
-| path | The filepath to the attached file, relative to the directory containing the parent `FileBlock`. | <ul><li>Mutually exclusive with `embedded` property.</li><li>A valid relative filepath to a directory.</li><li>Path is relative to the directory containing the parent `FileBlock`.</li><li>"`.`" should be used to indicate the same directory as the parent `FileBlock`.</li><li>"`..`" can be used to walk up the directory tree.</li><li>Paths to nonexistent directories will be validated, but may raise errors when the parent `FileBlock` attempts to track the file.</li><li>Examples for a `FileBlock` at `/home/user/synthesis.fos`:<ul><li>"`.`" is `/home/user`</li><li>"`..`" is `/home`</li><li>"`../foo`" is `/home/foo`</li><li>"`./bar`" is `/home/user/bar`</li></ul></li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Product`
@@ -467,18 +510,19 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|--------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+|---------------|-------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | formula | Molecular composition. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | name | A unique name for the product. | <ul><li>Any text entry</li></ul> |
-| expected | Whether or not the product was expected from the synthesis. | <ul><li>True or False</li></ul> |
-| obtained | Whether or not the product obtained from the synthesis. | <ul><li>True or False</li></ul> |
+| expected | Whether or not the product was expected from the synthesis. | <ul><li>A boolen value (True or False)</li><li>Acceptable 'True' values (not case sensitive):<ul><li>true</li><li>t</li><li>yes</li><li>y</li><li>1</li><li>on</li></ul></li><li>Acceptable 'False' values (not case sensitive):<ul><li>false</li><li>f</li><li>no</li><li>n</li><li>0</li><li>off</li></ul></li></ul> |
+| obtained | Whether or not the product obtained from the synthesis. | <ul><li>A boolen value (True or False)</li><li>Acceptable 'True' values (not case sensitive):<ul><li>true</li><li>t</li><li>yes</li><li>y</li><li>1</li><li>on</li></ul></li><li>Acceptable 'False' values (not case sensitive):<ul><li>false</li><li>f</li><li>no</li><li>n</li><li>0</li><li>off</li></ul></li></ul> |
 | observations | General observations about the product. | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|----------------------|-----------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | expected_amount | How much of the product was nominally expected to be obtained from the synthesis | <ul><li>Positive decimal value</li><li>Requires that `expected_amount_unit` also be present</li></ul> |
 | expected_amount_unit | Units for product expected amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
 | obtained_amount | How much of the product was actually obtained from the synthesis.. | <ul><li>Positive decimal value</li><li>Requires that `obtained_amount_unit` also be present</li></ul> |
@@ -496,15 +540,16 @@ The `FlexTemplate` class is not normally used alone to construct objects. Instea
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 | medium | What medium the reaction vessel was quenched in (e.g., water, air). | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Ramp`
@@ -524,14 +569,15 @@ During construction of a `Ramp` object, it is required to have at least 2 of the
 If all three are provided, the last one found during reading will be discarded as redundant data, and the object is [dispatched](#dispatching-subclasses) to a `Ramp` subclass with a "retrieval" method for calculating the missing property (e.g., `get_temp()`, `get_time()`, or `get_rate()`) When working with `Ramp` objects in the FoSpy framework, it is best practice to always use the "retrieval" methods. For subclasses that *do* have the desired property, retrieval methods default to returning it directly.
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -556,14 +602,15 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -581,14 +628,15 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -606,14 +654,15 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|---------------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | Examples: `"dwell", "ramp", "quench"` | <ul><li>Any text entry</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | temp | The next temperature in the program. | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
 | time | Length of time from the previous temperature to the new temperature. | <ul><li>Positive decimal value</li><li>Requires that `time_unit` also be present</li></ul> |
 | rate | The sign-sensitive rate at which temperature was changed to get to the new temperature. (Increase -> positive, Decrease -> negative). | <ul><li>Any decimal value (positive or negative)</li><li>Requires that `rate_unit` also be present</li></ul> |
@@ -632,6 +681,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 |---------------------|----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | nominal_formula | Total expected chemical composition from all final products. | <ul><li>A chemical formula recognized by the [`chemformula` package.](https://pypi.org/project/chemformula/)</li></ul> |
 | nominal_amount | Total amount expected to be recovered from all final products. | <ul><li>Positive decimal value</li></ul> |
 | nominal_amount_unit | Units for reaction nominal amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
@@ -639,23 +689,50 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
+### `Rename`
+
+[Class Documentation][blockdocs-Rename]
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+Any [`SingleBlock` object](#singleblock) can have `rename` as one of its properties, which contains an instance of a `Rename` block. These can be used to alter the expected (required *or* optional) property names to custom names instead. This is useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `\"experimenters\"` might be mapped to the more generic `\"collaborators\"` for computational or meta-contexted FOS files.)
+
+`Rename` blocks are available as a "stop-gap" for scientists who are trying to make use of the FoS format, but whose areas of expertise are significantly deviated from the context FoS was designed for. Renaming is not intended as a long-term solution.
+
+- **If the descriptions/validation routines for the renamed property are still appropriate, but the property name itself is inaccurate:** Consider reaching out to developers about altering the FoS standards to better reflect the growing community.
+- **If you are working with a very niche application that requires fundamental alteration of the FoS standards:** Consider [modifying validation at runtime](#modifying-property-validation-at-runtime) or creating a fork of the [GitHub](https://github.com/errthumt/FoSpy) to make changes to the sourcecode.
+
+Note that renaming a property will keep all relevant validation rules attached to the new custom name (e.g., for the aforementioned example, the same rules that apply to the `\"experimenters\"` property now apply to the new `\"collaborators\"` property instead.). This allows researchers to make modifications for *clarity purposes only*, without bypassing any FoS standards.
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>Each property of a `Rename` object renames its parent's expected property of the same name to the provided value.</li><li>Renaming properties starting with "`_`" is not allowed.</li><li>Properties must be expected property names for the parent block.<ul><li>For unexpected (custom) keys, adding a rename mapping is not necessary.</li><li>(There is no required/optional validator to redirect to.)</li></ul></li><li>You cannot rename a property to a different expected property. (Unexpected names only.)</li><li>The following reserved properties cannot be renamed:<ul><li>`rename`</li><li>`metadata`</li></ul></li></ul> |---
 ### `SingleBlock`
 
 [Class Documentation][blockdocs-SingleBlock]
 
 **[Subclass of `Block`][blockdocs-Block]**
 
+`SingleBlock` is the parent class of all block classes representing a single entity. `SingleBlock`s are rarely constructed without subclassing, but may be used if you want to take advantage of the rigorous attribute assignment and methods that all other block classes inherit, without defining any expected properties.
+
+
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-
-`SingleBlock` is the parent class of all block classes representing a single entity. `SingleBlock`s are rarely constructed without subclassing, but may be used if you want to take advantage of the rigorous attribute assignment and methods that all other block classes inherit, without defining any expected properties.---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `Synthesis`
 
 [Class Documentation][blockdocs-Synthesis]
@@ -666,6 +743,7 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 | Property | Description | Validation Rules |
 |---------------|----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `SynthesisMeta` object.](#synthesismeta)</li></ul> |
 | experimenters | Experimenters who participated in any treatments described in the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Experimenter` objects.](#experimenter)</li></ul> |
 | reaction | General information applying to the entire synthetic reaction. | <ul><li>[A `Reaction` object.](#reaction)</li></ul> |
@@ -676,8 +754,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|-----------------------|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | cif | A single attached CIF file applicable to the entire synthesis. | <ul><li>[A `CIFFile` object.](#ciffile)</li></ul><ul></ul> |
 | cifs | Multiple attached CIF files applicable to the entire synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
 | laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
@@ -693,7 +771,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Required properties
 
 | Property | Description | Validation Rules |
-|-------------|--------------------------------------------------------------------------------------------------------------------|----------------------------------|
+|---------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | fos_id | A reaction ID unique within the scope of the applicable context. (e.g., a synthesis ID, template ID, etc.) | <ul><li>Any text entry</li></ul> |
 | fos_type | What type of `FileBlock` subclass the file should be interpreted as. | <ul><li>Any text entry</li></ul> |
 | description | A brief description of the intent for the file (characteristic methods, target products, template category, etc.). | <ul><li>Any text entry</li></ul> |
@@ -703,8 +782,8 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `TemplateBlock`
@@ -713,59 +792,69 @@ The following subclasses are dispatched based on the redundant parameter (see [R
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+The `TemplateBlock` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
+
+Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block. To construct a a `TemplateBlock` from an incomplete property dictionary, it is recommended to use [`FlexTemplate` instead.](#flextemplate)
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
-|---------------|----------------------------------|----------------------------------|
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
-
-The `TemplateBlock` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
-
-Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block. To construct a a `TemplateBlock` from an incomplete property dictionary, it is recommended to use [`FlexTemplate` instead.](#flextemplate)---
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |---
 ### `TemplateSet`
 
 [Class Documentation][blockdocs-TemplateSet]
 
 **[Subclass of `FileBlock`](#fileblock)**
 
+In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) dynamically determines template fields using the [`FlexTemplate` subclass](#flextemplate)
+
+Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.
+
+
+
+
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------|-----------------------------------------------------|
+|---------------|---------------------------------------------------|-----------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | metadata | General information about the file. | <ul><li>[A `MetaData` object.](#metadata)</li></ul> |
-
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|-----------------|-----------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | experimenters | A list of incomplete templates describing experimenters. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Experimenter` *templates.*](#experimenter)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | materials | A list of incomplete templates describing materials. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Material` *templates.*](#material)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | treatments | A list of incomplete templates describing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Treatment` *templates.*](#treatment)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | annealings | A list of incomplete templates describing annealing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Annealing` *templates.*](#annealing)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | anneal_sections | A list of incomplete templates describing annealing sections. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`AnnealSection` *templates.*](#annealsection)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
-| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
-
-In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) dynamically determines template fields using the [`FlexTemplate` subclass](#flextemplate)
-
-Developers are currently working on ways to flexibly allow any template list in a `TemplateSet`. For now, refer to [modifying validation at runtime](#modifying-property-validation-at-runtime) or reach out to developers if current standards are limiting how you want to use templates.---
+| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |---
 ### `TraceData`
 
 [Class Documentation][blockdocs-TraceData]
 
 **[Subclass of `SingleBlock`](#singleblock)**
 
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|------------|---------------------------------------|-------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 
 ---
 ### `Treatment`
@@ -777,15 +866,16 @@ Developers are currently working on ways to flexibly allow any template list in 
 #### Required properties
 
 | Property | Description | Validation Rules |
-|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
 | type | What type of treatment was performed. | <ul><li>Any text entry</li></ul> |
 | repeats | How many times the treatment was performed in succession *uninterrupted*. If other treatments are performed between repeats, add a different treatment block after the interrupting treatments. | <ul><li>Any integer (positive or negative)</li></ul> |
 
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| rename | Maps default expected property names to custom names. Useful for when expected properties *are* present and matching descriptions, but the default name doesn't align with the niche context. (e.g., `"experimenters"` might be mapped to the more generic `"collaborators"` for computational or meta-contexted FOS files.) | <ul><li>A dictionary of key:value string pairs</li><li>Keys starting with "`_`" are ignored.</li><li>Keys must be expected property names for the block.<ul><li>For unexpected (custom) keys, renaming is not necessary.</li></ul></li><li>Values cannot be registered property names.</li></ul> |
+|-----------------------|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
 | observations | General observations during the treatment | <ul><li>Any text entry</li></ul> |
 | recovered_amount | How much material was recovered after treatment. | <ul><li>Positive decimal value</li><li>Requires that `recovered_amount_unit` also be present</li></ul> |
 | recovered_amount_unit | Units for treatment recovered amount. | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li>[mass]</li><li>[length]^3</li></ul></li></ul> |
