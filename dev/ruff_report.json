@@ -1,1 +1,91 @@
-[]
+[
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 42,
+      "row": 187
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/_docs/properties/__init__.py",
+    "fix": null,
+    "location": {
+      "column": 36,
+      "row": 187
+    },
+    "message": "`...blocks.metadata.Rename` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 187,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 86,
+      "row": 4
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from ....blocks import Block, SingleBlock, ListBlock, _containers as blk_cont",
+          "end_location": {
+            "column": 86,
+            "row": 4
+          },
+          "location": {
+            "column": 1,
+            "row": 4
+          }
+        }
+      ],
+      "message": "Remove unused import: `....blocks.Rename`"
+    },
+    "location": {
+      "column": 80,
+      "row": 4
+    },
+    "message": "`....blocks.Rename` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 29,
+      "row": 2
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/template.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 3
+          },
+          "location": {
+            "column": 1,
+            "row": 2
+          }
+        }
+      ],
+      "message": "Remove unused import: `..editors`"
+    },
+    "location": {
+      "column": 27,
+      "row": 2
+    },
+    "message": "`..editors` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 2,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  }
+]
