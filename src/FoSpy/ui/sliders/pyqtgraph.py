@@ -8,14 +8,21 @@ try:
     from ._utils import _get_digits
     available = True
     import_e = None
-except UINotAvailable as e:
-    available = False
-    import_e = e
 except Exception as e:
+    # fallbacks to prevent crash if UI not available
+    AbstractSlider = object
+    AbstractControl = object
+    QtWidgets = object()
+    QtWidgets.QWidget = object
+
     available = False
 
-    import_e = ImportError("PyQtGraph UI not available for unexpected exception")
-    import_e.__cause__ = e
+    if isinstance(e, UINotAvailable):
+        import_e = e
+    else:
+        import_e = ImportError("PyQtGraph UI not available for unexpected exception")
+        import_e.__cause__ = e
+
 
 def _import_gate():
     global available, import_e
