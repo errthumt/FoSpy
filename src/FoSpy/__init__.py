@@ -19,5 +19,6 @@ __all__ = [
     "parsing",
     "plotting",
     "config",
-    "cfg"
+    "cfg",
+    "ui"
 ]
