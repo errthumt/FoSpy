@@ -115,7 +115,6 @@ nav:
       - _utils: full/ui/app/_utils.md
       - console: full/ui/app/console.md
       - menus: full/ui/app/menus.md
-      - temp: full/ui/app/temp.md
       - window: full/ui/app/window.md
       - block_widgets:
         - block_widgets/__init__: full/ui/app/block_widgets/__init__.md
