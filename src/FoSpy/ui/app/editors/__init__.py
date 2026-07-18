@@ -1,6 +1,13 @@
-from . import (
-    text_editor,
-    attachment
-)
+# Auto-generated __init__.py
 
-__all__ = ["text_editor", "attachment"]
+from . import attachment
+from . import comments
+from . import rename
+from . import text_editor
+
+__all__ = [
+    "attachment",
+    "comments",
+    "rename",
+    "text_editor",
+]

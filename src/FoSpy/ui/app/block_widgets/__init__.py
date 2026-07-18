@@ -10,6 +10,12 @@ from . import (
     template
 )
 
+__all__ = [
+    "attachment",
+    "rename",
+    "template"
+]
+
 widget_map = {
     str:(
         editors.text_editor.TextEditorWidget,
