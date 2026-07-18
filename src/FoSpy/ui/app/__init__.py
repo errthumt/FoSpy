@@ -7,7 +7,6 @@ try:
     from . import console
     from . import editors
     from . import menus
-    from . import temp
     from . import window
     available = True
 except UINotAvailable as e:
@@ -29,6 +28,5 @@ __all__ = [
     "console",
     "editors",
     "menus",
-    "temp",
     "window",
 ]
