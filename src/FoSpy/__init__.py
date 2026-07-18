@@ -7,6 +7,7 @@ from . import json
 from . import parsing
 from . import plotting
 from . import config
+from . import ui
 from .config import values as cfg
 
 __all__ = [
