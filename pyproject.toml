@@ -76,12 +76,10 @@ version-file = "_version.py"
 
 [tool.hatch.build]
 include = [
-    "src/FoSpy/config/*.json",
-    "src/FoSpy/_docs/**/*",
-    "src/FoSpy/app/assets/**/*"
+    "src/FoSpy/**/*"
 ]
 exclude = [
-    "src/FoSpy/config/user.json"
+    "src/FoSpy/config/*user*.json"
 ]
 
 [tool.vulture]
