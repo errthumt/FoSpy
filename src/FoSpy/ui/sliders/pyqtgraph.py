@@ -1,19 +1,20 @@
 from ..available import validate_ui, UINotAvailable
+from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
 
 try:
     validate_ui("pyqtgraph")
     import pyqtgraph as pg
     from pyqtgraph.Qt import QtWidgets, QtCore
-    from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl
     from ._utils import _get_digits
     available = True
     import_e = None
 except Exception as e:
     # fallbacks to prevent crash if UI not available
-    AbstractSlider = object
-    AbstractControl = object
-    QtWidgets = object()
-    QtWidgets.QWidget = object
+    class FallBackModule:
+        pass
+
+    QtWidgets = FallBackModule()
+    QtWidgets.QWidget = FallBackModule
 
     available = False
 
