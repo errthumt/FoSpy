@@ -1,13 +1,18 @@
 from ..available import validate_ui, UINotAvailable
+import tkinter as tk
 try:
     validate_ui("native")
     from .abstract import SliderPlot as AbstractSlider, ControlPanel as AbstractControl, CTRL_ROWS
     from matplotlib.collections import LineCollection
-    import tkinter as tk
     from ._utils import _get_digits
     available = True
     import_e = None
 except UINotAvailable as e:
+    # fallbacks to prevent crash if UI not available
+    AbstractSlider = object
+    AbstractControl = object
+    CTRL_ROWS = 0
+
     available = False
     import_e = e
 except Exception as e:
