@@ -1,0 +1,176 @@
+fos_id: TE002
+fos_type: synthesis
+description: My Second Synthesis
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
+
+[Rename]
+materials: reagents
+
+[[Experimenters]]
+name: Travis Errthum
+isu_research_group: Kovnir Group - Iowa State University
+orcid: 0009-0006-1937-5672
+rename: [
+    affiliation: isu_research_group
+]
+colleague$experimenter: [
+    name: Joseph Race
+    affiliation: Graham's Dad
+    orcid: 0000-0002-8551-3627
+]
+
+name: Joseph Race
+affiliation: Kovnir Group - Iowa State University
+orcid: 0000-0002-8551-3627
+
+[Reaction]
+nominal_formula: Ba8Cu13Zn11As28.5
+nominal_amount: 250.0
+nominal_amount_unit: milligram
+
+[Products]
+name: Barium transition-metal arsenide (8-24-28.5)
+formula: Ba8Cu13Zn11As28.5
+expected: True
+obtained: True
+expected_amount: 250.0
+expected_amount_unit: milligram
+obtained_amount: 150.0
+obtained_amount_unit: milligram
+observations: Gray Powder
+characterizations: PXRD
+structure_comments: [;;;
+Unique clathrate with variable occupancy on hyper-coordinate Arsenic site. Space
+group Cmcm]
+
+[[Reagents]]
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:purity
+:env
+:amount
+:amount_unit
+
+    Barium
+    reagent
+    Ba
+    Thermofisher
+    7440-39-3
+    lump
+    0.999
+    Ar (g)
+    // Weight percents were calculated automatically when saving.
+    // ! Total weight percent: 22.99%
+    8
+    mol ratio
+    treatments: [
+        type: cutting
+        repeats: 1
+        observations: smaller pieces improve homogenization
+    ]
+
+    Zinc
+    reagent
+    Zn
+    Sigma Aldrich
+    7440-66-6
+    powder
+    0.995
+    Ar (g)
+    // ! Total weight percent: 15.05%
+    11
+    mol ratio
+
+    Copper
+    reagent
+    Cu
+    Sigma Aldrich
+    7440-50-8
+    powder
+    0.995
+    Ar (g)
+    // ! Total weight percent: 17.29%
+    13
+    mol ratio
+
+    Arsenic
+    reagent
+    As
+    Furukama
+    7440-38-2
+    lump
+    0.9995
+    Ar (g)
+    // ! Total weight percent: 44.68%
+    28.5
+    mol ratio
+    treatments: [
+        type: Grinding
+        repeats: 1
+        observations: ground lumps into powder for weighing and homogenization
+    ]
+
+[[Treatments]]
+:type
+:repeats
+:observations
+
+    weigh
+    1
+    [;;;
+    Weighed stoichiometrically to carbonized ampoule. Barium added last to avoid
+    contact with ampoule during reaction]
+    recovered_mass: 250.0
+
+    seal
+    1
+    Evacuated ampoule and sealed with H2/O2 torch
+
+    anneal
+    1
+    None
+    program: [[
+        type: ramp
+        // ! Rate for ramp: 262.5 delta_degree_Celsius / hour
+        temp: 550
+        time: 2
+        temp_unit: degree_Celsius
+        time_unit: hour
+
+        type: dwell
+        time: 12
+        time_unit: hour
+
+        type: quench
+        medium: water
+    ]]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
+
+    anneal
+    1
+    None
+    program: [[
+        type: ramp
+        // ! Rate for ramp: 62.5 delta_degree_Celsius / hour
+        temp: 650
+        time: 10
+        temp_unit: degree_Celsius
+        time_unit: hour
+
+        type: dwell
+        time: 72
+        time_unit: hour
+    ]]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
+
+[Cifs]
+file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
+path: .
+
