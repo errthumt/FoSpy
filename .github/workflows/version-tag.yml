@@ -159,7 +159,11 @@ jobs:
 
       - name: Install Site Build Dependencies
         run: |
-          pip install mkdocs/fos_site
+          pip install -e ./mkdocs/fos_site
+
+      - name: Build Site for Release
+        run: |
+          fos-site-build --deploy
 
       - name: Install svu
         run: |
