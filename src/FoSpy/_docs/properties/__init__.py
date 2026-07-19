@@ -71,6 +71,7 @@ def table_dict_to_lines(table_dict, mode="cli"):
 
     txt = tabulate(table_dict, **tab_kwargs)
     lines = txt.splitlines(keepends=True)
+    lines.append("\n")
 
     return lines
 
