@@ -4,6 +4,7 @@ from .files import FileBlock
 from .._debug import Debug
 _debug = Debug()
 
+@FileBlock.set_dispatch("synthesis", from_key="_fos_type", allow_self=False)
 class Synthesis(FileBlock):
     """
     Represents a Synthesis loaded from a FOS file.
@@ -17,7 +18,5 @@ class Synthesis(FileBlock):
     def insert_treatment(self, treat, idx=-1):
         # placeholder. modify for insertion at idx
         self.treatments.append(treat)
-        
-FileBlock.dispatch["synthesis"] = Synthesis
 
     

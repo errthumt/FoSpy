@@ -371,7 +371,10 @@ class SingleBlock(Block):
                 _visited.append(cls)
 
             dispatch_from = getattr(cls, "dispatch_from", None)
-            if dispatch_from is not None and dispatch_from not in _visited:
+            if (dispatch_from is not None and
+                # skip abstract classes
+                issubclass(dispatch_from, SingleBlock) and
+                dispatch_from not in _visited):
                 full_block = dispatch_from.dispatch_subclass(blockDict, **kwargs)
                 if not isinstance(full_block, cls):
                     from .. import _errors as err
@@ -391,6 +394,30 @@ class SingleBlock(Block):
             return dispatched.dispatch_subclass(blockDict, _visited=_visited, **kwargs)
         
         return dispatcher
+    
+    @classmethod
+    def set_dispatch(cls, value=None, from_parent=None, from_key=None, allow_self=None):
+
+        # Abstract classes are sometimes made without SingleBlock in MRO
+        if from_parent is not None:
+            target_cls = from_parent
+        else:
+            target_cls = cls
+
+        if "dispatch" not in target_cls.__dict__:
+            target_cls.dispatch = {}
+
+        if from_key is not None:
+            target_cls.dispatch_key = from_key
+        
+        if allow_self is not None:
+            target_cls.dispatch_allow_self = allow_self
+
+        def dispatched_cls(subcls, v=value, _cls=target_cls):
+            subcls.dispatch_from = _cls
+            _cls.dispatch[v] = subcls
+            return subcls
+        return dispatched_cls
 
     @make_dispatch
     def dispatch_subclass(cls, blockDict:dict, _visited=None, **kwargs:any):
@@ -406,21 +433,25 @@ class SingleBlock(Block):
         from .. import _errors as err
         blockDict = _unwrap_block(blockDict).copy()
 
+        if not hasattr(cls, "dispatch"):
+            cls.dispatch = {}
+
+        # other defaults can be set by passing value=None to set_dispatch
+        cls.dispatch.setdefault(None, None)
+        default = cls.dispatch[None]
+
         dispatch_val = blockDict.get(cls.dispatch_key, None)
-        dispatched_cls = cls.dispatch.get(dispatch_val, None)
+        dispatched_cls = cls.dispatch.get(dispatch_val, default)
 
         if dispatched_cls is None:
-            if not cls.dispatch_default:
-                if not cls.dispatch_allow_self:
-                    raise err.FailedValidatorError(
-                        cls.dispatch_key, cls,
-                        Exception("This block type must be dispatched to another subclass."),
-                        blockDict=blockDict,
-                        hint=f"Could not find a valid dispatch value for {cls.dispatch_key} = {dispatch_val}.")
-                else:
-                    dispatched_cls = cls
+            if not cls.dispatch_allow_self:
+                raise err.FailedValidatorError(
+                    cls.dispatch_key, cls,
+                    Exception("This block type must be dispatched to another subclass."),
+                    blockDict=blockDict,
+                    hint=f"Could not find a valid dispatch value for {cls.dispatch_key} = {dispatch_val}.")
             else:
-                dispatched_cls = cls.dispatch_default
+                dispatched_cls = cls
 
         return dispatched_cls
     
@@ -1737,6 +1768,7 @@ class ListBlock(Block):
     ```
     """
     _reqCls: type[SingleBlock] = None
+    simple_lists = {}
     def __init__(self, blockList:list):
         """
         Constructs a `ListBlock` from a list of objects or serialized dictionaries.
@@ -1786,6 +1818,10 @@ class ListBlock(Block):
                 The subclass of `SingleBlock` that this `ListBlock` subclass
                 accepts.
         """
+        # pull repeats from cache
+        if reqCls in cls.simple_lists:
+            return cls.simple_lists[reqCls]
+        
         from .._docs.properties import _validator_rules
         from ._blockUtils import _get_docs_link
 
@@ -1809,6 +1845,8 @@ class ListBlock(Block):
         SimpleSub.__name__ = name
         SimpleSub.__qualname__ = qualname
         SimpleSub.__module__ = module
+
+        cls.simple_lists[reqCls] = SimpleSub
 
         return SimpleSub
 

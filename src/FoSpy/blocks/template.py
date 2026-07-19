@@ -68,6 +68,7 @@ def _is_plural(name, single):
     
     return False
 
+@FileBlock.set_dispatch("templates")
 class TemplateSet(FileBlock):
     """
     Represents a set of templates loaded from a FOS file.
@@ -124,8 +125,6 @@ class TemplateSet(FileBlock):
             out[name] = value
 
         return out
-    
-FileBlock.dispatch["templates"] = TemplateSet
 
 class TemplateList(ListBlock):
     """

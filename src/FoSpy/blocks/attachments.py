@@ -9,10 +9,9 @@ _debug = Debug()
 
 
 class Attachment(SingleBlock):
-    dispatch_key = "_extension"
-    dispatch={} # populated after subclass definitions
-    extensions={}
-    enforced_subtype=None
+    # dispatch_key = "_extension"
+    # dispatch={} # populated after subclass definitions
+    # extensions={}
     _id_key = "file_name"  
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
@@ -112,7 +111,8 @@ class Attachment(SingleBlock):
             attachments.append(self)
 
         return attachments
-    
+
+@Attachment.set_dispatch(from_key="_extension", allow_self=False)   
 class FileType:
     dispatch_key = "_location"
     dispatch = {}
@@ -167,10 +167,8 @@ class FileType:
             FileTypeLocator = cls.location_classes[location]
 
         return super(Attachment, FileTypeLocator)
-    
-Attachment.dispatch_default = FileType
 
-
+@Attachment.set_dispatch(".cif")
 class CIFFile(FileType, Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict,**kwargs)
@@ -216,16 +214,14 @@ class CIFFile(FileType, Attachment):
             return self._subprocess(_quick_pattern, args=(tth, intensity))
         
         return _quick_pattern(tth, intensity)
-    
-Attachment.dispatch[".cif"] = CIFFile
+
 
 class LocationType:
-    dispatch = {}
     @Attachment.make_dispatch
     def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
         return super(Attachment, cls)
 
-
+@Attachment.set_dispatch(from_parent=FileType, value="embedded", from_key="_location", allow_self=False)
 class EmbeddedFile(LocationType, Attachment):
     def _write_to_temp(self, encoding="utf-8"):
         try:
@@ -253,8 +249,8 @@ class EmbeddedFile(LocationType, Attachment):
         serial = super().serialize(**kwargs)
         #serial["embedded"] = self.embedded.copy()
         return serial
-FileType.dispatch["embedded"] = EmbeddedFile
 
+@Attachment.set_dispatch(from_parent=FileType, value="path")
 class PathFile(LocationType, Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
@@ -359,9 +355,6 @@ class PathFile(LocationType, Attachment):
         copy._filepath = self._filepath
         return copy
         
-        
-FileType.dispatch["path"] = PathFile
-
 
 CifList = ListBlock.Simple(CIFFile)
 AttachmentList = ListBlock.Simple(Attachment)
