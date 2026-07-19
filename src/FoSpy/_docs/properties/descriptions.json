@@ -244,26 +244,7 @@
             "desc": "An unique name for the template."
         }
     },
-    "TemplateSet": {
-        "anneal_sections": {
-            "desc": "A list of incomplete templates describing annealing sections."
-        },
-        "annealings": {
-            "desc": "A list of incomplete templates describing annealing treatments."
-        },
-        "cifs": {
-            "desc": "A list of CIF files attached to the template set."
-        },
-        "experimenters": {
-            "desc": "A list of incomplete templates describing experimenters."
-        },
-        "materials": {
-            "desc": "A list of incomplete templates describing materials."
-        },
-        "treatments": {
-            "desc": "A list of incomplete templates describing treatments."
-        }
-    },
+    "TemplateSet": {},
     "Treatment": {
         "end_time": {
             "desc": "What time the treatment was finished"

@@ -2,7 +2,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -13,7 +13,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>

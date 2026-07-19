@@ -112,7 +112,7 @@ class TemplateSet(FileBlock):
     
     def serialize(self, *args, **kwargs):
         serial = super().serialize(*args, **kwargs)
-        return serial
+
         out = {}
 
         for name, value in serial.items():
@@ -124,6 +124,8 @@ class TemplateSet(FileBlock):
             out[name] = value
 
         return out
+    
+FileBlock.dispatch["templates"] = TemplateSet
 
 class TemplateList(ListBlock):
     """

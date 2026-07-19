@@ -2,7 +2,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -26,7 +26,7 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -44,7 +44,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[[Anneal_sections]]
+[[Anneal_sections$annealsection]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
@@ -57,7 +57,7 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[Treatments$treatment]
+[Treatments]
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>

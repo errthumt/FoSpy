@@ -168,7 +168,7 @@ def main():
                                                            "time")
     # Save my new templates to my template file.
     my_templates.treatments = [anneal_template]
-    my_templates.anneal_sections = [ramp_template, dwell_template]
+    my_templates.add_block("anneal_sections","annealsection", [ramp_template, dwell_template])
     my_templates.keys_to_end("cifs")
 
     # Filling in my annealing templates

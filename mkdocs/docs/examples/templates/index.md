@@ -55,7 +55,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -66,7 +66,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -98,7 +98,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -109,7 +109,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -154,7 +154,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -165,7 +165,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -196,7 +196,16 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[[Anneal_sections]]
+[Treatments]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
+
+[[Anneal_sections$annealsection]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
@@ -208,15 +217,6 @@ template_name: Any dwell
 type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
-
-[Treatments$treatment]
-template_name: Empty Anneal Template
-type: anneal
--repeats: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
-start_temp: 25
-start_temp_unit: degree_Celsius
--observations: <!TEMPLATE-FIELD>
 
 [Cifs$attachment]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
@@ -232,7 +232,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -243,7 +243,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -274,7 +274,16 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[[Anneal_sections]]
+[Treatments]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
+
+[[Anneal_sections$annealsection]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
@@ -286,15 +295,6 @@ template_name: Any dwell
 type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
-
-[Treatments$treatment]
-template_name: Empty Anneal Template
-type: anneal
--repeats: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
-start_temp: 25
-start_temp_unit: degree_Celsius
--observations: <!TEMPLATE-FIELD>
 
 [[Cifs$attachment]]
 file_name: Ba2Zn5Sb6_ICSD.cif
@@ -418,7 +418,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters$experimenter]]
+[[Experimenters]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -442,7 +442,7 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[Materials$material]
+[Materials]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -460,7 +460,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[[Anneal_sections]]
+[[Anneal_sections$annealsection]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
@@ -473,7 +473,7 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[Treatments$treatment]
+[Treatments]
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>

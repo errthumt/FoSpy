@@ -8,6 +8,7 @@ class Synthesis(FileBlock):
     """
     Represents a Synthesis loaded from a FOS file.
     """
+    dispatch_from = FileBlock
 
     def insert_material(self, mat, idx=-1):
         # placeholder. modify for insertion at idx
@@ -16,6 +17,7 @@ class Synthesis(FileBlock):
     def insert_treatment(self, treat, idx=-1):
         # placeholder. modify for insertion at idx
         self.treatments.append(treat)
-
+        
+FileBlock.dispatch["synthesis"] = Synthesis
 
     

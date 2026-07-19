@@ -124,7 +124,9 @@ class FileBlock(SingleBlock):
     TemplateSet(FileBlock)
     ```
     """
-
+    dispatch = {}
+    dispatch_key = "_fos_type"
+    dispatch_allow_self = False
     def __init__(self, blockDict, _sourceFile=None, _dispatched=True):
         """
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
@@ -165,8 +167,6 @@ class FileBlock(SingleBlock):
 
     @classmethod
     def fromFile(cls, filepath):
-        from .metadata import MetaData
-        from ._blockUtils import _unwrap_block
         abspath = os.path.abspath(filepath)
         pathstr = str(abspath)
         try:
@@ -179,6 +179,13 @@ class FileBlock(SingleBlock):
 
         blockDict = EXT_READ_MAP[ext](abspath)
         abspath = blockDict.pop("_sourceFile", abspath)
+
+        return cls.dispatch_subclass(blockDict, _sourceFile=abspath)
+    
+    @SingleBlock.make_dispatch
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        from .metadata import MetaData
+        from ._blockUtils import _unwrap_block
         if "metadata" not in blockDict:
             raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
         
@@ -186,19 +193,13 @@ class FileBlock(SingleBlock):
         if "fos_type" not in metadata:
             # Metadata construction will always fail, delegate error message to construction
             try:
-                from .metadata import MetaData
-                _ = MetaData(metadata)
+                raise err.MissingPropertyError("fos_type", MetaData, blockDict=metadata)
             except Exception as e:
-                raise ValueError(f"Could not open file due to the following errors when validating metadata block:\n{e}")
-
+                raise ValueError("Could not identify file type due to missing fos_type in metadata") from e
 
         typ = metadata.get("fos_type","").lower()
-        subcls = MetaData.dispatch.get(typ, ("", cls))[1]
-
-        if not issubclass(subcls, cls):
-            raise ValueError(f"Cannot construct {cls.__name__} from file '{abspath}' with incompatible fos_type '{typ}'.")
-
-        return subcls.dispatch_subclass(blockDict, _sourceFile = abspath)
+        blockDict[cls.dispatch_key] = typ
+        return super(FileBlock, cls)
 
     def save(self, filepath:str=None, json_indent=4, **kwargs):
         """

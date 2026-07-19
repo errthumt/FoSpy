@@ -18,17 +18,11 @@ class MetaData(SingleBlock):
     to metadata
     """
     dispatch = {}
-    @classmethod
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        t = blockDict.get("fos_type","").lower()
-        subclass = cls.dispatch.get(t,(cls,FileBlock))[0]
-        return subclass(blockDict, _dispatched=True, **kwargs)
-    
-MetaData.dispatch["templates"] = (MetaData, TemplateSet)
+    dispatch_key = "fos_type"
     
 class SynthesisMeta(MetaData):
     dispatch = {}
-MetaData.dispatch["synthesis"] = (SynthesisMeta, Synthesis)
+MetaData.dispatch["synthesis"] = SynthesisMeta
 
 class Reaction(SingleBlock):
     """
