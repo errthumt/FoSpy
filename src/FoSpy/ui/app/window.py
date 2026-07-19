@@ -609,6 +609,12 @@ class MainWindow(QMainWindow):
         
         If both item and block are provided, item takes precedence.
         """
+        if isinstance(item, Block):
+            from warnings import warn
+            warn("A Block was passed in the first position instead of as 'blk='.", stacklevel=2, category=DeprecationWarning)
+            blk = item
+            item = None
+
         if item is None:
             if blk is None:
                 return None

@@ -15,7 +15,8 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QPushButton,
     QTabWidget,
-    QStackedWidget
+    QStackedWidget,
+    QSizePolicy
 )
 
 SIDEBAR_WIDTH = 400
@@ -238,18 +239,9 @@ class SingleBlockWidget(QWidget):
                 )
                 prop_name = None
 
-        target_type = aliases[alias]
-
         prop_alias = prop_name + "$" + alias
-        if issubclass(target_type, SingleBlock):
-            def pending_refresh(s, p=prop_alias):
-                s.blk.stage_template(p)
-        elif issubclass(target_type, ListBlock):
-            def pending_refresh(s, p=prop_alias):
-                setattr(s.blk, p, [])
-                getattr(s.blk, p).stage_template("First Item")
-        else:
-            raise NotImplementedError("An alias was mapped to a non-Block class")
+        def pending_refresh(s, p=prop_alias):
+            s.blk.stage_template(p)
 
         self.hard_refresh(pending_refresh)(self)
 
@@ -716,6 +708,15 @@ class ListBlockWidget(QWidget):
             tabs.addTab(tab_content, label)
 
         plus_tab = QWidget()
+        add_btn = QPushButton("Add New Block")
+        add_btn.clicked.connect(self.add_block)
+        add_btn.setMaximumWidth(200)
+
+        plus_layout = QVBoxLayout()
+        plus_layout.addWidget(add_btn)
+        plus_layout.addStretch()
+        plus_tab.setLayout(plus_layout)
+
         self.tabs.addTab(plus_tab, "+")
 
         tabs.currentChanged.connect(self.on_tab_changed)
@@ -725,7 +726,11 @@ class ListBlockWidget(QWidget):
     @staticmethod
     def hard_refresh(func):
         def decorated(self, *args, **kwargs):
-            current_blk = self._find_block(self.tabs.currentIndex())
+            try:
+                current_blk = self._find_block(self.tabs.currentIndex())
+            except IndexError:
+                current_blk = self.blk
+
             def pending(f=func, a=args, k=kwargs):
                 f(self, *a, **k)
 
