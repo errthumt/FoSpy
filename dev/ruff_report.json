@@ -4,17 +4,227 @@
     "code": "F401",
     "end_location": {
       "column": 42,
-      "row": 187
+      "row": 188
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/_docs/properties/__init__.py",
     "fix": null,
     "location": {
       "column": 36,
-      "row": 187
+      "row": 188
     },
     "message": "`...blocks.metadata.Rename` imported but unused",
     "name": "unused-import",
-    "noqa_row": 187,
+    "noqa_row": 188,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 48,
+      "row": 6
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 7
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 32,
+      "row": 6
+    },
+    "message": "`.._docs.properties._validator_rules` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 6,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 59,
+      "row": 6
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 7
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 50,
+      "row": 6
+    },
+    "message": "`.._docs.properties.val_rules` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 6,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 47,
+      "row": 126
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 127
+          },
+          "location": {
+            "column": 1,
+            "row": 126
+          }
+        }
+      ],
+      "message": "Remove unused import: `._blockUtils._unwrap_block`"
+    },
+    "location": {
+      "column": 34,
+      "row": 126
+    },
+    "message": "`._blockUtils._unwrap_block` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 126,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 33,
+      "row": 1
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/metadata.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 2
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Remove unused import: `.synthesis.Synthesis`"
+    },
+    "location": {
+      "column": 24,
+      "row": 1
+    },
+    "message": "`.synthesis.Synthesis` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 29,
+      "row": 5
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/metadata.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 5
+          }
+        }
+      ],
+      "message": "Remove unused import: `.files.FileBlock`"
+    },
+    "location": {
+      "column": 20,
+      "row": 5
+    },
+    "message": "`.files.FileBlock` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 5,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 6
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/metadata.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 7
+          },
+          "location": {
+            "column": 1,
+            "row": 6
+          }
+        }
+      ],
+      "message": "Remove unused import: `.template.TemplateSet`"
+    },
+    "location": {
+      "column": 23,
+      "row": 6
+    },
+    "message": "`.template.TemplateSet` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 6,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -50,6 +260,111 @@
     "message": "`....blocks.Rename` imported but unused",
     "name": "unused-import",
     "noqa_row": 4,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 16,
+      "row": 19
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from PySide6.QtWidgets import (\n    QWidget,\n    QLabel,\n    QVBoxLayout,\n    QHBoxLayout,\n    QLineEdit,\n    QScrollArea,\n    QPushButton,\n    QTabWidget,\n    QStackedWidget\n)",
+          "end_location": {
+            "column": 2,
+            "row": 20
+          },
+          "location": {
+            "column": 1,
+            "row": 9
+          }
+        }
+      ],
+      "message": "Remove unused import: `PySide6.QtWidgets.QSizePolicy`"
+    },
+    "location": {
+      "column": 5,
+      "row": 19
+    },
+    "message": "`PySide6.QtWidgets.QSizePolicy` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 19,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 43,
+      "row": 209
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 210
+          },
+          "location": {
+            "column": 1,
+            "row": 209
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 32,
+      "row": 209
+    },
+    "message": "`....blocks.SingleBlock` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 209,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 54,
+      "row": 209
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 210
+          },
+          "location": {
+            "column": 1,
+            "row": 209
+          }
+        }
+      ],
+      "message": "Remove unused import"
+    },
+    "location": {
+      "column": 45,
+      "row": 209
+    },
+    "message": "`....blocks.ListBlock` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 209,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
