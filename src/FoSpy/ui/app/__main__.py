@@ -25,6 +25,7 @@ def main_cli(**kwargs):
     from PySide6.QtWidgets import QApplication, QSplashScreen
     from PySide6.QtGui import QPixmap
     from PySide6.QtCore import Qt
+    from ...config import values as cfg
     import sys
 
     from .window import MainWindow
@@ -40,7 +41,8 @@ def main_cli(**kwargs):
     scaled = pixmap.scaledToHeight(splash_h, Qt.SmoothTransformation)
 
     splash = QSplashScreen(scaled, Qt.WindowStaysOnTopHint)
-    splash.show()
+    if cfg.get("APP.splash", True):
+        splash.show()
 
     try:
         app.processEvents()
