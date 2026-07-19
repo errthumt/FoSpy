@@ -23,22 +23,17 @@ TemplateLists = {
 [`TemplateSet`][FoSpy.blocks.template.TemplateSet] blocks."""
 
 
-aliases = {
-    "material": b.Material,
-    "materials": b.MaterialList,
-    "treatment": b.Treatment,
-    "treatments": b.TreatmentList,
-    "experimenter": b.Experimenter,
-    "experimenters": b.ExperimenterList,
-    "embed": b.EmbeddedFile
-}
-"""Maps alias names to block classes for use in non-template
-[`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] blocks."""
-
+blk_classes = []
 for attr in b.__all__:
     blk_cls = getattr(b, attr)
     if isinstance(blk_cls, type) and issubclass(blk_cls, b.Block):
-        aliases[attr.lower()] = blk_cls
+        blk_classes.append((attr.lower(), blk_cls))
+
+blk_classes.sort(key=lambda x: len(x[1].mro()), reverse=True)
+
+aliases = {name: cls for name, cls in blk_classes}
+"""Maps alias names to block classes for use in non-template
+[`SingleBlock`][FoSpy.blocks.blocks.SingleBlock] blocks."""
 
 
 required_keys = {
