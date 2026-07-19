@@ -31,7 +31,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic$materials]
+[Generic$material]
 template_name: A generic metal powder, purity 0.995
 -name: <!TEMPLATE-FIELD>
 type: reagent
@@ -53,7 +53,7 @@ start_temp: 25
 start_temp_unit: degree_Celsius
 -observations: <!TEMPLATE-FIELD>
 
-[[Anneal_sections]]
+[[Anneal_sections$annealsection]]
 template_name: Any ramp
 type: ramp
 -temp: <!TEMPLATE-FIELD>
@@ -66,7 +66,7 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[[Cifs]]
+[[Cifs$attachment]]
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 

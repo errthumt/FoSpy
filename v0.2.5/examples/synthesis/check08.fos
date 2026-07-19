@@ -151,6 +151,7 @@ treatments: [
 
 [Rename]
 materials: reagents
+attachments: cifs
 
 [Cifs]
 file_name: Ba2Zn5Sb6_ICSD.cif

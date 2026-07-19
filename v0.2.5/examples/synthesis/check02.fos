@@ -125,7 +125,9 @@ structure_comments: Unique clathrate with novel polyhedra. Space group Pnma
 // Synthesis files are required to have a materials block, so
 // this line specifies that it has been renamed to reagents.
 materials: reagents
+attachments: cifs
 
+// My attachment list only contains CIFs, so I renamed it to 'cifs'
 [Cifs]
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{

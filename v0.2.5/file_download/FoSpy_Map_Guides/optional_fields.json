@@ -152,24 +152,18 @@
             "end_time": "treatments[1].end_time"
         }
     ],
-    "cif": {
-        "rename": {},
-        "file_name": "cif.file_name",
-        "path": "cif.path",
-        "embedded": "cif.embedded"
-    },
-    "cifs": [
+    "attachments": [
         {
             "rename": {},
-            "file_name": "cifs[0].file_name",
-            "path": "cifs[0].path",
-            "embedded": "cifs[0].embedded"
+            "file_name": "attachments[0].file_name",
+            "path": "attachments[0].path",
+            "embedded": "attachments[0].embedded"
         },
         {
             "rename": {},
-            "file_name": "cifs[1].file_name",
-            "path": "cifs[1].path",
-            "embedded": "cifs[1].embedded"
+            "file_name": "attachments[1].file_name",
+            "path": "attachments[1].path",
+            "embedded": "attachments[1].embedded"
         }
     ],
     "laboratory_conditions": {
