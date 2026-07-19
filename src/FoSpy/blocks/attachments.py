@@ -391,4 +391,4 @@ class PathFile(LocationType, Attachment):
 FileType.dispatch["path"] = PathFile
 
 
-CifList = ListBlock.Simple(Attachment.enforce_subtype(CIFFile))
+CifList = ListBlock.Simple(CIFFile)

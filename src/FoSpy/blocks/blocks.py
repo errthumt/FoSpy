@@ -363,18 +363,25 @@ class SingleBlock(Block):
     def make_dispatch(func):
         @classmethod
         def dispatcher(cls, blockDict, _visited=None, **kwargs):
-            dispatch_from = getattr(cls, "dispatch_from", None)
-            if dispatch_from is not None and dispatch_from not in _visited:
-                return dispatch_from.dispatch_subclass(blockDict, **kwargs)
-
-            blockDict = _unwrap_block(blockDict)
-
             if _visited is None:
                 _visited = []
             elif cls in _visited:
                 return cls(blockDict, _dispatched=True, **kwargs)
             else:
                 _visited.append(cls)
+
+            dispatch_from = getattr(cls, "dispatch_from", None)
+            if dispatch_from is not None and dispatch_from not in _visited:
+                full_block = dispatch_from.dispatch_subclass(blockDict, **kwargs)
+                if not isinstance(full_block, cls):
+                    from .. import _errors as err
+                    raise err.FoSpyStructureError(f"Attempted to construct the blockDict below into a {cls.__name__} "
+                                                  "object, but it was dispatched to a different subclass "
+                                                  f"({full_block.__class__.__name__})\n\n{blockDict}")
+
+                return full_block
+
+            blockDict = _unwrap_block(blockDict)
                 
             dispatched = func(cls, blockDict, **kwargs)
             if dispatched in _visited:
