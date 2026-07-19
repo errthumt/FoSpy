@@ -363,6 +363,10 @@ class SingleBlock(Block):
     def make_dispatch(func):
         @classmethod
         def dispatcher(cls, blockDict, _visited=None, **kwargs):
+            _debugging = "annealing"
+            if cls.__name__.lower() == _debugging:
+                pass # put a break point here
+
             if _visited is None:
                 _visited = []
             elif cls in _visited:
@@ -370,6 +374,7 @@ class SingleBlock(Block):
             else:
                 _visited.append(cls)
 
+            # jump to intended entry point
             dispatch_from = getattr(cls, "dispatch_from", None)
             if (dispatch_from is not None and
                 # skip abstract classes
@@ -379,16 +384,21 @@ class SingleBlock(Block):
                 if not isinstance(full_block, cls):
                     from .. import _errors as err
                     raise err.FoSpyStructureError(f"Attempted to construct the blockDict below into a {cls.__name__} "
-                                                  "object, but it was dispatched to a different subclass "
-                                                  f"({full_block.__class__.__name__})\n\n{blockDict}")
+                                                "object, but it was dispatched to a different subclass "
+                                                f"({full_block.__class__.__name__})\n\n{blockDict}")
 
                 return full_block
+
 
             blockDict = _unwrap_block(blockDict)
                 
             dispatched = func(cls, blockDict, **kwargs)
             if dispatched in _visited:
                 return dispatched(blockDict, _dispatched=True, **kwargs)
+            elif isinstance(dispatched, type):
+                # if dispatched is not super,
+                # successfully dispatched to next subclass
+                _visited.append(cls)
 
             # call original return's method, not the extracted class
             return dispatched.dispatch_subclass(blockDict, _visited=_visited, **kwargs)
@@ -420,7 +430,7 @@ class SingleBlock(Block):
         return dispatched_cls
 
     @make_dispatch
-    def dispatch_subclass(cls, blockDict:dict, _visited=None, **kwargs:any):
+    def dispatch_subclass(cls, blockDict:dict, **kwargs:any):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
