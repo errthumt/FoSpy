@@ -161,7 +161,7 @@ group Cmcm]
     start_temp: 25
     start_temp_unit: degree_Celsius
 
-[Cifs]
+[Attachments]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: mkdocs/docs/examples/synthesis
 

@@ -170,8 +170,7 @@ optional_keys = {
         "rename": b.Rename
     },
     b.Synthesis: {
-        "cif": b.CIFFile,
-        "cifs": b.CifList,
+        "attachments": b.AttachmentList,
         "laboratory_conditions": b.LabConditions,
         "equipment": b.EquipmentList
     },

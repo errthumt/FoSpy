@@ -364,3 +364,4 @@ FileType.dispatch["path"] = PathFile
 
 
 CifList = ListBlock.Simple(CIFFile)
+AttachmentList = ListBlock.Simple(Attachment)

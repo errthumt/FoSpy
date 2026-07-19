@@ -203,11 +203,8 @@
         }
     },
     "Synthesis": {
-        "cif": {
-            "desc": "A single attached CIF file applicable to the entire synthesis."
-        },
-        "cifs": {
-            "desc": "Multiple attached CIF files applicable to the entire synthesis."
+        "attachments": {
+            "desc": "A list of files either attached by relative path or with embedded text."
         },
         "equipment": {
             "desc": "Specialized equipment or apparatuses used during the synthesis."

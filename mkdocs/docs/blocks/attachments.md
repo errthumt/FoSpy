@@ -18,6 +18,15 @@ documentation](../full/index.md).
         summary:
            functions: true
 ---
+[](){ #blockdocs-AttachmentList }
+### `AttachmentList`
+::: FoSpy.blocks.attachments.AttachmentList
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-CIFFile }
 ### `CIFFile`
 ::: FoSpy.blocks.attachments.CIFFile

@@ -46,11 +46,15 @@ def copy_fos_to_PyPI(fos_path: Path, pypi_path: Path):
     my_synth = Synthesis.fromFile(fos_path)
     my_synth.materials.remove_idx(from_idx=1)
     my_synth.treatments = []
-    my_synth.cifs[0].embedded = ["Embedded CIF Test Goes Here\n"]
-    my_synth.cifs.insert(0, {
+    my_synth.attachments[0].embedded = ["Embedded CIF Text Goes Here\n"]
+    my_synth.attachments.insert(0, {
         "file_name": "attached.cif",
         "path": "./projects/my_cifs"
     })
+
+    my_synth.attachments[0].file_name.add_comments(
+        "You can also attach files with relative paths."
+    )
 
     # write to temporary file
     with tempfile.TemporaryDirectory() as tmp:

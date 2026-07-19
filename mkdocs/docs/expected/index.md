@@ -810,10 +810,9 @@ Note that renaming a property will keep all relevant validation rules attached t
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+|-----------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-| cif | A single attached CIF file applicable to the entire synthesis. | <ul><li>[A `CIFFile` object.](#ciffile)</li></ul><ul></ul> |
-| cifs | Multiple attached CIF files applicable to the entire synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
+| attachments | A list of files either attached by relative path or with embedded text. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Attachment` objects.](#attachment)</li></ul> |
 | laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
 | equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |
 
@@ -899,7 +898,7 @@ Developers are currently working on ways to flexibly allow any template list in 
 | treatments | A list of incomplete templates describing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Treatment` *templates.*](#treatment)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | annealings | A list of incomplete templates describing annealing treatments. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`Annealing` *templates.*](#annealing)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
 | anneal_sections | A list of incomplete templates describing annealing sections. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`AnnealSection` *templates.*](#annealsection)<ul><li>[`FlexTemplate` subclasses](#flextemplate) are defined with a parent [`SingleBlock` subclass](#singleblock). They automatically detect which required properties are missing at construction time, and instantiate a [dynamic `TemplateBlock`](#templateblock) with template fields in those properties.</li></ul></li></ul> |
-| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`EnforcedAttachment` objects.](#attachment)</li></ul> |
+| cifs | A list of CIF files attached to the template set. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`CIFFile` objects.](#ciffile)</li></ul> |
 
 ---
 ### `TraceData`

@@ -71,13 +71,13 @@ The nice thing about python is that in most cases, if you set a new variable "eq
 
 any edits to `my_meta` will also be edits to `my_synthesis.metadata`.
 
-Beware if you are not familiar with object-oriented code or namespaces: This also means that if you *reassign* a variable, it unlinks it from the original. For example, in the code below, I mistakenly link `my_mats = my_synthesis.cifs` before correctly assigning `my_mats = my_synthesis.materials` in the next line. This *does not* link the CIF files and materials together in any way. Instead, `my_mats` "forgets" that it was ever linked to the CIFs and points at the materials for the rest of the script.
+Beware if you are not familiar with object-oriented code or namespaces: This also means that if you *reassign* a variable, it unlinks it from the original. For example, in the code below, I mistakenly link `my_mats = my_synthesis.attachments` before correctly assigning `my_mats = my_synthesis.materials` in the next line. This *does not* link the CIF files and materials together in any way. Instead, `my_mats` "forgets" that it was ever linked to the CIFs and points at the materials for the rest of the script.
 ```python
 # some shortcuts so I don't need to keep referencing my_synthesis
 my_meta = my_synthesis.metadata
 my_exps = my_synthesis.experimenters
 my_reaction = my_synthesis.reaction
-my_mats = my_synthesis.cifs
+my_mats = my_synthesis.attachments
 my_mats = my_synthesis.materials
 my_treats = my_synthesis.treatments
 ```
@@ -109,6 +109,12 @@ I also do some rearranging of the document block order here. Unless we rearrange
 my_synthesis.clear_all_comments()
 my_synthesis.rename_block("materials","reagents")
 my_mats = my_synthesis.reagents
+
+my_synthesis.rename_block("attachments", "cifs")
+my_synthesis.cifs.add_comments(
+    "My attachment list only contains CIFs, so I renamed it to 'cifs'"
+)
+
 my_synthesis.rename.add_comments(
     "This new block has been added because I renamed a required block.")
 my_synthesis.rename.materials.add_comments(

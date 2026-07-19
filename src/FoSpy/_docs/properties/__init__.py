@@ -490,10 +490,13 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
 
 
 def get_summary(cls, enforce=False, mode="cli"):
-    from ...blocks import SingleBlock
+    from ...blocks import Block
 
     cls_nm = cls.__name__
-    parent = next(c for c in cls.__bases__ if issubclass(c, SingleBlock))
+    bases = cls.__bases__
+    
+    parent = next(c for c in bases if issubclass(c, Block))
+
     parent_nm = parent.__name__
 
     descs = get_descs()

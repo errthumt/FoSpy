@@ -39,13 +39,19 @@ def main():
     my_meta = my_synthesis.metadata
     my_exps = my_synthesis.experimenters
     my_reaction = my_synthesis.reaction
-    my_mats = my_synthesis.cifs
+    my_mats = my_synthesis.attachments
     my_mats = my_synthesis.materials
     my_treats = my_synthesis.treatments
 
     my_synthesis.clear_all_comments()
     my_synthesis.rename_block("materials","reagents")
     my_mats = my_synthesis.reagents
+
+    my_synthesis.rename_block("attachments", "cifs")
+    my_synthesis.cifs.add_comments(
+        "My attachment list only contains CIFs, so I renamed it to 'cifs'"
+    )
+
     my_synthesis.rename.add_comments(
         "This new block has been added because I renamed a required block.")
     my_synthesis.rename.materials.add_comments(

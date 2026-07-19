@@ -6,6 +6,7 @@ project_id: travis5672/clathrates/As28+d
 
 [Rename]
 materials: reagents
+attachments: cifs
 
 [[Experimenters]]
 name: Travis Errthum

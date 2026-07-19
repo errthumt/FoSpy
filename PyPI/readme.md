@@ -66,12 +66,13 @@ treatments: [
 // This is a comment on the treatments block
 [Treatments]
 
-[[Cifs]]
+[[Attachments]]
+// You can also attach files with relative paths.
 file_name: attached.cif
 path: projects/my_cifs
 
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
-['Embedded CIF Test Goes Here\n']
+['Embedded CIF Text Goes Here\n']
 #################### END FOS EMBED }}}
 ```
