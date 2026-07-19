@@ -248,6 +248,9 @@ class SingleBlock(Block):
     [`TemplateBlock(SingleBlock)`][FoSpy.blocks.template.TemplateBlock]
     """
     dispatch = {}
+    dispatch_key = None
+    dispatch_default = None
+    dispatch_allow_self = True
     _aliases = None
     _id_key = None
 
@@ -355,9 +358,35 @@ class SingleBlock(Block):
                 serial = _prune_template_names(serial)
             return serial
         return empty
+    
+    @staticmethod
+    def make_dispatch(func):
+        @classmethod
+        def dispatcher(cls, blockDict, _visited=None, **kwargs):
+            dispatch_from = getattr(cls, "dispatch_from", None)
+            if dispatch_from is not None and dispatch_from not in _visited:
+                return dispatch_from.dispatch_subclass(blockDict, **kwargs)
 
-    @classmethod
-    def dispatch_subclass(cls, blockDict:dict, **kwargs:any):
+            blockDict = _unwrap_block(blockDict)
+
+            if _visited is None:
+                _visited = []
+            elif cls in _visited:
+                return cls(blockDict, _dispatched=True, **kwargs)
+            else:
+                _visited.append(cls)
+                
+            dispatched = func(cls, blockDict, **kwargs)
+            if dispatched in _visited:
+                return dispatched(blockDict, _dispatched=True, **kwargs)
+
+            # call original return's method, not the extracted class
+            return dispatched.dispatch_subclass(blockDict, _visited=_visited, **kwargs)
+        
+        return dispatcher
+
+    @make_dispatch
+    def dispatch_subclass(cls, blockDict:dict, _visited=None, **kwargs:any):
         """
         Recommended dispatcher to allow subclass delegation when constructing.
         
@@ -367,8 +396,26 @@ class SingleBlock(Block):
         Default behavior passes `blockDict` and `**kwargs` to `__init__`
         constructor.
         """
-        # k: construct normally.
-        return cls(blockDict,_dispatched=True, **kwargs)
+        from .. import _errors as err
+        blockDict = _unwrap_block(blockDict).copy()
+
+        dispatch_val = blockDict.get(cls.dispatch_key, None)
+        dispatched_cls = cls.dispatch.get(dispatch_val, None)
+
+        if dispatched_cls is None:
+            if not cls.dispatch_default:
+                if not cls.dispatch_allow_self:
+                    raise err.FailedValidatorError(
+                        cls.dispatch_key, cls,
+                        Exception("This block type must be dispatched to another subclass."),
+                        blockDict=blockDict,
+                        hint=f"Could not find a valid dispatch value for {cls.dispatch_key} = {dispatch_val}.")
+                else:
+                    dispatched_cls = cls
+            else:
+                dispatched_cls = cls.dispatch_default
+
+        return dispatched_cls
     
     @classmethod
     def build_req_validators(cls):
@@ -809,53 +856,68 @@ class SingleBlock(Block):
             template = {}
 
         if not isinstance(template, (TemplateBlock, dict)):
-            raise ValueError("Template must be a TemplateBlock or dictionary.")
+            raise ValueError("Template must be a TemplateBlock or dictionary. To 'stage' a ListBlock, "
+                             "you can stage a SingleBlock template with a ListBlock alias. This creates "
+                             "a non-template ListBlock with the template staged as its first entry.")
+        
+        alias_validator = None
+        if "$" in prop_name:
+            prop_name, alias = prop_name.split("$",1)
+            try:
+                alias_validator = self._aliases[alias]
+            except KeyError as e:
+                raise err.PropertyAliasError(prop_name, self, blockDict={prop_name: "<staged template>"},
+                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
+                                             posthint=f"Valid aliases: {list(self._aliases.keys())}") from e
 
         if hasattr(self, prop_name):
             raise ValueError(f"Property {prop_name} already exists. You cannot stage a template for a property that already exists.")
         
         validators = self.build_validators()
         validator = validators.get(prop_name, None)
-        alias = None
-        if isinstance(validator, type) and issubclass(validator, ListBlock):
-            raise ValueError(f"{prop_name} is a list property. You cannot stage a template for a list property. "
-                             "Instead, set the property to an empty list and then stage a template to that list.")
+
+        if validator is not None:
+            alias = None
+
+        if alias_validator is not validator and None not in (validator, alias_validator):
+            raise ValueError(f"Property {prop_name} already has a validator. You cannot alias a different validator for the same property.")
         
-        if "$" in prop_name and validator is not None:
-            prop, alias = prop_name.split("$",1)
-            raise ValueError(f"The property {prop} already has a validator. You cannot alias a different validator for the same property.")
+        validator = next(v for v in (validator, alias_validator) if v is not None)
 
         if validator is None:
-            if "$" not in prop_name:
-                if isinstance(template, dict):
-                    alias = None
-                else:
-                    alias = next(k for k, v in self._aliases.items() if isinstance(template, v))
-
-                if alias is None:
-                    raise ValueError(f"The property {prop_name} is unexpected. In order to stage a template "
-                                    "for and unexpected property, you must specify the validator with a '$' alias "
-                                    "in the property name, or stage a pre-constructed template of an aliasable validator.")
-
-            else:
-                prop_name, alias = prop_name.split("$",1)
-
             try:
-                validator = self._aliases[alias]
-            except KeyError:
-                raise err.PropertyAliasError(prop_name, self, blockDict={prop_name: "<staged template>"},
-                                             hint=f"Unrecognized block alias: '{alias}' assigned to property: ",
-                                             posthint=f"Valid aliases: {list(self._aliases.keys())}")
-            
-        if not (isinstance(validator, type) and issubclass(validator, SingleBlock)):
-            raise ValueError("Templates can only be staged for SingleBlock validators")
+                if not isinstance(template, TemplateBlock):
+                    raise TypeError("Dictionary templates must be staged with an alias.")
 
-        if not isinstance(template, (dict, validator)):
-            raise ValueError(f"{prop_name} is mapped to an incompatible validator for the staged template.")
+                alias = next(k for k, v in self._aliases.items() if isinstance(template, v))
+                validator = self._aliases[alias]
+            except (TypeError,StopIteration) as e:
+                raise ValueError(f"Property {prop_name} is unexpected. In order to stage a template "
+                                "for and unexpected property, you must specify the validator with a '$' alias "
+                                "in the property name, or stage a pre-constructed template of an aliasable validator."
+                                ) from e
+
+        if isinstance(validator, type) and issubclass(validator, ListBlock):
+            # let setattr handle ListBlock construction using alias
+            # this creates an empty ListBlock under self.prop_name
+            # (alias stripped during setattr)
+            setattr(self, prop_name+"$"+alias if alias is not None else prop_name, [])
+            empty_lb = getattr(self, prop_name)
+            return empty_lb.stage_template("entry0", template)
 
         if isinstance(template, dict):
+            # reflex returns a TemplateBlock subclassed from the validator
             template = validator.reflex(serialize=False, include_temp_names=True, clean=False, **template)
             template.template_name = prop_name
+
+        elif not isinstance(template, validator):
+            val_nm = validator.__name__
+            if alias is None:
+                error_msg = f"The provided template is not compatible with the validator expected for property '{prop_name}' ({val_nm})."
+            else:
+                error_msg = f"The provided template is not compatible with the validator specified by alias '{alias}' ({val_nm})."
+            raise ValueError(error_msg)
+
 
         template._staged_parent = self
 
@@ -2187,7 +2249,8 @@ class ListBlock(Block):
             self._objs.remove(blk)
 
         if blk in self._staged_templates.values():
-            self._staged_templates.pop(blk)
+            temp_id = next(k for k,v in self._staged_templates.items() if v is blk)
+            self._staged_templates.pop(temp_id)
             
     
     def remove_any(self, **kwargs):

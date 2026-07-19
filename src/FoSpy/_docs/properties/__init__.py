@@ -490,8 +490,11 @@ def _md_to_mode(txt, mode="cli", urls={}, crossrefs={}):
 
 
 def get_summary(cls, enforce=False, mode="cli"):
+    from ...blocks import SingleBlock
+
     cls_nm = cls.__name__
-    parent_nm = cls.__bases__[0].__name__
+    parent = next(c for c in cls.__bases__ if issubclass(c, SingleBlock))
+    parent_nm = parent.__name__
 
     descs = get_descs()
     temp_dir = TEMPLATE_DIR

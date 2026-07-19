@@ -34,7 +34,7 @@ def _unwrap_block(struct):
     if isinstance(struct,SingleBlock):
         struct = struct.serialize(keepListType=True)
         struct = _unwrap_block(struct)
-    return struct
+    return struct.copy()
 
 def _unwrap_listblock(struct, typ:type=None):
     from .blocks import ListBlock

@@ -50,7 +50,11 @@ class PropertyError(Exception):
 
 
 def _get_block_info(blockObj, blockDict={}):
-    typ = type(blockObj)
+    if isinstance(blockObj, type):
+        typ = blockObj
+    else:
+        typ = type(blockObj)
+
     typ_nm = typ.__name__
 
     if hasattr(typ, "_id_key"):

@@ -9,7 +9,8 @@ _debug = Debug()
 
 
 class Attachment(SingleBlock):
-    dispatch={}
+    dispatch_key = "_extension"
+    dispatch={} # populated after subclass definitions
     extensions={}
     enforced_subtype=None
     _id_key = "file_name"  
@@ -86,16 +87,24 @@ class Attachment(SingleBlock):
 
     @classmethod
     def enforce_subtype(cls, subcls, **kwargs):
-        @_validator_rules(
-            val_rules.get(subcls)
-        )
-        class EnforcedAttachment(cls):
-            enforced_subtype = subcls
-            pass
-        return EnforcedAttachment
+        # TODO: move enforcement to setattr
+        return cls
 
-    @classmethod
+    @SingleBlock.make_dispatch
     def dispatch_subclass(cls, blockDict, **kwargs):
+        from .. import _errors as err
+        # just inserted as first line of make_dispatch's dispatcher def
+        # blockDict = _unwrap_block(blockDict)
+
+        if "file_name" not in blockDict:
+            raise err.MissingPropertyError("file_name", cls, blockDict=blockDict)
+        
+        _, ext = cls._validate_filename(blockDict["file_name"])
+
+        blockDict[cls.dispatch_key] = ext
+
+        return super(Attachment, cls)
+    
         blockDict = blockDict.copy()
         # construct a bare attachment to validate filename and extension
         validated = cls(blockDict, _dispatched=True)
@@ -131,9 +140,121 @@ class Attachment(SingleBlock):
             attachments.append(self)
 
         return attachments
-
-class EmbeddedFile(Attachment):
+    
+class FileType:
+    dispatch_key = "_location"
     dispatch = {}
+    dispatch_default = None
+    dispatch_allow_default = False
+    location_classes = {}
+    dispatch_from = Attachment
+
+    @Attachment.make_dispatch
+    def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
+        from ._blockUtils import _unwrap_block
+        from .. import _errors as err
+
+        location = None
+        for key, ft in cls.dispatch.items():
+            if location is not None:
+                blockDict.pop(key, None)
+            elif key in blockDict:
+                location = key
+
+        if location is None:
+            raise err.MissingPropertyError(" or ".join(cls.dispatch.keys()), cls, blockDict=blockDict)
+
+        blockDict[cls.dispatch_key] = location
+
+        # assemble hybrid classes only once
+        if location not in cls.location_classes:
+            class FileTypeLocator(cls, Attachment):
+                dispatch = {}
+                dispatch_default = None
+                dispatch_allow_default = False
+
+            FileTypeLocator.__name__ = cls.__name__ + "Locator"
+            FileTypeLocator.__qualname__ = cls.__name__ + "Locator"
+            FileTypeLocator.__module__ = cls.__module__
+
+            cap_loc = location.capitalize()
+
+            for key, ft in cls.dispatch.items():
+                class LocatedFileType(ft, cls):
+                    dispatch_allow_default = True
+
+
+                LocatedFileType.__name__ = cap_loc + cls.__name__
+                LocatedFileType.__qualname__ = cap_loc + cls.__qualname__
+                LocatedFileType.__module__ = cls.__module__
+
+                FileTypeLocator.dispatch[key] = LocatedFileType
+
+            cls.location_classes[location] = FileTypeLocator
+        else:
+            FileTypeLocator = cls.location_classes[location]
+
+        return super(Attachment, FileTypeLocator)
+    
+Attachment.dispatch_default = FileType
+
+
+class CIFFile(FileType, Attachment):
+    def __init__(self, blockDict, **kwargs):
+        super().__init__(blockDict,**kwargs)
+        self._reserved.append("engine")
+        self.engine = None
+    def _get_engine(self, engine_name=None):
+        if engine_name is None:
+            if self.engine is None:
+                self.engine = self.new_engine()
+            engine = self.engine
+        else:
+            engine = self.new_engine(engine_name=engine_name)
+
+        return engine
+
+    def get_pattern(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_pattern()
+    
+    def get_peaks(self, engine_name=None):
+        engine = self._get_engine(engine_name=engine_name)
+
+        return engine.get_peaks()
+    
+    def new_engine(self, engine_name=None):
+        from ..config import values as cfg
+        from ..plotting.diffraction.engines import ENGINES
+        if engine_name is None:
+            engine_name = cfg.get("diffraction.default_engine")
+        return ENGINES[engine_name](self._get_filepath())
+
+    def quick_pattern(self,subprocess=False):
+        from ..plotting._utils import _quick_pattern
+        
+        df = self.get_pattern()
+
+        x,y = df.columns[:2]
+
+        tth, intensity = df[x].to_numpy(), df[y].to_numpy()
+
+        if subprocess:
+            return self._subprocess(_quick_pattern, args=(tth, intensity))
+        
+        return _quick_pattern(tth, intensity)
+    
+Attachment.dispatch[".cif"] = CIFFile
+
+class LocationType:
+    dispatch = {}
+    @Attachment.make_dispatch
+    def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
+        return super(Attachment, cls)
+
+
+class EmbeddedFile(LocationType, Attachment):
     def _write_to_temp(self, encoding="utf-8"):
         try:
             temppath = self.find_temppath()
@@ -160,10 +281,9 @@ class EmbeddedFile(Attachment):
         serial = super().serialize(**kwargs)
         #serial["embedded"] = self.embedded.copy()
         return serial
-Attachment.dispatch["embedded"] = EmbeddedFile
+FileType.dispatch["embedded"] = EmbeddedFile
 
-class PathFile(Attachment):
-    dispatch = {}
+class PathFile(LocationType, Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         
@@ -268,55 +388,7 @@ class PathFile(Attachment):
         return copy
         
         
-Attachment.dispatch["path"] = PathFile
+FileType.dispatch["path"] = PathFile
 
-class CIFFile(Attachment):
-    def __init__(self, blockDict, **kwargs):
-        super().__init__(blockDict,**kwargs)
-        self._reserved.append("engine")
-        self.engine = None
-    def _get_engine(self, engine_name=None):
-        if engine_name is None:
-            if self.engine is None:
-                self.engine = self.new_engine()
-            engine = self.engine
-        else:
-            engine = self.new_engine(engine_name=engine_name)
-
-        return engine
-
-    def get_pattern(self, engine_name=None):
-        engine = self._get_engine(engine_name=engine_name)
-
-        return engine.get_pattern()
-    
-    def get_peaks(self, engine_name=None):
-        engine = self._get_engine(engine_name=engine_name)
-
-        return engine.get_peaks()
-    
-    def new_engine(self, engine_name=None):
-        from ..config import values as cfg
-        from ..plotting.diffraction.engines import ENGINES
-        if engine_name is None:
-            engine_name = cfg.get("diffraction.default_engine")
-        return ENGINES[engine_name](self._get_filepath())
-
-    def quick_pattern(self,subprocess=False):
-        from ..plotting._utils import _quick_pattern
-        
-        df = self.get_pattern()
-
-        x,y = df.columns[:2]
-
-        tth, intensity = df[x].to_numpy(), df[y].to_numpy()
-
-        if subprocess:
-            return self._subprocess(_quick_pattern, args=(tth, intensity))
-        
-        return _quick_pattern(tth, intensity)
-    
-
-Attachment.extensions[".cif"] = CIFFile
 
 CifList = ListBlock.Simple(Attachment.enforce_subtype(CIFFile))
