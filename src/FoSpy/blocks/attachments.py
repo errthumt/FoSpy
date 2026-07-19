@@ -87,7 +87,8 @@ class Attachment(SingleBlock):
 
     @classmethod
     def enforce_subtype(cls, subcls, **kwargs):
-        # TODO: move enforcement to setattr
+        raise DeprecationWarning("Attachments no longer enforce subtype through this method. "
+                                 "Simply spec the validator as the enforced subtype instead.")
         return cls
 
     @SingleBlock.make_dispatch
@@ -104,35 +105,6 @@ class Attachment(SingleBlock):
         blockDict[cls.dispatch_key] = ext
 
         return super(Attachment, cls)
-    
-        blockDict = blockDict.copy()
-        # construct a bare attachment to validate filename and extension
-        validated = cls(blockDict, _dispatched=True)
-
-        extension = validated._extension
-
-        attachmenttype = None
-        for key, ft in cls.dispatch.items():
-            if attachmenttype is not None:
-                blockDict.pop(key, None)
-            elif key in blockDict:
-                attachmenttype = ft
-
-        if attachmenttype is None:
-            raise ValueError(f"Could not determine type for attachment: {validated.file_name}. "
-                             f"Must have one of the following keys: {list(cls.dispatch.keys())}") 
-        
-        subtype = cls.extensions.get(extension, cls)
-
-        if cls.enforced_subtype is not None and not issubclass(subtype, cls.enforced_subtype):
-            raise ValueError(f"Attachment type for this key must be a subclass of {cls.enforced_subtype.__name__}")
-
-        class NewAttachment(attachmenttype, subtype, cls):
-            @classmethod
-            def dispatch_subclass(cls, blockDict, **kwargs):
-                return cls(blockDict, _dispatched=True, **kwargs)
-
-        return NewAttachment.dispatch_subclass(blockDict, **kwargs)
     
     def find_attachments(self):
         attachments = super().find_attachments()
