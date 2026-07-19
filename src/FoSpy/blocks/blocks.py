@@ -606,6 +606,7 @@ class SingleBlock(Block):
 
         self.track_attachments(**cfg.track_attachments())
 
+
         from ..parsing.validation import aliases as als
         new_als = als.copy()
         new_als.update(self._aliases or {})

@@ -22,6 +22,52 @@ class FailedTemplateField(SimpleWrapper,TemplateField):
     def serialize(self, *args, **kwargs):
         return self._value
 
+def _get_template_aliases():
+    from .. import blocks as b
+    template_aliases = {}
+    for blk_name in b.__all__:
+
+        blk = getattr(b, blk_name)
+
+        blk_name = blk_name.lower()
+
+        if "template" in blk_name or "meta" in blk_name or blk_name in (
+            "rename"
+        ):
+            continue
+
+        target = None
+        if issubclass(blk, SingleBlock):
+            if issubclass(blk, b.Attachment):
+                target = ListBlock.Simple(blk)
+            else:
+                target = TemplateList.Simple(blk)
+        elif issubclass(blk, ListBlock) and blk._reqCls is not None:
+            if issubclass(blk._reqCls, b.Attachment):
+                target = blk
+            else:
+                target = TemplateList.Simple(blk._reqCls)
+
+        if target is not None:
+            template_aliases[blk_name] = target
+    return template_aliases
+
+def _is_plural(name, single):
+    """Not exhaustive, but good enough for now"""
+    if not name.endswith("s"):
+        return False
+
+    if name[:-1] == single:
+        return True
+    
+    if name.endswith("es") and name[:-2] == single:
+        return True
+    
+    if name.endswith("ies") and name[:-3] == single[:-1]:
+        return True
+    
+    return False
+
 class TemplateSet(FileBlock):
     """
     Represents a set of templates loaded from a FOS file.
@@ -29,10 +75,55 @@ class TemplateSet(FileBlock):
     FOS files may contain multiple different types of templates grouped into
     `TemplateList`s. Each of these lists is one attribute of a `TemplateSet`.
     """
-    def __init__(self, blockDict, _sourceFile=None, _dispatched=False):
-        from ..parsing.validation import TemplateLists
-        self._aliases = TemplateLists
-        super().__init__(blockDict, _sourceFile=_sourceFile, _dispatched=_dispatched)
+    def __init__(self, blockDict, **kwargs):
+        self._aliases = _get_template_aliases()
+        super().__init__(blockDict, **kwargs)
+    
+    def __setattr__(self, name, value):
+        if "$" in name:
+            new_name, alias = name.split("$")
+            if alias in self._aliases:
+                return super().__setattr__(name, value)
+            
+            try:
+                alias = next(a for a in self._aliases if _is_plural(alias, a))
+                name = new_name + "$" + alias
+            except StopIteration:
+                pass
+            return super().__setattr__(name, value)
+
+        if name.startswith("_") or name in (
+            "metadata",
+            "ext",
+            "rename"
+        ):
+            return super().__setattr__(name, value)
+
+        if name in self._aliases:
+            name = name + "s" + name
+        else:
+            try:
+                alias = next(a for a in self._aliases if _is_plural(name, a))
+                name = name + "$" + alias
+            except StopIteration:
+                pass
+
+        return super().__setattr__(name, value)
+    
+    def serialize(self, *args, **kwargs):
+        serial = super().serialize(*args, **kwargs)
+        return serial
+        out = {}
+
+        for name, value in serial.items():
+            if "$" in name:
+                new_name, alias = name.split("$")
+                if _is_plural(new_name, alias):
+                    name = new_name
+
+            out[name] = value
+
+        return out
 
 class TemplateList(ListBlock):
     """

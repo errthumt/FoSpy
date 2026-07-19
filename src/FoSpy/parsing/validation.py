@@ -10,19 +10,6 @@ from .._debug import Debug
 _debug = Debug()
 
 
-
-TemplateLists = {
-    "experimenters": b.TemplateList.Simple(b.Experimenter),
-    "materials": b.TemplateList.Simple(b.Material),
-    "treatments": b.TemplateList.Simple(b.Treatment),
-    "annealings": b.TemplateList.Simple(b.Annealing),
-    "anneal_sections": b.TemplateList.Simple(b.AnnealSection),
-    "cifs": b.CifList
-}
-"""Maps alias names to [`TemplateList`][FoSpy.blocks.template.TemplateList] classes for use in
-[`TemplateSet`][FoSpy.blocks.template.TemplateSet] blocks."""
-
-
 blk_classes = []
 for attr in b.__all__:
     blk_cls = getattr(b, attr)
@@ -217,8 +204,6 @@ optional_keys = {
     b.Rename: {
         "rename": False
     },
-
-    b.TemplateSet: TemplateLists
 }
 """
 Maps block classes to dictionaries of optional keys and their validators.

@@ -40,7 +40,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[CIFS]
+[[CIFS$attachment]]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
  
@@ -55,7 +55,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
+[[Experimenters$experimenter]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -66,7 +66,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials]
+[Materials$material]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -84,7 +84,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Cifs]
+[Cifs$attachment]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
@@ -98,7 +98,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
+[[Experimenters$experimenter]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -109,7 +109,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials]
+[Materials$material]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -127,7 +127,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic$materials]
+[Generic$material]
 template_name: A generic metal powder, purity 0.995
 -name: <!TEMPLATE-FIELD>
 type: reagent
@@ -140,7 +140,7 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[Cifs]
+[Cifs$attachment]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
@@ -154,7 +154,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
+[[Experimenters$experimenter]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -165,7 +165,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials]
+[Materials$material]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -183,7 +183,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic$materials]
+[Generic$material]
 template_name: A generic metal powder, purity 0.995
 -name: <!TEMPLATE-FIELD>
 type: reagent
@@ -195,15 +195,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-
-[Treatments]
-template_name: Empty Anneal Template
-type: anneal
--repeats: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
-start_temp: 25
-start_temp_unit: degree_Celsius
--observations: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp
@@ -218,7 +209,16 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[Cifs]
+[Treatments$treatment]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
+
+[Cifs$attachment]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 
@@ -232,7 +232,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
+[[Experimenters$experimenter]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -243,7 +243,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials]
+[Materials$material]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -261,7 +261,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Generic$materials]
+[Generic$material]
 template_name: A generic metal powder, purity 0.995
 -name: <!TEMPLATE-FIELD>
 type: reagent
@@ -273,15 +273,6 @@ env: Ar (g)
 -amount: <!TEMPLATE-FIELD>
 amount_unit: mol ratio
 purity: 0.995
-
-[Treatments]
-template_name: Empty Anneal Template
-type: anneal
--repeats: <!TEMPLATE-FIELD>
--program: <!TEMPLATE-FIELD>
-start_temp: 25
-start_temp_unit: degree_Celsius
--observations: <!TEMPLATE-FIELD>
 
 [[Anneal_sections]]
 template_name: Any ramp
@@ -296,7 +287,16 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[[Cifs]]
+[Treatments$treatment]
+template_name: Empty Anneal Template
+type: anneal
+-repeats: <!TEMPLATE-FIELD>
+-program: <!TEMPLATE-FIELD>
+start_temp: 25
+start_temp_unit: degree_Celsius
+-observations: <!TEMPLATE-FIELD>
+
+[[Cifs$attachment]]
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 
@@ -418,7 +418,7 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
+[[Experimenters$experimenter]]
 template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
@@ -429,7 +429,7 @@ name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Generic$materials]
+[Generic$material]
 template_name: A generic metal powder, purity 0.995
 -name: <!TEMPLATE-FIELD>
 type: reagent
@@ -442,7 +442,7 @@ env: Ar (g)
 amount_unit: mol ratio
 purity: 0.995
 
-[Materials]
+[Materials$material]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -473,7 +473,7 @@ type: dwell
 -time: <!TEMPLATE-FIELD>
 time_unit: hour
 
-[Treatments]
+[Treatments$treatment]
 template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
@@ -482,7 +482,7 @@ start_temp: 25
 start_temp_unit: degree_Celsius
 -observations: <!TEMPLATE-FIELD>
 
-[[Cifs]]
+[[Cifs$attachment]]
 file_name: Ba2Zn5Sb6_ICSD.cif
 embedded: {{{
 
