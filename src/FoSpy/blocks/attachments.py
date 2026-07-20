@@ -90,7 +90,7 @@ class Attachment(SingleBlock):
                                  "Simply spec the validator as the enforced subtype instead.")
         return cls
 
-    @SingleBlock.make_dispatch
+    @SingleBlock.make_dispatch(file_name="attachment.txt")
     def dispatch_subclass(cls, blockDict, **kwargs):
         from .. import _errors as err
         # just inserted as first line of make_dispatch's dispatcher def
@@ -121,9 +121,8 @@ class FileType:
     location_classes = {}
     dispatch_from = Attachment
 
-    @Attachment.make_dispatch
+    @Attachment.make_dispatch(embedded="embedded text goes here")
     def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
-        from ._blockUtils import _unwrap_block
         from .. import _errors as err
 
         location = None
@@ -141,9 +140,7 @@ class FileType:
         # assemble hybrid classes only once
         if location not in cls.location_classes:
             class FileTypeLocator(cls, Attachment):
-                dispatch = {}
-                dispatch_default = None
-                dispatch_allow_default = False
+                pass
 
             FileTypeLocator.__name__ = cls.__name__ + "Locator"
             FileTypeLocator.__qualname__ = cls.__name__ + "Locator"
@@ -152,15 +149,16 @@ class FileType:
             cap_loc = location.capitalize()
 
             for key, ft in cls.dispatch.items():
-                class LocatedFileType(ft, cls):
-                    dispatch_allow_default = True
+                @FileTypeLocator.set_dispatch(key, allow_self=False)
+                class LocatedFileType(FileTypeLocator,ft, cls):
+                    pass
 
 
                 LocatedFileType.__name__ = cap_loc + cls.__name__
                 LocatedFileType.__qualname__ = cap_loc + cls.__qualname__
                 LocatedFileType.__module__ = cls.__module__
 
-                FileTypeLocator.dispatch[key] = LocatedFileType
+                # FileTypeLocator.dispatch[key] = LocatedFileType
 
             cls.location_classes[location] = FileTypeLocator
         else:
@@ -174,6 +172,11 @@ class CIFFile(FileType, Attachment):
         super().__init__(blockDict,**kwargs)
         self._reserved.append("engine")
         self.engine = None
+
+    @Attachment.make_dispatch(file_name="attachment.cif")
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(CIFFile, cls)
+
     def _get_engine(self, engine_name=None):
         if engine_name is None:
             if self.engine is None:
@@ -216,13 +219,12 @@ class CIFFile(FileType, Attachment):
         return _quick_pattern(tth, intensity)
 
 
-class LocationType:
-    @Attachment.make_dispatch
-    def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
-        return super(Attachment, cls)
-
 @Attachment.set_dispatch(from_parent=FileType, value="embedded", from_key="_location", allow_self=False)
-class EmbeddedFile(LocationType, Attachment):
+class EmbeddedFile(Attachment):
+    @Attachment.make_dispatch(path=None)
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(Attachment, cls)
+    
     def _write_to_temp(self, encoding="utf-8"):
         try:
             temppath = self.find_temppath()
@@ -251,10 +253,13 @@ class EmbeddedFile(LocationType, Attachment):
         return serial
 
 @Attachment.set_dispatch(from_parent=FileType, value="path")
-class PathFile(LocationType, Attachment):
+class PathFile(Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
-        
+
+    @Attachment.make_dispatch(path=".", embedded=None)
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(Attachment, cls)
 
     def _get_abspath(self):
         filedir = self._get_filedir().resolve()

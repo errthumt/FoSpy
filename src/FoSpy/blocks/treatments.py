@@ -84,7 +84,7 @@ class Ramp(AnnealSection):
     def __init__(self, blockDict, _dispatched=False):
         super().__init__(blockDict, _dispatched=_dispatched)
 
-    @AnnealSection.make_dispatch
+    @AnnealSection.make_dispatch(temp="", time="")
     def dispatch_subclass(cls, blockDict, **kwargs):
 
         seeking = cls.dispatch.keys()
@@ -94,7 +94,7 @@ class Ramp(AnnealSection):
             if found_val is not None and len(found) < len(seeking)-1:
                 found[key] = found_val
 
-        missing = [k for k in seeking if k not in found]
+        missing = [k for k in seeking if k not in found and k is not None]
 
         if len(missing) > 1:
             raise err.MissingPropertyError(' or '.join(missing), cls, blockDict=blockDict)
@@ -126,6 +126,10 @@ class Ramp(AnnealSection):
 
 @Ramp.set_dispatch("temp", from_key="_ramp_missing", allow_self=False)
 class RampNoTemp(Ramp):
+    @Ramp.make_dispatch(time="", rate="", temp=None)
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(RampNoTemp, cls)
+    
     def get_temp(self, temp_units="C"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
@@ -155,6 +159,9 @@ class RampNoTemp(Ramp):
 
 @Ramp.set_dispatch("time")
 class RampNoTime(Ramp):
+    @Ramp.make_dispatch(temp="", rate="", time=None)
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(RampNoTime, cls)
     def get_time(self, time_units="h"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
@@ -183,6 +190,9 @@ class RampNoTime(Ramp):
 
 @Ramp.set_dispatch("rate")
 class RampNoRate(Ramp):
+    @Ramp.make_dispatch(temp="", time="", rate=None)
+    def dispatch_subclass(cls, blockDict, **kwargs):
+        return super(RampNoRate, cls)
     def get_rate(self, temp_units="C", time_units="h"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:

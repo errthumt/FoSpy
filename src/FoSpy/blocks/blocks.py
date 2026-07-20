@@ -276,8 +276,42 @@ class SingleBlock(Block):
         Args:
             *args: A list of properties to override as template types.
         """
-        from .template import TemplateBlock, TemplateField, TemplateList
+        from .template import TemplateBlock, TemplateField, TemplateList, AbstractTemplate, AbstractTemplateLocator
         from ..parsing.validation import required_keys, optional_keys
+
+        if cls not in TemplateBlock.dispatch:
+            @TemplateBlock.set_dispatch(cls, from_key="_full_class", allow_self=False)
+            class TemplateLocator(AbstractTemplateLocator, TemplateBlock):
+                _full_class = cls
+
+            TemplateLocator.__name__ = f"{cls.__name__}TemplateLocator"
+            TemplateLocator.__qualname__ = f"{cls.__name__}.TemplateLocator"
+            TemplateLocator.__module__ = cls.__module__
+        else:
+            TemplateLocator = TemplateBlock.dispatch[cls]
+
+        args = tuple(sorted(args))
+
+        if args not in TemplateLocator.dispatch:
+            @TemplateLocator.set_dispatch(args, from_key="_fields", allow_self=False)
+            class NewTemplate(AbstractTemplate, TemplateLocator, cls):
+                _fields = args
+
+            NewTemplate.__name__ = f"{cls.__name__}Template"
+            NewTemplate.__qualname__ = f"{cls.__name__}.Template"
+            NewTemplate.__module__ = cls.__module__
+
+            # upgrade empty args to reflexors
+            if len(args) == 0:
+                from .template import FlexTemplate
+                NewTemplate = FlexTemplate.reflexor(cls)
+
+        else:
+            NewTemplate = TemplateLocator.dispatch[args]
+
+        return NewTemplate
+
+        # old code
         if issubclass(cls, TemplateBlock):
             class ExtendedTemplate(cls):
                 pass
@@ -320,9 +354,6 @@ class SingleBlock(Block):
             required_keys[dispatched_sub] = finished_reqs
             optional_keys[dispatched_sub] = finished_opts
 
-        SubTemplate.__name__ = f"{cls.__name__}Template"
-        SubTemplate.__qualname__ = f"{cls.__name__}.Template"
-        SubTemplate.__module__ = cls.__module__
 
         return SubTemplate
    
@@ -345,8 +376,8 @@ class SingleBlock(Block):
             **kwargs (str): Known properties to pass to the template constructor.
         """
         from .template import FlexTemplate
-        class Flex(FlexTemplate, cls):
-            _baseReq = cls
+        
+        Flex = FlexTemplate.reflexor(cls)
         
         kwargs.setdefault("template_name", f"Reflexed {cls.__name__}")
 
@@ -360,50 +391,72 @@ class SingleBlock(Block):
         return empty
     
     @staticmethod
-    def make_dispatch(func):
-        @classmethod
-        def dispatcher(cls, blockDict, _visited=None, **kwargs):
-            _debugging = "annealing"
-            if cls.__name__.lower() == _debugging:
-                pass # put a break point here
+    def make_dispatch(_func=None, **template_defs):
+        if _func is not None and not callable(_func):
+            raise ValueError("It looks like you passed a template default as a positional argument instead of a keyword argument.")
 
-            if _visited is None:
-                _visited = []
-            elif cls in _visited:
-                return cls(blockDict, _dispatched=True, **kwargs)
-            else:
-                _visited.append(cls)
-
-            # jump to intended entry point
-            dispatch_from = getattr(cls, "dispatch_from", None)
-            if (dispatch_from is not None and
-                # skip abstract classes
-                issubclass(dispatch_from, SingleBlock) and
-                dispatch_from not in _visited):
-                full_block = dispatch_from.dispatch_subclass(blockDict, **kwargs)
-                if not isinstance(full_block, cls):
-                    from .. import _errors as err
-                    raise err.FoSpyStructureError(f"Attempted to construct the blockDict below into a {cls.__name__} "
-                                                "object, but it was dispatched to a different subclass "
-                                                f"({full_block.__class__.__name__})\n\n{blockDict}")
-
-                return full_block
-
-
-            blockDict = _unwrap_block(blockDict)
+        def decorator(func):
+            @classmethod
+            def dispatcher(cls, blockDict, _visited=None, _d=template_defs, _get_defaults=False, _template_fields=None, **kwargs):
+                if _get_defaults:
+                    return _d
                 
-            dispatched = func(cls, blockDict, **kwargs)
-            if dispatched in _visited:
-                return dispatched(blockDict, _dispatched=True, **kwargs)
-            elif isinstance(dispatched, type):
-                # if dispatched is not super,
-                # successfully dispatched to next subclass
-                _visited.append(cls)
+                def return_val(_cls,bD,_temp=_template_fields, **kw):
+                    if _temp is not None:
+                        return _cls.TemplateClass(*_temp)(bD, _dispatched=True, **kw)
+                    
+                    return _cls(bD, _dispatched=True, **kw)
 
-            # call original return's method, not the extracted class
-            return dispatched.dispatch_subclass(blockDict, _visited=_visited, **kwargs)
+
+                _debugging = "ciffilelocator"
+                if cls.__name__.lower() == _debugging:
+                    pass # put a break point here
+
+                if _visited is None:
+                    _visited = []
+                elif cls in _visited:
+                    return return_val(cls, blockDict, **kwargs)
+                # else:
+                #     _visited.append(cls)
+
+
+                # jump to intended entry point
+                dispatch_from = getattr(cls, "dispatch_from", None)
+                if (dispatch_from is not None and
+                    # skip abstract classes
+                    issubclass(dispatch_from, SingleBlock) and
+                    dispatch_from not in _visited):
+                    from .template import TemplateBlock, FlexTemplate
+                    target_cls = next(c for c in cls.__mro__ if 
+                                      issubclass(c, SingleBlock) and
+                                      not issubclass(c, (TemplateBlock, FlexTemplate)))
+                    full_block = dispatch_from.dispatch_subclass(blockDict, _template_fields=_template_fields, **kwargs)
+                    if not isinstance(full_block, target_cls):
+                        from .. import _errors as err
+                        raise err.FoSpyStructureError(f"Attempted to construct the blockDict below into a {target_cls.__name__} "
+                                                    "or its template, but it was dispatched to a different subclass "
+                                                    f"({full_block.__class__.__name__})\n\n{blockDict}")
+
+                    return full_block
+
+                if not isinstance(blockDict, dict):
+                    blockDict = _unwrap_block(blockDict)
+                    
+                dispatched = func(cls, blockDict,_template_fields=_template_fields, **kwargs)
+                if dispatched in _visited:
+                    return return_val(dispatched, blockDict, **kwargs)
+                elif isinstance(dispatched, type):
+                    # if dispatched is not super,
+                    # successfully dispatched to next subclass
+                    _visited.append(cls)
+
+                return dispatched.dispatch_subclass(blockDict, _visited=_visited,_template_fields=_template_fields, **kwargs)
+            return dispatcher
         
-        return dispatcher
+        if _func is None:
+            return decorator
+        
+        return decorator(_func)
     
     @classmethod
     def set_dispatch(cls, value=None, from_parent=None, from_key=None, allow_self=None):
@@ -441,7 +494,6 @@ class SingleBlock(Block):
         constructor.
         """
         from .. import _errors as err
-        blockDict = _unwrap_block(blockDict).copy()
 
         if not hasattr(cls, "dispatch"):
             cls.dispatch = {}
@@ -755,7 +807,7 @@ class SingleBlock(Block):
                 - If a template field is found when constructing a non-template
                   subclass.
         """
-        if name.startswith("_") or name in self._reserved:
+        if name.startswith("_") or name in getattr(self, "_reserved", []):
             return super().__setattr__(name, value)
         
         from ..parsing.format_fos import format_field
@@ -813,12 +865,11 @@ class SingleBlock(Block):
                 if issubclass(validator, SingleBlock):
                     validator = validator.dispatch_subclass
                     val_kwargs = {}
-                    value = _unwrap_block(value)
-                    pass
+                    # value = _unwrap_block(value)
                 elif issubclass(validator, ListBlock):
                     val_kwargs = {}
 
-                elif value == format_field("template") and not issubclass(validator, TemplateField):
+                elif str(value) == format_field("template") and not issubclass(validator, TemplateField):
                     if isinstance(self,TemplateBlock):
                         validator = TemplateField
                     else:       
@@ -1140,7 +1191,7 @@ class SingleBlock(Block):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
         
-    def serialize(self, keepListType:bool=False, shallow:bool=False, clean:bool=False):
+    def serialize(self, keepListType:bool=False, shallow:bool=False, clean:bool=False, **kwargs):
         """
         Return a recursively serialized `dict` representation of `self`.
 
@@ -1366,11 +1417,11 @@ class SingleBlock(Block):
         for key in args:
             val = validators.get(key, None)
             if isinstance(val,type) and (issubclass(val, SingleBlock) or issubclass(val, ListBlock)):
-                serial[key] = []
+                serial.setdefault(key, [{}])
             else:
                 serial[key] = format_field("template")
         serial["template_name"] = template_name
-        return type(self).TemplateClass(*args).dispatch_subclass(serial)
+        return self.TemplateClass(*args).dispatch_subclass(serial)
 
     def _resolve_relative_path(self, path: str):
         """
@@ -1891,12 +1942,16 @@ class ListBlock(Block):
             if hasattr(self, "_reqCls"):
                 errors = []
                 typ = self._reqCls
-                value = _unwrap_listblock(value, typ=typ)
+                if getattr(typ, "_full_class", None) is not None:
+                    check_typ = typ._full_class
+                else:
+                    check_typ = typ
+                value = _unwrap_listblock(value, typ=check_typ)
                 new_list = []
                 for idx, obj in enumerate(value):
                     if isinstance(obj, dict) and obj == {}:
                         continue
-                    if not isinstance(obj, typ):
+                    if not isinstance(obj, check_typ):
                         try:
                             new_obj = typ.dispatch_subclass(obj)
                         except Exception as e:
