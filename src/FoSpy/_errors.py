@@ -3,6 +3,9 @@
 class AttachmentTypeError(Exception):
     pass
 
+class BlockDispatchError(Exception):
+    pass
+
 
 class FileBlockNotFoundError(Exception):
     pass

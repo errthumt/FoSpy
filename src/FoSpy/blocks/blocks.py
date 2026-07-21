@@ -5,6 +5,7 @@ from ..parsing.syntax import (
     meta_keys as mk,
     meta_defaults as md,
 )
+from typing import Self, Any, TypeVar, Callable
 
 from .. import _errors as err
 
@@ -12,6 +13,8 @@ from ._blockUtils import _unwrap_block
 
 from .._debug import Debug
 _debug = Debug()
+
+SingleBlockType = TypeVar('T', bound='SingleBlock')
 
 def _add_comments_to_parent(attr_name):
     """
@@ -390,74 +393,125 @@ class SingleBlock(Block):
             return serial
         return empty
     
-    @staticmethod
-    def make_dispatch(_func=None, **template_defs):
-        if _func is not None and not callable(_func):
-            raise ValueError("It looks like you passed a template default as a positional argument instead of a keyword argument.")
-
-        def decorator(func):
-            @classmethod
-            def dispatcher(cls, blockDict, _visited=None, _d=template_defs, _get_defaults=False, _template_fields=None, **kwargs):
-                if _get_defaults:
-                    return _d
-                
-                def return_val(_cls,bD,_temp=_template_fields, **kw):
-                    if _temp is not None:
-                        return _cls.TemplateClass(*_temp)(bD, _dispatched=True, **kw)
-                    
-                    return _cls(bD, _dispatched=True, **kw)
-
-
-                _debugging = "ciffilelocator"
-                if cls.__name__.lower() == _debugging:
-                    pass # put a break point here
-
-                if _visited is None:
-                    _visited = []
-                elif cls in _visited:
-                    return return_val(cls, blockDict, **kwargs)
-                # else:
-                #     _visited.append(cls)
-
-
-                # jump to intended entry point
-                dispatch_from = getattr(cls, "dispatch_from", None)
-                if (dispatch_from is not None and
-                    # skip abstract classes
-                    issubclass(dispatch_from, SingleBlock) and
-                    dispatch_from not in _visited):
-                    from .template import TemplateBlock, FlexTemplate
-                    target_cls = next(c for c in cls.__mro__ if 
-                                      issubclass(c, SingleBlock) and
-                                      not issubclass(c, (TemplateBlock, FlexTemplate)))
-                    full_block = dispatch_from.dispatch_subclass(blockDict, _template_fields=_template_fields, **kwargs)
-                    if not isinstance(full_block, target_cls):
-                        from .. import _errors as err
-                        raise err.FoSpyStructureError(f"Attempted to construct the blockDict below into a {target_cls.__name__} "
-                                                    "or its template, but it was dispatched to a different subclass "
-                                                    f"({full_block.__class__.__name__})\n\n{blockDict}")
-
-                    return full_block
-
-                if not isinstance(blockDict, dict):
-                    blockDict = _unwrap_block(blockDict)
-                    
-                dispatched = func(cls, blockDict,_template_fields=_template_fields, **kwargs)
-                if dispatched in _visited:
-                    return return_val(dispatched, blockDict, **kwargs)
-                elif isinstance(dispatched, type):
-                    # if dispatched is not super,
-                    # successfully dispatched to next subclass
-                    _visited.append(cls)
-
-                return dispatched.dispatch_subclass(blockDict, _visited=_visited,_template_fields=_template_fields, **kwargs)
-            return dispatcher
-        
-        if _func is None:
-            return decorator
-        
-        return decorator(_func)
+# class SingleBlock(Block):
     
+    @staticmethod
+    def dispatcher(dispatch_method: Callable[..., dict])->classmethod:
+        @classmethod
+        def dispatch_subclass(cls:type[SingleBlockType], blockDict, **kwargs):
+            from ._blockUtils import _unwrap_block
+            from .. import _errors as err
+
+            if not isinstance(blockDict, dict):
+                blockDict = _unwrap_block(blockDict)
+
+            block_dispatch = blockDict.setdefault("__dispatch__", {})
+            visited = block_dispatch.setdefault("__visited__")
+
+            blockDict = dispatch_method(cls, blockDict, **kwargs)
+
+            cls_dispatch = getattr(cls, "__dispatch__", {})
+
+            visited = block_dispatch.setdefault("__visited__", [])
+            if cls in visited:
+                return cls
+
+
+            visited.append(cls)
+            
+            from_key, registry, allow_self, dispatch_from = (
+                cls_dispatch.get(k, d) for (k,d) in
+                        (
+                            ("from_key", None),
+                            ("registry", {}),
+                            ("allow_self", True),
+                            ("dispatch_from", cls)
+                        )
+            )
+
+            if dispatch_from not in visited:
+                blockDict.pop("__dispatch__", None)
+                return dispatch_from.dispatch_subclass(blockDict, **kwargs)
+
+            dispatch_val = block_dispatch.get(from_key,
+                                blockDict.get(from_key, None))
+            
+            dispatched_cls = registry.get(dispatch_val, cls)
+
+            if dispatched_cls is cls and not allow_self:
+                raise err.BlockDispatchError(
+                    f"The following blockDict was dispatched to {cls.__name__} "
+                    "but could not be dispatched further. "
+                    f"{cls.__name__} blocks are not allowed without a subclass.")
+            
+            return dispatched_cls.dispatch_subclass(blockDict, **kwargs)
+        return dispatch_subclass
+    
+    @staticmethod
+    def setup_dispatch(cls:type[SingleBlockType]=None,**kw_setup):
+        if cls is not None and not isinstance(cls, type):
+            raise Exception("@setup_dispatch must be used as a bare decorator, or with "
+                            "a class as the first positional argument. You may have tried "
+                            "to decorate a class with positional args instead of keywords.")
+
+        def decorator(_cls:type[SingleBlockType], _kw=kw_setup):
+            _cls.__dispatch__ = _kw
+
+            # inject dispatch_subclass method
+            @SingleBlock.dispatcher
+            def dispatch_subclass(current_cls:type[SingleBlockType], blockDict:dict, **kwargs):
+                return current_cls.add_dispatch(blockDict, _wrapped=True, **kwargs)
+
+            _cls.dispatch_subclass = dispatch_subclass
+            return _cls
+        
+        if cls is not None:
+            return decorator(cls)
+
+        return decorator
+    
+    @classmethod
+    def dispatch_subclass(cls, *args, **kwargs):
+        # fallback.
+        # overridden by setup_dispatch decorator
+        return cls
+    
+    @classmethod
+    def add_dispatch(cls, blockDict, _wrapped=False, **kwargs):
+        if _wrapped:
+            # subclasses may want to mutate blockDict
+            return blockDict
+
+        raise Exception("add_dispatch should only be called by a decorated dispatch_subclass method.")
+
+    @classmethod
+    def register_dispatch(cls, registry_val, to_parent:type[SingleBlockType]=None):
+        def decorator(subcls, _val=registry_val, _p=to_parent, _cls=cls):
+            to_parent = _p or _cls
+
+            if "__dispatch__" not in to_parent.__dict__:
+                raise Exception("You cannot register a subclass to a class that "
+                f"hasn't been decorated with @setup_dispatch() ({to_parent.__name__})")
+            
+            registry = _cls.__dispatch__.setdefault("registry", {})
+
+            registry[registry_val] = subcls
+
+            return subcls
+        return decorator
+    
+    def __new__(cls, blockDict, *args, **kwargs):
+        _dispatched = kwargs.pop("_dispatched", False)
+        if _dispatched:
+            # blockDict should always be dict after dispatch. I want to see attributeerror if not.
+            blockDict.pop("__dispatch__")
+            return super().__new__(cls)
+        
+        # double guard rail is pointless, _dispatched=True will go to first guard rail
+        dispatched_cls = cls.dispatch_subclass(blockDict, *args, **kwargs)
+        return dispatched_cls(blockDict, *args, _dispatched=True, **kwargs)
+            
+
     @classmethod
     def set_dispatch(cls, value=None, from_parent=None, from_key=None, allow_self=None):
 
@@ -494,9 +548,6 @@ class SingleBlock(Block):
         constructor.
         """
         from .. import _errors as err
-
-        if not hasattr(cls, "dispatch"):
-            cls.dispatch = {}
 
         # other defaults can be set by passing value=None to set_dispatch
         cls.dispatch.setdefault(None, None)
@@ -644,7 +695,7 @@ class SingleBlock(Block):
         """
         return self._rename_validators(self.build_req_validators())
 
-    def __init__(self, blockDict:dict, _dispatched=False):
+    def __init__(self, blockDict:dict, *args, **kwargs):
         """
         Constructs a SingleBlock object from a dictionary.
 
@@ -692,11 +743,6 @@ class SingleBlock(Block):
         self._constructed = False
         property_errors = []
 
-        if not _dispatched:
-            from warnings import warn
-            warn(f"You should avoid directly constructing a {type(self).__name__} object. Use the dispatch_subclass() "
-                 "method instead to allow for subclass delegation when constructing.", stacklevel=2)
-
         self.track_attachments(**cfg.track_attachments())
 
 
@@ -706,14 +752,11 @@ class SingleBlock(Block):
         self._aliases = new_als
         self._reserved = ['ext']
 
-        blockDict = _unwrap_block(blockDict)
         self._sourceDict = blockDict.copy()
 
         if not isinstance(blockDict, dict):
             raise TypeError("A SingleBlock must be constructed from either a dictionary or another SingleBlock. "
                             "The passed source can optionally be wrapped in lists of length == 1.")
-
-        blockDict = blockDict.copy()
 
         rename = blockDict.pop("rename",None)
         if rename:
@@ -764,6 +807,75 @@ class SingleBlock(Block):
             raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
         
         self._constructed = True
+
+    @classmethod
+    def find_dispatch_values(cls):
+        out = {}
+
+        mro = cls.__mro__
+        for parent_cls in reversed(mro):
+            dispatch_key = getattr(parent_cls, "dispatch_key", None)
+            if dispatch_key is None:
+                continue
+            if dispatch_key.startswith("_"):
+                # If dispatch key is private, it is determined dynamically during dispatch.
+                # dispatch methods using private keys should bind defaults to the dispatch method.
+                dispatch_vals = parent_cls.dispatch_subclass({}, _get_defaults=True)
+                out.update(dispatch_vals)
+            else:
+                try:
+                    dispatch_val = next(
+                        k for k, v in parent_cls.dispatch.items()
+                        if v is not None
+                        and issubclass(cls, v)
+                    )
+                    out[dispatch_key] = dispatch_val
+                except StopIteration:
+                    pass
+
+
+        out = {k:v for k,v in out.items() if v is not None}
+
+        return out
+    
+    @classmethod
+    def _add_dispatch_values(cls, target_cls, serial):
+        missing_dispatch_e = err.FoSpyStructureError(f"Could not find a dispatch path from {cls.__name__} to {target_cls.__name__}.")
+
+        if not hasattr(cls, "dispatch") or cls.dispatch is None or not issubclass(target_cls, cls):
+            raise missing_dispatch_e
+        
+        try:
+            dispatch_val, next_cls = next((k, v) for k, v in cls.dispatch.items() if issubclass(target_cls, v))
+        except StopIteration:
+            raise missing_dispatch_e
+        
+        if cls.dispatch_key.startswith("_"):
+            for k, v in next_cls.find_dispatch_values().items():
+                if callable(v):
+                    v = v(serial.get(k,None))
+
+                serial[k] = v
+        else:
+            serial[cls.dispatch_key] = dispatch_val
+
+        return serial, next_cls
+
+    def promote(self, target_cls:Block, construct=True):
+        serial = self.serialize(keepListType=True)
+
+        next_cls = self
+        while next_cls is not target_cls:
+            serial, next_cls = next_cls._add_dispatch_values(target_cls, serial)
+    
+        if not construct:
+            return serial
+
+        try:
+            return target_cls.dispatch_subclass(serial)
+        except Exception as e:
+            raise err.FoSpyStructureError(f"Unable to construct a {target_cls.__name__} from the dispatched dictionary:\n{serial}.") from e
+
 
     def _update_src(self):
         if self._constructed and self._props_changed:

@@ -303,36 +303,6 @@ class TemplateBlock(SingleBlock):
                     validators[name] = cached_val
                 else:
                     validators.pop(name, None)
-
-    @classmethod
-    def find_dispatch_values(cls):
-        out = {}
-
-        mro = cls.__mro__
-        for parent_cls in reversed(mro):
-            dispatch_key = getattr(parent_cls, "dispatch_key", None)
-            if dispatch_key is None:
-                continue
-            if dispatch_key.startswith("_"):
-                # If dispatch key is private, it is determined dynamically during dispatch.
-                # dispatch methods using private keys should bind defaults to the dispatch method.
-                dispatch_vals = parent_cls.dispatch_subclass({}, _get_defaults=True)
-                out.update(dispatch_vals)
-            else:
-                try:
-                    dispatch_val = next(
-                        k for k, v in parent_cls.dispatch.items()
-                        if v is not None
-                        and issubclass(cls, v)
-                    )
-                    out[dispatch_key] = dispatch_val
-                except StopIteration:
-                    pass
-
-
-        out = {k:v for k,v in out.items() if v is not None}
-
-        return out
     
     @classmethod
     def TemplateClass(cls, *args):
