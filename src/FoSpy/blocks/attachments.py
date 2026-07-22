@@ -8,10 +8,8 @@ from .._docs.properties import _validator_rules, val_rules
 _debug = Debug()
 
 
+@SingleBlock.setup_dispatch(from_key="_extension", allow_self=False)
 class Attachment(SingleBlock):
-    # dispatch_key = "_extension"
-    # dispatch={} # populated after subclass definitions
-    # extensions={}
     _id_key = "file_name"  
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
@@ -88,22 +86,29 @@ class Attachment(SingleBlock):
     def enforce_subtype(cls, subcls, **kwargs):
         raise DeprecationWarning("Attachments no longer enforce subtype through this method. "
                                  "Simply spec the validator as the enforced subtype instead.")
-        return cls
-
-    @SingleBlock.make_dispatch(file_name="attachment.txt")
-    def dispatch_subclass(cls, blockDict, **kwargs):
+    
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
         from .. import _errors as err
-        # just inserted as first line of make_dispatch's dispatcher def
-        # blockDict = _unwrap_block(blockDict)
+
+        # make sure wrapped
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
 
         if "file_name" not in blockDict:
             raise err.MissingPropertyError("file_name", cls, blockDict=blockDict)
-        
+
         _, ext = cls._validate_filename(blockDict["file_name"])
 
-        blockDict[cls.dispatch_key] = ext
+        return {dispatch_key: ext}
 
-        return super(Attachment, cls)
+    @classmethod
+    def register_dispatch(cls, registry_val, **kwargs):
+        extension = registry_val or ".txt"
+        fn = "attachment"+extension
+        return super().register_dispatch(registry_val, setup_from_key="_location",
+                                         setup_allow_self=False, defaults={"file_name":fn},
+                                         inherit_dispatch=True,
+                                         **kwargs)
     
     def find_attachments(self):
         attachments = super().find_attachments()
@@ -111,71 +116,88 @@ class Attachment(SingleBlock):
             attachments.append(self)
 
         return attachments
+    
+@Attachment.register_dispatch(None)
+class AnyFile:
 
-@Attachment.set_dispatch(from_key="_extension", allow_self=False)   
-class FileType:
-    dispatch_key = "_location"
-    dispatch = {}
-    dispatch_default = None
-    dispatch_allow_default = False
-    location_classes = {}
-    dispatch_from = Attachment
+    @classmethod
+    def register_dispatch(cls, registry_val, from_parent=None, **kwargs):
+        from_parent = from_parent or cls
+        # {registry_val:None} guarantees that "path" or "embedded" are present in blockDict to be found by add_dispatch
+        return SingleBlock.register_dispatch(registry_val, from_parent=from_parent, defaults={registry_val:None}, **kwargs)
 
-    @Attachment.make_dispatch(embedded="embedded text goes here")
-    def dispatch_subclass(cls, blockDict, _visited=None, **kwargs):
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
         from .. import _errors as err
 
+        # make sure wrapped
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
+
+        dispatch = cls.__dispatch__
+
+        # additional location types will never be added after runtime.
+        # but subclasses of AnyFile need to inherit a *copy* of AnyFile's runtime registry
+        # they will all still inherit dispatch_from=Attachment
+
+        # only cache hybrids one class at a time.
+        # First call of CIFFile.add_dispatch will populate CIFFile's registry with location bases.
+        finalized = dispatch.get("final", False)
+        if not finalized:
+            if cls is not AnyFile:
+                # populate all subclasses registry with AnyFile's runtime registry
+                for location, sub in AnyFile.__dispatch__["registry"].items():
+                    cls.register_dispatch(location)(sub)
+
+            # mark as finalized
+            dispatch["final"] = True
+
+        registry = cls.__dispatch__["registry"]
+
         location = None
-        for key, ft in cls.dispatch.items():
+        # the first key that exists in blockDict is the location
+        for key, loc_cls in registry.items():
+            # after location found, pop redundant keys
             if location is not None:
                 blockDict.pop(key, None)
             elif key in blockDict:
-                location = key
+                location, LocationClass = key, loc_cls
 
         if location is None:
-            raise err.MissingPropertyError(" or ".join(cls.dispatch.keys()), cls, blockDict=blockDict)
+            raise err.MissingPropertyError(" or ".join(registry.keys()), cls, blockDict=blockDict)
 
-        blockDict[cls.dispatch_key] = location
-
-        # assemble hybrid classes only once
-        if location not in cls.location_classes:
-            class FileTypeLocator(cls, Attachment):
+        # initial copied registry entries are not subclasses of this class, but will be
+        # re-mapped as hybrids on the first pass of a matching location.
+        if not issubclass(LocationClass, cls):
+            # all location base classes are cached from AnyFile on first call,
+            # but location hybrid classes are only created and cached on the first call with their location.
+            class LocatedFileType(LocationClass, cls):
                 pass
-
-            FileTypeLocator.__name__ = cls.__name__ + "Locator"
-            FileTypeLocator.__qualname__ = cls.__name__ + "Locator"
-            FileTypeLocator.__module__ = cls.__module__
 
             cap_loc = location.capitalize()
 
-            for key, ft in cls.dispatch.items():
-                @FileTypeLocator.set_dispatch(key, allow_self=False)
-                class LocatedFileType(FileTypeLocator,ft, cls):
-                    pass
+            LocatedFileType.__name__ = cap_loc + cls.__name__
+            LocatedFileType.__qualname__ = cap_loc + cls.__qualname__
+            LocatedFileType.__module__ = cls.__module__
 
+            LocatedFileType = SingleBlock.register_dispatch(
+                location, from_parent=cls,
+                # defaults should make sure that the location key is present
+                defaults={location: None})(LocatedFileType)
+            
+            # overwrite current registry
+            cls.register_dispatch(location)(LocatedFileType)
 
-                LocatedFileType.__name__ = cap_loc + cls.__name__
-                LocatedFileType.__qualname__ = cap_loc + cls.__qualname__
-                LocatedFileType.__module__ = cls.__module__
+        # location key ("path" or "embedded") is already in blockDict, but caching it at
+        # "_location" makes it easy for base dispatcher to use in normal routine.
+        # this is injected to blockDict before passing back to dispatch
+        return {dispatch_key: location}
 
-                # FileTypeLocator.dispatch[key] = LocatedFileType
-
-            cls.location_classes[location] = FileTypeLocator
-        else:
-            FileTypeLocator = cls.location_classes[location]
-
-        return super(Attachment, FileTypeLocator)
-
-@Attachment.set_dispatch(".cif")
-class CIFFile(FileType, Attachment):
+@Attachment.register_dispatch(".cif")
+class CIFFile(AnyFile, Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict,**kwargs)
         self._reserved.append("engine")
         self.engine = None
-
-    @Attachment.make_dispatch(file_name="attachment.cif")
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(CIFFile, cls)
 
     def _get_engine(self, engine_name=None):
         if engine_name is None:
@@ -218,13 +240,14 @@ class CIFFile(FileType, Attachment):
         
         return _quick_pattern(tth, intensity)
 
+# later:
+# @AnyFile.register_dispatch("path")
+# class PathFile(Attachment):
 
-@Attachment.set_dispatch(from_parent=FileType, value="embedded", from_key="_location", allow_self=False)
+
+@AnyFile.register_dispatch("embedded")
 class EmbeddedFile(Attachment):
-    @Attachment.make_dispatch(path=None)
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(Attachment, cls)
-    
+
     def _write_to_temp(self, encoding="utf-8"):
         try:
             temppath = self.find_temppath()
@@ -252,15 +275,10 @@ class EmbeddedFile(Attachment):
         #serial["embedded"] = self.embedded.copy()
         return serial
 
-@Attachment.set_dispatch(from_parent=FileType, value="path")
+@AnyFile.register_dispatch("path")
 class PathFile(Attachment):
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
-
-    @Attachment.make_dispatch(path=".", embedded=None)
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(Attachment, cls)
-
     def _get_abspath(self):
         filedir = self._get_filedir().resolve()
 

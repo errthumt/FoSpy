@@ -1,6 +1,6 @@
 from .files import FileBlock
 
-from .blocks import ListBlock, SingleBlock, Block
+from .blocks import ListBlock, SingleBlock
 from ._blockUtils import _get_docs_link
 from .._docs.properties import _validator_rules
 
@@ -68,7 +68,7 @@ def _is_plural(name, single):
     
     return False
 
-@FileBlock.set_dispatch("templates")
+@FileBlock.register_dispatch("templates")
 class TemplateSet(FileBlock):
     """
     Represents a set of templates loaded from a FOS file.
@@ -198,13 +198,16 @@ class TemplateList(ListBlock):
         cls.simple_lists[reqCls] = FlexList
 
         return FlexList
-         
+
+@SingleBlock.setup_dispatch(from_key="_full_class", allow_self=False)
 class TemplateBlock(SingleBlock):
     _id_key = "template_name"
-    def __init__(self, blockDict, _dispatched=False, **kwargs):
+    _full_class = None
+    _fields = None
+    def __init__(self, blockDict, **kwargs):
         self._val_exceptions = {}
 
-        super().__init__(blockDict, _dispatched=_dispatched)
+        super().__init__(blockDict, **kwargs)
 
     def find_staged_id(self):
         if not (hasattr(self, "_staged_parent")
@@ -244,7 +247,7 @@ class TemplateBlock(SingleBlock):
                 new_template.stage_template(temp_id, template)
             return new_template
 
-        return self._full_class.dispatch_subclass(serial)
+        return self._full_class(serial)
     
     def serialize(self,keepListType=False, shallow=False, clean=False, **kwargs):
         # from ..parsing.validation import required_keys
@@ -285,6 +288,7 @@ class TemplateBlock(SingleBlock):
             super().__setattr__(name, value)
             self._val_exceptions.pop(name, None)
         except err.FailedValidatorError as e:
+            from ..parsing.validation import optional_keys
             self._val_exceptions[name] = e
 
             validators = optional_keys.setdefault(type(self), {})
@@ -315,184 +319,135 @@ class TemplateBlock(SingleBlock):
         
         return cls._full_class.TemplateClass(*fields)
     
-    @classmethod
-    def next_dispatch(cls):
-        # skip abstract classes
-        try:
-            mro = cls.__mro__
-            next_blk_cls = next(c for c in mro[1:] if issubclass(c, SingleBlock)
-                                and getattr(c, "dispatch_key", None) is not None)
-        except StopIteration:
-            return None, None
+    def __new__(cls, blockDict, *args, **kwargs):
+        from .. import _errors as err
+
+        if None in (cls._fields, cls._full_class):
+            raise err.BlockDispatchError("A Template Block must be initialized from an existing class, or a Template of that class.")
         
-        next_key = next_blk_cls.dispatch_key
-        next_val = getattr(cls, next_key, None)
+        dispatched = kwargs.pop("_dispatched", False)
+        if dispatched:
+            return super().__new__(cls, blockDict, *args, _dispatched=True, **kwargs)
 
-        return next_key, next_val
-    
-    @staticmethod
-    def make_dispatch(*args, **kwargs):
-        func = SingleBlock.make_dispatch(*args, **kwargs).__func__
-        @classmethod
-        def wrapper(cls,blockDict, _f=func, **kw):
-            from ._blockUtils import _unwrap_block
+        full_class = cls._full_class
 
-            if not isinstance(blockDict, dict):
-                blockDict = _unwrap_block(blockDict)
+        full_dispatch = getattr(full_class, "__dispatch__", {})
+        
+        next_class = full_dispatch.get("dispatch_from", full_class)
+
+        while next_class is not full_class:
+            blockDict = next_class.inject_defaults(blockDict)
+            registry = next_class.__dispatch__["registry"]
+
+            try:
+                next_class = next(sub for sub in registry.values() if issubclass(full_class, sub))
+            except StopIteration:
+                err.BlockDispatchError(
+                    f"Could not find a valid dispatch chain to get from {next_class.__name__} to "
+                    f"{full_class.__name__}.")
                 
-            next_key, next_val = cls.next_dispatch()
-            if next_key is not None:
-                set_val = blockDict.setdefault(next_key, next_val)
-                if set_val is None:
-                    raise TypeError("A new Template Block must be initialized from an existing class, or a Template of that class.")
-                # if set_val is () but next_val is truthy, FlexTemplate is dispatching
-                elif next_val and not set_val:
-                    blockDict[next_key] = next_val
-            
-            # skip None and () values
-            if not kw.get("_template_fields", None):
-                kw["_template_fields"] = getattr(cls, "_fields", blockDict.get("_fields", None))
+        template_class = next_class.TemplateClass(*cls._fields)
 
-            return _f(cls, blockDict, **kw)
-        return wrapper
-    
-    @make_dispatch
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(TemplateBlock, cls)
+        return template_class(blockDict, *args, _dispatched=True, **kwargs)
 
     
-class AbstractTemplateLocator:
-    @TemplateBlock.make_dispatch
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(AbstractTemplateLocator, cls)
-    
-class AbstractTemplate:
-    @TemplateBlock.make_dispatch
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        from ..parsing.validation import optional_keys, required_keys
-        
-        # populate validators only once for each constructed template class
-        if cls not in optional_keys:
-            validators = cls.build_validators()
-
-            req_validators = required_keys.setdefault(cls, {})
-            template_validators = optional_keys.setdefault(cls, {})
-            for field in cls._fields:
-                validator = validators.get(field, None)
-                req_validators[field] = False
-                if isinstance(validator, type) and issubclass(validator, SingleBlock):
-                    template_validators[field] = FlexTemplate.reflexor(validator)
-                elif isinstance(validator, type) and issubclass(validator, ListBlock):
-                    template_validators[field] = TemplateList.Simple(validator._reqCls)
-                else:
-                    template_validators[field] = TemplateField
-
-
-
-        return super(AbstractTemplate, cls)
-
-
-class FlexTemplate(SingleBlock):
-    _baseReq = None
+class FlexTemplate:
     @classmethod
-    def reflexor(cls, subcls):
-        if getattr(subcls, "_full_class", None) is not None:
-            subcls = subcls._full_class
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
 
-        # First recursion:
-        #   - calls TemplateClass(*()) to initialize locator and base
-        #   - after initializing locator and base,
-        #       TemplateClass calls reflexor to promote base to reflexor
-        # Second recursion (called by TemplateClass(*())):
-        #    calls TemplateClass again, which now returns the cached base
-        BaseTemplateClass = subcls.TemplateClass()
+        registry = cls.__dispatch__["registry"]
 
-        # First Recursion:
-        #    Reflexor was already cached by second recursion, return it
-        if issubclass(BaseTemplateClass, FlexTemplate):
-            return BaseTemplateClass
-        
-        # Second Recursion:
-        #    Replace cached base with new reflexor subclass
+        block_dispatch = blockDict.setdefault("__dispatch__", {})
+        fields = block_dispatch.setdefault("_fields", ())
 
-        TemplateLocator = TemplateBlock.dispatch[subcls]
-        
-        @TemplateLocator.set_dispatch(())
-        class Reflexor(FlexTemplate, BaseTemplateClass):
-            _baseReq = subcls
+        if fields not in registry:
 
-        mro = Reflexor.__mro__
+            @cls.register_dispatch(fields)
+            class TemplateClass(TemplateFieldCounter,cls):
+                _fields = fields
+                pass
 
+            suffix = "FlexTemplate" if not fields else "Template"
 
-        Reflexor.__name__ = f"Flex{subcls.__name__}"
-        Reflexor.__qualname__ = f"{cls.__name__}.reflexor.Flex{subcls.__name__}"
-        Reflexor.__module__ = cls.__module__
+            TemplateClass.__name__ = f"{cls._full_class.__name__}{suffix}"
+            TemplateClass.__qualname__ = f"{cls._full_class.__name__}{suffix}"
+            TemplateClass.__module__ = cls.__module__
 
-        from ..parsing.validation import optional_keys, required_keys
-
-        old_reqs = Reflexor.build_req_validators()
-        req_vals = {k:False for k in old_reqs}
-        req_vals.pop('ext', None)
-
-        required_keys[Reflexor] = req_vals
-        Reflexor.req_overrides = req_vals
-        optional_keys.setdefault(Reflexor, {}).update(old_reqs)
-
-        return Reflexor
-
-    @TemplateBlock.make_dispatch
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        if cls._baseReq is None:
-            raise TypeError("To dispatch a FlexTemplate, it must be initialized from an existing class using FlexTemplate.reflexor().")
-        
-        from ._blockUtils import  _template_found
-
-
-        req_overrides = cls.req_overrides.copy()
-        validators = cls.build_validators()
-
-        rename_dict = blockDict.get("rename", {})
-        rename_from = {v:k for k,v in rename_dict.items()}
-
-        template_fields = []
-
-        dispatch_values = cls.find_dispatch_values()
-
-        for key, val in dispatch_values.items():
-            blockDict.setdefault(key, val)
-
-        for orig_key, val in blockDict.items():
-            req_overrides.pop(orig_key, None)
-            if orig_key in rename_from:
-                key = rename_from[key]
-            else:
-                key = orig_key
-
-            if _template_found(val):
-                template_fields.append(key)
-            else:
-                validator = validators.get(key, lambda x: x)
-                try:
-                    if isinstance(validator, type) and issubclass(validator, SingleBlock):
-                        new_val = validator.dispatch_subclass(val)
-                    else:
-                        new_val = validator(val)
-                    blockDict[orig_key] = new_val
-                except Exception:
-                    template_fields.append(key)
-
-
-        for key in req_overrides:
-            template_fields.append(key)
-            blockDict[key] = TemplateField
-
-        if not template_fields:
-            return cls._baseReq
-        
-        TemplateClass = cls._baseReq.TemplateClass(*template_fields)
-
-        return TemplateClass
+        return {dispatch_key: cls._fields}
     
+    def __new__(cls, blockDict, *args, **kwargs):
+        if not hasattr(cls, "_fields"):
+            raise Exception("FlexTemplate subclasses must be initialized using a SingleBlock's TemplateClass method.")
+        
+        if cls._fields != ():
+            return super().__new__(cls, blockDict, *args, **kwargs)
+        
+        # flex logic goes here to determine number of fields.
+        return super().__new__(cls, blockDict, *args, **kwargs)
+    
+class TemplateFieldCounter:
+    _fields = ()
     @classmethod
-    def reflex(cls):
-        return cls._baseReq.reflex()
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
+
+        return {dispatch_key: cls._fields}
+
+
+
+
+
+
+
+# class FlexTemplate(SingleBlock):
+#     _baseReq = None
+#     @classmethod
+#     def reflexor(cls, subcls):
+#         if getattr(subcls, "_full_class", None) is not None:
+#             subcls = subcls._full_class
+
+#         # First recursion:
+#         #   - calls TemplateClass(*()) to initialize locator and base
+#         #   - after initializing locator and base,
+#         #       TemplateClass calls reflexor to promote base to reflexor
+#         # Second recursion (called by TemplateClass(*())):
+#         #    calls TemplateClass again, which now returns the cached base
+#         BaseTemplateClass = subcls.TemplateClass()
+
+#         # First Recursion:
+#         #    Reflexor was already cached by second recursion, return it
+#         if issubclass(BaseTemplateClass, FlexTemplate):
+#             return BaseTemplateClass
+        
+#         # Second Recursion:
+#         #    Replace cached base with new reflexor subclass
+
+#         TemplateLocator = TemplateBlock.dispatch[subcls]
+        
+#         @TemplateLocator.set_dispatch(())
+#         class Reflexor(FlexTemplate, BaseTemplateClass):
+#             _baseReq = subcls
+
+#         mro = Reflexor.__mro__
+
+
+#         Reflexor.__name__ = f"Flex{subcls.__name__}"
+#         Reflexor.__qualname__ = f"{cls.__name__}.reflexor.Flex{subcls.__name__}"
+#         Reflexor.__module__ = cls.__module__
+
+#         from ..parsing.validation import optional_keys, required_keys
+
+#         old_reqs = Reflexor.build_req_validators()
+#         req_vals = {k:False for k in old_reqs}
+#         req_vals.pop('ext', None)
+
+#         required_keys[Reflexor] = req_vals
+#         Reflexor.req_overrides = req_vals
+#         optional_keys.setdefault(Reflexor, {}).update(old_reqs)
+
+#         return Reflexor
+    
+#     @classmethod
+#     def reflex(cls):
+#         return cls._baseReq.reflex()

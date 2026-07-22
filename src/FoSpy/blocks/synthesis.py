@@ -4,7 +4,7 @@ from .files import FileBlock
 from .._debug import Debug
 _debug = Debug()
 
-@FileBlock.set_dispatch("synthesis", from_key="_fos_type", allow_self=False)
+@FileBlock.register_dispatch("synthesis")
 class Synthesis(FileBlock):
     """
     Represents a Synthesis loaded from a FOS file.

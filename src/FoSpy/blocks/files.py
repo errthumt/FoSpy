@@ -110,6 +110,7 @@ EXT_DESC_MAP = {
     k: v[2] for k, v in EXT_MAP.items()
 }
 
+@SingleBlock.setup_dispatch(from_key="_fos_type", allow_self=False)
 class FileBlock(SingleBlock):
     """
     Represents a set of blocks loaded from a file.
@@ -124,10 +125,7 @@ class FileBlock(SingleBlock):
     TemplateSet(FileBlock)
     ```
     """
-    dispatch = {}
-    dispatch_key = "_fos_type"
-    dispatch_allow_self = False
-    def __init__(self, blockDict, _sourceFile=None, _dispatched=True):
+    def __init__(self, blockDict, _sourceFile=None, **kwargs):
         """
         Optionally specify _sourceFile before constructing from blockDict using parent `SingleBlock` constructor.
         """
@@ -137,7 +135,7 @@ class FileBlock(SingleBlock):
         self._temppath = Path(self._tempdir.name)
         atexit.register(self.cleanup)
 
-        super().__init__(blockDict, _dispatched=_dispatched)
+        super().__init__(blockDict, **kwargs)
         self.refresh_attachments()
 
     def __setattr__(self, name, value):
@@ -180,26 +178,7 @@ class FileBlock(SingleBlock):
         blockDict = EXT_READ_MAP[ext](abspath)
         abspath = blockDict.pop("_sourceFile", abspath)
 
-        return cls.dispatch_subclass(blockDict, _sourceFile=abspath)
-    
-    @SingleBlock.make_dispatch
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        from .metadata import MetaData
-        from ._blockUtils import _unwrap_block
-        if "metadata" not in blockDict:
-            raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
-        
-        metadata = _unwrap_block(blockDict["metadata"])
-        if "fos_type" not in metadata:
-            # Metadata construction will always fail, delegate error message to construction
-            try:
-                raise err.MissingPropertyError("fos_type", MetaData, blockDict=metadata)
-            except Exception as e:
-                raise ValueError("Could not identify file type due to missing fos_type in metadata") from e
-
-        typ = metadata.get("fos_type","").lower()
-        blockDict[cls.dispatch_key] = typ
-        return super(FileBlock, cls)
+        return cls(blockDict, _sourceFile=abspath)
 
     def save(self, filepath:str=None, json_indent=4, **kwargs):
         """

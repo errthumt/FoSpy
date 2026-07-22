@@ -11,7 +11,7 @@ from pprint import pp
 # pass
 
 
-from FoSpy.blocks import Annealing
+from FoSpy.blocks import Annealing, Attachment, EmbeddedFile, CIFFile, PathFile
 
 anneal_dict = {
     "type": "anneal",
@@ -28,18 +28,32 @@ anneal_dict = {
     "start_temp": "25",
     "start_temp_unit": "C"
 }
+anneal = Annealing(anneal_dict)
 
-anneal = Annealing.dispatch_subclass(anneal_dict)
+embedded_dict = {
+    "file_name": "test.cif",
+    "embedded": "this is my embedded file"
+}
+embedded1 = EmbeddedFile(embedded_dict)
+embedded2 = CIFFile(embedded_dict)
+embedded3 = Attachment(embedded_dict)
 
-anneal_template = anneal.make_template("anneal_template", "program")
+path_dict = {
+    "file_name": "idek.idek",
+    "path": "../../hello/world"
+}
+path1 = PathFile(path_dict)
+path2 = Attachment(path_dict)
 
-serial = anneal_template.serialize()
-pp(serial)
+try:
+    path3_fail = CIFFile(path_dict)
+    raise Exception("Should have failed")
+except Exception as e:
+    print("Failed as expected")
+    print(e)
 
-anneal_dict["program"] = [{"type": "dwell"}]
 
-reflexed = Annealing.reflex(serialize=False, **anneal_dict)
 
-pp(reflexed.serialize())
 
-pass
+
+

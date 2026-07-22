@@ -279,166 +279,119 @@ class SingleBlock(Block):
         Args:
             *args: A list of properties to override as template types.
         """
-        from .template import TemplateBlock, TemplateField, TemplateList, AbstractTemplate, AbstractTemplateLocator
-        from ..parsing.validation import required_keys, optional_keys
+        from .template import TemplateBlock, FlexTemplate
 
-        if cls not in TemplateBlock.dispatch:
-            @TemplateBlock.set_dispatch(cls, from_key="_full_class", allow_self=False)
-            class TemplateLocator(AbstractTemplateLocator, TemplateBlock):
+        cls_registry = TemplateBlock.__dispatch__["registry"]
+
+        if cls not in cls_registry:
+
+            @TemplateBlock.register_dispatch(cls, setup_from_key="_fields", setup_allow_self=True, inherit_dispatch=True)
+            class TemplateLocator(FlexTemplate, TemplateBlock, cls):
                 _full_class = cls
 
             TemplateLocator.__name__ = f"{cls.__name__}TemplateLocator"
-            TemplateLocator.__qualname__ = f"{cls.__name__}.TemplateLocator"
+            TemplateLocator.__qualname__ = f"{cls.__name__}.TemplateClass.Locator"
             TemplateLocator.__module__ = cls.__module__
-        else:
-            TemplateLocator = TemplateBlock.dispatch[cls]
 
-        args = tuple(sorted(args))
+        fields = tuple(sorted(args))
 
-        if args not in TemplateLocator.dispatch:
-            @TemplateLocator.set_dispatch(args, from_key="_fields", allow_self=False)
-            class NewTemplate(AbstractTemplate, TemplateLocator, cls):
-                _fields = args
+        # construct a proxy dictionary that will correctly dispatch to the right
+        # template class in TemplateBlock's dispatch chain.
+        proxy_dict = {
+            "__dispatch__": {
+                "_full_class": cls,
+                "_fields": fields
+            }
+        }
 
-            NewTemplate.__name__ = f"{cls.__name__}Template"
-            NewTemplate.__qualname__ = f"{cls.__name__}.Template"
-            NewTemplate.__module__ = cls.__module__
+        return TemplateBlock.dispatch_subclass(proxy_dict)
 
-            # upgrade empty args to reflexors
-            if len(args) == 0:
-                from .template import FlexTemplate
-                NewTemplate = FlexTemplate.reflexor(cls)
-
-        else:
-            NewTemplate = TemplateLocator.dispatch[args]
-
-        return NewTemplate
-
-        # old code
-        if issubclass(cls, TemplateBlock):
-            class ExtendedTemplate(cls):
-                pass
-            SubTemplate = ExtendedTemplate
-        else:
-            class NewTemplate(TemplateBlock, cls):
-                dispatch = {}
-                def __init__(self, blockDict, _dispatched=False):
-                    super().__init__(blockDict, _dispatched=_dispatched)
-                    self._full_class = cls
-            SubTemplate = NewTemplate
-        required_keys[SubTemplate] = {}
-        optional_keys[SubTemplate] = {}
-        required_validators = cls.build_req_validators()
-        all_validators = cls.build_validators()
-        for key in args:
-            req_val = required_validators.get(key,None)
-            val = all_validators.get(key,None) or req_val
-
-            if isinstance(val,type) and issubclass(val,SingleBlock):
-                all_fields = list(val.build_req_validators().keys())
-                field = val.TemplateClass(*all_fields)
-
-            elif isinstance(val,type) and issubclass(val, ListBlock):
-                field = TemplateList.Simple(val._reqCls)
-            else:
-                field = TemplateField
-
-            if req_val:
-                required_keys[SubTemplate][key] = field
-            else:
-                optional_keys[SubTemplate][key] = field
-
-        finished_reqs = required_keys[SubTemplate]
-        finished_opts = optional_keys[SubTemplate]
-        for typ, sub in cls.dispatch.items():
-            dispatched_sub = sub.TemplateClass(*args)
-            SubTemplate.dispatch[typ] = dispatched_sub
-
-            required_keys[dispatched_sub] = finished_reqs
-            optional_keys[dispatched_sub] = finished_opts
-
-
-        return SubTemplate
    
     @classmethod
-    def reflex(cls, serialize=True, include_temp_names=True, clean=False, **kwargs:dict):
+    def reflex(cls, serialize=True, include_temp_names=True, clean=False, **kwargs):
         """
-        Generate a flexible template for the current class.
 
-        Flexibly generates a template for the current class where any required
-        properties missing from `kwargs` are automatically converted to template
-        types (See
-        [`FlexTemplate`][FoSpy.blocks.template.FlexTemplate]).
-        Returns an instance of the flexible template constructed from `kwargs`,
-        or a serial dictionary of that instance.
-        
-        Args:
-            serialize (bool):
-                Whether to return the serialized dictionary of the reflexed
-                template, or the object itself.
-            **kwargs (str): Known properties to pass to the template constructor.
         """
-        from .template import FlexTemplate
-        
-        Flex = FlexTemplate.reflexor(cls)
-        
         kwargs.setdefault("template_name", f"Reflexed {cls.__name__}")
 
-        empty = Flex.dispatch_subclass(kwargs)
-        if serialize:
-            serial = empty.serialize(clean=clean)
-            if not include_temp_names:
-                from ._blockUtils import _prune_template_names
-                serial = _prune_template_names(serial)
+        reflexor = cls.TemplateClass()
+
+        empty = reflexor(kwargs)
+
+        if not serialize:
+            return empty
+
+        serial = empty.serialize(clean=clean)
+
+        if include_temp_names:
             return serial
-        return empty
+
+        from ._blockUtils import _prune_template_names
+        serial = _prune_template_names(serial)
+        return serial
     
 # class SingleBlock(Block):
+    def __new__(cls, blockDict, *args, **kwargs):
+        _dispatched = kwargs.pop("_dispatched", False)
+        if _dispatched:
+            # blockDict should always be dict after dispatch. I want to see attributeerror if not.
+            blockDict.pop("__dispatch__",None)
+            return super().__new__(cls)
+        
+        blockDict = _unwrap_block(blockDict)
+        
+        dispatched_cls = cls.dispatch_subclass(blockDict, *args, **kwargs)
+
+        if issubclass(dispatched_cls, cls):
+            return dispatched_cls(blockDict, *args, _dispatched=True, **kwargs)
+
+        dispatch = blockDict.pop("__dispatch__")
+        raise err.BlockDispatchError(
+            f"Attempted to construct the following dictionary as a {cls.__name__} block, "
+            f"but it was dispatched to a {dispatched_cls.__name__} instead."
+            f"\n\nINPUT:\n{blockDict}"
+            f"\n\nDISPATCH:\n{dispatch}")
     
     @staticmethod
     def dispatcher(dispatch_method: Callable[..., dict])->classmethod:
+        """
+        Decorate a classmethod to dispatch to other subclasses.
+
+        Not normally used directly. See
+        [`setup_dispatch`][FoSpy.blocks.blocks.SingleBlock.setup_dispatch]
+        decorator.
+        """
+
         @classmethod
-        def dispatch_subclass(cls:type[SingleBlockType], blockDict, **kwargs):
-            from ._blockUtils import _unwrap_block
+        def dispatch_subclass(cls:type[SingleBlockType], blockDict, _add_defaults=False, **kwargs):
             from .. import _errors as err
 
-            if not isinstance(blockDict, dict):
-                blockDict = _unwrap_block(blockDict)
-
             block_dispatch = blockDict.setdefault("__dispatch__", {})
-            visited = block_dispatch.setdefault("__visited__")
+            visited = block_dispatch.setdefault("visited", [])
+            cls_dispatch = getattr(cls, "__dispatch__", None)
+            # shorthand for keying dispatch parameters
+            d=cls_dispatch
 
-            blockDict = dispatch_method(cls, blockDict, **kwargs)
-
-            cls_dispatch = getattr(cls, "__dispatch__", {})
-
-            visited = block_dispatch.setdefault("__visited__", [])
-            if cls in visited:
+            if d['dispatch_from'] in visited and (
+                cls in visited or
+                d is None or
+                d['from_key'] is None):
                 return cls
-
-
+            
+            blockDict = dispatch_method(cls, blockDict, add_defaults=_add_defaults, **kwargs)
             visited.append(cls)
             
-            from_key, registry, allow_self, dispatch_from = (
-                cls_dispatch.get(k, d) for (k,d) in
-                        (
-                            ("from_key", None),
-                            ("registry", {}),
-                            ("allow_self", True),
-                            ("dispatch_from", cls)
-                        )
-            )
-
-            if dispatch_from not in visited:
+            if d['dispatch_from'] not in visited:
                 blockDict.pop("__dispatch__", None)
-                return dispatch_from.dispatch_subclass(blockDict, **kwargs)
-
-            dispatch_val = block_dispatch.get(from_key,
-                                blockDict.get(from_key, None))
+                return d['dispatch_from'].dispatch_subclass(blockDict, _add_defaults=_add_defaults, **kwargs)
             
-            dispatched_cls = registry.get(dispatch_val, cls)
 
-            if dispatched_cls is cls and not allow_self:
+            dispatch_val = block_dispatch.get(d['from_key'],
+                                blockDict.get(d['from_key'], None))
+            
+            dispatched_cls = d['registry'].get(dispatch_val, d['registry'].get(None, None))
+
+            if dispatched_cls is cls and not d['allow_self']:
                 raise err.BlockDispatchError(
                     f"The following blockDict was dispatched to {cls.__name__} "
                     "but could not be dispatched further. "
@@ -448,21 +401,106 @@ class SingleBlock(Block):
         return dispatch_subclass
     
     @staticmethod
-    def setup_dispatch(cls:type[SingleBlockType]=None,**kw_setup):
+    def setup_dispatch(cls:type[SingleBlockType]=None,
+        from_key=None,
+        allow_self=True,
+        _dispatch_from=None,
+        _defaults={}
+    ):
+        """
+        Decorate a class to dispatch to other classes during construction.
+        
+        The decorated class's [`add_dispatch`
+        method][FoSpy.blocks.blocks.SingleBlock.add_dispatch] will be wrapped
+        into a new method,
+        [`dispatch_subclass`][FoSpy.blocks.blocks.SingleBlock.dispatch_subclass],
+        which is decorator as a
+        [`dispatcher`][FoSpy.blocks.blocks.SingleBlock.dispatcher]. The parent
+        class's `from_key` is found in the blockDict passed to the constructor,
+        and the value mapped to `from_key` is mapped to dispatchable subclasses
+        in the `registry`.
+        
+        `add_dispatch` returns a dictionary of values that are injected into the
+        blockDict, either to be detected by dispatch, or to be delegated to the
+        constructor.
+
+        This decorator should only be used directly for the start of a dispatch
+        chain. For later dispatches, use
+        [`register_dispatch`][FoSpy.blocks.blocks.SingleBlock.register_dispatch]
+        
+        Args:
+            cls (SingleBlock subclass):
+                The class to be decorated. If provided, the decorator is most
+                likely being called as a bare decorator. Otherwise, the
+                decorators is being called with other keyword arguments and
+                returns the modified decorator.
+
+            from_key (str):
+                The key to be located in the blockDict after optional injection
+                by `add_dispatch`. Private `from_key`s will be injected and
+                located under the `__dispatch__` key which is popped before
+                final construction.
+            
+            allow_self (bool):
+                When True, the decorated class will dispatch to itself if no
+                subclasses can be found. When False, error is raised during
+                construction if dispatchable subclass is not found.
+            
+            _dispatch_from (SingleBlock subclass):
+                To be passed only by `register_dispatch`, which decorates
+                subclasses to populate this class's registry. Identifies the
+                parent class that the constructor must start at. If not
+                provided, the decorated class is assumed to be the start of a
+                dispatch chain. 
+            _defaults (dict):
+                To be passed only by `register_dispatch`, which decorates
+                subclasses to populat this class's registry. Provides default
+                values that should be injected into the blockDict when trying to
+                guarantee dispatching to the decorated class (usually by a
+                template constructor).
+            """
         if cls is not None and not isinstance(cls, type):
             raise Exception("@setup_dispatch must be used as a bare decorator, or with "
                             "a class as the first positional argument. You may have tried "
                             "to decorate a class with positional args instead of keywords.")
 
-        def decorator(_cls:type[SingleBlockType], _kw=kw_setup):
-            _cls.__dispatch__ = _kw
+        def decorator(_cls:type[SingleBlockType], _fk=from_key, _as=allow_self, _df=_dispatch_from):
+            _cls.__dispatch__ = {
+                "from_key": _fk,
+                "allow_self": _as,
+                "dispatch_from": _df or _cls,
+                "registry": {}
+            }
 
-            # inject dispatch_subclass method
+            def inject(bD, k, v, is_default=False):
+                target_dict = bD["__dispatch__"] if k.startswith("_") else bD
+
+                if is_default and v is None and k in target_dict:
+                    return bD
+                
+                target_dict[k] = v
+
+                return bD
+
+            @classmethod
+            def inject_defaults(current_cls, blockDict, _d=_defaults):
+                for k, v in _d.items():
+                    blockDict = inject(blockDict, k, v, is_default=True)
+                return blockDict
+
             @SingleBlock.dispatcher
-            def dispatch_subclass(current_cls:type[SingleBlockType], blockDict:dict, **kwargs):
-                return current_cls.add_dispatch(blockDict, _wrapped=True, **kwargs)
+            def dispatch_subclass(current_cls:type[SingleBlockType], blockDict:dict, _dispatch_key=_fk, **kwargs):
+                injection = current_cls.add_dispatch(blockDict, _dispatch_key, _wrapped=True, **kwargs)
+            
+                for k, v in injection.items():
+                    blockDict = inject(blockDict, k, v)
 
+                return blockDict
+
+            # inject methods
+            _cls.inject_defaults = inject_defaults
             _cls.dispatch_subclass = dispatch_subclass
+
             return _cls
         
         if cls is not None:
@@ -477,39 +515,77 @@ class SingleBlock(Block):
         return cls
     
     @classmethod
-    def add_dispatch(cls, blockDict, _wrapped=False, **kwargs):
+    def inject_defaults(cls, blockDict, *args, **kwargs):
+        # fallback.
+        # overridden by setup_dispatch decorator
+        return blockDict
+    
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, _wrapped=False, **kwargs):
         if _wrapped:
             # subclasses may want to mutate blockDict
-            return blockDict
+            return {}
 
         raise Exception("add_dispatch should only be called by a decorated dispatch_subclass method.")
 
     @classmethod
-    def register_dispatch(cls, registry_val, to_parent:type[SingleBlockType]=None):
-        def decorator(subcls, _val=registry_val, _p=to_parent, _cls=cls):
-            to_parent = _p or _cls
+    def register_dispatch(cls, registry_val, from_parent:type[SingleBlockType]=None, setup_from_key=None, setup_allow_self=True, inherit_dispatch=False, defaults:dict={}):
+        """
+        Decorate a subclass to be dispatched from a parent class.
 
-            if "__dispatch__" not in to_parent.__dict__:
-                raise Exception("You cannot register a subclass to a class that "
-                f"hasn't been decorated with @setup_dispatch() ({to_parent.__name__})")
+        The subclass will also be decorated with the parent's
+        [setup_dispatch][FoSpy.blocks.blocks.SingleBlock.setup_dispatch] to set
+        up its own dispatch parameters.
+
+        Args:
+            registry_val:
+                The value to be found in a dispatched blockDict which will be
+                mapped to the subclass in the parent class's registry.
+                
+            from_parent:
+                The parent class to register the subclass to. Defaults to the
+                class which calls the method, but may be overridden if a
+                non-SingleBlock abstract class is the parent.
+
+            setup_from_key:
+                Passed as from_key to the parents setup_dispatch decorator.
+
+            setup_allow_self:
+                Passed as allow_self to the parent's setup_dispatch decorator.
+
+            inherit_dispatch:
+                Whether the decorated class should inherit its parent's
+                `add_dispatch` method
             
-            registry = _cls.__dispatch__.setdefault("registry", {})
+            defaults:
+                Default values that should be injected into the blockDict when
+                trying to guarantee dispatching to the registered class.
+                Defaults to {}. If parent's from_key is public, defaults will be
+                updated with `{from_key: registry_val}`
+        """
+        setup = {
+            "from_key": setup_from_key,
+            "allow_self": setup_allow_self,
+        }
+        from_parent = from_parent or cls
+        def decorator(subcls, _val=registry_val, _p=from_parent, _cls=cls, _s=setup):
+            if "__dispatch__" not in _p.__dict__:
+                raise Exception("You cannot register a subclass to a class that "
+                f"hasn't been decorated with @setup_dispatch() or @register_dispatch() ({_p.__name__})")
+            
+            _s["_dispatch_from"] = _p.__dispatch__["dispatch_from"]
+            
+            subcls = cls.setup_dispatch(subcls, **_s)
+            registry = _p.__dispatch__["registry"]
 
             registry[registry_val] = subcls
+
+            if not inherit_dispatch and "add_dispatch" not in subcls.__dict__:
+                subcls.add_dispatch = SingleBlock.add_dispatch
 
             return subcls
         return decorator
     
-    def __new__(cls, blockDict, *args, **kwargs):
-        _dispatched = kwargs.pop("_dispatched", False)
-        if _dispatched:
-            # blockDict should always be dict after dispatch. I want to see attributeerror if not.
-            blockDict.pop("__dispatch__")
-            return super().__new__(cls)
-        
-        # double guard rail is pointless, _dispatched=True will go to first guard rail
-        dispatched_cls = cls.dispatch_subclass(blockDict, *args, **kwargs)
-        return dispatched_cls(blockDict, *args, _dispatched=True, **kwargs)
             
 
     @classmethod
@@ -536,37 +612,6 @@ class SingleBlock(Block):
             return subcls
         return dispatched_cls
 
-    @make_dispatch
-    def dispatch_subclass(cls, blockDict:dict, **kwargs:any):
-        """
-        Recommended dispatcher to allow subclass delegation when constructing.
-        
-        Overridden in some subclasses, usually to assign subclass based on the
-        value of one or more properties.
-
-        Default behavior passes `blockDict` and `**kwargs` to `__init__`
-        constructor.
-        """
-        from .. import _errors as err
-
-        # other defaults can be set by passing value=None to set_dispatch
-        cls.dispatch.setdefault(None, None)
-        default = cls.dispatch[None]
-
-        dispatch_val = blockDict.get(cls.dispatch_key, None)
-        dispatched_cls = cls.dispatch.get(dispatch_val, default)
-
-        if dispatched_cls is None:
-            if not cls.dispatch_allow_self:
-                raise err.FailedValidatorError(
-                    cls.dispatch_key, cls,
-                    Exception("This block type must be dispatched to another subclass."),
-                    blockDict=blockDict,
-                    hint=f"Could not find a valid dispatch value for {cls.dispatch_key} = {dispatch_val}.")
-            else:
-                dispatched_cls = cls
-
-        return dispatched_cls
     
     @classmethod
     def build_req_validators(cls):
@@ -697,40 +742,34 @@ class SingleBlock(Block):
 
     def __init__(self, blockDict:dict, *args, **kwargs):
         """
-        Constructs a SingleBlock object from a dictionary.
+        Constructs a SingleBlock object from a dictionary or another
+        SingleBlock.
 
-        Avoid using this constructor for unfamiliar block classes, it may bypass
-        subclass delegation. Use
-        [`dispatch_subclass`][FoSpy.blocks.blocks.SingleBlock.dispatch_subclass]
-        instead.
+        [Before construction][FoSpy.blocks.blocks.SingleBlock.__new__], the
+        `blockDict` is unwrapped into a deep-copied dictionary and scanned to
+        determine which subclass should be constructed.
 
         SingleBlocks are constructed recursively from an arbitrarily nested
-        dictionary. All keys identified by `SingleBlock.build_req_validators()`
-        must be present at the top level. Required keys at nested levels are
-        handled by the recursed constructor.
+        dictionary. After popping the top-level [`rename`
+        key][FoSpy.blocks.metadata.Rename], to see if any expected properties
+        have been renamed, all keys identified by
+        [`get_req_validators`][FoSpy.blocks.blocks.SingleBlock.get_req_validators]
+        must be in the top-level. Validation of all properties is delegated to
+        [setattr][FoSpy.blocks.blocks.SingleBlock.__setattr__].
 
         Args:
             blockDict:
                 An arbitrarily nested dictionary mapping attribute names to
-                values. 
-
-                Unexpected attributes will be assigned under `self.ext` instead
-                (see `SingleBlock.__setattr__`). 
+                values.  
                 
-                It is possible to pass a blockDict already containing objects,
-                but validation routines will fail if objects are not the correct
+                It is possible to pass a blockDict already containing FoSpy objects,
+                but validation routines may fail if objects are not the correct
                 type. Best practice is to serialize all nested objects into
                 lists, dicts, and strings to allow full type coersion.
-            _dispatched:
-                Flag passed by
-                [`dispatch_subclass`][FoSpy.blocks.blocks.SingleBlock.dispatch_subclass]
-                to signal that the safer construction method was used. Warning
-                issued for False
-
 
         Raises:
             ValueError:
-                A key required by `SingleBlock.build_req_validators()` is not
+                A key required by `build_req_validators()` is not
                 present.
             TypeError:
                 The value passed as `blockDict` was not able to be unwrapped
@@ -741,7 +780,6 @@ class SingleBlock(Block):
         from .metadata import Rename, MetaData
         self._staged_templates = {}
         self._constructed = False
-        property_errors = []
 
         self.track_attachments(**cfg.track_attachments())
 
@@ -754,32 +792,17 @@ class SingleBlock(Block):
 
         self._sourceDict = blockDict.copy()
 
-        if not isinstance(blockDict, dict):
-            raise TypeError("A SingleBlock must be constructed from either a dictionary or another SingleBlock. "
-                            "The passed source can optionally be wrapped in lists of length == 1.")
-
-        rename = blockDict.pop("rename",None)
-        if rename:
-            setattr(self, "rename", _unwrap_block(rename))
-        elif not isinstance(self, (Rename, MetaData)):
-            setattr(self, "rename", {})
+        rename = blockDict.pop("rename", {})
+        if getattr(self,"allow_rename",True):
+            self.rename=rename
 
         req = self.get_req_validators()
         req.pop("ext",None)
-        for key, validator in req.items():
-            if key not in blockDict:
-                from .template import TemplateBlock, TemplateList, TemplateField, FlexTemplate
-                is_type = isinstance(validator, type)
-                if is_type and issubclass(validator, TemplateField):
-                    blockDict[key] = ""
-                elif is_type and issubclass(validator, FlexTemplate):
-                    blockDict[key] = {"template_name": f"Empty {self._baseReq.__name__} Template"}
-                elif is_type and issubclass(validator, TemplateBlock):
-                    blockDict[key] = validator.reflex()
-                elif is_type and issubclass(validator, TemplateList):
-                    blockDict[key] = []
-                else:
-                    property_errors.append(err.MissingPropertyError(key, self, blockDict=blockDict))
+
+        property_errors = [
+            err.MissingPropertyError(key, self, blockDict=blockDict)
+            for key in req if key not in blockDict
+        ]
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -797,6 +820,9 @@ class SingleBlock(Block):
         self.ext = SubContainer()
 
         for key, val in blockDict.items():
+            if key.startswith("_"):
+                continue
+
             self._key_order.append(key)
             try:
                 setattr(self, key, val)
@@ -807,74 +833,6 @@ class SingleBlock(Block):
             raise err.PropertyErrorGroup(self, blockDict=blockDict, errors=property_errors)
         
         self._constructed = True
-
-    @classmethod
-    def find_dispatch_values(cls):
-        out = {}
-
-        mro = cls.__mro__
-        for parent_cls in reversed(mro):
-            dispatch_key = getattr(parent_cls, "dispatch_key", None)
-            if dispatch_key is None:
-                continue
-            if dispatch_key.startswith("_"):
-                # If dispatch key is private, it is determined dynamically during dispatch.
-                # dispatch methods using private keys should bind defaults to the dispatch method.
-                dispatch_vals = parent_cls.dispatch_subclass({}, _get_defaults=True)
-                out.update(dispatch_vals)
-            else:
-                try:
-                    dispatch_val = next(
-                        k for k, v in parent_cls.dispatch.items()
-                        if v is not None
-                        and issubclass(cls, v)
-                    )
-                    out[dispatch_key] = dispatch_val
-                except StopIteration:
-                    pass
-
-
-        out = {k:v for k,v in out.items() if v is not None}
-
-        return out
-    
-    @classmethod
-    def _add_dispatch_values(cls, target_cls, serial):
-        missing_dispatch_e = err.FoSpyStructureError(f"Could not find a dispatch path from {cls.__name__} to {target_cls.__name__}.")
-
-        if not hasattr(cls, "dispatch") or cls.dispatch is None or not issubclass(target_cls, cls):
-            raise missing_dispatch_e
-        
-        try:
-            dispatch_val, next_cls = next((k, v) for k, v in cls.dispatch.items() if issubclass(target_cls, v))
-        except StopIteration:
-            raise missing_dispatch_e
-        
-        if cls.dispatch_key.startswith("_"):
-            for k, v in next_cls.find_dispatch_values().items():
-                if callable(v):
-                    v = v(serial.get(k,None))
-
-                serial[k] = v
-        else:
-            serial[cls.dispatch_key] = dispatch_val
-
-        return serial, next_cls
-
-    def promote(self, target_cls:Block, construct=True):
-        serial = self.serialize(keepListType=True)
-
-        next_cls = self
-        while next_cls is not target_cls:
-            serial, next_cls = next_cls._add_dispatch_values(target_cls, serial)
-    
-        if not construct:
-            return serial
-
-        try:
-            return target_cls.dispatch_subclass(serial)
-        except Exception as e:
-            raise err.FoSpyStructureError(f"Unable to construct a {target_cls.__name__} from the dispatched dictionary:\n{serial}.") from e
 
 
     def _update_src(self):
@@ -974,19 +932,12 @@ class SingleBlock(Block):
             value = universal_val(value, **val_kwargs)
 
             if isinstance(validator, type):
-                if issubclass(validator, SingleBlock):
-                    validator = validator.dispatch_subclass
-                    val_kwargs = {}
-                    # value = _unwrap_block(value)
-                elif issubclass(validator, ListBlock):
+                if issubclass(validator, Block):
                     val_kwargs = {}
 
-                elif str(value) == format_field("template") and not issubclass(validator, TemplateField):
-                    if isinstance(self,TemplateBlock):
-                        validator = TemplateField
-                    else:       
-                        e = ValueError("You cannot assign a template field as a property for a non-template object.")
-                        raise err.FailedValidatorError(name, self, e, blockDict=self._update_src(), hint="Template field passed to non-template property: ")
+                elif str(value) == TemplateField.serialize() and not issubclass(validator, TemplateField):      
+                    e = ValueError("Template field detected for a non-templated property.")
+                    raise err.FailedValidatorError(name, self, e, blockDict=self._update_src(), hint="Template field passed to non-templated property: ")
                 if isinstance(validator, type) and isinstance(value, validator):
                     return self._assign_and_inject(name, value)
             
@@ -1533,7 +1484,7 @@ class SingleBlock(Block):
             else:
                 serial[key] = format_field("template")
         serial["template_name"] = template_name
-        return self.TemplateClass(*args).dispatch_subclass(serial)
+        return self.TemplateClass(*args)(serial)
 
     def _resolve_relative_path(self, path: str):
         """
@@ -1704,10 +1655,14 @@ class SingleBlock(Block):
         This prevents mutation of the comments when reconstructing.
         """
         cls = type(self)
+        # cache calculated comments before serializing
         c_cmts = self._calc_comments.copy()
-        self._calc_comments = {}
+        
+        serial = self.serialize(keepListType=True)
+        
+        new_obj =  cls(serial)
 
-        new_obj =  cls.dispatch_subclass(self.serialize(keepListType=True))
+        # restore cached calc comments
         self._calc_comments = c_cmts
 
         return new_obj
@@ -1967,12 +1922,6 @@ class ListBlock(Block):
             blockList = [blockList]
         self._objs = blockList
         self._staged_templates = {}
-
-        
-        # for blockDict in blockList:
-        #     obj = self._reqCls.dispatch_subclass(blockDict)
-        #     obj._parent_block = self
-        #     self._objs.append(obj)
     
     
     @classmethod
@@ -2065,7 +2014,7 @@ class ListBlock(Block):
                         continue
                     if not isinstance(obj, check_typ):
                         try:
-                            new_obj = typ.dispatch_subclass(obj)
+                            new_obj = typ(obj)
                         except Exception as e:
                             errors.append(err.ListBlockMismatchError(self, obj, idx, cause=e))
                             continue  

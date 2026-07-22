@@ -1,15 +1,16 @@
-from .synthesis import Synthesis
 from .blocks import (
     SingleBlock, ListBlock
 )
-from .files import FileBlock
-from .template import TemplateSet
 
 from ._blockUtils import _calc_routine
 
 from .._debug import Debug
 _debug = Debug()
 
+@SingleBlock.setup_dispatch(
+    from_key="fos_type",
+    allow_self=True
+)
 class MetaData(SingleBlock):
     """
     Represents metadata for a FOS-formatted file.
@@ -17,12 +18,16 @@ class MetaData(SingleBlock):
     Any key:value pairs at the top of a FOS file will automatically be assigned
     to metadata
     """
-    dispatch = {}
-    dispatch_key = "fos_type"
-    
+    allow_rename = False
+
+@MetaData.register_dispatch("synthesis",
+    defaults = {
+        "metadata": {
+            "fos_type": "synthesis"
+        }
+    })
 class SynthesisMeta(MetaData):
-    dispatch = {}
-MetaData.dispatch["synthesis"] = SynthesisMeta
+    pass
 
 class Reaction(SingleBlock):
     """
@@ -67,4 +72,4 @@ EquipmentList = ListBlock.Simple(Equipment)
 
 
 class Rename(SingleBlock):
-    pass
+    allow_rename = False

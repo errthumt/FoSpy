@@ -8,15 +8,25 @@ from .. import _errors as err
 from .._debug import Debug
 _debug = Debug()
 
+@SingleBlock.setup_dispatch(from_key="type")
 class Treatment(SingleBlock):
+    # Maps type strings to subclass constructors.
+    # Populated after each subclass definition.
+    dispatch = {}
     _id_key = "type"
+    @classmethod
+    def dispatch_subclass(cls, blockDict):
+        from .blocks import _unwrap_block
+        blockDict = _unwrap_block(blockDict)
+        t = blockDict.get("type", None)
+        subclass = cls.dispatch.get(t,cls)
+        return subclass(blockDict, _dispatched=True)
 
-
-@Treatment.set_dispatch("composition", from_key="type")
+@Treatment.register_dispatch("composition")
 class CompChange(Treatment):
     pass
 
-@Treatment.set_dispatch("anneal")
+@Treatment.register_dispatch("anneal")
 class Annealing(Treatment):
     def __init__(self, blockDict, _dispatched=False):
         super().__init__(blockDict, _dispatched=_dispatched)
@@ -62,10 +72,9 @@ class Annealing(Treatment):
         self.update_profile(**kwargs)
         return self._profile.interactive()
 
-
+@SingleBlock.setup_dispatch(from_key="type", allow_self=False)
 class AnnealSection(SingleBlock):
     _id_key = "type"
-    
     @_calc_routine
     def add_missing_parameter(self):
         return
@@ -79,37 +88,40 @@ class AnnealSection(SingleBlock):
         value = time.to(FOSUnit(time_units))
         return value
 
-@AnnealSection.set_dispatch("ramp", from_key="type", allow_self=False)   
+@AnnealSection.register_dispatch("ramp", setup_from_key="_ramp_missing", setup_allow_self=False)
 class Ramp(AnnealSection):
     def __init__(self, blockDict, _dispatched=False):
         super().__init__(blockDict, _dispatched=_dispatched)
 
-    @AnnealSection.make_dispatch(temp="", time="")
-    def dispatch_subclass(cls, blockDict, **kwargs):
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        # make sure wrapped
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
 
-        seeking = cls.dispatch.keys()
-        found = {}
-        for key in seeking:
-            found_val = blockDict.pop(key,None)
-            if found_val is not None and len(found) < len(seeking)-1:
-                found[key] = found_val
+        registry = list(cls.__dispatch__["registry"].keys())
+        seeking = len(registry) - 1
+        found = []
+        for key in registry:
+            if len(found) == seeking:
+                blockDict.pop(key, None)
+            elif key in blockDict:
+                found.append(key)
 
-        missing = [k for k in seeking if k not in found and k is not None]
-
+        missing = [r for r in registry if r not in found]
         if len(missing) > 1:
-            raise err.MissingPropertyError(' or '.join(missing), cls, blockDict=blockDict)
+            needed = len(missing) - 1
+            raise err.MissingPropertyError(" or ".join(missing), cls, blockDict=blockDict, hint=f"Missing properties for dispatch; {needed} more of:")
         
-        missing = missing[0]
-        
-        blockDict.update(found)
-        blockDict[cls.dispatch_key] = missing
-            
-        return super(AnnealSection, cls)
-            
+        missing = missing.pop()
+        return {dispatch_key: missing}
+    
+    @classmethod
+    def register_dispatch(cls, registry_val, **kwargs):
+        return super().register_dispatch(registry_val, inherit_dispatch=False, **kwargs)
+   
     def get_rate(self, temp_units="C", time_units="h"):
         from ..parsing.validators.units import FOSTempUnit, FOSUnit, FOSQuantity
-        if not hasattr(self, "rate"):
-            raise ValueError("Ramp section does not have a 'rate' attribute. Conisder reclassifying this section as a RampNoRate section.")
+
         new_unit = FOSUnit(f"{FOSTempUnit(temp_units)}/{FOSUnit(time_units,'[time]')}")
         rate = FOSQuantity(float(self.rate.magnitude),self.rate.units)
         value = rate.to(new_unit)
@@ -117,19 +129,22 @@ class Ramp(AnnealSection):
     
     def get_temp(self, temp_units="C"):
         from ..parsing.validators.units import FOSTempUnit, FOSQuantity
-        if not hasattr(self, "temp"):
-            raise ValueError("Ramp section does not have a 'temp' attribute. Conisder reclassifying this section as a RampNoTemp section.")
+
         temp = FOSQuantity(float(self.temp.magnitude),self.temp.units)
         value = temp.to(FOSTempUnit(temp_units))
         return value
     
+    def get_time(self, time_units="h"):
+        from ..parsing.validators.units import FOSUnit, FOSQuantity
 
-@Ramp.set_dispatch("temp", from_key="_ramp_missing", allow_self=False)
+        time = FOSQuantity(float(self.time.magnitude),self.time.units)
+        value = time.to(FOSUnit(time_units))
+        return value
+
+
+@Ramp.register_dispatch("temp")
 class RampNoTemp(Ramp):
-    @Ramp.make_dispatch(time="", rate="", temp=None)
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(RampNoTemp, cls)
-    
+    dispatch = {}
     def get_temp(self, temp_units="C"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
@@ -157,11 +172,8 @@ class RampNoTemp(Ramp):
         temp = self.get_temp(temp_unit)
         self.add_calc_comment("time", f"Temperature after ramp: {temp} {temp_unit}", "missing temp")
 
-@Ramp.set_dispatch("time")
+@Ramp.register_dispatch("time")
 class RampNoTime(Ramp):
-    @Ramp.make_dispatch(temp="", rate="", time=None)
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(RampNoTime, cls)
     def get_time(self, time_units="h"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
@@ -188,11 +200,8 @@ class RampNoTime(Ramp):
         time = self.get_time(time_unit)
         self.add_calc_comment("temp", f"Time for ramp: {time} {time_unit}", "missing time")
 
-@Ramp.set_dispatch("rate")
+@Ramp.register_dispatch("rate")
 class RampNoRate(Ramp):
-    @Ramp.make_dispatch(temp="", time="", rate=None)
-    def dispatch_subclass(cls, blockDict, **kwargs):
-        return super(RampNoRate, cls)
     def get_rate(self, temp_units="C", time_units="h"):
         from ..parsing.validators.units import FOSQuantity, FOSTempUnit, _to_decimal
         try:
@@ -218,15 +227,13 @@ class RampNoRate(Ramp):
         rate = self.get_rate()
         self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")
 
-@AnnealSection.set_dispatch("dwell")
+@AnnealSection.register_dispatch("dwell")
 class Dwell(AnnealSection):
     pass
-    
 
-@AnnealSection.set_dispatch("quench")
+@AnnealSection.register_dispatch("quench")
 class Quench(AnnealSection):
     pass
-
 
 class AnnealProgram(ListBlock):
     _reqCls = AnnealSection
