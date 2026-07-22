@@ -163,7 +163,7 @@
     "code": "F401",
     "end_location": {
       "column": 37,
-      "row": 780
+      "row": 806
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -173,11 +173,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 781
+            "row": 807
           },
           "location": {
             "column": 1,
-            "row": 780
+            "row": 806
           }
         }
       ],
@@ -185,11 +185,11 @@
     },
     "location": {
       "column": 31,
-      "row": 780
+      "row": 806
     },
     "message": "`.metadata.Rename` imported but unused",
     "name": "unused-import",
-    "noqa_row": 780,
+    "noqa_row": 806,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -198,7 +198,7 @@
     "code": "F401",
     "end_location": {
       "column": 47,
-      "row": 780
+      "row": 806
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -208,11 +208,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 781
+            "row": 807
           },
           "location": {
             "column": 1,
-            "row": 780
+            "row": 806
           }
         }
       ],
@@ -220,11 +220,11 @@
     },
     "location": {
       "column": 39,
-      "row": 780
+      "row": 806
     },
     "message": "`.metadata.MetaData` imported but unused",
     "name": "unused-import",
-    "noqa_row": 780,
+    "noqa_row": 806,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -233,7 +233,7 @@
     "code": "F401",
     "end_location": {
       "column": 54,
-      "row": 883
+      "row": 912
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -243,11 +243,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 884
+            "row": 913
           },
           "location": {
             "column": 1,
-            "row": 883
+            "row": 912
           }
         }
       ],
@@ -255,11 +255,11 @@
     },
     "location": {
       "column": 42,
-      "row": 883
+      "row": 912
     },
     "message": "`..parsing.format_fos.format_field` imported but unused",
     "name": "unused-import",
-    "noqa_row": 883,
+    "noqa_row": 912,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -268,7 +268,7 @@
     "code": "F401",
     "end_location": {
       "column": 59,
-      "row": 884
+      "row": 913
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -278,11 +278,11 @@
           "content": "from .template import TemplateField",
           "end_location": {
             "column": 59,
-            "row": 884
+            "row": 913
           },
           "location": {
             "column": 9,
-            "row": 884
+            "row": 913
           }
         }
       ],
@@ -290,11 +290,11 @@
     },
     "location": {
       "column": 46,
-      "row": 884
+      "row": 913
     },
     "message": "`.template.TemplateBlock` imported but unused",
     "name": "unused-import",
-    "noqa_row": 884,
+    "noqa_row": 913,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -335,10 +335,45 @@
   },
   {
     "cell": null,
+    "code": "F811",
+    "end_location": {
+      "column": 38,
+      "row": 155
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/files.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 156
+          },
+          "location": {
+            "column": 1,
+            "row": 155
+          }
+        }
+      ],
+      "message": "Remove definition: `err`"
+    },
+    "location": {
+      "column": 35,
+      "row": 155
+    },
+    "message": "Redefinition of unused `err` from line 4: `err` redefined here",
+    "name": "redefined-while-unused",
+    "noqa_row": 155,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/redefined-while-unused"
+  },
+  {
+    "cell": null,
     "code": "F401",
     "end_location": {
       "column": 38,
-      "row": 153
+      "row": 179
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -348,11 +383,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 154
+            "row": 180
           },
           "location": {
             "column": 1,
-            "row": 153
+            "row": 179
           }
         }
       ],
@@ -360,13 +395,83 @@
     },
     "location": {
       "column": 35,
-      "row": 153
+      "row": 179
     },
     "message": "`.._errors` imported but unused",
     "name": "unused-import",
-    "noqa_row": 153,
+    "noqa_row": 179,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 21,
+      "row": 488
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 24,
+            "row": 488
+          },
+          "location": {
+            "column": 13,
+            "row": 488
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `from_key`"
+    },
+    "location": {
+      "column": 13,
+      "row": 488
+    },
+    "message": "Local variable `from_key` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 488,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+  },
+  {
+    "cell": null,
+    "code": "F841",
+    "end_location": {
+      "column": 21,
+      "row": 489
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
+    "fix": {
+      "applicability": "unsafe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 24,
+            "row": 489
+          },
+          "location": {
+            "column": 13,
+            "row": 489
+          }
+        }
+      ],
+      "message": "Remove assignment to unused variable `registry`"
+    },
+    "location": {
+      "column": 13,
+      "row": 489
+    },
+    "message": "Local variable `registry` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 489,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
   },
   {
     "cell": null,
