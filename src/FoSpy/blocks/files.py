@@ -146,7 +146,28 @@ class FileBlock(SingleBlock):
             else:
                 self._ext_file = None
                 self._ext_dir = None
-        super().__setattr__(name, value)         
+        super().__setattr__(name, value)  
+
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
+
+        from .. import _errors as err
+        from ._blockUtils import _unwrap_block
+
+        from .metadata import MetaData
+        metadata = blockDict.get("metadata", None)
+
+        if metadata is None:
+            raise err.MissingPropertyError("metadata", cls, blockDict=blockDict)
+        
+        metadata = _unwrap_block(metadata)
+        fos_type = metadata.pop("fos_type", None)
+        if fos_type is None:
+            raise err.MissingPropertyError("fos_type", MetaData, blockDict=metadata)
+        
+        return {dispatch_key: fos_type}
+
 
     def cleanup(self):
         if self._tempdir is not None:

@@ -14,7 +14,7 @@ from ._blockUtils import _unwrap_block
 from .._debug import Debug
 _debug = Debug()
 
-SingleBlockType = TypeVar('T', bound='SingleBlock')
+BlockType = TypeVar('T', bound='Block')
 
 def _add_comments_to_parent(attr_name):
     """
@@ -363,8 +363,9 @@ class SingleBlock(Block):
         """
 
         @classmethod
-        def dispatch_subclass(cls:type[SingleBlockType], blockDict, _add_defaults=False, **kwargs):
+        def dispatch_subclass(cls:type[BlockType], blockDict, _add_defaults=False, **kwargs):
             from .. import _errors as err
+            for_template = kwargs.get("for_template", False)
 
             block_dispatch = blockDict.setdefault("__dispatch__", {})
             visited = block_dispatch.setdefault("visited", [])
@@ -377,8 +378,12 @@ class SingleBlock(Block):
                 d is None or
                 d['from_key'] is None):
                 return cls
-            
-            blockDict = dispatch_method(cls, blockDict, add_defaults=_add_defaults, **kwargs)
+            try:
+                blockDict = dispatch_method(cls, blockDict, add_defaults=_add_defaults, **kwargs)
+            except Exception as e:
+                if not for_template:
+                    raise e
+
             visited.append(cls)
             
             if d['dispatch_from'] not in visited:
@@ -389,19 +394,21 @@ class SingleBlock(Block):
             dispatch_val = block_dispatch.get(d['from_key'],
                                 blockDict.get(d['from_key'], None))
             
-            dispatched_cls = d['registry'].get(dispatch_val, d['registry'].get(None, None))
+            dispatched_cls = d['registry'].get(dispatch_val, d['registry'].get(None, cls))
 
             if dispatched_cls is cls and not d['allow_self']:
-                raise err.BlockDispatchError(
-                    f"The following blockDict was dispatched to {cls.__name__} "
-                    "but could not be dispatched further. "
-                    f"{cls.__name__} blocks are not allowed without a subclass.")
+                if not for_template:
+                    raise err.BlockDispatchError(
+                        f"The following blockDict was dispatched to {cls.__name__} "
+                        "but could not be dispatched further. "
+                        f"{cls.__name__} blocks are not allowed without a subclass.")
+                return cls
             
             return dispatched_cls.dispatch_subclass(blockDict, **kwargs)
         return dispatch_subclass
     
     @staticmethod
-    def setup_dispatch(cls:type[SingleBlockType]=None,
+    def setup_dispatch(cls:type[BlockType]=None,
         from_key=None,
         allow_self=True,
         _dispatch_from=None,
@@ -464,7 +471,7 @@ class SingleBlock(Block):
                             "a class as the first positional argument. You may have tried "
                             "to decorate a class with positional args instead of keywords.")
 
-        def decorator(_cls:type[SingleBlockType], _fk=from_key, _as=allow_self, _df=_dispatch_from):
+        def decorator(_cls:type[BlockType], _fk=from_key, _as=allow_self, _df=_dispatch_from, _def=_defaults):
             _cls.__dispatch__ = {
                 "from_key": _fk,
                 "allow_self": _as,
@@ -483,13 +490,21 @@ class SingleBlock(Block):
                 return bD
 
             @classmethod
-            def inject_defaults(current_cls, blockDict, _d=_defaults):
+            def inject_defaults(current_cls, blockDict, _d=_def):
+                d = current_cls.__dispatch__
+                blk_d = blockDict.setdefault("__dispatch__", {})
+                if (not d['allow_self'] and
+                    None not in d['registry'] and
+                    blockDict.get(d['from_key'],blk_d.get(d['from_key'], None)) is None):
+                    default_dispatch = next(iter(d['registry'].values()))
+                    blockDict = default_dispatch.inject_defaults(blockDict)
+
                 for k, v in _d.items():
                     blockDict = inject(blockDict, k, v, is_default=True)
                 return blockDict
 
             @SingleBlock.dispatcher
-            def dispatch_subclass(current_cls:type[SingleBlockType], blockDict:dict, _dispatch_key=_fk, **kwargs):
+            def dispatch_subclass(current_cls:type[BlockType], blockDict:dict, _dispatch_key=_fk, **kwargs):
                 injection = current_cls.add_dispatch(blockDict, _dispatch_key, _wrapped=True, **kwargs)
             
                 for k, v in injection.items():
@@ -529,7 +544,12 @@ class SingleBlock(Block):
         raise Exception("add_dispatch should only be called by a decorated dispatch_subclass method.")
 
     @classmethod
-    def register_dispatch(cls, registry_val, from_parent:type[SingleBlockType]=None, setup_from_key=None, setup_allow_self=True, inherit_dispatch=False, defaults:dict={}):
+    def register_dispatch(cls, registry_val,
+                          from_parent:type[BlockType]=None,
+                          setup_from_key=None,
+                          setup_allow_self=True,
+                          inherit_dispatch=False,
+                          defaults:dict=None):
         """
         Decorate a subclass to be dispatched from a parent class.
 
@@ -566,12 +586,18 @@ class SingleBlock(Block):
         setup = {
             "from_key": setup_from_key,
             "allow_self": setup_allow_self,
+            "_defaults": defaults or {}
         }
         from_parent = from_parent or cls
         def decorator(subcls, _val=registry_val, _p=from_parent, _cls=cls, _s=setup):
             if "__dispatch__" not in _p.__dict__:
                 raise Exception("You cannot register a subclass to a class that "
                 f"hasn't been decorated with @setup_dispatch() or @register_dispatch() ({_p.__name__})")
+            
+            dispatch_key = _p.__dispatch__["from_key"]
+            if not dispatch_key.startswith("_"):
+                _s["_defaults"][dispatch_key] = _val
+
             
             _s["_dispatch_from"] = _p.__dispatch__["dispatch_from"]
             
@@ -778,6 +804,7 @@ class SingleBlock(Block):
 
         """
         from .metadata import Rename, MetaData
+        from ._blockUtils import _unwrap_block
         self._staged_templates = {}
         self._constructed = False
 
@@ -789,6 +816,8 @@ class SingleBlock(Block):
         new_als.update(self._aliases or {})
         self._aliases = new_als
         self._reserved = ['ext']
+
+        blockDict = _unwrap_block(blockDict)
 
         self._sourceDict = blockDict.copy()
 
@@ -909,6 +938,9 @@ class SingleBlock(Block):
             if name not in validators:
                 validators[name] = val
                 self._key_overrides[name] = val
+
+        if name == "treatments":
+            pass # debugging
 
         if name in validators:
             universal_val = self.universal_val
@@ -1093,6 +1125,7 @@ class SingleBlock(Block):
     
     def fill_staged_template(self, prop_name, **kwargs):
         from .template import TemplateBlock
+
         prop_key = prop_name.split("$")[0] if "$" in prop_name else prop_name
 
         template = self._staged_templates.pop(prop_key, None)
@@ -1102,13 +1135,10 @@ class SingleBlock(Block):
 
         prop_name = prop_key
 
-        try:
-            filled = template.fill(staged=True,**kwargs)
-        except Exception:
-            partial = template.fill(staged=True,incomplete=True, **kwargs)
-            self._staged_templates[prop_name] = partial
-            partial._staged_parent = self
-            return prop_name, partial
+        filled = template.fill(staged=True,**kwargs)
+        
+        if isinstance(filled, TemplateBlock):
+            return self.stage_template(prop_name, filled)
         
         try:
             setattr(self, prop_name, filled)
@@ -1129,6 +1159,8 @@ class SingleBlock(Block):
         for val in self.get_prop_dict().values():
             if hasattr(val, "has_staged") and val.has_staged():
                 return True
+        
+        return False
 
     def rename_dict(self):
         if not hasattr(self, "rename"):
@@ -1922,6 +1954,7 @@ class ListBlock(Block):
             blockList = [blockList]
         self._objs = blockList
         self._staged_templates = {}
+        self._temp_id_gen = self.temp_id_gen()
     
     
     @classmethod
@@ -1971,6 +2004,10 @@ class ListBlock(Block):
         cls.simple_lists[reqCls] = SimpleSub
 
         return SimpleSub
+    
+    def TemplateClass(cls):
+        from .template import TemplateList
+        return TemplateList.simple(cls._reqCls)
 
 
     def __setattr__(self, name, value):
@@ -2042,10 +2079,20 @@ class ListBlock(Block):
     def has_staged(self):
         return len(self._staged_templates) > 0 or any(blk.has_staged() for blk in self)
     
-    def stage_template(self, temp_id, template:Block|dict=None):
+    @staticmethod
+    def temp_id_gen():
+        i = 0
+        while True:
+            yield "template_" + str(i)
+            i += 1
+    
+    def stage_template(self, temp_id=None, template:Block|dict=None):
         from .template import TemplateBlock
         if template is None:
             template = {}
+
+        if temp_id is None:
+            temp_id = next(self._temp_id_gen)
 
         if "$" in temp_id:
             raise ValueError("ListBlock Template IDs cannot contain '$'. "
@@ -2069,17 +2116,18 @@ class ListBlock(Block):
         return temp_id, template
     
     def fill_staged_template(self, temp_id, idx=None, **kwargs):
+        from .template import TemplateBlock
+
         template = self._staged_templates.pop(temp_id, None)
         if template is None:
             temp_id, _ = self.stage_template(temp_id)
             return self.fill_staged_template(temp_id, **kwargs)
         
-        try:
-            filled = template.fill(staged=True,**kwargs)
-        except Exception:
-            partial = template.fill(staged=True,incomplete=True, **kwargs)
-            return self.stage_template(temp_id, partial)
-        
+        filled = template.fill(staged=True, **kwargs)
+
+        if isinstance(filled, TemplateBlock):
+            return self.stage_template(temp_id, filled)
+
         if idx is None:
             self.append(filled)
         else:

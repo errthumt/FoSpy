@@ -11,7 +11,7 @@ from pprint import pp
 # pass
 
 
-from FoSpy.blocks import Annealing, Attachment, EmbeddedFile, CIFFile, PathFile
+from FoSpy.blocks import Annealing, Attachment, EmbeddedFile, CIFFile, PathFile, Synthesis
 
 anneal_dict = {
     "type": "anneal",
@@ -52,6 +52,26 @@ except Exception as e:
     print("Failed as expected")
     print(e)
 
+
+anneal_dict.pop("start_temp")
+anneal_dict.pop("repeats")
+
+AnnealingTemplate = Annealing.TemplateClass("start_temp", "repeats")
+
+anneal_template1 = AnnealingTemplate(anneal_dict)
+template_serial1 = anneal_template1.serialize()
+pp(template_serial1)
+
+anneal_template2 = Annealing.reflex(serialize=False)
+template_serial2 = anneal_template2.serialize()
+pp(template_serial2)
+
+anneal_template3 = Annealing.reflex(serialize=False, **anneal_dict)
+template_serial3 = anneal_template3.serialize()
+pp(template_serial3)
+
+
+pass
 
 
 

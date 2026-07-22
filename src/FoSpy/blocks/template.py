@@ -126,18 +126,44 @@ class TemplateSet(FileBlock):
 
         return out
 
+@SingleBlock.setup_dispatch(from_key="_reqCls",allow_self=False)
 class TemplateList(ListBlock):
     """
     Represents a list of templates with the same subclass.
     """
-    simple_lists = {}
 
-    @staticmethod
-    def temp_id_gen():
-        i = 0
-        while True:
-            yield "template_" + str(i)
-            i += 1
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
+
+        block_dispatch = blockDict.setdefault("__dispatch__", {})
+        reqCls = block_dispatch.setdefault("_reqCls", cls._reqCls)
+
+        if reqCls is None:
+            return {}
+        
+        registry = TemplateList.__dispatch__['registry']
+        if reqCls not in registry:
+            SimpleList = ListBlock.Simple(reqCls)
+
+            link = _get_docs_link(reqCls)
+            @SingleBlock.register_dispatch(reqCls, from_parent=TemplateList)
+            @_validator_rules(
+                f"A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`{reqCls.__name__}` *templates.*]{link}",
+                ["[`FlexTemplate` subclasses](#flextemplate) are defined with a parent "
+                "[`SingleBlock` subclass](#singleblock). They automatically detect "
+                "which required properties are missing at construction time, and "
+                "instantiate a [dynamic `TemplateBlock`](#templateblock) with template "
+                "fields in those properties."]
+            )
+            class FlexList(TemplateList, SimpleList):
+                pass
+
+            FlexList.__name__ = f"{reqCls.__name__}FlexList"
+            FlexList.__qualname__ = f"{cls.__name__}.{reqCls.__name__}FlexList"
+            FlexList.__module__ = cls.__module__
+
+        return {dispatch_key: reqCls}
 
     def __init__(self, blockList):
         super().__init__([])
@@ -157,7 +183,7 @@ class TemplateList(ListBlock):
         except Exception:
             block = _unwrap_block(block)
             try:
-                self.stage_template(next(self._temp_id_gen), block)
+                self.stage_template(template=block)
             except Exception as e:
                 raise NotImplementedError("Shouldn't happen") from e
 
@@ -173,31 +199,13 @@ class TemplateList(ListBlock):
 
     @classmethod
     def Simple(cls, reqCls, **kwargs):
-        if reqCls in cls.simple_lists:
-            return cls.simple_lists[reqCls]
-        
-        SimpleList = ListBlock.Simple(reqCls)
+        proxy_dict = {
+            "__dispatch__": {
+                "_reqCls": reqCls,
+            }
+        }
 
-        link = _get_docs_link(reqCls)
-
-        @_validator_rules(
-            f"A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`{reqCls.__name__}` *templates.*]{link}",
-            ["[`FlexTemplate` subclasses](#flextemplate) are defined with a parent "
-             "[`SingleBlock` subclass](#singleblock). They automatically detect "
-             "which required properties are missing at construction time, and "
-             "instantiate a [dynamic `TemplateBlock`](#templateblock) with template "
-             "fields in those properties."]
-        )
-        class FlexList(TemplateList, SimpleList):
-            pass
-
-        FlexList.__name__ = f"{reqCls.__name__}FlexList"
-        FlexList.__qualname__ = f"{cls.__name__}.{reqCls.__name__}FlexList"
-        FlexList.__module__ = cls.__module__
-
-        cls.simple_lists[reqCls] = FlexList
-
-        return FlexList
+        return TemplateList.dispatch_subclass(proxy_dict)
 
 @SingleBlock.setup_dispatch(from_key="_full_class", allow_self=False)
 class TemplateBlock(SingleBlock):
@@ -208,6 +216,51 @@ class TemplateBlock(SingleBlock):
         self._val_exceptions = {}
 
         super().__init__(blockDict, **kwargs)
+
+    def _override_validators(self, validators):
+        from .blocks import Block
+        try:
+            rename_dict = self.rename_dict()
+        except AttributeError:
+            rename_dict = {}
+
+        for field in self._fields:
+            if field in rename_dict:
+                field = rename_dict[field]
+
+            if field not in validators:
+                continue
+
+            val = validators[field]
+            if not isinstance(val, type) or not issubclass(val, Block):
+                new_val = TemplateField
+
+            elif issubclass(val, SingleBlock):
+                new_val = val.TemplateClass()
+
+            elif issubclass(val, ListBlock):
+                new_val = TemplateList.Simple(val._reqCls)
+            
+            else:
+                raise NotImplementedError("Shouldn't happen")
+
+            validators[field] = new_val
+
+        for field in self._val_exceptions:
+            validators[field] = FailedTemplateField
+
+        return validators
+
+
+    def get_req_validators(self):
+        validators = super().get_req_validators()
+
+        return self._override_validators(validators)
+    
+    def get_validators(self):
+        validators = super().get_validators()
+
+        return self._override_validators(validators)
 
     def find_staged_id(self):
         if not (hasattr(self, "_staged_parent")
@@ -223,31 +276,23 @@ class TemplateBlock(SingleBlock):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
         
-        if not incomplete and self.has_staged():
-            raise ValueError("A template cannot be filled to a full block with staged templates.")
-        
-        if in_place:
-            for kw, arg in kwargs.items():
-                setattr(self,kw,arg)
-            return self
+        for prop in self._staged_templates:
+            self.fill_staged_template(prop)
         
         staged_id = self.find_staged_id()
         if staged_id and not staged:
-            return self._staged_parent.fill_staged_template(staged_id, **kwargs)
+            _, filled = self._staged_parent.fill_staged_template(staged_id, **kwargs)
+            return filled
 
         serial = self.serialize(keepListType=True)
-        serial.pop("template_name",None)
         for kw, arg in kwargs.items():
             serial[kw] = arg
 
-        if incomplete:
-            new_template = self._full_class.reflex(serialize=False,**serial)
-            new_template.template_name = self.template_name
-            for temp_id, template in self._staged_templates.items():
-                new_template.stage_template(temp_id, template)
-            return new_template
+        flex_cls = self._full_class.TemplateClass()
 
-        return self._full_class(serial)
+        filled = flex_cls(serial)
+
+        return filled
     
     def serialize(self,keepListType=False, shallow=False, clean=False, **kwargs):
         # from ..parsing.validation import required_keys
@@ -268,7 +313,7 @@ class TemplateBlock(SingleBlock):
                 if issubclass(validator,SingleBlock):
                     val = serial.pop(key, validator.reflex())
                 elif issubclass(validator, ListBlock):
-                    val = serial.pop(key, validator([]).serialize(keepListType=keepListType, shallow=shallow, clean=clean))
+                    val = serial.pop(key, validator([]).serialize())
 
             if val is None:
                 val = serial.pop(key, TemplateField("").serialize())
@@ -282,31 +327,50 @@ class TemplateBlock(SingleBlock):
     
     def __setattr__(self, name, value):
         from .. import _errors as err
-        from ..parsing.validation import optional_keys
+        from .blocks import Block
 
         try:
             super().__setattr__(name, value)
             self._val_exceptions.pop(name, None)
         except err.FailedValidatorError as e:
-            from ..parsing.validation import optional_keys
-            self._val_exceptions[name] = e
+            validators = self.get_validators()
 
-            validators = optional_keys.setdefault(type(self), {})
             cached_val = validators.get(name, None)
 
-            if isinstance(cached_val, type) and issubclass(cached_val, SingleBlock):
+            if not isinstance(cached_val, type) or not issubclass(cached_val, Block):
+                self._val_exceptions[name] = e
+                # newly mutated _val_exceptions should allow setattr now.
+                super().__setattr__(name, value)
+
+            elif issubclass(cached_val, SingleBlock):
                 self.stage_template(name, value)
 
-            elif isinstance(cached_val, type) and issubclass(cached_val, ListBlock):
-                raise NotImplementedError("A TemplateList failed construction unexpectedly.") from e
-            
-            else:
-                validators[name] = FailedTemplateField
-                super().__setattr__(name, value)
-                if cached_val is not None:
-                    validators[name] = cached_val
-                else:
-                    validators.pop(name, None)
+            elif issubclass(cached_val, TemplateList):
+                raise NotImplementedError("A TemplateList construction failed unexpectedly.")
+
+            else: # ListBlock Only
+                from ._blockUtils import _unwrap_listblock
+                from warnings import warn
+                setattr(self, name, [])
+
+                value = _unwrap_listblock(value)
+
+                new_listblock = getattr(self, name)
+
+                warnings = []
+                for item in value:
+                    try:
+                        new_listblock.append(item)
+                    except err.FailedValidatorError as e:
+                        try:
+                            new_listblock.stage_template(template=item)
+                        except Exception as e:
+                            warnings.append("The following item could not be set to a ListBlock or staged as a template:"
+                                            f"\n\nCANDIDATE:\n{item}"
+                                            f"\n\nERROR:\n{e}")
+                if warnings:
+                    for w in warnings:
+                        warn(w, UserWarning)
     
     @classmethod
     def TemplateClass(cls, *args):
@@ -319,6 +383,30 @@ class TemplateBlock(SingleBlock):
         
         return cls._full_class.TemplateClass(*fields)
     
+    @classmethod
+    def _inject_defaults(cls, full_class, blockDict):
+        from .. import _errors as err
+
+        full_dispatch = getattr(full_class, "__dispatch__", {})
+        
+        next_class = None
+        while next_class is not full_class:
+            if next_class is None:
+                next_class = full_dispatch.get("dispatch_from", full_class)
+            else:
+                registry = next_class.__dispatch__["registry"]
+                try:
+                    next_class = next(sub for sub in registry.values() if issubclass(full_class, sub))
+                except StopIteration:
+                    err.BlockDispatchError(
+                        f"Could not find a valid dispatch chain to get from {next_class.__name__} to "
+                        f"{full_class.__name__}.")
+                    
+            blockDict = next_class.inject_defaults(blockDict)
+
+
+        return blockDict
+    
     def __new__(cls, blockDict, *args, **kwargs):
         from .. import _errors as err
 
@@ -330,23 +418,15 @@ class TemplateBlock(SingleBlock):
             return super().__new__(cls, blockDict, *args, _dispatched=True, **kwargs)
 
         full_class = cls._full_class
-
-        full_dispatch = getattr(full_class, "__dispatch__", {})
-        
-        next_class = full_dispatch.get("dispatch_from", full_class)
-
-        while next_class is not full_class:
-            blockDict = next_class.inject_defaults(blockDict)
-            registry = next_class.__dispatch__["registry"]
-
-            try:
-                next_class = next(sub for sub in registry.values() if issubclass(full_class, sub))
-            except StopIteration:
-                err.BlockDispatchError(
-                    f"Could not find a valid dispatch chain to get from {next_class.__name__} to "
-                    f"{full_class.__name__}.")
+        blockDict = cls._inject_defaults(full_class, blockDict)
                 
-        template_class = next_class.TemplateClass(*cls._fields)
+        template_class = full_class.TemplateClass(*cls._fields)
+
+        for field in cls._fields:
+            if blockDict.get(field, None) is None:
+                blockDict[field] = TemplateField()
+
+        blockDict.setdefault("template_name", cls.__name__)
 
         return template_class(blockDict, *args, _dispatched=True, **kwargs)
 
@@ -374,7 +454,7 @@ class FlexTemplate:
             TemplateClass.__qualname__ = f"{cls._full_class.__name__}{suffix}"
             TemplateClass.__module__ = cls.__module__
 
-        return {dispatch_key: cls._fields}
+        return {dispatch_key: cls._fields or fields}
     
     def __new__(cls, blockDict, *args, **kwargs):
         if not hasattr(cls, "_fields"):
@@ -383,8 +463,58 @@ class FlexTemplate:
         if cls._fields != ():
             return super().__new__(cls, blockDict, *args, **kwargs)
         
-        # flex logic goes here to determine number of fields.
-        return super().__new__(cls, blockDict, *args, **kwargs)
+        from .blocks import Block
+        from .metadata import Rename
+        from ._blockUtils import _template_found
+
+        full_cls = cls._full_class
+        temp_name = blockDict.pop("template_name", cls.__name__)
+        try:
+            return full_cls(blockDict, *args, **kwargs)
+        except Exception:
+            blockDict['template_name'] = temp_name
+
+        # jump back to start of dispatch chain.
+        dispatch = full_cls.__dispatch__ or {}
+        dispatch_start = dispatch.get("dispatch_from", full_cls)
+
+        # continuously inject until chain tops out.
+        next_cls = None
+        while next_cls is not full_cls:
+            next_cls = next_cls or dispatch_start
+            blockDict = cls._inject_defaults(next_cls, blockDict)
+
+            next_dispatch = next_cls.__dispatch__
+            from_key = next_dispatch["from_key"]
+            registry = next_dispatch["registry"]
+
+            full_cls, next_cls = next_cls, full_cls.dispatch_subclass(blockDict, for_template=True)
+            blockDict.pop("__dispatch__", None)
+
+        rename_dict = blockDict.get("rename", {})
+        rename_from = {v:k for k, v in rename_dict.items()}
+        fields = []
+        reqs = full_cls.build_req_validators()
+        reqs.pop('ext', None)
+
+        for name, validator in reqs.items():
+            if name in rename_from:
+                name = rename_from[name]
+
+            if (
+                _template_found(blockDict.get(name, None))
+            ) or (
+                isinstance(validator, type) and
+                issubclass(validator, Block) and
+                not issubclass(validator, Rename)
+            ):
+                fields.append(name)
+
+        for prop, val in blockDict.items():
+            if prop not in fields and _template_found(val):
+                fields.append(prop)
+
+        return full_cls.TemplateClass(*fields)(blockDict, *args, **kwargs)
     
 class TemplateFieldCounter:
     _fields = ()

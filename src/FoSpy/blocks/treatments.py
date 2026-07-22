@@ -87,8 +87,16 @@ class AnnealSection(SingleBlock):
         time = FOSQuantity(float(self.time.magnitude), self.time.units)
         value = time.to(FOSUnit(time_units))
         return value
+    
+@AnnealSection.register_dispatch("dwell")
+class Dwell(AnnealSection):
+    pass
 
-@AnnealSection.register_dispatch("ramp", setup_from_key="_ramp_missing", setup_allow_self=False)
+@AnnealSection.register_dispatch("quench")
+class Quench(AnnealSection):
+    pass
+
+@AnnealSection.register_dispatch("ramp", setup_from_key="_ramp_missing", setup_allow_self=False, defaults={"temp": None, "time": None, "rate": None})
 class Ramp(AnnealSection):
     def __init__(self, blockDict, _dispatched=False):
         super().__init__(blockDict, _dispatched=_dispatched)
@@ -227,13 +235,6 @@ class RampNoRate(Ramp):
         rate = self.get_rate()
         self.add_calc_comment("temp", f"Rate for ramp: {rate}", "missing rate")
 
-@AnnealSection.register_dispatch("dwell")
-class Dwell(AnnealSection):
-    pass
-
-@AnnealSection.register_dispatch("quench")
-class Quench(AnnealSection):
-    pass
 
 class AnnealProgram(ListBlock):
     _reqCls = AnnealSection
