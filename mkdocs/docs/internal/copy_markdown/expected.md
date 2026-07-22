@@ -428,31 +428,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 
 ---
-### `FlexTemplate`
-
-[Class Documentation][blockdocs-FlexTemplate]
-
-**[Subclass of `TemplateBlock`](#templateblock)**
-
-The `FlexTemplate` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses with other [`SingleBlock` subclasses](#singleblock), similar to the [`TemplateBlock` class](#templateblock). Unlike `TemplateBlock`s, `FlexTemplate`s dynamically determine what required properties are missing at construction time, and return a `TemplateBlock` instance with those properties marked as template fields.
-
-
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|---------------|---------------------------------------------------|--------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
-| template_name | An unique name for the template. | <ul><li>Any text entry</li></ul> |
-
-#### Optional properties
-
-| Property | Description | Validation Rules |
-|------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-
----
 ### `GasFlow`
 
 [Class Documentation][blockdocs-GasFlow]

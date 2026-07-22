@@ -2,18 +2,18 @@ fos_id: Travis's Templates
 fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
-[[Experimenters]]
-template_name: Travis
+[[Experimenters$experimenterlist]]
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
 orcid: 0009-0006-1937-5672
+template_name: ('name', 'Travis Errthum')
 
 template_name: Joe
 name: Joseph Race
 -affiliation: <!TEMPLATE-FIELD>
 orcid: 0000-0002-8551-3627
 
-[Materials]
+[Materials$materiallist]
 template_name: Ground Arsenic, glovebox
 name: Arsenic
 -type: <!TEMPLATE-FIELD>
@@ -31,7 +31,7 @@ treatments: [
     observations: ground lumps into powder for weighing and homogenization
 ]
 
-[Cifs$attachment]
+[Cifs$attachmentlist]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif
 path: .
 

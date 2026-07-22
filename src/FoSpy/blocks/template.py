@@ -166,13 +166,22 @@ class TemplateList(ListBlock):
         return {dispatch_key: reqCls}
 
     def __init__(self, blockList):
-        super().__init__([])
-        self._temp_id_gen = TemplateList.temp_id_gen()
+        super().__init__(blockList)
 
-        if not isinstance(blockList, list):
-            blockList = [blockList]
+    def __iter__(self):
+        full_list = self._objs.copy()
 
-        for block in blockList:
+        full_list.extend(list(self._staged_templates.values()))
+
+        return iter(full_list)
+
+    def __setattr__(self, name, value):
+        if not name == "_objs":
+            return super().__setattr__(name, value)
+
+        super().__setattr__(name, [])
+
+        for block in value:
             self.append(block)
 
     def append(self, block):
@@ -188,12 +197,20 @@ class TemplateList(ListBlock):
                 raise NotImplementedError("Shouldn't happen") from e
 
 
-    def serialize(self, *args, override_list_type=None,**kwargs):
-        serial = super().serialize(*args, override_list_type=override_list_type, **kwargs).copy()
+    def serialize(self, *args, **kwargs):
+        cached_temps = self._staged_templates
 
-        if not override_list_type:
-            for blk in self._staged_templates.values():
-                serial.append(blk.serialize(*args, **kwargs))
+        self._staged_templates = {}
+
+        serial = super().serialize(*args, **kwargs).copy()
+
+        for blk_dict, blk in zip(serial, self._objs):
+            blk_dict["template_name"] = blk.get_id()
+
+        self._staged_templates = cached_temps
+
+        for blk in self._staged_templates.values():
+            serial.append(blk.serialize(*args, **kwargs))
 
         return serial
 
@@ -475,7 +492,8 @@ class FlexTemplate:
             blockDict['template_name'] = temp_name
 
         # jump back to start of dispatch chain.
-        dispatch = full_cls.__dispatch__ or {}
+        dispatch = getattr(full_cls, "__dispatch__", None) or {}
+
         dispatch_start = dispatch.get("dispatch_from", full_cls)
 
         # continuously inject until chain tops out.
@@ -483,10 +501,6 @@ class FlexTemplate:
         while next_cls is not full_cls:
             next_cls = next_cls or dispatch_start
             blockDict = cls._inject_defaults(next_cls, blockDict)
-
-            next_dispatch = next_cls.__dispatch__
-            from_key = next_dispatch["from_key"]
-            registry = next_dispatch["registry"]
 
             full_cls, next_cls = next_cls, full_cls.dispatch_subclass(blockDict, for_template=True)
             blockDict.pop("__dispatch__", None)

@@ -1950,11 +1950,11 @@ class ListBlock(Block):
         if not (isinstance(self._reqCls, type) and issubclass(self._reqCls, SingleBlock)):
             raise TypeError(f"ListBlock instances can only be constructed from subclasses with an assigned _reqCls. {self.__class__} has no _reqCls.")
         self.track_attachments(**cfg.track_attachments())
+        self._temp_id_gen = self.temp_id_gen()
         if not isinstance(blockList, list):
             blockList = [blockList]
         self._objs = blockList
         self._staged_templates = {}
-        self._temp_id_gen = self.temp_id_gen()
     
     
     @classmethod
@@ -2079,8 +2079,7 @@ class ListBlock(Block):
     def has_staged(self):
         return len(self._staged_templates) > 0 or any(blk.has_staged() for blk in self)
     
-    @staticmethod
-    def temp_id_gen():
+    def temp_id_gen(self):
         i = 0
         while True:
             yield "template_" + str(i)
@@ -2091,14 +2090,13 @@ class ListBlock(Block):
         if template is None:
             template = {}
 
-        if temp_id is None:
-            temp_id = next(self._temp_id_gen)
-
-        if "$" in temp_id:
-            raise ValueError("ListBlock Template IDs cannot contain '$'. "
-                             "The block type must match the required class for the ListBlock.")
-
-        if not isinstance(template, (TemplateBlock, dict)):
+        if isinstance(template, TemplateBlock):
+            temp_id = temp_id or template.template_name
+            if temp_id in self._staged_templates:
+                temp_id += f" ({next(self._temp_id_gen)})"
+        elif isinstance(template, dict):
+            temp_id = temp_id or template.get("template_name", next(self._temp_id_gen))
+        else:
             raise ValueError("Template must be a TemplateBlock or dictionary.")
         
         if isinstance(template, dict):
@@ -2497,15 +2495,17 @@ class ListBlock(Block):
         
         key, val = next(iter(kwargs.items()))
         
-        objs = self._objs.copy()
+        objs = list(iter(self)).copy()
         removed = 0
-        for obj in objs:
+        for obj in self:
             if getattr(obj, key, None) == val:
-                for i, existing in enumerate(self._objs):
+                for i, existing in enumerate(objs):
                     if existing is obj:
-                        del self._objs[i]
+                        del objs[i]
                         removed += 1
                         break
+
+        self._objs = objs
         _debug.msg(f"Removed {removed} {self._reqCls.__name__} objects matching {key} = {val}.")
     
     def get_any(self, **kwargs):
@@ -2514,7 +2514,7 @@ class ListBlock(Block):
         
         key, val = next(iter(kwargs.items()))
         found = []
-        for obj in self._objs:
+        for obj in self:
             if getattr(obj, key, None) == val:
                 found.append(obj)
         return found
@@ -2523,12 +2523,12 @@ class ListBlock(Block):
         return self.get_any(**kwargs)[0]
     
     def clear_all_comments(self):
-        for obj in self._objs:
+        for obj in self:
             if hasattr(obj, "clear_all_comments"):
                 obj.clear_all_comments()
 
     def default_key_order(self, deep=False):
-        for obj in self._objs:
+        for obj in self:
             if hasattr(obj, "default_key_order"):
                 obj.default_key_order(deep=deep)
 
