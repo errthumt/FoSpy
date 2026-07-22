@@ -373,7 +373,7 @@
     "code": "F401",
     "end_location": {
       "column": 38,
-      "row": 179
+      "row": 188
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -383,11 +383,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 180
+            "row": 189
           },
           "location": {
             "column": 1,
-            "row": 179
+            "row": 188
           }
         }
       ],
@@ -395,83 +395,13 @@
     },
     "location": {
       "column": 35,
-      "row": 179
+      "row": 188
     },
     "message": "`.._errors` imported but unused",
     "name": "unused-import",
-    "noqa_row": 179,
+    "noqa_row": 188,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
-  },
-  {
-    "cell": null,
-    "code": "F841",
-    "end_location": {
-      "column": 21,
-      "row": 488
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
-    "fix": {
-      "applicability": "unsafe",
-      "edits": [
-        {
-          "content": "",
-          "end_location": {
-            "column": 24,
-            "row": 488
-          },
-          "location": {
-            "column": 13,
-            "row": 488
-          }
-        }
-      ],
-      "message": "Remove assignment to unused variable `from_key`"
-    },
-    "location": {
-      "column": 13,
-      "row": 488
-    },
-    "message": "Local variable `from_key` is assigned to but never used",
-    "name": "unused-variable",
-    "noqa_row": 488,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
-  },
-  {
-    "cell": null,
-    "code": "F841",
-    "end_location": {
-      "column": 21,
-      "row": 489
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
-    "fix": {
-      "applicability": "unsafe",
-      "edits": [
-        {
-          "content": "",
-          "end_location": {
-            "column": 24,
-            "row": 489
-          },
-          "location": {
-            "column": 13,
-            "row": 489
-          }
-        }
-      ],
-      "message": "Remove assignment to unused variable `registry`"
-    },
-    "location": {
-      "column": 13,
-      "row": 489
-    },
-    "message": "Local variable `registry` is assigned to but never used",
-    "name": "unused-variable",
-    "noqa_row": 489,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
   },
   {
     "cell": null,
