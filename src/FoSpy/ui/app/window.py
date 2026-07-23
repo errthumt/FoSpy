@@ -527,6 +527,11 @@ class MainWindow(QMainWindow):
                 msg_box.setDefaultButton(btn)
                 default = btn
 
+        msg_box.setWindowModality(Qt.ApplicationModal)
+        msg_box.raise_()
+        msg_box.activateWindow()
+        msg_box.setWindowFlag(Qt.WindowStaysOnTopHint)
+
         msg_box.exec()
 
         clicked = msg_box.clickedButton() or default

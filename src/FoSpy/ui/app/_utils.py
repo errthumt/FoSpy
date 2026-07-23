@@ -27,6 +27,7 @@ asset_dir = pathlib.Path(__file__).parent / "assets"
 
 ASSETS = {
     "splash": asset_dir / "splash.png",
+    "compatible packages": asset_dir / "compatible_packages.txt"
 }
 
 SKIP_ARG = object()
