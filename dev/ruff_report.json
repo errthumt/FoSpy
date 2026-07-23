@@ -370,10 +370,10 @@
   },
   {
     "cell": null,
-    "code": "F401",
+    "code": "F841",
     "end_location": {
-      "column": 38,
-      "row": 188
+      "column": 30,
+      "row": 269
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -382,26 +382,26 @@
         {
           "content": "",
           "end_location": {
-            "column": 1,
-            "row": 189
+            "column": 30,
+            "row": 269
           },
           "location": {
-            "column": 1,
-            "row": 188
+            "column": 25,
+            "row": 269
           }
         }
       ],
-      "message": "Remove unused import: `.._errors`"
+      "message": "Remove assignment to unused variable `e`"
     },
     "location": {
-      "column": 35,
-      "row": 188
+      "column": 29,
+      "row": 269
     },
-    "message": "`.._errors` imported but unused",
-    "name": "unused-import",
-    "noqa_row": 188,
+    "message": "Local variable `e` is assigned to but never used",
+    "name": "unused-variable",
+    "noqa_row": 269,
     "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+    "url": "https://docs.astral.sh/ruff/rules/unused-variable"
   },
   {
     "cell": null,
