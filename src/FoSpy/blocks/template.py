@@ -68,7 +68,7 @@ def _is_plural(name, single):
     
     return False
 
-@FileBlock.register_dispatch("templates")
+@FileBlock.register_dispatch("templates",defaults={"metadata":{"fos_type":"templates"}})
 class TemplateSet(FileBlock):
     """
     Represents a set of templates loaded from a FOS file.
@@ -185,7 +185,10 @@ class TemplateBlock(SingleBlock):
     _fields = None
     def __init__(self, blockDict, **kwargs):
         self._val_exceptions = {}
+        from ._blockUtils import _unwrap_block
 
+        blockDict = _unwrap_block(blockDict)
+        blockDict.setdefault("template_name", self.__class__.__name__)
         super().__init__(blockDict, **kwargs)
 
     def _override_validators(self, validators):
@@ -317,6 +320,8 @@ class TemplateBlock(SingleBlock):
                 super().__setattr__(name, value)
 
             elif issubclass(cached_val, SingleBlock):
+                if isinstance(value, TemplateField) or value == TemplateField().serialize():
+                    value = {}
                 self.stage_template(name, value)
 
             elif issubclass(cached_val, TemplateList):

@@ -1179,7 +1179,11 @@ class SingleBlock(Block):
         for prop in serial:
             if "$" in prop:
                 prop = prop.split("$")[0]
-            out[prop] = getattr(self, prop)
+
+            # guard for when templateblocks add staged templates to their serial
+            if hasattr(self, prop):
+                out[prop] = getattr(self, prop)
+                
         return out
     
     def _rename_validators(self, validators:dict):

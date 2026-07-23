@@ -70,6 +70,8 @@ anneal_template3 = Annealing.reflex(serialize=False, **anneal_dict)
 template_serial3 = anneal_template3.serialize()
 pp(template_serial3)
 
+synthesis_template = Synthesis.reflex(serialize=False)
+
 
 pass
 
