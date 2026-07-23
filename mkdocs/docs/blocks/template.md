@@ -9,15 +9,6 @@ documentation](../full/index.md).
 ## Block Types in this Module
 
 ---
-[](){ #blockdocs-FlexTemplate }
-### `FlexTemplate`
-::: FoSpy.blocks.template.FlexTemplate
-    options:
-        show_if_no_docstring: true
-        inherited_members: true
-        summary:
-           functions: true
----
 [](){ #blockdocs-TemplateBlock }
 ### `TemplateBlock`
 ::: FoSpy.blocks.template.TemplateBlock

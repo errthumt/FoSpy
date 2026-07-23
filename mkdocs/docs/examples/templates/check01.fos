@@ -3,10 +3,10 @@ fos_type: templates
 description: A collection of templates commonly appearing in Travis's syntheses
 
 [[Experimenters$experimenterlist]]
+template_name: Travis
 name: Travis Errthum
 affiliation: Iowa State University Dept of Chemistry
 orcid: 0009-0006-1937-5672
-template_name: ('name', 'Travis Errthum')
 
 template_name: Joe
 name: Joseph Race

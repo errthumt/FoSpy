@@ -142,9 +142,11 @@ class TemplateList(ListBlock):
         if reqCls is None:
             return {}
         
+        if getattr(reqCls, "_full_class", None) is not None:
+            reqCls = reqCls._full_class
+        
         registry = TemplateList.__dispatch__['registry']
         if reqCls not in registry:
-            SimpleList = ListBlock.Simple(reqCls)
 
             link = _get_docs_link(reqCls)
             @SingleBlock.register_dispatch(reqCls, from_parent=TemplateList)
@@ -156,7 +158,8 @@ class TemplateList(ListBlock):
                 "instantiate a [dynamic `TemplateBlock`](#templateblock) with template "
                 "fields in those properties."]
             )
-            class FlexList(TemplateList, SimpleList):
+            class FlexList(TemplateList):
+                _reqCls = reqCls.TemplateClass()
                 pass
 
             FlexList.__name__ = f"{reqCls.__name__}FlexList"
@@ -164,55 +167,6 @@ class TemplateList(ListBlock):
             FlexList.__module__ = cls.__module__
 
         return {dispatch_key: reqCls}
-
-    def __init__(self, blockList):
-        super().__init__(blockList)
-
-    def __iter__(self):
-        full_list = self._objs.copy()
-
-        full_list.extend(list(self._staged_templates.values()))
-
-        return iter(full_list)
-
-    def __setattr__(self, name, value):
-        if not name == "_objs":
-            return super().__setattr__(name, value)
-
-        super().__setattr__(name, [])
-
-        for block in value:
-            self.append(block)
-
-    def append(self, block):
-        from .. import _errors as err
-        from ._blockUtils import _unwrap_block
-        try:
-            super().append(block)
-        except Exception:
-            block = _unwrap_block(block)
-            try:
-                self.stage_template(template=block)
-            except Exception as e:
-                raise NotImplementedError("Shouldn't happen") from e
-
-
-    def serialize(self, *args, **kwargs):
-        cached_temps = self._staged_templates
-
-        self._staged_templates = {}
-
-        serial = super().serialize(*args, **kwargs).copy()
-
-        for blk_dict, blk in zip(serial, self._objs):
-            blk_dict["template_name"] = blk.get_id()
-
-        self._staged_templates = cached_temps
-
-        for blk in self._staged_templates.values():
-            serial.append(blk.serialize(*args, **kwargs))
-
-        return serial
 
     @classmethod
     def Simple(cls, reqCls, **kwargs):
@@ -307,7 +261,10 @@ class TemplateBlock(SingleBlock):
 
         flex_cls = self._full_class.TemplateClass()
 
-        filled = flex_cls(serial)
+        try:
+            filled = self._full_class(serial)
+        except Exception as e:
+            filled = flex_cls(serial)
 
         return filled
     
@@ -432,6 +389,7 @@ class TemplateBlock(SingleBlock):
         
         dispatched = kwargs.pop("_dispatched", False)
         if dispatched:
+            blockDict.setdefault("template_name", cls.__name__)
             return super().__new__(cls, blockDict, *args, _dispatched=True, **kwargs)
 
         full_class = cls._full_class
@@ -443,7 +401,6 @@ class TemplateBlock(SingleBlock):
             if blockDict.get(field, None) is None:
                 blockDict[field] = TemplateField()
 
-        blockDict.setdefault("template_name", cls.__name__)
 
         return template_class(blockDict, *args, _dispatched=True, **kwargs)
 
@@ -485,11 +442,6 @@ class FlexTemplate:
         from ._blockUtils import _template_found
 
         full_cls = cls._full_class
-        temp_name = blockDict.pop("template_name", cls.__name__)
-        try:
-            return full_cls(blockDict, *args, **kwargs)
-        except Exception:
-            blockDict['template_name'] = temp_name
 
         # jump back to start of dispatch chain.
         dispatch = getattr(full_cls, "__dispatch__", None) or {}
@@ -527,6 +479,15 @@ class FlexTemplate:
         for prop, val in blockDict.items():
             if prop not in fields and _template_found(val):
                 fields.append(prop)
+
+        try:
+            idx = fields.index("template_name")
+            fields.pop(idx)
+        except ValueError:
+            pass
+
+        if not fields:
+            return super().__new__(cls, blockDict, *args, _dispatched=True, **kwargs)
 
         return full_cls.TemplateClass(*fields)(blockDict, *args, **kwargs)
     

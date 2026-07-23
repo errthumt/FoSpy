@@ -1907,6 +1907,7 @@ class SingleBlock(Block):
                 ])
         return attachments
 
+@SingleBlock.setup_dispatch(from_key="_reqCls", allow_self=False)
 class ListBlock(Block):
     """
     Represents multiple similar blocks of key:value pairs parsed from a FOS File
@@ -1955,7 +1956,42 @@ class ListBlock(Block):
             blockList = [blockList]
         self._objs = blockList
         self._staged_templates = {}
-    
+
+    @classmethod
+    def add_dispatch(cls, blockDict, dispatch_key, **kwargs):
+        _ = SingleBlock.add_dispatch(blockDict, dispatch_key, **kwargs)
+
+        from .template import TemplateList
+        from .._docs.properties import _validator_rules
+        from ._blockUtils import _get_docs_link
+
+        block_dispatch = blockDict.setdefault("__dispatch__", {})
+        reqCls = block_dispatch.setdefault("_reqCls", cls._reqCls)
+
+        if reqCls is None:
+            return {}
+        
+        if getattr(reqCls, "_full_class", None) is not None:
+            return TemplateList.Simple(reqCls)
+        
+        registry = ListBlock.__dispatch__['registry']
+
+        if reqCls not in registry:
+            link = _get_docs_link(reqCls)
+
+            @_validator_rules(
+                f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.]{link}"
+            )
+            @SingleBlock.register_dispatch(reqCls, from_parent=ListBlock)
+            class SimpleList(ListBlock):
+                _reqCls = reqCls
+
+            SimpleList.__name__ = f"{reqCls.__name__}SimpleList"
+            SimpleList.__qualname__ = f"ListBlock.Simple.{reqCls.__name__}List"
+            SimpleList.__module__ = reqCls.__module__
+
+        return {dispatch_key: reqCls}
+            
     
     @classmethod
     def Simple(cls, reqCls=SingleBlock):
@@ -1973,37 +2009,16 @@ class ListBlock(Block):
                 The subclass of `SingleBlock` that this `ListBlock` subclass
                 accepts.
         """
-        # pull repeats from cache
-        if reqCls in cls.simple_lists:
-            return cls.simple_lists[reqCls]
-        
-        from .._docs.properties import _validator_rules
-        from ._blockUtils import _get_docs_link
-
         if not issubclass(reqCls, SingleBlock):
             raise TypeError("reqCls must be a subclass of SingleBlock")
-        if cls._reqCls is not None:
-            raise TypeError("You cannot create a simple subclass of another ListBlock subclass.")
 
-        link = _get_docs_link(reqCls)
+        proxy_dict = {
+            "__dispatch__": {
+                "_reqCls": reqCls,
+            }
+        }
 
-        @_validator_rules(
-            f"A [simple `ListBlock`](#listblock-and-simple-lists) of [`{reqCls.__name__}` objects.]{link}"
-        )
-        class SimpleSub(cls):
-            _reqCls = reqCls
-
-        name = f"{reqCls.__name__}List"
-        qualname = f"{cls.__name__}.Simple.{name}"
-        module = reqCls.__module__
-
-        SimpleSub.__name__ = name
-        SimpleSub.__qualname__ = qualname
-        SimpleSub.__module__ = module
-
-        cls.simple_lists[reqCls] = SimpleSub
-
-        return SimpleSub
+        return ListBlock.dispatch_subclass(proxy_dict)
     
     def TemplateClass(cls):
         from .template import TemplateList
@@ -2033,6 +2048,7 @@ class ListBlock(Block):
         """
         from .attachments import Attachment
         from ._blockUtils import _unwrap_listblock
+        from .template import TemplateBlock, TemplateList
 
         if name == "_objs":
 
@@ -2058,6 +2074,13 @@ class ListBlock(Block):
                         if isinstance(obj, Attachment) and hasattr(obj, "_filepath"):
                             new_obj._filepath = obj._filepath
                         obj=new_obj
+                    elif isinstance(obj, TemplateBlock) and not isinstance(self, TemplateList):
+                        try:
+                            obj = obj.fill()
+                            if isinstance(obj, TemplateBlock):
+                                raise err.FoSpyStructureError("Could not fill a template into a complete block before adding to this ListBlock")
+                        except Exception as e:
+                            errors.append(err.ListBlockMismatchError(self, obj, idx, cause=e))
                     obj._parent_block = self
                     if hasattr(obj, "refresh") and isinstance(obj, Attachment):
                         obj.refresh(new_copy=self._att_new_copy, overwrite=self._att_overwrite)
