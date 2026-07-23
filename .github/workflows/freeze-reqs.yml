@@ -24,6 +24,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install with full DEV dependencies
+        run: |
+          pip install .[DEV]
+
+      - name: Freeze to app compatibility check
+        run: |
+          pip freeze > src/FoSpy/ui/app/assets/compatible_packages.txt
+
       - name: Install pip-tools
         run: |
           pip install pip-tools
