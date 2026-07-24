@@ -201,29 +201,6 @@ Attachment types are dispatched based on which optional properties they have. Fi
 `CIFFile`s also have additional requirements to follow according to their attachment type designation. Refer to [the `Attachment` class](#attachment).
 
 ---
-### `CSVdata`
-
-[Class Documentation][blockdocs-CSVdata]
-
-**[Subclass of `SingleBlock`](#singleblock)**
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|---------------|---------------------------------------------------|--------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
-
-
-#### Optional properties
-
-| Property | Description | Validation Rules |
-|------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-
-
-
----
 ### `ChemChange`
 
 [Class Documentation][blockdocs-ChemChange]
@@ -966,29 +943,6 @@ The experimenters property will be correctly interpreted as a list of [`Experime
 | Property | Description | Validation Rules |
 |------------|---------------------------------------|-------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-
----
-### `TraceData`
-
-[Class Documentation][blockdocs-TraceData]
-
-**[Subclass of `SingleBlock`](#singleblock)**
-
-#### Required properties
-
-| Property | Description | Validation Rules |
-|---------------|---------------------------------------------------|--------------------------------------|
-| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
-
-
-#### Optional properties
-
-| Property | Description | Validation Rules |
-|------------|---------------------------------------|-------------------------------------------------|
-| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
-
-
 
 
 ---
