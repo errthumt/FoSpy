@@ -1,7 +1,9 @@
 import subprocess
 import sys
+
+
 def run():
-    from ...ui import available, app
+    from ...ui import app, available
     try:
         app._import_gate()
         subprocess.check_call(

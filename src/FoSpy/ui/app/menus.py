@@ -1,5 +1,5 @@
-from PySide6.QtGui import QAction, QActionGroup, QDesktopServices
 from PySide6.QtCore import QUrl
+from PySide6.QtGui import QAction, QActionGroup, QDesktopServices
 
 MENU_BUILDERS = {}
 
@@ -203,15 +203,15 @@ def help_menu(win):
 
 @add_to_menus("app")
 def app_menu(win):
-    from ._utils import register_app, add_to_start
-    from .setup.check_update import update_dlg
     import platform
 
+    from ._utils import add_to_start, register_app
+    from .setup.check_env import check_env
+    from .setup.check_update import update_dlg
+
     menu = {
-        "Update FoSpy": {
-            "From PyPI": lambda *_, w=win: update_dlg(w),
-            "From GitHub": lambda *_, w=win: update_dlg(w,github=True)
-        },
+        "Update FoSpy": lambda *_, w=win: update_dlg(w),
+        "[DEV] Check Environment": lambda *_, w=win: check_env(w),
         "Add as *.fos Editor": register_app,
         "Add to Start Menu": add_to_start
     }

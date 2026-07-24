@@ -29,6 +29,8 @@ def main_cli(**kwargs):
     import sys
 
     from .window import MainWindow
+    from ._utils import register_dlg
+    from .setup.check_env import check_env
 
     app = QApplication(sys.argv)
 
@@ -49,11 +51,14 @@ def main_cli(**kwargs):
 
         window = MainWindow(**kwargs)
         window.show()
-    except Exception as e:
+    except Exception:
         splash.hide()
-        raise e
+        raise
     
     splash.finish(window)
+
+    if check_env(window) is None:
+        register_dlg()
 
     sys.exit(app.exec())
 

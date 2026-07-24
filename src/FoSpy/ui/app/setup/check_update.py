@@ -2,103 +2,238 @@ import subprocess
 import sys
 from pathlib import Path
 
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QComboBox,
+    QDialog,
+    QDialogButtonBox,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QRadioButton,
+    QVBoxLayout,
+    QWidget,
+)
+
 
 def update(source="FoSpy", dependencies=False, executable=None, cmd_only=False):
     if executable is None:
         executable = sys.executable
 
     if "win" in sys.platform.lower():
-        version_override = "set SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1.dev00+000000 && "
         app_executable = (Path(executable).parent / "fospy-app.exe").resolve()
     else:
-        version_override = "SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1.dev00+000000 && "
         app_executable = (Path(executable).parent / "fospy-app").resolve()
 
     # Build the pip install command
     install_cmd = f'"{executable}" -m pip install --upgrade --force-reinstall'
     if not dependencies:
         install_cmd += " --no-deps"
+    elif source=="Fospy":
+        source += "[app]"
     else:
-        pass#source += "[app]"
+        source = f'"FoSpy[app] @ {source}"'
     install_cmd += f" {source}"
-
-    if source != "FoSpy":
-        install_cmd = version_override + install_cmd
 
     # Full chained command
     cmd = (
-        f'"{executable}" -m pip cache purge'
-        f' && {install_cmd}'
-        f' && "{app_executable}"'
+        f'echo Clearing pip cache... '
+        f'&& "{executable}" -m pip cache purge '
+        f'&& echo( && echo Installing from: {source} '
+        f'&& {install_cmd} '
+        f'&& echo( && echo Restarting FoSpy... '
+        f'&& "{app_executable}"'
     )
 
     if cmd_only:
         return cmd
 
-    subprocess.Popen(
-        cmd,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        shell=True,
-        creationflags=subprocess.CREATE_NEW_CONSOLE
-    )
+    run_detached_in_new_window(cmd)
 
+def update_dlg(window):
+    dlg = UpdateFoSpyDialog(parent=window)
 
-def update_from_github(branch="main", dependencies=False, executable=None, cmd_only=False):
-    url = f'"https://github.com/errthumt/FoSpy/archive/refs/heads/{branch}.zip"'
+    if not dlg.exec():
+        return
 
-    return update(source=url, dependencies=dependencies, executable=executable, cmd_only=cmd_only)
-
-def update_dlg(window, github=False):
-    update_func = update_from_github if github else update
-
-    options = {
-        "Update Dependencies?": {
-            "Yes": True,
-            "No": False
-        }
-    }
-    description = (
-        "Please select options for update.\n\n"
-        "Your Python pip cache will be cleared before update. "
-        "If updating dependencies, all required packages will be reinstalled, "
-        "even if they do not require updates.\n\n"
-        "Otherwise, only FoSpy will be updated."
-    )
+    dependencies, github, branch = dlg.get_values()
 
     if github:
-        options["GitHub Branch"] = [
-            "main",
-            "dev"
-        ]
+        source = f"git+https://github.com/errthumt/FoSpy.git@{branch}"
+    else:
+        source = "FoSpy"
 
-        description += ("\n\n"
-            "Warning: Updates from the GitHub may be unstable. Some unstable updates may require a complete reinstall.")
-
-    results = window._get_text_inputs(
-        "Update FoSpy", description, **options
-    )
-
-    if not results:
-        return
-
-    confirm = window._custom_popup(
-        "Confirm FoSpy Update",
-        "Are you sure you want to update FoSpy? This will restart "
-        "the application and you will lose any unsaved work.",
-        cancel=True
-    )
-
-    if not confirm:
-        return
-
-    kwargs = {
-        "dependencies": results["Update Dependencies?"],
-        "branch": results.get("GitHub Branch", None)
-    }
-
-    update_func(**kwargs)
+    update(source=source, dependencies=dependencies)
 
     window.close()
 
 
+def git_available():
+    import shutil
+    return shutil.which("git") is not None
+
+
+class UpdateFoSpyDialog(QDialog):
+    def __init__(self, branches=("main", "dev"), parent=None, new=False):
+        super().__init__(parent)
+        self.setWindowTitle("Update FoSpy")
+
+        root = QVBoxLayout(self)
+        if not new:
+            desc = QLabel(
+                "Please select options for update.\n\n"
+                "This app will be closed and restarted after update. If necessary, cancel this dialog and save your work before updating.\n\n"
+                "This dialog can be accessed again from the Menu via:\nApp > Update FoSpy.\n\n"
+                "Please note that Python's pip cache will be cleared before updating."
+            )
+        else:
+            desc = QLabel(
+                "Please select FoSpy install options.\n\n"
+                "Please not that Python's pip cache will be cleared before installing."
+            )
+
+        root.addWidget(desc)
+
+        self.rb_with_deps = QRadioButton("Update/Reinstall all dependencies.")
+        self.rb_without_deps = QRadioButton("Update FoSpy only.")
+
+        if new:
+            self.rb_with_deps.setChecked(True)
+
+        else:
+            self.rb_without_deps.setChecked(True)
+            # --- Update mode group ---
+            mode_group = QGroupBox("Update/Reinstall Dependencies (numpy, pandas, etc)?")
+            mode_layout = QVBoxLayout(mode_group)
+
+
+            mode_layout.addWidget(self.rb_with_deps)
+            mode_layout.addWidget(self.rb_without_deps)
+
+            root.addWidget(mode_group)
+
+
+        self.rb_pypi = QRadioButton("PyPI")
+        self.rb_github = QRadioButton("GitHub")
+
+        self.rb_pypi.setChecked(True)
+        # Only show GitHub option if git is available
+        if git_available():
+            self.rb_github.clicked.connect(self.select_github)
+            self.rb_pypi.clicked.connect(self.select_pypi)
+
+            # --- Source group ---
+            source_group = QGroupBox("Update Source")
+            source_layout = QVBoxLayout(source_group)
+            source_layout.addWidget(self.rb_pypi)
+            source_layout.addWidget(self.rb_github)
+            self.gh_label = QLabel(
+                "Please note that GitHub updates may be unstable. A complete "
+                "reinstall is recommended for returning from a GitHub build to "
+                "a stable release.")
+            self.gh_label.setVisible(False)
+            root.addWidget(source_group)
+
+        else:
+            self.gh_label = QLabel("Tip: Once <a href='https://git-scm.com/'>Git</a> is installed, you can update directly from GitHub using this menu.")
+
+
+        # --- Branch selection (hidden unless GitHub selected) ---
+        self.branch_container = QWidget()
+        branch_layout = QHBoxLayout(self.branch_container)
+        branch_layout.setContentsMargins(0, 0, 0, 0)
+
+        branch_layout.addWidget(QLabel("GitHub Branch:"))
+        self.branch_combo = QComboBox()
+        self.branch_combo.addItems(branches)
+        branch_layout.addWidget(self.branch_combo)
+
+        # Initially hidden unless GitHub is selected
+        self.branch_container.setVisible(False)
+        root.addWidget(self.branch_container)
+
+        root.addWidget(self.gh_label)
+
+        # --- OK / Cancel ---
+        btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        btns.accepted.connect(self.accept)
+        btns.rejected.connect(self.reject)
+        root.addWidget(btns)
+
+
+        self.setWindowModality(Qt.ApplicationModal)
+        self.raise_()
+        self.activateWindow()
+        self.setWindowFlag(Qt.WindowStaysOnTopHint)
+
+        if new and not git_available():
+            self.accept()
+
+    def get_values(self):
+        dependencies = self.rb_with_deps.isChecked()
+        github = not self.rb_pypi.isChecked()
+        branch = self.branch_combo.currentText() if github else None
+        return dependencies, github, branch
+
+    def select_github(self, *_):
+        self.gh_label.setVisible(True)
+        self.branch_container.setVisible(True)
+
+    def select_pypi(self, *_):
+        self.gh_label.setVisible(False)
+        self.branch_container.setVisible(False)
+
+def run_detached_in_new_window(cmd_str: str):
+    """
+    Executes a chained command string in a single new terminal window,
+    completely detached from the calling Python process.
+    """
+    system = sys.platform
+
+    if system == "win32":
+        # Windows: Use CREATE_NEW_CONSOLE with cmd.exe
+        subprocess.Popen(
+            f'cmd.exe /k "{cmd_str}"',
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
+            close_fds=True
+        )
+
+    elif system == "darwin":
+        # macOS: Use AppleScript to open a new Terminal window and run the command
+        # Escaping quotes for AppleScript
+        escaped_cmd = cmd_str.replace('\\', '\\\\').replace('"', '\\"')
+        applescript = f'tell application "Terminal" to do script "{escaped_cmd}"'
+        
+        subprocess.Popen(
+            ["osascript", "-e", applescript],
+            start_new_session=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+
+    else:
+        # Linux / Unix: Try common terminal emulators
+        # x-terminal-emulator, gnome-terminal, konsole, or xterm
+        terminals = [
+            ["x-terminal-emulator", "-e", f"bash -c '{cmd_str}'"],
+            ["gnome-terminal", "--", "bash", "-c", cmd_str],
+            ["konsole", "-e", "bash", "-c", cmd_str],
+            ["xterm", "-e", f"bash -c '{cmd_str}'"]
+        ]
+
+        launched = False
+        for term_args in terminals:
+            try:
+                subprocess.Popen(
+                    term_args,
+                    start_new_session=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+                launched = True
+                break
+            except FileNotFoundError:
+                continue
+
+        if not launched:
+            raise RuntimeError("Could not find a supported terminal emulator (x-terminal-emulator, gnome-terminal, etc.).")

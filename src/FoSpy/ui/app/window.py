@@ -1,28 +1,29 @@
+import os
+import pathlib
+import sys
+import traceback
+from typing import Any
+
+import qdarktheme
 from PySide6.QtCore import Qt, QUrl
-from PySide6.QtGui import QStandardItemModel, QStandardItem, QDesktopServices
+from PySide6.QtGui import QDesktopServices, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QApplication,
-    QMainWindow,
-    QSplitter,
-    QTreeView,
-    QStackedWidget,
-    QWidget,
-    QLabel,
-    QVBoxLayout,
     QFileDialog,
+    QLabel,
+    QMainWindow,
     QMessageBox,
-    QPushButton
+    QPushButton,
+    QSplitter,
+    QStackedWidget,
+    QTreeView,
+    QVBoxLayout,
+    QWidget,
 )
-import qdarktheme
-import os
-import sys
-from typing import Any
-import pathlib
-import traceback
 
-from ...blocks import FileBlock, Block, SingleBlock, ListBlock, Rename
-from ._utils import _get_label, register_dlg, _get_template_label
+from ...blocks import Block, FileBlock, ListBlock, Rename, SingleBlock
 from ...config import values as cfg
+from ._utils import _get_label, _get_template_label
 
 WINDOW_TITLE = "FoSpy - FoS File Viewer"
 WINDOW_DIMENSIONS = (1200, 900)
@@ -63,7 +64,7 @@ class TextContentWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, open_path:pathlib.Path|str=None, copy:bool=None):
+    def __init__(self, open_path:pathlib.Path | str | None=None, copy:bool | None=None):
         """Initialize the FoSpy viewer app window.
 
         Args:
@@ -106,8 +107,6 @@ class MainWindow(QMainWindow):
 
         self._open_file(open_path=open_path, copy=copy)
 
-        register_dlg()
-
         sys.excepthook = self.handle_exception
 
     def closeEvent(self, event):
@@ -140,20 +139,20 @@ class MainWindow(QMainWindow):
             raise resp
 
         if resp:
-            import sys
             import subprocess
+            import sys
             import tempfile
 
-            tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8")
-            tmp.write("".join(traceback.format_exception(exctype, value, tb)))
-            tmp.close()
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8") as tmp:
+                tmp.write("".join(traceback.format_exception(exctype, value, tb)))
+                tmp.close()
 
-            if sys.platform.startswith("win"):
-                os.startfile(tmp.name)
-            elif sys.platform.startswith("darwin"):
-                subprocess.call(["open", tmp.name])
-            else:
-                QDesktopServices.openUrl(QUrl.fromLocalFile(tmp.name))
+                if sys.platform.startswith("win"):
+                    os.startfile(tmp.name)
+                elif sys.platform.startswith("darwin"):
+                    subprocess.call(["open", tmp.name])
+                else:
+                    QDesktopServices.openUrl(QUrl.fromLocalFile(tmp.name))
 
     def _startup_copy_dlg(self, open_path):
         if open_path is None:
@@ -282,11 +281,11 @@ class MainWindow(QMainWindow):
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, blk_i)
 
-            for blk in blk._staged_templates.values():
-                label = _get_template_label(blk)
+            for _blk in blk._staged_templates.values():
+                label = _get_template_label(_blk)
 
                 child_item = QStandardItem(label)
-                self._add_tree_item(child_item, parent_item, blk)
+                self._add_tree_item(child_item, parent_item, _blk)
         
         elif isinstance(blk, SingleBlock):
 
@@ -412,20 +411,18 @@ class MainWindow(QMainWindow):
         console.exec()
 
     def _open_docs_site(self):
-        from ._utils import _get_version, _find_docs_url
+        from ._utils import _find_docs_url, _get_version
 
         version = _get_version()
         url = _find_docs_url(version)
 
-        if url.endswith("latest/"):
-            if not self._custom_popup(
+        if url.endswith("latest/") and not self._custom_popup(
                 "Documentation for version not found",
                 f"A documentation URL for version {version} could not be found.\n\n"
                 "Redirecting to the latest version instead:\n"
                 + url,
-                cancel=True
-            ):
-                return
+                cancel=True):
+            return
 
         QDesktopServices.openUrl(QUrl(url))
 
@@ -810,7 +807,7 @@ class MainWindow(QMainWindow):
         
         return item
 
-    def save(self, *args,path:str=None):
+    def save(self, *args,path:str | None=None):
         if not self.root_block:
             return
         
@@ -861,15 +858,13 @@ class MainWindow(QMainWindow):
         )
 
         if path:
-            if path.endswith(".fosx"):
-                if not self._custom_popup(
+            if path.endswith(".fosx")and not self._custom_popup(
                     "Packaging File",
                     "You are about to package this file as a FoSX archive. "
                     "FoSX-packaged files cannot be edited directly. "
                     "You will be returned to the non-packaged file after saving.",
-                    cancel=True
-                ):
-                    return
+                    cancel=True):
+                return
 
             self.save(path=path)
             return True
