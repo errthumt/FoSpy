@@ -206,12 +206,10 @@ def app_menu(win):
     import platform
 
     from ._utils import add_to_start, register_app
-    from .setup.check_env import check_env
-    from .setup.check_update import update_dlg
+    from .check_update import update_dlg
 
     menu = {
         "Update FoSpy": lambda *_, w=win: update_dlg(w),
-        "[DEV] Check Environment": lambda *_, w=win: check_env(w),
         "Add as *.fos Editor": register_app,
         "Add to Start Menu": add_to_start
     }

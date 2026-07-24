@@ -6,6 +6,7 @@ nav:
   - Synthesis Files: examples/synthesis/index.md
   - Template Files: examples/templates/index.md
 - Guides:
+  - Getting Started: guides/getting_started.md
   - FOS Syntax: guides/syntax.md
   - Expected Properties: expected/index.md
   - Attachments: guides/attachments.md
@@ -113,6 +114,7 @@ nav:
       - app/__init__: full/ui/app/__init__.md
       - __main__: full/ui/app/__main__.md
       - _utils: full/ui/app/_utils.md
+      - check_update: full/ui/app/check_update.md
       - console: full/ui/app/console.md
       - menus: full/ui/app/menus.md
       - window: full/ui/app/window.md

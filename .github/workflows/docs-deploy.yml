@@ -1,7 +1,10 @@
 name: Build Site and Deploy "incoming" to MkDocs
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Freeze Requirements"]
+    types:
+      - completed
     branches:
       - main
 

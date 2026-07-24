@@ -15,7 +15,7 @@ def run():
             return install_dependencies()
         
         return True
-    except (SystemExit, Exception):
+    except (SystemExit, Exception):  # noqa: BLE001
         from PySide6.QtWidgets import QApplication
         app = QApplication.instance()
         if app is not None:

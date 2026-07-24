@@ -237,3 +237,124 @@ def run_detached_in_new_window(cmd_str: str):
 
         if not launched:
             raise RuntimeError("Could not find a supported terminal emulator (x-terminal-emulator, gnome-terminal, etc.).")
+
+
+def _load_current():
+    frozen_txt = subprocess.check_output(["pip", "freeze"], text=True)
+    return _load_packages(frozen_txt)
+
+
+def _load_compatible(path):
+    frozen_txt = path.read_text()
+    return _load_packages(frozen_txt)
+
+
+def check_for_incompatible():
+    from FoSpy.ui.app._utils import ASSETS
+    frozen = _load_current()
+    compatible = _load_compatible(ASSETS["compatible packages"])
+
+    incompatible = set(frozen.keys()) - set(compatible.keys())
+    incompatible = {name: frozen[name] for name in incompatible}
+    incompatible.pop("fospy", None)
+
+    return incompatible
+
+
+def check_env(win):
+    from ...config import values as cfg
+
+    checked = cfg.APP.startup_checks.get("env", False)
+    if checked:
+        return
+
+    incompatible = check_for_incompatible()
+    if not incompatible:
+        return
+
+    summary_strings = [f"{name}=={ver}" for name, ver in incompatible.items()]
+
+    if len(incompatible) > 9:
+        summary_strings = summary_strings[:9]
+        summary_strings.append(f"and {len(incompatible) - 9} more...")
+
+    summary = "\n".join(summary_strings)
+
+    confirm = win._custom_popup(
+        "Additional Packages Detected",
+        "It is recommended to install the FoSpy GUI in a dedicated virtual environment.\n"
+        "The following packages are unexpected for FoSpy and suggest you may be using FoSpy in a shared environment:\n\n"
+        f"{summary}\n\n"
+        "Would you like to reinstall FoSpy in a fresh virtual environment?",
+        ("Yes", True),
+        ("No", False),
+        ("No, and don't ask again", None),
+        cancel=False
+    )
+
+    if confirm is None:
+        cfg.APP.startup_checks.env = True
+        cfg.APP.startup_checks.save()
+
+    if not confirm:
+        return
+
+    import sys
+    from pathlib import Path
+
+    from PySide6.QtWidgets import QFileDialog
+
+    from .check_update import UpdateFoSpyDialog, run_detached_in_new_window, update
+
+    new_venv = QFileDialog.getExistingDirectory(
+        win,
+        "Select Folder for New FoSpy Environment", "",
+        QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+
+    new_venv = Path(new_venv) / ".venv_FoSpy"
+    new_venv = new_venv.resolve()
+
+    cmd = (
+        'echo Setting up new virtual environment at: && '
+        f'echo {new_venv} && '
+        f'"{sys.executable}" -m venv "{new_venv}" && '
+        'echo( && '
+    )
+
+    if "win" in sys.platform.lower():
+        new_executable = new_venv / "Scripts" / "python.exe"
+    else:
+        new_executable = new_venv / "bin" / "python"
+
+    new_executable = new_executable.resolve()
+
+
+    update_dlg = UpdateFoSpyDialog(parent=win, new=True)
+
+    if not update_dlg.exec():
+        return
+
+    dependencies, github, branch = update_dlg.get_values()
+
+    if github:
+        source = f"git+https://github.com/errthumt/FoSpy.git@{branch}"
+    else:
+        source = "FoSpy"
+
+    cmd += update(source=source, dependencies=dependencies, executable=new_executable, cmd_only=True)
+
+    # print(cmd)
+
+    run_detached_in_new_window(cmd)
+    win.close()
+    return True
+
+
+def _load_packages(frozen_txt):
+    pkgs = {}
+    for line in frozen_txt.splitlines():
+        line = line.strip()
+        if "==" in line:
+            name, ver = line.split("==", 1)
+            pkgs[name.lower()] = ver
+    return pkgs
