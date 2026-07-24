@@ -70,7 +70,7 @@ Refer to the full `track_attachments` documentation for more guidance.
 
 ## File Types
 
-File types are dispatched based on the `extension` value. For niche applications, it is possible to add your own filetype during runtime by creating an `Attachment` subclass and mutating [Attachment.extensions](../blocks/attachments.md#FoSpy.blocks.attachments.Attachment.extensions). However, if you anticipate other scientists using the same filetype, you should [reach out to devs](https://github.com/errthumt/FoSpy/issues/) about incorporating it into the main package.
+File types are dispatched based on the `extension` value. For now, extension classes are only coded on an as-needed basis for proof-of-concept for the project. In the future, we hope to make an effort to build classes for specialized analysis of different filetypes, which will provide summaries to add to the FoS file.
 
 ### CIF Files
 
