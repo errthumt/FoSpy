@@ -6,7 +6,8 @@
   - Full Example Script: examples/code_example/full.md
   - Synthesis Files: examples/synthesis/index.md
   - Template Files: examples/templates/index.md
-- Guides: 
+- Guides:
+  - Getting Started: guides/getting_started.md 
   - FOS Syntax: guides/syntax.md
   - Expected Properties: expected/index.md
   - Attachments: guides/attachments.md

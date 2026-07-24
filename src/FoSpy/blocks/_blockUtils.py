@@ -28,12 +28,18 @@ def _calc_routine(func):
 
 def _unwrap_block(struct):
     from .blocks import SingleBlock
+    from .template import TemplateField
     while isinstance(struct,list) and len(struct) == 1:
         struct = struct[0]
 
     if isinstance(struct,SingleBlock):
         struct = struct.serialize(keepListType=True)
         struct = _unwrap_block(struct)
+
+    if isinstance(struct, TemplateField) or struct == TemplateField().serialize():
+        return {}
+
+
     return struct.copy()
 
 def _unwrap_listblock(struct, typ:type=None):
@@ -53,6 +59,9 @@ def _unwrap_listblock(struct, typ:type=None):
 
 def _template_found(val):
     from FoSpy.blocks.template import TemplateField
+    if val is None:
+        return True
+
     if val == TemplateField().serialize():
         return True
 

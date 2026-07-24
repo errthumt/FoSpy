@@ -1,7 +1,9 @@
 import subprocess
 import sys
+
+
 def run():
-    from ...ui import available, app
+    from ...ui import app, available
     try:
         app._import_gate()
         subprocess.check_call(
@@ -13,7 +15,7 @@ def run():
             return install_dependencies()
         
         return True
-    except (SystemExit, Exception):
+    except (SystemExit, Exception):  # noqa: BLE001
         from PySide6.QtWidgets import QApplication
         app = QApplication.instance()
         if app is not None:

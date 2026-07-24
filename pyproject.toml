@@ -49,10 +49,10 @@ PySide = [
     "FoSpy[qt-plotting]",
     "PySide6-essentials"
 ]
-app = ["FoSpy[PySide]", "pyqtdarktheme"]
-all = ["FoSpy[cif2xrd, PySide]"]
+app = ["FoSpy[PySide]", "pyqtdarktheme", "pip-tools"]
+all = ["FoSpy[cif2xrd,app]"]
 DEV-TEST = ["questionary"]
-DEV = ["FoSpy[DEV_TEST, all]"]
+DEV = ["FoSpy[DEV-TEST,all]"]
 
 [project.urls]
 Homepage = "https://github.com/errthumt/FoSpy"

@@ -1,11 +1,9 @@
 # FoSpy
 A framework for opening, editing, and saving Files of Synthesis (*.fos)
-* [Main Github](https://github.com/errthumt/FoSpy)
-* [GUI Proof of Concept](https://github.com/errthumt/CyFoS-alpha)
-  * FOS syntax for the GUI alpha is an earlier iteration and may no longer be in use.
-
-
-[Code Example](https://errthumt.github.io/FoSpy/examples/API_example/)
+* [Homepage and Documentation](https://errthumt.github.io/FoSpy)
+* [GitHub](https://github.com/errthumt/FoSpy)
+* [Getting Started](https://errthumt.github.io/FoSpy/latest/guides/getting_started/)
+* [Code Example](https://errthumt.github.io/FoSpy/examples/API_example/)
 
 ## A Simple FOS File
 

@@ -1,7 +1,7 @@
-try:
+try:  # noqa: N999
     from ._utils import add_parser
     from .window import MainWindow
-except Exception:
+except Exception:  # noqa: BLE001
     def add_parser(*args, **kwargs):
         def decorator(func):
             return func
@@ -20,13 +20,15 @@ SPLASH_PCT = 30
 def main_cli(**kwargs):
     from . import _import_gate
     _import_gate()
-    from ._utils import ASSETS
-
-    from PySide6.QtWidgets import QApplication, QSplashScreen
-    from PySide6.QtGui import QPixmap
-    from PySide6.QtCore import Qt
     import sys
 
+    from PySide6.QtCore import Qt
+    from PySide6.QtGui import QPixmap
+    from PySide6.QtWidgets import QApplication, QSplashScreen
+
+    from ...config import values as cfg
+    from ._utils import ASSETS, register_dlg
+    from .check_update import check_env
     from .window import MainWindow
 
     app = QApplication(sys.argv)
@@ -40,18 +42,22 @@ def main_cli(**kwargs):
     scaled = pixmap.scaledToHeight(splash_h, Qt.SmoothTransformation)
 
     splash = QSplashScreen(scaled, Qt.WindowStaysOnTopHint)
-    splash.show()
+    if cfg.get("APP.splash", True):
+        splash.show()
 
     try:
         app.processEvents()
 
         window = MainWindow(**kwargs)
         window.show()
-    except Exception as e:
+    except Exception:
         splash.hide()
-        raise e
+        raise
     
     splash.finish(window)
+
+    if check_env(window) is None:
+        register_dlg()
 
     sys.exit(app.exec())
 
