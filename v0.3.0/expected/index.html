@@ -9358,7 +9358,7 @@
 <p><a class="autorefs autorefs-internal" href="../blocks/template/#templateblock">Class Documentation</a></p>
 <p><strong><a href="#singleblock">Subclass of <code>SingleBlock</code></a></strong></p>
 <p>The <code>TemplateBlock</code> class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other <code>SingleBlock</code> subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the <code>fill()</code> method. Refer to the <a href="../examples/code_example/">code example walkthrough</a> for some uses of templates.</p>
-<p>Instances of the base <code>TemplateBlock</code> class are usually constructed by calling the <a href="../blocks/blocks/#FoSpy.blocks.blocks.SingleBlock.TemplateClass"><code>TemplateClass</code> class method</a> on an existing block. To construct a a <code>TemplateBlock</code> from an incomplete property dictionary, it is recommended to use <a href="#flextemplate"><code>FlexTemplate</code> instead.</a></p>
+<p>Instances of the base <code>TemplateBlock</code> class are usually constructed by calling the <a href="../blocks/blocks/#FoSpy.blocks.blocks.SingleBlock.TemplateClass"><code>TemplateClass</code> class method</a> on an existing block, but some template classes can dynamically determine which fields are missing and redirect to the appropriate template class.</p>
 <h4 id="required-properties_28">Required properties</h4>
 <table>
 <thead>
@@ -9402,7 +9402,7 @@
 <h3 id="templateset"><code>TemplateSet</code></h3>
 <p><a class="autorefs autorefs-internal" href="../blocks/template/#templateset">Class Documentation</a></p>
 <p><strong><a href="#fileblock">Subclass of <code>FileBlock</code></a></strong></p>
-<p>In contrast with a <code>Synthesis</code> file, most top-level properties for a <code>TemplateSet</code> are expected to contain <a href="#templatelists">lists of templates</a> of a given type. The <a href="../blocks/template/#FoSpy.blocks.template.TemplateList.Simple"><code>TemplateList.Simple()</code> class method</a> dynamically determines template fields using the <a href="#flextemplate"><code>FlexTemplate</code> subclass</a></p>
+<p>In contrast with a <code>Synthesis</code> file, most top-level properties for a <code>TemplateSet</code> are expected to contain <a href="#templatelists">lists of templates</a> of a given type. The <a href="../blocks/template/#FoSpy.blocks.template.TemplateList.Simple"><code>TemplateList.Simple()</code> class method</a> uses a flexible subclass of the <a href="#templateblock"><code>TemplateBlock</code> class</a> to dynamically determine what fields are missing/empty and delegate to the correct template for each object in the list.</p>
 <p><code>TemplateSets</code> do not have many expected properties by default, but you can add a list of templates for any block to a <code>TemplateSet</code> using an <em>alias</em>. Aliases are ways of signaling to a block that you are creating an unexpected property, but you want it to be a certain block type anyway. You do this by adding "<code>$</code>", followed by the name of the block type in all lowercase, to the end of the property name.</p>
 <p>For example:</p>
 <div class="highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[[Experimenters]]

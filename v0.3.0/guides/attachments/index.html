@@ -5147,7 +5147,7 @@
 </span></code></pre></div>
 <p>Refer to the full <code>track_attachments</code> documentation for more guidance.</p>
 <h2 id="file-types">File Types</h2>
-<p>File types are dispatched based on the <code>extension</code> value. For niche applications, it is possible to add your own filetype during runtime by creating an <code>Attachment</code> subclass and mutating <a href="../../blocks/attachments/#FoSpy.blocks.attachments.Attachment.extensions">Attachment.extensions</a>. However, if you anticipate other scientists using the same filetype, you should <a href="https://github.com/errthumt/FoSpy/issues/">reach out to devs</a> about incorporating it into the main package.</p>
+<p>File types are dispatched based on the <code>extension</code> value. For now, extension classes are only coded on an as-needed basis for proof-of-concept for the project. In the future, we hope to make an effort to build classes for specialized analysis of different filetypes, which will provide summaries to add to the FoS file.</p>
 <h3 id="cif-files">CIF Files</h3>
 <p>Extension: <code>.cif</code> | Class: <a class="autorefs autorefs-internal" href="../../blocks/attachments/#ciffile"><code>CIFFile</code></a></p>
 <p><strong>(In Progress)</strong>
