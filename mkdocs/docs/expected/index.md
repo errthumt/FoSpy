@@ -864,7 +864,7 @@ Note that renaming a property will keep all relevant validation rules attached t
 
 The `TemplateBlock` class is not normally used alone to construct objects. Instead, it is used to make hybridized subclasses of other `SingleBlock` subclasses. Template subclasses override required properties of the original class with template fields that can be later filled in and passed to their validators with the `fill()` method. Refer to the [code example walkthrough](../examples/code_example/index.md) for some uses of templates.
 
-Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block. To construct a a `TemplateBlock` from an incomplete property dictionary, it is recommended to use [`FlexTemplate` instead.](#flextemplate)
+Instances of the base `TemplateBlock` class are usually constructed by calling the [`TemplateClass` class method](../blocks/blocks.md#FoSpy.blocks.blocks.SingleBlock.TemplateClass) on an existing block, but some template classes can dynamically determine which fields are missing and redirect to the appropriate template class.
 
 
 #### Required properties
@@ -888,7 +888,7 @@ Instances of the base `TemplateBlock` class are usually constructed by calling t
 
 **[Subclass of `FileBlock`](#fileblock)**
 
-In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) dynamically determines template fields using the [`FlexTemplate` subclass](#flextemplate)
+In contrast with a `Synthesis` file, most top-level properties for a `TemplateSet` are expected to contain [lists of templates](#templatelists) of a given type. The [`TemplateList.Simple()` class method](../blocks/template.md#FoSpy.blocks.template.TemplateList.Simple) uses a flexible subclass of the [`TemplateBlock` class](#templateblock) to dynamically determine what fields are missing/empty and delegate to the correct template for each object in the list.
 
 `TemplateSets` do not have many expected properties by default, but you can add a list of templates for any block to a `TemplateSet` using an *alias*. Aliases are ways of signaling to a block that you are creating an unexpected property, but you want it to be a certain block type anyway. You do this by adding "`$`", followed by the name of the block type in all lowercase, to the end of the property name.
 
