@@ -338,12 +338,16 @@ class SingleBlockWidget(QWidget):
 
         req_props = self.blk.get_req_validators().keys()
         opt_props = self.blk.get_validators()
-        staged_templates = self.blk._staged_templates
+        staged_templates = self.blk._staged_templates.copy()
 
         self.failed_found = False
         for prop, val in prop_dict.items():
             opt_props.pop(prop, None)
-            self._add_prop_row(prop, val, renamed_from, req_props)
+            if prop in staged_templates:
+                staged_templates.pop(prop)
+                self._add_prop_row(prop, val, renamed_from, req_props, staged=True)
+            else:
+                self._add_prop_row(prop, val, renamed_from, req_props)
 
         for prop, val in staged_templates.items():
             opt_props.pop(prop, None)

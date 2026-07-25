@@ -480,11 +480,24 @@ class SingleBlock(Block):
             }
 
             def inject(bD, k, v, is_default=False):
-                target_dict = bD["__dispatch__"] if k.startswith("_") else bD
+                target_dict = bD.setdefault("__dispatch__",{}) if k.startswith("_") else bD
 
                 if is_default and v is None and k in target_dict:
                     return bD
-                
+
+                if isinstance(v, dict):
+                    nested_dict = target_dict.setdefault(k, {})
+
+
+                    nested_dict = _unwrap_block(nested_dict)
+                    if not isinstance(nested_dict, dict):
+                        raise err.FoSpyStructureError(f"Expected {k} to be a dictionary, but got {nested_dict} instead.")
+
+                    for k2, v2 in v.items():
+                        nested_dict = inject(nested_dict, k2, v2, is_default=is_default)
+
+                    v = nested_dict
+
                 target_dict[k] = v
 
                 return bD
@@ -1047,11 +1060,13 @@ class SingleBlock(Block):
 
     def stage_template(self, prop_name, template:Block|dict=None):
         from .template import TemplateBlock
-        if template is None:
+        if not template:
             template = {}
+        if isinstance(template, list) and len(template) == 1:
+            template = template[0]
 
         if not isinstance(template, (TemplateBlock, dict)):
-            raise ValueError("Template must be a TemplateBlock or dictionary. To 'stage' a ListBlock, "
+            raise TypeError("Template must be a TemplateBlock or dictionary. To 'stage' a ListBlock, "
                              "you can stage a SingleBlock template with a ListBlock alias. This creates "
                              "a non-template ListBlock with the template staged as its first entry.")
         
@@ -1167,10 +1182,15 @@ class SingleBlock(Block):
             return {}
         return self.rename.serialize(shallow=True, clean=True)
     
-    def get_id(self):
+    def get_id(self, id_key=None):
         """Returns an easily recognizable identifier for self. Non-unique."""
-        id_txt = str(getattr(self, self._id_key)) if self._id_key is not None else type(self).__name__
-        return self._id_key, id_txt
+        id_key = id_key or self._id_key
+        if id_key is not None:
+            id_txt = str(getattr(self, id_key, type(self).__name__))
+        else:
+            id_txt = type(self).__name__
+
+        return id_key, id_txt
     
     def get_prop_dict(self):
         """Returns a dictionary mapping property names to their live object values."""
@@ -1232,7 +1252,7 @@ class SingleBlock(Block):
         
         attr_obj = getattr(self.ext if extended else self, name)
 
-        setattr(attr_obj, "_parent_block", self)
+        attr_obj._parent_block = self
 
         if isinstance(attr_obj, Attachment):
             attr_obj._get_filepath()
@@ -2113,28 +2133,29 @@ class ListBlock(Block):
             i += 1
     
     def stage_template(self, temp_id=None, template:Block|dict=None):
-        from .template import TemplateBlock
+        from .template import TemplateBlock, TemplateField
         if template is None:
             template = {}
 
-        if isinstance(template, TemplateBlock):
-            temp_id = temp_id or template.template_name
-            if temp_id in self._staged_templates:
-                temp_id += f" ({next(self._temp_id_gen)})"
-        elif isinstance(template, dict):
-            temp_id = temp_id or template.get("template_name", next(self._temp_id_gen))
-        else:
-            raise ValueError("Template must be a TemplateBlock or dictionary.")
+        if not isinstance(template, (TemplateBlock, dict)):
+            raise TypeError("Template must be a TemplateBlock or dictionary.")
+        
         
         if isinstance(template, dict):
             template = self._reqCls.reflex(serialize=False,**template)
-            template.template_name = temp_id
         elif not isinstance(template, self._reqCls):
-            raise ValueError("Template must be a TemplateBlock subclass of the same type as this ListBlock.")
+            raise TypeError("Template must be a TemplateBlock subclass of the same type as this ListBlock.")
         
+        if temp_id is None:
+            _, temp_id = template.get_id(id_key=self._reqCls._id_key)
+
+        if isinstance(temp_id, TemplateField) or temp_id in (TemplateField().serialize(), None):
+            temp_id = getattr(template, "template_name", template.__class__.__name__)
+
         if temp_id in self._staged_templates:
-            raise ValueError(f"A Template has already been staged for {temp_id}.")
+            temp_id += f" ({next(self._temp_id_gen)})"
         
+        template.template_name=temp_id
         template._staged_parent = self
         self._staged_templates[temp_id] = template
 

@@ -20,12 +20,7 @@ class MetaData(SingleBlock):
     """
     allow_rename = False
 
-@MetaData.register_dispatch("synthesis",
-    defaults = {
-        "metadata": {
-            "fos_type": "synthesis"
-        }
-    })
+@MetaData.register_dispatch("synthesis")
 class SynthesisMeta(MetaData):
     pass
 

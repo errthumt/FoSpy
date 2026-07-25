@@ -186,6 +186,9 @@ class FileBlock(SingleBlock):
 
     @classmethod
     def fromFile(cls, filepath):
+        from .template import TemplateSet
+        from .. import _errors as err
+
         abspath = os.path.abspath(filepath)
         pathstr = str(abspath)
         try:
@@ -198,8 +201,18 @@ class FileBlock(SingleBlock):
 
         blockDict = EXT_READ_MAP[ext](abspath)
         abspath = blockDict.pop("_sourceFile", abspath)
+        try:
+            return cls(blockDict, _sourceFile=abspath)
+        except err.MultiplePropertyErrors as e:
+            try:
+                template = cls.TemplateClass()(blockDict, _sourceFile=abspath)
+                if isinstance(template, TemplateSet):
+                    raise err.BlockDispatchError("Could not open the file, and could not open as a template because it was identified as a set of templates.")
+                return template
+            except Exception as e2:
+                e2.__cause__ = e
+                raise ValueError("Failed to open file as either a complete file or a template.") from e2
 
-        return cls(blockDict, _sourceFile=abspath)
 
     def save(self, filepath:str=None, json_indent=4, **kwargs):
         """

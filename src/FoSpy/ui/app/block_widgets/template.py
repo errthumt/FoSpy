@@ -40,6 +40,17 @@ class TemplateBlockWidget(SingleBlockWidget):
     def push_filled(self, **props):
         from ....blocks import TemplateBlock
 
+        if not hasattr(self.blk, "_staged_parent"):
+            root_blk = self.win.root_block
+            if self.blk is not root_blk:
+                raise NotImplementedError("Features for editing non-staged templates have not been implemented yet.")
+
+            filled = self.blk.fill(**props)
+            self.win._flag_edited(filled)
+            self.filled = filled
+            self.win.root_block = filled
+            return filled
+
         staged_parent = self.blk._staged_parent
         staged_dict = staged_parent._staged_templates
         staged_reversed = {v:k for k,v in staged_dict.items()}

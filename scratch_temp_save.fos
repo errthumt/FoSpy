@@ -1,0 +1,24 @@
+template_name: My Synthesis Template
+-fos_id: <!TEMPLATE-FIELD>
+fos_type: synthesis
+-description: <!TEMPLATE-FIELD>
+group_id: kovnir-0000-0003-1152-1912
+-project_id: <!TEMPLATE-FIELD>
+
+[Experimenters]
+name: Joseph Race
+affiliation: Kovnir Group - Iowa State University
+orcid: 0000-0002-8551-3627
+
+[Reaction]
+template_name: reaction
+-nominal_formula: <!TEMPLATE-FIELD>
+-nominal_amount: <!TEMPLATE-FIELD>
+-nominal_amount_unit: <!TEMPLATE-FIELD>
+
+[Products]
+
+[Materials]
+
+[Treatments]
+

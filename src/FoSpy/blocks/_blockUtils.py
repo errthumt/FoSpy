@@ -42,11 +42,11 @@ def _unwrap_block(struct):
 
     return struct.copy()
 
-def _unwrap_listblock(struct, typ:type=None):
+def _unwrap_listblock(struct, typ=None):
     from .blocks import ListBlock
     if isinstance(struct, ListBlock):
         return struct.serialize()
-    if isinstance(struct, typ):
+    if typ is not None and isinstance(struct, typ):
         return [struct]
     if not isinstance(struct, list):
         return [_unwrap_block(struct)]

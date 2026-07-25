@@ -1,12 +1,10 @@
+from .._debug import Debug
+from .._docs.properties import _validator_rules
+from ..blocks._containers import SimpleWrapper
+from ._blockUtils import _get_docs_link
+from .blocks import ListBlock, SingleBlock
 from .files import FileBlock
 
-from .blocks import ListBlock, SingleBlock
-from ._blockUtils import _get_docs_link
-from .._docs.properties import _validator_rules
-
-from ..blocks._containers import SimpleWrapper
-
-from .._debug import Debug
 _debug = Debug()
 
 class TemplateField:
@@ -63,10 +61,7 @@ def _is_plural(name, single):
     if name.endswith("es") and name[:-2] == single:
         return True
     
-    if name.endswith("ies") and name[:-3] == single[:-1]:
-        return True
-    
-    return False
+    return bool(name.endswith("ies") and name[:-3] == single[:-1])
 
 @FileBlock.register_dispatch("templates",defaults={"metadata":{"fos_type":"templates"}})
 class TemplateSet(FileBlock):
@@ -152,15 +147,14 @@ class TemplateList(ListBlock):
             @SingleBlock.register_dispatch(reqCls, from_parent=TemplateList)
             @_validator_rules(
                 f"A [simple `ListBlock`](#listblock-and-simple-lists) of flexible [`{reqCls.__name__}` *templates.*]{link}",
-                ["[`FlexTemplate` subclasses](#flextemplate) are defined with a parent "
+                [("[`FlexTemplate` subclasses](#flextemplate) are defined with a parent "
                 "[`SingleBlock` subclass](#singleblock). They automatically detect "
                 "which required properties are missing at construction time, and "
                 "instantiate a [dynamic `TemplateBlock`](#templateblock) with template "
-                "fields in those properties."]
+                "fields in those properties.")]
             )
             class FlexList(TemplateList):
                 _reqCls = reqCls.TemplateClass()
-                pass
 
             FlexList.__name__ = f"{reqCls.__name__}FlexList"
             FlexList.__qualname__ = f"{cls.__name__}.{reqCls.__name__}FlexList"
@@ -188,7 +182,13 @@ class TemplateBlock(SingleBlock):
         from ._blockUtils import _unwrap_block
 
         blockDict = _unwrap_block(blockDict)
-        blockDict.setdefault("template_name", self.__class__.__name__)
+
+        if isinstance(self, FileBlock):
+            current_temp = blockDict.pop("template_name", None)
+            temp_name = blockDict.get("metadata",{}).get("template_name", current_temp)
+            temp_name = temp_name or self.__class__.__name__
+            blockDict["template_name"] = temp_name
+        
         super().__init__(blockDict, **kwargs)
 
     def _override_validators(self, validators):
@@ -206,25 +206,49 @@ class TemplateBlock(SingleBlock):
                 continue
 
             val = validators[field]
-            if not isinstance(val, type) or not issubclass(val, Block):
+            if not (isinstance(val, type) and issubclass(val, Block)):
                 new_val = TemplateField
 
-            elif issubclass(val, SingleBlock):
-                new_val = val.TemplateClass()
 
-            elif issubclass(val, ListBlock):
-                new_val = TemplateList.Simple(val._reqCls)
-            
-            else:
-                raise NotImplementedError("Shouldn't happen")
-
-            validators[field] = new_val
+                validators[field] = new_val
 
         for field in self._val_exceptions:
             validators[field] = FailedTemplateField
 
         return validators
 
+    def try_singleblock(self, blk_cls, field_name, candidate):
+        if isinstance(candidate, blk_cls) and not isinstance(candidate, TemplateBlock):
+            return candidate
+        if not isinstance(candidate, blk_cls):
+            try:
+                return blk_cls(candidate)
+            except Exception:
+                pass
+
+        _, template = self.stage_template(field_name, candidate)
+
+        return template
+
+    def try_listblock(self, blk_cls, candidate):
+        from ._blockUtils import _unwrap_listblock
+        if isinstance(candidate, blk_cls) and not isinstance(candidate, TemplateList):
+            return candidate
+        if not isinstance(candidate, blk_cls):
+            try:
+                return blk_cls(candidate)
+            except Exception:
+                pass
+
+        listblock = blk_cls([])
+        candidate = _unwrap_listblock(candidate, blk_cls._reqCls)
+        for item in candidate:
+            try:
+                listblock.append(item)
+            except Exception:
+                listblock.stage_template(template=item)
+
+        return listblock
 
     def get_req_validators(self):
         validators = super().get_req_validators()
@@ -249,8 +273,10 @@ class TemplateBlock(SingleBlock):
     def fill(self,incomplete=False,staged=False,in_place=False,**kwargs):
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
+
+        current_templates = list(self._staged_templates.keys())
         
-        for prop in self._staged_templates:
+        for prop in current_templates:
             self.fill_staged_template(prop)
         
         staged_id = self.find_staged_id()
@@ -266,7 +292,7 @@ class TemplateBlock(SingleBlock):
 
         try:
             filled = self._full_class(serial)
-        except Exception as e:
+        except Exception:  # noqa: BLE001
             filled = flex_cls(serial)
 
         return filled
@@ -300,7 +326,16 @@ class TemplateBlock(SingleBlock):
         for key, val in serial.items():
             out[key] = val
 
+        if isinstance(self, FileBlock):
+            temp_name = out.pop("template_name", self.__class__.__name__)
+            out["metadata"]["template_name"] = temp_name
+
         return out
+
+    def __getattr__(self, name):
+        if name in self._staged_templates:
+            return self._staged_templates[name]
+        return super().__getattr__(name)
     
     def __setattr__(self, name, value):
         from .. import _errors as err
@@ -328,8 +363,9 @@ class TemplateBlock(SingleBlock):
                 raise NotImplementedError("A TemplateList construction failed unexpectedly.")
 
             else: # ListBlock Only
-                from ._blockUtils import _unwrap_listblock
                 from warnings import warn
+
+                from ._blockUtils import _unwrap_listblock
                 setattr(self, name, [])
 
                 value = _unwrap_listblock(value)
@@ -340,10 +376,10 @@ class TemplateBlock(SingleBlock):
                 for item in value:
                     try:
                         new_listblock.append(item)
-                    except err.FailedValidatorError as e:
+                    except err.MultipleListBlockErrors as e:
                         try:
                             new_listblock.stage_template(template=item)
-                        except Exception as e:
+                        except Exception as e:  # noqa: BLE001
                             warnings.append("The following item could not be set to a ListBlock or staged as a template:"
                                             f"\n\nCANDIDATE:\n{item}"
                                             f"\n\nERROR:\n{e}")
@@ -425,7 +461,6 @@ class FlexTemplate:
             @cls.register_dispatch(fields)
             class TemplateClass(TemplateFieldCounter,cls):
                 _fields = fields
-                pass
 
             suffix = "FlexTemplate" if not fields else "Template"
 
@@ -437,14 +472,14 @@ class FlexTemplate:
     
     def __new__(cls, blockDict, *args, **kwargs):
         if not hasattr(cls, "_fields"):
-            raise Exception("FlexTemplate subclasses must be initialized using a SingleBlock's TemplateClass method.")
+            raise Exception("FlexTemplate subclasses must be initialized using a SingleBlock's TemplateClass method.")  # noqa: TRY002
         
         if cls._fields != ():
             return super().__new__(cls, blockDict, *args, **kwargs)
         
+        from ._blockUtils import _template_found
         from .blocks import Block
         from .metadata import Rename
-        from ._blockUtils import _template_found
 
         full_cls = cls._full_class
 
