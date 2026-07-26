@@ -29,7 +29,7 @@ def update(source="FoSpy", dependencies=False, executable=None, cmd_only=False):
     install_cmd = f'"{executable}" -m pip install --upgrade --force-reinstall'
     if not dependencies:
         install_cmd += " --no-deps"
-    elif source=="Fospy":
+    elif source=="FoSpy":
         source += "[app]"
     else:
         source = f'"FoSpy[app] @ {source}"'
