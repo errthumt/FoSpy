@@ -15,6 +15,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+IGNORE = (
+    "fospy",
+    "tzdata"
+)
+
 
 def update(source="FoSpy", dependencies=False, executable=None, cmd_only=False):
     if executable is None:
@@ -240,7 +245,7 @@ def run_detached_in_new_window(cmd_str: str):
 
 
 def _load_current():
-    frozen_txt = subprocess.check_output(["pip", "freeze"], text=True)
+    frozen_txt = subprocess.check_output([sys.executable, "-m", "pip", "freeze"], text=True)
     return _load_packages(frozen_txt)
 
 
@@ -256,7 +261,8 @@ def check_for_incompatible():
 
     incompatible = set(frozen.keys()) - set(compatible.keys())
     incompatible = {name: frozen[name] for name in incompatible}
-    incompatible.pop("fospy", None)
+    for pkg in IGNORE:
+        incompatible.pop(pkg, None)
 
     return incompatible
 
