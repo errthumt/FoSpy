@@ -69,6 +69,7 @@ class BaseEditorWidget(QWidget):
         except Exception as e:
             self.hint(str(e), "Failed to apply changes:", exc=e)
         self.refresh_editor()
+        self.blk_widget.update_preview()
 
     def refresh_editor(self):
         pass

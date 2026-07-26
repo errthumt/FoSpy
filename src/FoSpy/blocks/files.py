@@ -346,5 +346,23 @@ class FileBlock(SingleBlock):
 
         shutil.rmtree(pkg_dir)
 
+    def preview_text(self, *args, **kwargs):
+        prop_dict = self.get_prop_dict()
+
+        txt = prop_dict.pop("metadata").preview_text(*args, **kwargs)
+
+        for key, val in prop_dict.items():
+            txt += "\n\n"
+            if isinstance(val, SingleBlock):
+                txt += f"[{key.capitalize()}]"
+            else:
+                txt += f"[[{key.capitalize()}]]"
+
+            txt += "\n..."
+
+        return txt
+
+
+
 
     

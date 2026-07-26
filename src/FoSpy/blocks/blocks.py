@@ -1931,6 +1931,89 @@ class SingleBlock(Block):
                 ])
         return attachments
 
+    def preview_text(self, width=40, _parent_indent=None):
+        from .files import FileBlock
+
+        if _parent_indent is None and getattr(self, "_parent_block", None) is not None:
+            parent_blk = self._parent_block
+
+            if isinstance(parent_blk, ListBlock):
+                next_parent = parent_blk._parent_block
+                prop_name = parent_blk.get_parent_prop()
+
+                if isinstance(next_parent, FileBlock):
+                    prop_name = prop_name.capitalize()
+                    parent_indent = False
+                    txt = "...\n\n[[{prop_name}]]\n...\n{preview_txt}\n\n..."
+                else:
+                    parent_indent = True
+                    txt = "...\n{prop_name}: [[\n...\n{preview_txt}\n\n...\n]]"
+
+            elif isinstance(parent_blk, FileBlock):
+                prop_name = self.get_parent_prop()
+                parent_indent = False
+
+                if prop_name == "metadata":
+                    txt = "<start of file>\n\n{preview_txt}\n\n..."
+                else:
+                    prop_name = prop_name.capitalize()
+                    txt = "...\n\n[{prop_name}]\n{preview_txt}\n\n..."
+
+            else:
+                prop_name = self.get_parent_prop()
+                parent_indent = True
+
+                txt = "...\n{prop_name}: [\n{preview_txt}\n]"
+
+            preview_txt = self.preview_text(width=width, _parent_indent=parent_indent)
+            return txt.format(**locals())
+
+        if _parent_indent:
+            width -= 4
+
+        prop_dict = self.get_prop_dict()
+
+        lines = []
+        comments = self._meta.comments
+        def add_line(txt):
+            if len(txt) > width:
+                if txt.endswith(": [...]"):
+                    txt = txt[:width-10]
+                    txt += "...: [...]"
+                elif txt.endswith(": [[...]]"):
+                    txt = txt[:width-12]
+                    txt += "...: [[...]]"
+                else:
+                    txt = txt[:width-3] + "..."
+            lines.append(txt)
+
+        for key, val in prop_dict.items():
+            comment_list = comments.get(key, [])
+            if comment_list:
+                add_line("")
+            for c in comment_list:
+                add_line(f"// {c}")
+
+            line_txt = key + ": "
+
+            if isinstance(val, SingleBlock):
+                line_txt += "[...]"
+            elif isinstance(val, ListBlock):
+                line_txt += "[[...]]"
+            elif hasattr(val, "serialize"):
+                line_txt += val.serialize()
+            else:
+                line_txt += str(val)
+
+            add_line(line_txt)
+
+        if _parent_indent:
+            lines = ["    " + ln for ln in lines]
+
+        return "\n".join(lines)
+
+
+
 @SingleBlock.setup_dispatch(from_key="_reqCls", allow_self=False)
 class ListBlock(Block):
     """

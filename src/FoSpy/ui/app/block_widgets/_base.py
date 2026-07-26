@@ -6,6 +6,7 @@ from .._utils import _get_label, _get_template_label
 from ..editors.comments import CommentEditorWidget
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont, QTextOption
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -16,13 +17,20 @@ from PySide6.QtWidgets import (
     QPushButton,
     QTabWidget,
     QStackedWidget,
-    QSizePolicy
+    QTextEdit
 )
 
 SIDEBAR_WIDTH = 400
 SIDEBAR_MARGINS = (10,10,10,10)
 
 SCROLL_WIDTH = SIDEBAR_WIDTH - SIDEBAR_MARGINS[0] - SIDEBAR_MARGINS[2]
+
+PREVIEW_CHAR_WIDTH = 40
+PREVIEW_FONT = QFont("Monospace")
+PREVIEW_FONT.setStyleHint(QFont.TypeWriter)
+PREVIEW_FONT.setPointSize(11)
+
+PREVIEW_STYLE = "background-color: #FFFFFF; color: #000000;"
 
 def _add_header(widget:QWidget,label, view_name=None):
     blk = widget.blk
@@ -135,11 +143,12 @@ class SingleBlockWidget(QWidget):
         self.editor = editor
         main_layout.addWidget(editor, stretch=1)
 
-        self.inactive = QLabel(
-            "Select a property or comment editor to inspect it in more detail.\n\n"
-            "Greyed-out properties can only be edited in the inspector."
-            )
-        self.inactive.setWordWrap(True)
+        # self.inactive = QLabel(
+        #     "Select a property or comment editor to inspect it in more detail.\n\n"
+        #     "Greyed-out properties can only be edited in the inspector."
+        #     )
+        # self.inactive.setWordWrap(True)
+        self.inactive = self.build_inactive()
         editor.addWidget(self.inactive)
         
         self.active = QTabWidget()
@@ -167,6 +176,56 @@ class SingleBlockWidget(QWidget):
         self.prop_labels = {}
 
         self._refresh_properties()
+
+    def build_inactive(self):
+        inactive = QWidget()
+
+        # Layout for the inactive widget
+        outer_layout = QVBoxLayout(inactive)
+        outer_layout.setContentsMargins(10,10,10,10)
+
+        intro = QLabel(
+            "Select a nested block, property or comment editor to inspect it in more detail.\n\n"
+            "Greyed-out properties can only be edited in the inspector;\n"
+            "Properties without an editor are read-only.\n\n"
+        )
+        intro.setWordWrap(True)
+        outer_layout.addWidget(intro)
+
+        preview_header = QLabel("<h4>File Preview:</h4>")
+        outer_layout.addWidget(preview_header)
+
+        # Scroll area
+        scroll = QScrollArea(inactive)
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QScrollArea.Shape.NoFrame)
+        scroll.setContentsMargins(0,0,0,0)
+        scroll.setSizeAdjustPolicy(QScrollArea.SizeAdjustPolicy.AdjustToContents)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
+        # Content inside the scroll area
+        scroll_content = QWidget()
+        scroll_layout = QVBoxLayout(scroll_content)
+        scroll_layout.setContentsMargins(0,0,0,0)
+
+        self.preview = QTextEdit(scroll_content)
+        self.preview.setReadOnly(True)
+        self.preview.setFont(PREVIEW_FONT)
+        self.preview.setStyleSheet(PREVIEW_STYLE)
+        self.preview.setWordWrapMode(QTextOption.WrapMode.NoWrap)
+        self.update_preview()
+
+        scroll_layout.addWidget(self.preview)
+
+        scroll.setWidget(scroll_content)
+        outer_layout.addWidget(scroll, stretch=1)
+
+        return inactive
+
+
+    def update_preview(self):
+        self.preview.setText(self.blk.preview_text(width=PREVIEW_CHAR_WIDTH))
 
     @staticmethod
     def hard_refresh(func):
@@ -645,7 +704,8 @@ class SingleBlockWidget(QWidget):
 
         if error is not None:
             raise error
-        
+
+        self.update_preview()
         self.next_line(prop)
 
 class ListBlockWidget(QWidget):
@@ -698,7 +758,7 @@ class ListBlockWidget(QWidget):
             self.blk_widgets[child_blk] = tab_content
             tabs.addTab(tab_content, label)
 
-        for temp_id, template in self.blk._staged_templates.items():
+        for template in self.blk._staged_templates.values():
             label = _get_template_label(template)
             widget = _get_widget(template)
 
@@ -793,6 +853,11 @@ class ListBlockWidget(QWidget):
     def find_widget(self, blk):
         idx = self._find_idx(blk)
         return self.tabs.widget(idx)
+
+    def update_preview(self):
+        current_widget = self.tabs.currentWidget()
+        if hasattr(current_widget, "update_preview"):
+            current_widget.update_preview()
 
     def remove_block(self, blk):
         if not self.win._custom_popup(

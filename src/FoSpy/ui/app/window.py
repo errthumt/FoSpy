@@ -333,7 +333,7 @@ class MainWindow(QMainWindow):
                     add_item(prop, obj)
 
             for prop, obj in staged_templates.items():
-                add_item(prop, obj)
+                add_item(prop, obj, pop=False)
 
         self._set_flag(blk, "refresh", False)
 
@@ -621,15 +621,11 @@ class MainWindow(QMainWindow):
         if not item:
             return
         
-        self.find_widget(item=item, go_to=True)
+        w = self.find_widget(item=item, go_to=True)
+        w.update_preview()
 
         self.tree_view.resizeColumnToContents(0)
 
-        if self.tree_visible:
-            tree_width = self.tree_view.sizeHint().width()
-            splitter_width = self.splitter.sizeHint().width()
-
-            self.splitter.setSizes([tree_width, splitter_width - tree_width])
 
     def find_widget(self, item=None, blk:Block=None, go_to=False):
         """Find and return the widget associated with a block or tree item.
