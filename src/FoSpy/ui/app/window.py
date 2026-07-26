@@ -317,9 +317,11 @@ class MainWindow(QMainWindow):
             prop_dict = blk.get_prop_dict()
             staged_templates = blk._staged_templates.copy()
 
-            def add_item(prop, obj):
+            def add_item(prop, obj, pop=True):
                 label = prop
-                staged_templates.pop(prop, None)
+
+                if pop:
+                    staged_templates.pop(prop, None)
 
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, obj)
