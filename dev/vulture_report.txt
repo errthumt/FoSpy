@@ -18,7 +18,7 @@ src/FoSpy/ui/app/_utils.py:333: unused attribute 'registered' (60% confidence, 1
 src/FoSpy/ui/app/_utils.py:343: unused attribute 'start_menu' (60% confidence, 1 line)
 src/FoSpy/ui/app/_utils.py:373: unused attribute 'registered' (60% confidence, 1 line)
 src/FoSpy/ui/app/block_widgets/_base.py:25: unused variable 'SCROLL_WIDTH' (60% confidence, 1 line)
-src/FoSpy/ui/app/check_update.py:296: unused attribute 'env' (60% confidence, 1 line)
+src/FoSpy/ui/app/check_update.py:302: unused attribute 'env' (60% confidence, 1 line)
 src/FoSpy/ui/app/console.py:282: unused attribute 'run_command' (60% confidence, 1 line)
 src/FoSpy/ui/sliders/abstract.py:51: unused attribute 'sl_rows' (60% confidence, 1 line)
 src/FoSpy/ui/sliders/pyqtgraph.py:150: unused attribute '_ctrl_col' (60% confidence, 1 line)
