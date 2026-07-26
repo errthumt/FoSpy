@@ -58,6 +58,8 @@ def main_cli(**kwargs):
 
     if check_env(window) is None:
         register_dlg()
+    else:
+        sys.exit()
 
     sys.exit(app.exec())
 
