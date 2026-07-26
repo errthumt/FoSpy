@@ -5,8 +5,10 @@ from PySide6.QtWidgets import QLabel
 class TemplateBlockWidget(SingleBlockWidget):
     def __init__(self, label, blk, window):
         super().__init__(label, blk, window)
-
-        disclaimer = QLabel("This block is a <i>staged template</i>. It will be attached to the parent block once all fields are filled in.")
+        if blk is not window.root_block:
+            disclaimer = QLabel("This block is a <i>staged template</i>. It will be attached to the parent block once all fields are filled in.")
+        else:
+            disclaimer = QLabel("This file is currently incomplete. It can be saved as a template to be filled in later, or, once all required fields are filled in, it can be saved as a complete file.")
         self.layout().insertWidget(1, disclaimer)
 
     @staticmethod

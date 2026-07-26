@@ -267,12 +267,36 @@ class MainWindow(QMainWindow):
     def _populate_tree_nodes(self, parent_item:QStandardItem, blk:Block):
         """Recursively adds child nodes to a QStandardItem."""
 
+        from ...blocks.template import TemplateBlock
+
+
         if not isinstance(blk, Block):
             return
         
         if not hasattr(blk, "__GUI_FLAGS__"):
             blk.__GUI_FLAGS__ = {}
 
+        is_staged = (
+            hasattr(blk, "_staged_parent") or (
+                blk is self.root_block and
+                isinstance(blk, TemplateBlock)
+            )
+        )
+        edited = self._get_flag(blk, "edited")
+        has_staged = blk.has_staged()
+
+        current_label = parent_item.text().lstrip("*").rstrip("🏷️ +")
+
+        label = "".join(
+            [
+                "*" if edited else "",
+                current_label,
+                "🏷️" if is_staged else "",
+                " +" if has_staged else "",
+            ]
+        )
+
+        parent_item.setText(label)
 
         if isinstance(blk, ListBlock):
             for i, blk_i in enumerate(blk._objs):
@@ -282,7 +306,7 @@ class MainWindow(QMainWindow):
                 self._add_tree_item(child_item, parent_item, blk_i)
 
             for _blk in blk._staged_templates.values():
-                label = _get_template_label(_blk)
+                label = _get_label(_blk)
 
                 child_item = QStandardItem(label)
                 self._add_tree_item(child_item, parent_item, _blk)
@@ -291,24 +315,23 @@ class MainWindow(QMainWindow):
 
             # get dict of property name -> live object
             prop_dict = blk.get_prop_dict()
+            staged_templates = blk._staged_templates.copy()
+
+            def add_item(prop, obj):
+                label = prop
+                staged_templates.pop(prop, None)
+
+                child_item = QStandardItem(label)
+                self._add_tree_item(child_item, parent_item, obj)
+
             for prop, obj in prop_dict.items():
                 # only Block instances get added to tree. Primitives are edited
                 # in the SingleBlock's own widget
                 if isinstance(obj, Block):
-                    label = prop
-                    if obj.has_staged():
-                        label += "+"
-                    child_item = QStandardItem(label)
-                    self._add_tree_item(child_item, parent_item, obj)
+                    add_item(prop, obj)
 
-            for prop, obj in blk._staged_templates.items():
-                label = "🏷️" + prop
-
-                if obj.has_staged():
-                    label += "+"
-                    
-                child_item = QStandardItem(label)
-                self._add_tree_item(child_item, parent_item, obj)
+            for prop, obj in staged_templates.items():
+                add_item(prop, obj)
 
         self._set_flag(blk, "refresh", False)
 
