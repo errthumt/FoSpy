@@ -72,6 +72,8 @@ def _template_found(val):
         return False
 
     if isinstance(val, dict):
+        if "template_name" in val:
+            return True
         for key, v in val.items():
             if key != "template_name" and _template_found(v):
                 return True

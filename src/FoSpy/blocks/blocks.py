@@ -818,6 +818,7 @@ class SingleBlock(Block):
         """
         from .metadata import Rename, MetaData
         from ._blockUtils import _unwrap_block
+        from .template import TemplateBlock
         self._staged_templates = {}
         self._constructed = False
 
@@ -845,6 +846,9 @@ class SingleBlock(Block):
             err.MissingPropertyError(key, self, blockDict=blockDict)
             for key in req if key not in blockDict
         ]
+
+        if "template_name" in blockDict and not isinstance(self, TemplateBlock):
+            property_errors.append(err.PropertyError("template_name", self, blockDict=blockDict, hint="Cannot construct a non-template block with property: "))
         
         self._meta = SubContainer()
         self._calc_comments = {}
@@ -2016,6 +2020,24 @@ class SingleBlock(Block):
 
         return "\n".join(lines)
 
+    def add_field(self, *args, **kwargs):
+        new_template = self.make_template("New Template").add_field(*args, **kwargs)
+
+        if getattr(self, "_parent_block", None) is None:
+            return new_template
+
+
+        parent_blk = self._parent_block
+
+        if isinstance(parent_blk, ListBlock):
+            _, new_template = parent_blk.stage_template(template=new_template)
+            return new_template
+        
+        parent_prop = self.get_parent_prop()
+
+        new_parent = parent_blk.add_field(parent_prop, value=new_template)
+        return getattr(new_parent, parent_prop)
+
 
 
 @SingleBlock.setup_dispatch(from_key="_reqCls", allow_self=False)
@@ -2460,7 +2482,7 @@ class ListBlock(Block):
         for obj in self:
             obj._meta.list_type = typ
         
-    def serialize(self, clean=False, shallow=False, override_list_type:str|bool=None):
+    def serialize(self, clean=False, shallow=False, override_list_type:str|bool=None, **kwargs):
         """
         Serialize this `ListBlock` as a list of dictionaries.
 
