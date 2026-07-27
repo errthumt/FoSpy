@@ -46,7 +46,7 @@ def add_menu(win, menu_bar, label, specs:dict|tuple[tuple], parent=None):
             continue
 
         action_func = spec
-        if len(name) == 2:
+        if isinstance(name,tuple):
             action_label, shortcut = name
         else:
             action_label = name
@@ -64,11 +64,11 @@ def add_menu(win, menu_bar, label, specs:dict|tuple[tuple], parent=None):
 def file_menu(win):
 
     return {
-        "Open...": win._open_dlg,
-        "Open A Copy...": lambda *_: win._open_dlg(copy=True),
-        "Edit A Copy": win._edit_copy,
-        "Save": win.save,
-        "Save As...": win.save_dlg
+        ("Open...","Ctrl+O"): win._open_dlg,
+        ("Open A Copy...","Ctrl+Shift+O"): lambda *_: win._open_dlg(copy=True),
+        ("Edit A Copy","Ctrl+Shift+E"): win._edit_copy,
+        ("Save","Ctrl+S"): win.save,
+        ("Save As...","Ctrl+Shift+S"): win.save_dlg
     }
 
 
