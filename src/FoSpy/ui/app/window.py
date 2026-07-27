@@ -64,6 +64,8 @@ class TextContentWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
+    handlers = {"__cached__": {}}
+    session_warnings = []
     def __init__(self, open_path:pathlib.Path | str | None=None, copy:bool | None=None):
         """Initialize the FoSpy viewer app window.
 
@@ -75,6 +77,8 @@ class MainWindow(QMainWindow):
                 - False: Open the editor with the original file.
                 - None: GUI prompt.
         """
+        import warnings
+
         super().__init__()
 
         self.tree_visible = True
@@ -105,15 +109,51 @@ class MainWindow(QMainWindow):
                 open_path = None
                 copy = False
 
+    # def __init__
+        handlers = (
+            (sys, "excepthook", self.handle_exception),
+            (warnings, "showwarning", self.handle_warning)
+        )
+
+        for mod, attr, handler in handlers:
+            cached = getattr(mod, attr)
+            def restore(m=mod,a=attr,c=cached):
+                setattr(m, a, c)
+            self.handlers["__cached__"].setdefault((mod,attr), restore)
+            setattr(mod, attr, handler)
+
+        self.handlers[self] = True
+
         self._open_file(open_path=open_path, copy=copy)
 
-        sys.excepthook = self.handle_exception
 
     def closeEvent(self, event):
         if not self._unsaved_dlg("exiting"):
             return event.ignore()
 
+        self.handlers.pop(self, None)
+
+        if len(self.handlers) == 1:
+            for restore in self.handlers["__cached__"].values():
+                restore()
+
         return super().closeEvent(event)
+
+    def _open_temp_file(self, txt):
+        import subprocess
+        import sys
+        import tempfile
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8") as tmp:
+            tmp.write(txt)
+            tmp.close()
+
+            if sys.platform.startswith("win"):
+                os.startfile(tmp.name)
+            elif sys.platform.startswith("darwin"):
+                subprocess.call(["open", tmp.name])
+            else:
+                QDesktopServices.openUrl(QUrl.fromLocalFile(tmp.name))
 
     def handle_exception(self, exctype, value, tb):
         options = [
@@ -139,20 +179,37 @@ class MainWindow(QMainWindow):
             raise resp
 
         if resp:
-            import subprocess
-            import sys
-            import tempfile
+            txt = "".join(traceback.format_exception(exctype, value, tb))
+            self._open_temp_file(txt)
 
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8") as tmp:
-                tmp.write("".join(traceback.format_exception(exctype, value, tb)))
-                tmp.close()
 
-                if sys.platform.startswith("win"):
-                    os.startfile(tmp.name)
-                elif sys.platform.startswith("darwin"):
-                    subprocess.call(["open", tmp.name])
-                else:
-                    QDesktopServices.openUrl(QUrl.fromLocalFile(tmp.name))
+    def handle_warning(self, message, category, filename, lineno, file=None, line=None):
+        str_message = str(message)
+        only_once = getattr(message, "only_once", False)
+        if only_once and str_message in self.session_warnings:
+            return
+
+        if only_once:
+            self.session_warnings.append(str_message)
+
+        resp = self._custom_popup(
+            "Warning!",
+            str_message,
+            ("Continue", False),
+            ("View Full Warning Details", True),
+            cancel=False
+        )
+
+        if resp:
+            txt = f"{category.__name__}: {message}\n\n{filename}:{lineno}"
+
+            exc = getattr(message, "exc", None)
+
+            if exc is not None:
+                txt += "\n\n" + "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+
+
+            self._open_temp_file(txt)
 
     def _startup_copy_dlg(self, open_path):
         if open_path is None:

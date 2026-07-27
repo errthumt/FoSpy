@@ -2,6 +2,7 @@ import re
 from ..._debug import Debug
 from pathlib import Path
 from ..._docs.properties import _validator_rules
+from ... import _errors as err
 _debug = Debug()
 _debug.on = True
 
@@ -61,8 +62,7 @@ def file_name(name: str, sourceDict={}, **kwargs) -> str:
         raise ValueError("Filename must not contain path separators")
 
     if "," in name:
-        from warnings import warn
-        warn(f"Comma in embedded filename: '{name}' may lead to unexpected behavior.",SyntaxWarning)
+        err.warn_fos(f"Comma in embedded filename: '{name}' may lead to unexpected behavior.", SyntaxWarning, only_once=True)
 
     if not FILENAME_RE.match(name):
         raise ValueError(

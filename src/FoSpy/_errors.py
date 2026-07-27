@@ -1,5 +1,17 @@
 # TODO: Figure out cleaner type hints without circular imports.
 
+class FOSWarning(Warning):
+    def __init__(self, message, exc=None, only_once=False):
+        super().__init__(message)
+        self.exc = exc
+        self.only_once = only_once
+
+def warn_fos(message, *args, exc=None, only_once=False, **kwargs):
+    from warnings import warn
+
+    message = FOSWarning(message, exc, only_once)
+    warn(message, *args, **kwargs)
+
 class AttachmentTypeError(Exception):
     pass
 
