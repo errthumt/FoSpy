@@ -144,6 +144,14 @@ def expand_lists(key, val, indent, looped=False):
 
 
 def write_dict_to_file(blocks, filepath, **kwargs):
+    if not isinstance(blocks, dict):
+        raise TypeError(f"Only a dictionary can be written to a file. Got:\n{str(type(blocks))}\n\n{blocks}")
+
+    invalid = {k:v for k,v in blocks.items() if not k.startswith("_") and not isinstance(v, (dict, list))}
+    if invalid:
+        summary = "\n\n".join([f"{k}: {type(v)}\n{v}" for k,v in invalid.items()])
+        raise TypeError(f"The following blocks are not valid:\n\n{summary}")
+
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     blocks = blocks.copy()
     block_comments = blocks.pop(mk["comments"])

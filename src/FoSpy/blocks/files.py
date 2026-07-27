@@ -88,6 +88,8 @@ def open_fosx(fosx_path, ext_dir=None, **kwargs):
 EXT_MAP = {
     "fos": (dict_from_file, write_dict_to_file,
             "FoS Format"),
+    "fost": (dict_from_file, write_dict_to_file,
+             "FoS Format (Template)"),
     "fosx": (open_fosx, save_fosx,
             "FoSX Package"),
     "json": (
@@ -201,17 +203,46 @@ class FileBlock(SingleBlock):
 
         blockDict = EXT_READ_MAP[ext](abspath)
         abspath = blockDict.pop("_sourceFile", abspath)
-        try:
-            return cls(blockDict, _sourceFile=abspath)
-        except err.MultiplePropertyErrors as e:
+        as_template = ext == "fost"
+
+        file = None
+        last_error = None
+        desync = False
+        while file is None:
+            if last_error is not None:
+                err.warn_fos(str(last_error), exc=last_error)
+
+            if as_template:
+                cls = cls.TemplateClass()
+
             try:
-                template = cls.TemplateClass()(blockDict, _sourceFile=abspath)
-                if isinstance(template, TemplateSet):
-                    raise err.BlockDispatchError("Could not open the file, and could not open as a template because it was identified as a set of templates.")
-                return template
-            except Exception as e2:
-                e2.__cause__ = e
-                raise ValueError("Failed to open file as either a complete file or a template.") from e2
+                file = cls(blockDict, _sourceFile=abspath)
+            except err.MultiplePropertyErrors as e:
+                if last_error is not None:
+                    e.__cause__ = last_error
+
+                if as_template:
+                    raise ValueError("Failed to open file as template.") from e
+
+                failed_error = ValueError("Failed to open file as a complete FoS file. Will attempt to open a copy as a template instead.")
+                failed_error.__cause__ = e
+                last_error = failed_error
+                as_template = True
+                desync = True
+
+            except Exception as e:
+                raise ValueError("An unexpected error occurred when trying to open file.") from e
+
+        if isinstance(file, TemplateSet) and as_template:
+            failed_error = ValueError("The file was opened as a template, but dispatched as a TemplateSet. TemplateSets cannot be opened as templates.")
+            if last_error is not None:
+                failed_error.__cause__ = last_error
+            raise failed_error
+
+        if desync:
+            file._sourceFile = None
+
+        return file
 
 
     def save(self, filepath:str=None, json_indent=4, **kwargs):
@@ -237,7 +268,7 @@ class FileBlock(SingleBlock):
         try:
             if not saving_as:
                 if self._sourceFile is None:
-                    raise ValueError("Synthesis object was constructed without a sourceFile. A save destination must be specified.")
+                    raise ValueError("The file either lost its connection to its source file or was constructed without one. A save destination must be specified.")
                 else:
                     filepath = self._sourceFile
             self._sourceFile = os.path.abspath(filepath)
@@ -264,7 +295,7 @@ class FileBlock(SingleBlock):
 
         except Exception as e:
             if not saving_as:
-                warn(f"Could not save file. Disconnected from source file for safety. Exception: {e}", RuntimeWarning)
+                warn(f"Could not save file. Disconnecting from source file for safety. Exception: {e}", UserWarning)
                 self._sourceFile = None
                 return e
             else:

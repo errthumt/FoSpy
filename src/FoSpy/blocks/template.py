@@ -12,7 +12,7 @@ class TemplateField:
         pass
 
     @classmethod
-    def serialize(cls,keepListType=None, clean=False):
+    def serialize(cls,**kwargs):
         from ..parsing.format_fos import format_field
         return format_field("template")
     
@@ -303,15 +303,18 @@ class TemplateBlock(SingleBlock):
         required = self.get_req_validators()
         required.pop('ext',None)
         required.pop('template_name',None)
-        serial = super().serialize(keepListType=keepListType, shallow=shallow, clean=clean)
+        serial = super().serialize(keepListType=keepListType, shallow=shallow, clean=clean, as_template=True)
+
+        if shallow:
+            return serial
+
+        rename_dict = self.rename_dict()
 
         out = {"template_name":serial.pop("template_name","")}
 
-        for key, staged in self._staged_templates.items():
-            serial.setdefault(key, staged.serialize(keepListType=keepListType, shallow=shallow, clean=clean))
-
         for key,validator in required.items():
             val = None
+            key = rename_dict.get(key, key)
             if isinstance(validator,type):
                 if issubclass(validator,SingleBlock):
                     val = serial.pop(key, validator.reflex())
@@ -498,17 +501,19 @@ class FlexTemplate:
             blockDict.pop("__dispatch__", None)
 
         rename_dict = blockDict.get("rename", {})
-        rename_from = {v:k for k, v in rename_dict.items()}
+        if isinstance(rename_dict, list):
+            rename_dict = rename_dict[0]
+
+        rename_from = {v:k for k, v in rename_dict.items() if not k.startswith("_")}
         fields = []
         reqs = full_cls.build_req_validators()
         reqs.pop('ext', None)
 
         for name, validator in reqs.items():
-            if name in rename_from:
-                name = rename_from[name]
+            block_name = rename_dict.get(name, name)
 
             if (
-                _template_found(blockDict.get(name, None))
+                _template_found(blockDict.get(block_name, None))
             ) or (
                 isinstance(validator, type) and
                 issubclass(validator, Block) and

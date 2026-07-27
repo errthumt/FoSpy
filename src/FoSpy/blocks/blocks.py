@@ -1310,7 +1310,7 @@ class SingleBlock(Block):
             raise ValueError(f"This object already has attribute: '{block_name}'.")
         return setattr(self, f"{block_name}${type_alias}", value)
         
-    def serialize(self, keepListType:bool=False, shallow:bool=False, clean:bool=False, **kwargs):
+    def serialize(self, keepListType:bool=False, shallow:bool=False, clean:bool=False, as_template=False, **kwargs):
         """
         Return a recursively serialized `dict` representation of `self`.
 
@@ -1394,7 +1394,7 @@ class SingleBlock(Block):
                 obj = obj()
             serialize = getattr(obj, "serialize", None)
             if callable(serialize) and not shallow:
-                return obj.serialize(clean=clean)
+                return obj.serialize(clean=clean, as_template=as_template)
             if isinstance(obj, list):
                 return [try_serial(item) for item in obj]
             if isinstance(obj, dict):
@@ -1443,6 +1443,10 @@ class SingleBlock(Block):
 
         if "template_name" in out and not isinstance(self, TemplateBlock):
             out.pop("template_name")
+
+        if as_template:
+            for key, staged in self._staged_templates.items():
+                out.setdefault(key, staged.serialize(keepListType=keepListType, shallow=shallow, clean=clean))
 
         if clean:
             scan = out.copy()
@@ -1531,7 +1535,7 @@ class SingleBlock(Block):
 
         from ..parsing.format_fos import format_field
 
-        serial = self.serialize(keepListType=True)
+        serial = self.serialize(keepListType=True, as_template=not args)
         validators = self.get_validators()
         for key in args:
             val = validators.get(key, None)
@@ -2497,16 +2501,16 @@ class ListBlock(Block):
         if override_list_type is None:
             for obj in self:
                 if obj._meta.list_type == "explicit":
-                    return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit")
-            return self.serialize(clean=clean, shallow=shallow, override_list_type="looped")
+                    return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit", **kwargs)
+            return self.serialize(clean=clean, shallow=shallow, override_list_type="looped", **kwargs)
         elif not override_list_type:
             keepListType = len(self)>1
-            lst = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType) for obj in self]
+            lst = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType, **kwargs) for obj in self]
             return lst
         else:
             copy = self.copy()
             copy.set_list_type(override_list_type)
-            return copy.serialize(clean=clean, shallow=shallow, override_list_type=False)
+            return copy.serialize(clean=clean, shallow=shallow, override_list_type=False, **kwargs)
     
      
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):

@@ -826,48 +826,95 @@ class MainWindow(QMainWindow):
             
             item = item.child(row)
         
-        return item
+        return item   
 
     def save(self, *args,path:str | None=None):
+        from ...blocks.template import TemplateBlock
+
         if not self.root_block:
             return
         
-        if path is None and self.root_block._sourceFile is None:
-            return self.save_dlg()
+        if path is None:
+            if self.root_block._sourceFile is None:
+                return self.save_dlg()
+            else:
+                path = self.root_block._sourceFile
 
-        if path is not None and path.endswith(".fosx"):
-            copy = self.root_block.copy()
-            copy.save(filepath=path)
+        if (
+                (not isinstance(self.root_block, TemplateBlock) and self.root_block.has_staged())
+                or
+                (isinstance(self.root_block, TemplateBlock) and not path.endswith(".fost"))
+        ):
+            options = [
+                ("Save as Template", "template")
+            ]
+
+            if not isinstance(self.root_block, TemplateBlock):
+                options.append(("Discard Unfilled Fields", "discard"))
+
+            proceed = self._custom_popup(
+                "Incomplete File",
+                "This file still has unfilled template fields and cannot be saved "
+                "as a complete file. Would you like to save it as a template file instead?"
+                *options,
+                cancel=True
+            )
+
+            if not proceed:
+                return
+
+            if proceed == "template":
+                return self.save_dlg("fost")
             
+        if path.endswith(".fosx")and not self._custom_popup(
+            "Packaging File",
+            "You are about to package this file as a FoSX archive. "
+            "FoSX-packaged files cannot be edited directly. "
+            "You will be returned to the non-packaged file after saving.",
+            cancel=True):
+            return
+
+        if path.endswith(".fost") and not isinstance(self.root_block, TemplateBlock):
+            saving_block = self.root_block.make_template(f"Template saved from {self.root_block.get_file_name()}")
         else:
-            self.root_block.save(filepath=path)
-            src = self.root_block._sourceFile
-            # cache current tree selection
-            current_idx = self.tree_view.currentIndex()
-            cached_path = None
-            if current_idx.isValid():
-                current_item = self.tree_model.itemFromIndex(current_idx)
-                if current_item is not None:
-                    cached_path = self._get_item_path(current_item)
+            saving_block = self.root_block
 
-            self._open_file(src, copy=False)
+        saving_block.save(filepath=path)
+        src = saving_block._sourceFile
+        # cache current tree selection
 
-            # restore tree selection
-            if cached_path:
-                new_item = self._get_item_from_path(cached_path)
-                if new_item:
-                    new_idx = self.tree_model.indexFromItem(new_item)
-                    if new_idx.isValid():
-                        self.tree_view.setCurrentIndex(new_idx)
-                        self.tree_view.scrollTo(new_idx)
-                        self._on_tree_selection(new_idx)
+        current_idx = self.tree_view.currentIndex()
+        cached_path = None
+        if current_idx.isValid():
+            current_item = self.tree_model.itemFromIndex(current_idx)
+            if current_item is not None:
+                cached_path = self._get_item_path(current_item)
+
+        self._open_file(src, copy=False)
+
+        # restore tree selection
+        if cached_path:
+            new_item = self._get_item_from_path(cached_path)
+            if new_item:
+                new_idx = self.tree_model.indexFromItem(new_item)
+                if new_idx.isValid():
+                    self.tree_view.setCurrentIndex(new_idx)
+                    self.tree_view.scrollTo(new_idx)
+                    self._on_tree_selection(new_idx)
 
         return True
     
-    def save_dlg(self, *args):
+    def save_dlg(self, *allowed):
         from ...blocks.files import EXT_DESC_MAP
+
+        if not allowed:
+            allowed = EXT_DESC_MAP
+        else:
+            allowed = {k: v for k, v in EXT_DESC_MAP.items() if k in allowed}
+
+
         all_ext = [f"*.{ext}" for ext in EXT_DESC_MAP]
-        ext_list = [f"{desc} (*.{ext})" for ext, desc in EXT_DESC_MAP.items()]
+        ext_list = [f"{desc} (*.{ext})" for ext, desc in allowed.items()]
         ext_list.append(f'All FoS-style Files ({" ".join(all_ext)})')
         ext_list.append("All Files (*)")
 
@@ -879,13 +926,13 @@ class MainWindow(QMainWindow):
         )
 
         if path:
-            if path.endswith(".fosx")and not self._custom_popup(
-                    "Packaging File",
-                    "You are about to package this file as a FoSX archive. "
-                    "FoSX-packaged files cannot be edited directly. "
-                    "You will be returned to the non-packaged file after saving.",
-                    cancel=True):
-                return
+            if not any(path.endswith("."+ext) for ext in allowed):
+                allowed_list = ["\n"]
+                allowed_list.extend(ext_list)
+                raise ValueError(f"You cannot save the current file with that extension. Allowed extensions are:"
+                                 "\n - ".join(allowed_list))
+                return False
+            
 
             self.save(path=path)
             return True
