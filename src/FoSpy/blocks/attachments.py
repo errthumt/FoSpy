@@ -4,13 +4,16 @@ from .._debug import Debug
 
 from .._errors import AttachmentTypeError, FileBlockNotFoundError
 from .._docs.properties import _validator_rules, val_rules
+from pathlib import Path
 
 _debug = Debug()
 
 
 @SingleBlock.setup_dispatch(from_key="_extension", allow_self=False)
 class Attachment(SingleBlock):
-    _id_key = "file_name"  
+    _id_key = "file_name"
+    last_filedir = Path.cwd().resolve()
+
     def __init__(self, blockDict, **kwargs):
         super().__init__(blockDict, **kwargs)
         self._filepath = None
@@ -287,7 +290,14 @@ class PathFile(Attachment):
     def _get_filedir(self):
         from pathlib import Path
         fileblock = self.find_fileblock()
-        return Path(fileblock._sourceFile).parent.resolve()
+
+        if fileblock._sourceFile is None:
+            return self.last_filedir.resolve()
+
+        filedir = Path(fileblock._sourceFile).parent.resolve()
+        Attachment.last_filedir = filedir
+        
+        return filedir
 
     def exists(self):
         return self._filepath.is_file() if self._filepath is not None else False
