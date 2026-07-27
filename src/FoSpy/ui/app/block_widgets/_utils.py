@@ -46,6 +46,8 @@ def _get_widget(blk, prop_map=None, prop=None):
     return _widget_not_found
 
 def _get_template_widget(blk, prop_map=None, prop=None):
+    from ....blocks import ListBlock, FileBlock
+
     if prop_map is not None:
         if prop in prop_map:
             return prop_map[prop]
@@ -70,8 +72,11 @@ def _get_template_widget(blk, prop_map=None, prop=None):
                     prop_map = {}
                 
                 new_prop_map = prop_map.copy()
+
+                parent_blk = getattr(blk, "_parent_block", None)
+                allow_template_name = isinstance(parent_blk, ListBlock) or (isinstance(parent_blk, FileBlock) and blk.get_parent_prop() == "metadata")
                 
-                new_prop_map["template_name"] = (False, lambda value: False)
+                new_prop_map["template_name"] = (False, lambda value: allow_template_name)
 
                 class HybridTemplateWidget(template_widget, full_widget):
                     prop_map = new_prop_map
