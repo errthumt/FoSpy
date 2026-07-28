@@ -310,6 +310,8 @@ class TemplateBlock(SingleBlock):
                 serial["template_name"] = temp_name
             filled = flex_cls(serial)
 
+        filled.keys_to_front(*self._key_order)
+
         return filled
     
     def serialize(self,keepListType=False, shallow=False, clean=False, **kwargs):

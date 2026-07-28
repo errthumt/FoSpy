@@ -4,6 +4,7 @@ from PySide6.QtWidgets import QLabel
 
 class TemplateBlockWidget(SingleBlockWidget):
     def __init__(self, label, blk, window):
+        blk.keys_to_front("template_name")
         super().__init__(label, blk, window)
         if blk is not window.root_block:
             disclaimer = QLabel("This block is a <i>staged template</i>. It will be attached to the parent block once all fields are filled in.")
@@ -21,7 +22,7 @@ class TemplateBlockWidget(SingleBlockWidget):
             if result is None:
                 return
             
-            if hasattr(self, "filled") and self.filled is not None:
+            if getattr(self, "filled", None) is not None:
                 self.win.go_to_block(self.filled)
 
             return result
@@ -60,6 +61,7 @@ class TemplateBlockWidget(SingleBlockWidget):
         temp_id = staged_reversed[self.blk]
 
         temp_id, filled = staged_parent.fill_staged_template(temp_id, **props)
+        self.filled = filled
 
         self.win._flag_edited(filled)
 
@@ -67,7 +69,6 @@ class TemplateBlockWidget(SingleBlockWidget):
             filled.template_name = temp_id
 
         if not hasattr(filled, "_parent_block") or isinstance(filled, TemplateBlock) or not isinstance(filled._parent_block, TemplateBlock):
-            self.filled = filled
             return filled
         
         parent_widget = self.win.find_widget(filled._parent_block)
