@@ -364,7 +364,7 @@ def create_list_block_dict(lines):
 
             if not (is_key_val or is_comment or nested>0):
                 raise SyntaxError(f"Failed to parse key: value pair from line: '{line}'")
-            key = is_key_val.group("key") if is_key_val else None
+            key = is_key_val.group("key").lstrip("-") if is_key_val else None
             if nested > 0:
                 current_lines.append(line)
             elif key in keys:
