@@ -1089,7 +1089,7 @@ class SingleBlock(Block):
         if hasattr(self, prop_name):
             raise ValueError(f"Property {prop_name} already exists. You cannot stage a template for a property that already exists.")
         
-        validators = self.build_validators()
+        validators = self.get_validators()
         validator = validators.get(prop_name, None)
 
         if validator is not None:
@@ -1098,7 +1098,7 @@ class SingleBlock(Block):
         if alias_validator is not validator and None not in (validator, alias_validator):
             raise ValueError(f"Property {prop_name} already has a validator. You cannot alias a different validator for the same property.")
         
-        validator = next(v for v in (validator, alias_validator) if v is not None)
+        validator = validator or alias_validator or None
 
         if validator is None:
             try:
@@ -1760,11 +1760,11 @@ class SingleBlock(Block):
         Move any attribute names in `*args` to the front of _key_order to be
         serialized first. Order within `*args` is maintained in result.
         """
+        args = list(args)
         try:
             meta_idx = args.index("metadata")
             args.pop(meta_idx)
-        # TODO: Better handling
-        except Exception:
+        except (IndexError, ValueError):
             pass
         
         new_order = []
@@ -2489,8 +2489,11 @@ class ListBlock(Block):
             raise ValueError("List type must be 'single' or 'looped'.")
         for obj in self:
             obj._meta.list_type = typ
+
+        for obj in self._staged_templates.values():
+            obj._meta.list_type = typ
         
-    def serialize(self, clean=False, shallow=False, override_list_type:str|bool=None, **kwargs):
+    def serialize(self, clean=False, shallow=False, override_list_type:str|bool=None, as_template=False, **kwargs):
         """
         Serialize this `ListBlock` as a list of dictionaries.
 
@@ -2531,16 +2534,23 @@ class ListBlock(Block):
         if override_list_type is None:
             for obj in self:
                 if obj._meta.list_type == "explicit":
-                    return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit", **kwargs)
-            return self.serialize(clean=clean, shallow=shallow, override_list_type="looped", **kwargs)
+                    return self.serialize(clean=clean, shallow=shallow, override_list_type="explicit", as_template=as_template, **kwargs)
+            return self.serialize(clean=clean, shallow=shallow, override_list_type="looped", as_template=as_template, **kwargs)
         elif not override_list_type:
             keepListType = len(self)>1
+
             lst = [obj.serialize(clean=clean, shallow=shallow, keepListType=keepListType, **kwargs) for obj in self]
+
+            if as_template:
+                for template in self._staged_templates.values():
+                    lst.append(template.serialize(clean=clean, shallow=shallow, keepListType=keepListType, **kwargs))
+
             return lst
+        
         else:
             copy = self.copy()
             copy.set_list_type(override_list_type)
-            return copy.serialize(clean=clean, shallow=shallow, override_list_type=False, **kwargs)
+            return copy.serialize(clean=clean, shallow=shallow, override_list_type=False, as_template=as_template, **kwargs)
     
      
     def list_avail_routines(self, recursive=False, prefix="", abbreviated=False):
@@ -2625,7 +2635,14 @@ class ListBlock(Block):
     def copy(self):
         """Returns a deep copy by serializing and then reconstructing."""
         cls = type(self)
-        return cls(self.serialize(override_list_type=False))
+
+        copy = cls(self.serialize(override_list_type=False))
+
+        for temp_id, template in self._staged_templates.items():
+            template = template.serialize()
+            copy.stage_template(temp_id, template=template)
+
+        return copy
     
     def remove_block(self, blk):
         if blk in self._objs:

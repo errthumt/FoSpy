@@ -1,9 +1,9 @@
+template_name: Template saved from scratch.fos
 fos_id: TE002
 fos_type: synthesis
 description: My Second Synthesis
 group_id: kovnir-0000-0003-1152-1912
 project_id: travis5672/clathrates/As28+d
-template_name: Template saved from scratch.fos
 
 [[Experimenters]]
 name: Travis Errthum
@@ -21,6 +21,11 @@ colleague$experimenter: [
 name: Joseph Race
 affiliation: Kovnir Group - Iowa State University
 orcid: 0000-0002-8551-3627
+
+-name: <!TEMPLATE-FIELD>
+-affiliation: <!TEMPLATE-FIELD>
+template_name: [;;;
+<FoSpy.blocks.template.TemplateField object at 0x00000261FA75EA30>]
 
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5

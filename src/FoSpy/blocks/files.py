@@ -285,6 +285,8 @@ class FileBlock(SingleBlock):
                 filepath must be specified.
         """
         from warnings import warn
+        from .template import TemplateBlock
+
         saving_as = filepath is not None
         try:
             if not saving_as:
@@ -310,7 +312,10 @@ class FileBlock(SingleBlock):
             if ext not in EXT_WRITE_MAP:
                 raise ValueError(f"Unrecognized file extension '{ext}'. Supported extensions are: {list(EXT_WRITE_MAP.keys())}")
 
-            blockDict = self.serialize(clean="fos" not in ext)
+            if ext != "fost" and isinstance(self, TemplateBlock):
+                raise ValueError("Template files can only be saved as *.fost")
+
+            blockDict = self.serialize(clean=("fos" not in ext), as_template=(ext=="fost"))
 
             EXT_WRITE_MAP[ext](blockDict, filepath, json_indent=json_indent, **kwargs)
 
@@ -341,9 +346,18 @@ class FileBlock(SingleBlock):
         Save/Reload allows attachment tracking to remain intact where
         serialization/reconstruction would normally desync.
         """
+        from .template import TemplateBlock
+
+        src = getattr(self, "_sourceFile", None)
         if path is None:
+            if src is not None:
+                ext = str(src).split(".")[-1]
+            else:
+                ext = "fos"
+                if isinstance(self, TemplateBlock):
+                    ext += "t"
             # get temporary save location
-            loc = self._temppath / "~temp~.fos"
+            loc = self._temppath / f"~temp~.{ext}"
         else:
             path = Path(path)
             loc = path
