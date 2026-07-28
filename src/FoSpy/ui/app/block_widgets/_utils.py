@@ -73,10 +73,19 @@ def _get_template_widget(blk, prop_map=None, prop=None):
                 
                 new_prop_map = prop_map.copy()
 
-                parent_blk = getattr(blk, "_parent_block", None)
-                allow_template_name = isinstance(parent_blk, ListBlock) or (isinstance(parent_blk, FileBlock) and blk.get_parent_prop() == "metadata")
+                parent_blk = getattr(blk, "_parent_block", getattr(blk, "_staged_parent", None))
+                allow_template_name = (
+                    parent_blk is not None and
+                    blk in parent_blk._staged_templates.values() and
+                    next(
+                        k for k,v in parent_blk._staged_templates.items()
+                        if v is blk
+                    ) == "metadata"
+                )
+
+                editor = widget_map[str] if allow_template_name else (False, lambda value: False)
                 
-                new_prop_map["template_name"] = (False, lambda value: allow_template_name)
+                new_prop_map["template_name"] = editor
 
                 class HybridTemplateWidget(template_widget, full_widget):
                     prop_map = new_prop_map

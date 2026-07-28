@@ -148,7 +148,28 @@ class FileBlock(SingleBlock):
             else:
                 self._ext_file = None
                 self._ext_dir = None
-        super().__setattr__(name, value)  
+        elif name == "template_name" and hasattr(self, "metadata"):
+            self.metadata.template_name = value
+
+        return super().__setattr__(name, value)
+
+    def __getattribute__(self, name):
+        if name != "template_name" or not hasattr(self, "metadata") or not hasattr(self.metadata, "template_name"):
+            return super().__getattribute__(name)
+
+        return self.metadata.template_name
+
+    def stage_template(self, prop_name, template=None):
+        if prop_name != "metadata":
+            return super().stage_template(prop_name, template=template)
+
+        temp_name = getattr(self, "template_name", None)
+        prop_name, staged = super().stage_template(prop_name, template=template)
+
+        if not hasattr(staged, "template_name") and temp_name is not None:
+            staged.template_name = temp_name
+
+        return prop_name, staged
 
     @classmethod
     def add_dispatch(cls, blockDict, dispatch_key, **kwargs):

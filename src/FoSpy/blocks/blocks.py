@@ -1064,6 +1064,8 @@ class SingleBlock(Block):
 
     def stage_template(self, prop_name, template:Block|dict=None):
         from .template import TemplateBlock
+        from .files import FileBlock
+
         if not template:
             template = {}
         if isinstance(template, list) and len(template) == 1:
@@ -1122,7 +1124,13 @@ class SingleBlock(Block):
         if isinstance(template, dict):
             # reflex returns a TemplateBlock subclassed from the validator
             template = validator.reflex(serialize=False, include_temp_names=True, clean=False, **template)
-            template.template_name = prop_name
+
+            if prop_name == "metadata" and isinstance(self, FileBlock):
+                temp_name = getattr(self, "template_name", prop_name)
+            else:
+                temp_name = prop_name
+
+            template.template_name = temp_name
 
         elif not isinstance(template, validator):
             val_nm = validator.__name__

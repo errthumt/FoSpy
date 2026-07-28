@@ -184,9 +184,14 @@ class TemplateBlock(SingleBlock):
         blockDict = _unwrap_block(blockDict)
 
         if isinstance(self, FileBlock):
+            if "metadata" not in self._fields:
+                new_fields = list(self._fields)
+                new_fields.append("metadata")
+                self._fields = tuple(new_fields)
+
             current_temp = blockDict.pop("template_name", None)
-            temp_name = blockDict.get("metadata",{}).get("template_name", current_temp)
-            temp_name = temp_name or self.__class__.__name__
+            metadata = blockDict.setdefault("metadata", {})
+            temp_name = metadata.setdefault("template_name", current_temp or self.__class__.__name__)
             blockDict["template_name"] = temp_name
         
         super().__init__(blockDict, **kwargs)
@@ -441,12 +446,83 @@ class TemplateBlock(SingleBlock):
                 
         template_class = full_class.TemplateClass(*cls._fields)
 
+        rename_dict = blockDict.get("rename", {})
+        if isinstance(rename_dict, list):
+            rename_dict = rename_dict[0]
+
         for field in cls._fields:
+            field = rename_dict.get(field, field)
             if blockDict.get(field, None) is None:
                 blockDict[field] = TemplateField()
 
 
         return template_class(blockDict, *args, _dispatched=True, **kwargs)
+
+    def add_field(self, prop_name, value=None):
+        from .blocks import Block, SingleBlock, ListBlock
+
+        validators = self.get_validators()
+        cached_val = validators.get(prop_name, None)
+
+        value = value or getattr(self, prop_name, None)
+        if value is None:
+            if not isinstance(cached_val, type) or not issubclass(cached_val, Block):
+                value = TemplateField.serialize()
+            elif issubclass(cached_val, SingleBlock):
+                value = {}
+            else:
+                # elif issubclass(cached_val, ListBlock):
+                value = []
+
+        elif prop_name not in validators:
+            setattr(self, prop_name, value)
+            return self
+
+        elif isinstance(value, Block):
+            value = value.serialize()
+
+        if isinstance(value, dict):
+            value.setdefault("template_name", prop_name)
+
+        if prop_name in self._fields or prop_name not in validators:
+            setattr(self, prop_name, value)
+            return self
+
+        serial = self.serialize()
+        serial[prop_name] = value
+
+        new_template = self.TemplateClass(prop_name)(serial)
+
+        if getattr(self, "_parent_block", getattr(self, "_staged_parent", None)) is None:
+            return new_template
+
+        if getattr(self, "_staged_parent", None) is not None:
+            prop_name = next(k for k, v in self._staged_parent._staged_templates.items() if v is self)
+            _, new_template = self._staged_parent.stage_template(prop_name, template=new_template)
+            return new_template
+
+        parent_blk = self._parent_block
+
+        if isinstance(parent_blk, ListBlock):
+            _, new_template = parent_blk.stage_template(template=new_template)
+            return new_template
+        
+        parent_prop = self.get_parent_prop()
+
+        new_parent = parent_blk.add_field(parent_prop, value=new_template)
+        return getattr(new_parent, parent_prop)
+
+    def stage_template(self, prop_name, template=None):
+        cached_value = getattr(self, prop_name, None)
+        if cached_value is not None:
+            # bypass required property block
+            super(SingleBlock, self).__delattr__(prop_name)
+
+        try:
+            return super().stage_template(prop_name, template=template)
+        except Exception:
+            setattr(self, prop_name, cached_value)
+            raise
 
     
 class FlexTemplate:

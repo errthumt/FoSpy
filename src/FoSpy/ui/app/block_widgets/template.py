@@ -63,7 +63,7 @@ class TemplateBlockWidget(SingleBlockWidget):
 
         self.win._flag_edited(filled)
 
-        if isinstance(filled, TemplateBlock):
+        if isinstance(filled, TemplateBlock) and not (staged_parent is self.win.root_block and temp_id == "metadata"):
             filled.template_name = temp_id
 
         if not hasattr(filled, "_parent_block") or isinstance(filled, TemplateBlock) or not isinstance(filled._parent_block, TemplateBlock):
