@@ -276,6 +276,8 @@ class TemplateBlock(SingleBlock):
         return staged_reversed.get(self, False)
 
     def fill(self,incomplete=False,staged=False,in_place=False,**kwargs):
+        from .. import _errors as err
+
         if not self._full_class is not None and issubclass(self._full_class, SingleBlock):
             raise TypeError("A Template Block must be initialized from an existing class in order to be filled.")
 
@@ -294,10 +296,18 @@ class TemplateBlock(SingleBlock):
             serial[kw] = arg
 
         flex_cls = self._full_class.TemplateClass()
-
+        temp_name = None
         try:
+            if staged_id == "metadata" and isinstance(self._staged_parent, FileBlock) and self._staged_parent.has_staged():
+                raise err.PropertyErrorGroup(self, serial, [
+                    ValueError("A FileBlock's metadata template cannot be finalized until all other staged templates are filled.")
+                ])
+
+            temp_name = serial.pop("template_name", None)
             filled = self._full_class(serial)
-        except Exception:  # noqa: BLE001
+        except err.MultiplePropertyErrors:
+            if temp_name is not None:
+                serial["template_name"] = temp_name
             filled = flex_cls(serial)
 
         return filled
@@ -523,6 +533,35 @@ class TemplateBlock(SingleBlock):
         except Exception:
             setattr(self, prop_name, cached_value)
             raise
+
+    def is_staged(self):
+        if getattr(self, "_staged_parent", None) is None:
+            return False
+
+        try:
+            return any(v is self for k, v in self._staged_parent._staged_templates.items())
+        except StopIteration:
+            return False
+
+    def get_staged_id(self):
+        if not self.is_staged():
+            return None
+
+        return next(k for k, v in self._staged_parent._staged_templates.items() if v is self)
+
+    def find_fileblock(self):
+        from .. import _errors as err
+
+        try:
+            return super().find_fileblock()
+        except err.FileBlockNotFoundError:
+            if not self.is_staged():
+                raise
+
+        try:
+            return self._staged_parent.find_fileblock()
+        except err.FileBlockNotFoundError as e:
+            raise err.FileBlockNotFoundError("Could not find FileBlock containing this object's staged parent.") from e
 
     
 class FlexTemplate:
