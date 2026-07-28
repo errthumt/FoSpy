@@ -19,6 +19,16 @@ def block_list_to_lines(blocklist:list, indent=0):
         intersect = set.intersection(*(set(d.keys()) for d in blocklist))
         loop_keys = [k for k in blocklist[0] if k in intersect]
 
+    for check_block in blocklist:
+        for key in (k for k in check_block if not k.startswith("_")):
+            if any(key not in block for block in blocklist):
+                for block in blocklist:
+                    popped = block.pop(key, None)
+                    if popped is not None:
+                        block[key] = popped
+            else:
+                break
+
     for meta_key in mk.values():
         if meta_key in loop_keys:
             loop_keys.remove(meta_key)
