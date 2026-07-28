@@ -898,30 +898,26 @@ class MainWindow(QMainWindow):
                 path = self.root_block._sourceFile
 
         if (
-                (not isinstance(self.root_block, TemplateBlock) and self.root_block.has_staged())
-                or
-                (isinstance(self.root_block, TemplateBlock) and not path.endswith(".fost"))
+                not path.endswith(".fost") and (
+                    (not isinstance(self.root_block, TemplateBlock) and self.root_block.has_staged())
+                    or
+                    isinstance(self.root_block, TemplateBlock)
+                )
         ):
-            options = [
-                ("Save as Template", "template")
-            ]
 
-            if not isinstance(self.root_block, TemplateBlock):
-                options.append(("Discard Unfilled Fields", "discard"))
 
             proceed = self._custom_popup(
                 "Incomplete File",
                 "This file still has unfilled template fields and cannot be saved "
-                "as a complete file. Would you like to save it as a template file instead?"
-                *options,
+                "as a complete file. Would you like to save it as a template file instead?",
+                ("Save as Template", True),
                 cancel=True
             )
 
             if not proceed:
                 return
-
-            if proceed == "template":
-                return self.save_dlg("fost")
+            
+            return self.save_dlg("fost")
             
         if path.endswith(".fosx")and not self._custom_popup(
             "Packaging File",
