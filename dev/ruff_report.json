@@ -3858,7 +3858,7 @@
     "code": "RUF013",
     "end_location": {
       "column": 38,
-      "row": 2366
+      "row": 2368
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -3868,11 +3868,11 @@
           "content": "int | None",
           "end_location": {
             "column": 38,
-            "row": 2366
+            "row": 2368
           },
           "location": {
             "column": 35,
-            "row": 2366
+            "row": 2368
           }
         }
       ],
@@ -3880,11 +3880,11 @@
     },
     "location": {
       "column": 35,
-      "row": 2366
+      "row": 2368
     },
     "message": "PEP 484 prohibits implicit `Optional`",
     "name": "implicit-optional",
-    "noqa_row": 2366,
+    "noqa_row": 2368,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/implicit-optional"
   },
@@ -3893,7 +3893,7 @@
     "code": "RUF013",
     "end_location": {
       "column": 55,
-      "row": 2366
+      "row": 2368
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -3903,11 +3903,11 @@
           "content": "int | None",
           "end_location": {
             "column": 55,
-            "row": 2366
+            "row": 2368
           },
           "location": {
             "column": 52,
-            "row": 2366
+            "row": 2368
           }
         }
       ],
@@ -3915,11 +3915,11 @@
     },
     "location": {
       "column": 52,
-      "row": 2366
+      "row": 2368
     },
     "message": "PEP 484 prohibits implicit `Optional`",
     "name": "implicit-optional",
-    "noqa_row": 2366,
+    "noqa_row": 2368,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/implicit-optional"
   },
@@ -3928,17 +3928,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 2462
+      "row": 2464
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 2462
+      "row": 2464
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 2462,
+    "noqa_row": 2464,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -3947,7 +3947,7 @@
     "code": "RUF013",
     "end_location": {
       "column": 80,
-      "row": 2496
+      "row": 2498
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/blocks.py",
     "fix": {
@@ -3957,11 +3957,11 @@
           "content": "str | bool | None",
           "end_location": {
             "column": 80,
-            "row": 2496
+            "row": 2498
           },
           "location": {
             "column": 72,
-            "row": 2496
+            "row": 2498
           }
         }
       ],
@@ -3969,11 +3969,11 @@
     },
     "location": {
       "column": 72,
-      "row": 2496
+      "row": 2498
     },
     "message": "PEP 484 prohibits implicit `Optional`",
     "name": "implicit-optional",
-    "noqa_row": 2496,
+    "noqa_row": 2498,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/implicit-optional"
   },
@@ -4672,17 +4672,17 @@
     "code": "S110",
     "end_location": {
       "column": 21,
-      "row": 232
+      "row": 235
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 231
+      "row": 234
     },
     "message": "`try`-`except`-`pass` detected, consider logging the exception",
     "name": "try-except-pass",
-    "noqa_row": 231,
+    "noqa_row": 234,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/try-except-pass"
   },
@@ -4691,17 +4691,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 29,
-      "row": 231
+      "row": 234
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": null,
     "location": {
       "column": 20,
-      "row": 231
+      "row": 234
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 231,
+    "noqa_row": 234,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -4710,17 +4710,17 @@
     "code": "S110",
     "end_location": {
       "column": 21,
-      "row": 246
+      "row": 249
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": null,
     "location": {
       "column": 13,
-      "row": 245
+      "row": 248
     },
     "message": "`try`-`except`-`pass` detected, consider logging the exception",
     "name": "try-except-pass",
-    "noqa_row": 245,
+    "noqa_row": 248,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/try-except-pass"
   },
@@ -4729,17 +4729,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 29,
-      "row": 245
+      "row": 248
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": null,
     "location": {
       "column": 20,
-      "row": 245
+      "row": 248
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 245,
+    "noqa_row": 248,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -4748,17 +4748,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 29,
-      "row": 253
+      "row": 256
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": null,
     "location": {
       "column": 20,
-      "row": 253
+      "row": 256
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 253,
+    "noqa_row": 256,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -4767,7 +4767,7 @@
     "code": "I001",
     "end_location": {
       "column": 58,
-      "row": 474
+      "row": 477
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -4777,11 +4777,11 @@
           "content": "        from .blocks import Block, ListBlock, SingleBlock\n",
           "end_location": {
             "column": 1,
-            "row": 475
+            "row": 478
           },
           "location": {
             "column": 1,
-            "row": 474
+            "row": 477
           }
         }
       ],
@@ -4789,11 +4789,11 @@
     },
     "location": {
       "column": 9,
-      "row": 474
+      "row": 477
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 474,
+    "noqa_row": 477,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
@@ -4802,7 +4802,7 @@
     "code": "F841",
     "end_location": {
       "column": 20,
-      "row": 624
+      "row": 627
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -4812,11 +4812,11 @@
           "content": "",
           "end_location": {
             "column": 23,
-            "row": 624
+            "row": 627
           },
           "location": {
             "column": 9,
-            "row": 624
+            "row": 627
           }
         }
       ],
@@ -4824,11 +4824,11 @@
     },
     "location": {
       "column": 9,
-      "row": 624
+      "row": 627
     },
     "message": "Local variable `rename_from` is assigned to but never used",
     "name": "unused-variable",
-    "noqa_row": 624,
+    "noqa_row": 627,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-variable"
   },
@@ -8968,10 +8968,45 @@
   },
   {
     "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 52,
+      "row": 27
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import os\nimport pathlib\nimport sys\nimport traceback\nfrom typing import Any\n\nimport qdarktheme\nfrom PySide6.QtCore import Qt, QUrl\nfrom PySide6.QtGui import QDesktopServices, QStandardItem, QStandardItemModel\nfrom PySide6.QtWidgets import (\n    QApplication,\n    QFileDialog,\n    QLabel,\n    QMainWindow,\n    QMessageBox,\n    QPushButton,\n    QSizePolicy,\n    QSplitter,\n    QStackedWidget,\n    QTreeView,\n    QVBoxLayout,\n    QWidget,\n)\n\nfrom ...blocks import Block, FileBlock, ListBlock, Rename, SingleBlock\nfrom ...config import values as cfg\nfrom ._utils import _get_label, _get_template_label\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 29
+          },
+          "location": {
+            "column": 1,
+            "row": 1
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 1
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 1,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
     "code": "F401",
     "end_location": {
       "column": 52,
-      "row": 26
+      "row": 27
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
     "fix": {
@@ -8981,11 +9016,11 @@
           "content": "from ._utils import _get_label",
           "end_location": {
             "column": 52,
-            "row": 26
+            "row": 27
           },
           "location": {
             "column": 1,
-            "row": 26
+            "row": 27
           }
         }
       ],
@@ -8993,11 +9028,11 @@
     },
     "location": {
       "column": 33,
-      "row": 26
+      "row": 27
     },
     "message": "`._utils._get_template_label` imported but unused",
     "name": "unused-import",
-    "noqa_row": 26,
+    "noqa_row": 27,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -9006,31 +9041,12 @@
     "code": "RUF012",
     "end_location": {
       "column": 34,
-      "row": 67
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
-    "fix": null,
-    "location": {
-      "column": 16,
-      "row": 67
-    },
-    "message": "Mutable default value for class attribute",
-    "name": "mutable-class-default",
-    "noqa_row": 67,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
-  },
-  {
-    "cell": null,
-    "code": "RUF012",
-    "end_location": {
-      "column": 26,
       "row": 68
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
     "fix": null,
     "location": {
-      "column": 24,
+      "column": 16,
       "row": 68
     },
     "message": "Mutable default value for class attribute",
@@ -9041,10 +9057,29 @@
   },
   {
     "cell": null,
+    "code": "RUF012",
+    "end_location": {
+      "column": 26,
+      "row": 69
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
+    "fix": null,
+    "location": {
+      "column": 24,
+      "row": 69
+    },
+    "message": "Mutable default value for class attribute",
+    "name": "mutable-class-default",
+    "noqa_row": 69,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/mutable-class-default"
+  },
+  {
+    "cell": null,
     "code": "F541",
     "end_location": {
       "column": 114,
-      "row": 985
+      "row": 990
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
     "fix": {
@@ -9054,11 +9089,11 @@
           "content": "\"You cannot save the current file with that extension. Allowed extensions are:\"",
           "end_location": {
             "column": 114,
-            "row": 985
+            "row": 990
           },
           "location": {
             "column": 34,
-            "row": 985
+            "row": 990
           }
         }
       ],
@@ -9066,11 +9101,11 @@
     },
     "location": {
       "column": 34,
-      "row": 985
+      "row": 990
     },
     "message": "f-string without any placeholders",
     "name": "f-string-missing-placeholders",
-    "noqa_row": 985,
+    "noqa_row": 990,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/f-string-missing-placeholders"
   },
