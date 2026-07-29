@@ -309,6 +309,7 @@ class TemplateBlock(SingleBlock):
             temp_name = serial.pop("template_name", None)
             filled = self._full_class(serial)
         except err.MultiplePropertyErrors:
+
             if temp_name is not None:
                 serial["template_name"] = temp_name
             filled = flex_cls(serial)
@@ -350,8 +351,10 @@ class TemplateBlock(SingleBlock):
             out[key] = val
 
         if isinstance(self, FileBlock):
-            temp_name = out.pop("template_name", self.__class__.__name__)
-            out["metadata"]["template_name"] = temp_name
+            metadata = getattr(self, "metadata", None)
+            if metadata is None or isinstance(metadata, TemplateBlock):
+                temp_name = out.pop("template_name", self.__class__.__name__)
+                out["metadata"]["template_name"] = temp_name
 
         return out
 
@@ -544,8 +547,10 @@ class TemplateBlock(SingleBlock):
     def stage_template(self, prop_name, template=None):
         cached_value = getattr(self, prop_name, None)
         if cached_value is not None:
-            # bypass required property block
-            super(SingleBlock, self).__delattr__(prop_name)
+            try:
+                super(SingleBlock, self).__delattr__(prop_name)
+            except AttributeError:
+                self._staged_templates.pop(prop_name)
 
         try:
             return super().stage_template(prop_name, template=template)

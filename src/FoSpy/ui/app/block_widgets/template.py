@@ -49,10 +49,39 @@ class TemplateBlockWidget(SingleBlockWidget):
                 raise NotImplementedError("Features for editing non-staged templates have not been implemented yet.")
 
             filled = self.blk.fill(**props)
-            self.win._flag_edited(filled)
-            self.filled = filled
-            self.win.root_block = filled
-            return filled
+
+            new_block = filled
+            if not isinstance(filled, TemplateBlock):
+                save_as = self.win._custom_popup(
+                    "File Complete!",
+                    "All template fields in the current file have been filled in. Would you like to convert this file to a complete synthesis file?",
+                    ("Convert and save later", False),
+                    ("Save as...", True),
+                    ("Keep editing as a template", None),
+                    cancel=False
+                )
+
+                if save_as is None:
+                    new_metadata = filled.metadata.add_field("fos_id")
+                    new_metadata.fos_id.add_comments("After filling in all required fields, fill in this field to convert as a full synthesis file.")
+
+                    new_block = new_metadata.find_fileblock()
+                    new_block.template_name = self.blk.template_name
+                    new_block._sourceFile = self.blk._sourceFile
+
+
+            else:
+                save_as = False
+
+            self.win._flag_edited(new_block)
+            self.win.root_block = new_block
+
+            if save_as:
+                self.win.save_dlg("fosx","fos","json")
+
+            self.filled = self.win.root_block
+
+            return self.win.root_block
 
         staged_parent = self.blk._staged_parent
         staged_dict = staged_parent._staged_templates

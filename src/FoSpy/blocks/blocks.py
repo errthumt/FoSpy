@@ -2017,7 +2017,7 @@ class SingleBlock(Block):
             elif isinstance(val, ListBlock):
                 line_txt += "[[...]]"
             elif hasattr(val, "serialize"):
-                line_txt += val.serialize()
+                line_txt += str(val.serialize())
             else:
                 line_txt += str(val)
 
