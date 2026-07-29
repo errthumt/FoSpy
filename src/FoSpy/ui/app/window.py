@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
     QTreeView,
     QVBoxLayout,
     QWidget,
+    QSizePolicy
 )
 
 from ...blocks import Block, FileBlock, ListBlock, Rename, SingleBlock
@@ -598,6 +599,7 @@ class MainWindow(QMainWindow):
                 msg_box.setDefaultButton(btn)
                 default = btn
             results[btn] = result
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         
         if cancel:
             btn = msg_box.addButton("Cancel", QMessageBox.ActionRole)
@@ -605,11 +607,14 @@ class MainWindow(QMainWindow):
             if default is DLG_ESCAPE:
                 msg_box.setDefaultButton(btn)
                 default = btn
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
+        msg_box.layout().activate()
         msg_box.setWindowModality(Qt.ApplicationModal)
         msg_box.raise_()
         msg_box.activateWindow()
         msg_box.setWindowFlag(Qt.WindowStaysOnTopHint)
+        msg_box.adjustSize()
 
         msg_box.exec()
 
