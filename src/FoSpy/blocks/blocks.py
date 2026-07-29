@@ -2028,23 +2028,30 @@ class SingleBlock(Block):
 
         return "\n".join(lines)
 
-    def add_field(self, *args, **kwargs):
-        new_template = self.make_template("New Template").add_field(*args, **kwargs)
-
+    def _replace_with_template(self, template):
         if getattr(self, "_parent_block", None) is None:
-            return new_template
-
+            return template
 
         parent_blk = self._parent_block
 
         if isinstance(parent_blk, ListBlock):
-            _, new_template = parent_blk.stage_template(template=new_template)
-            return new_template
-        
+            _, template = parent_blk.stage_template(template=template)
+            return template
+
         parent_prop = self.get_parent_prop()
 
-        new_parent = parent_blk.add_field(parent_prop, value=new_template)
+        new_parent = parent_blk.add_field(parent_prop, value=template)
         return getattr(new_parent, parent_prop)
+
+    def add_field(self, *args, **kwargs):
+        new_template = self.make_template("New Template").add_field(*args, **kwargs)
+
+        return self._replace_with_template(new_template)
+
+    def add_fields(self, *empty_fields, **set_fields):
+        new_template = self.make_template("New Template").add_fields(*empty_fields, **set_fields)
+        
+        return self._replace_with_template(new_template)
 
 
 

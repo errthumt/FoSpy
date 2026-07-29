@@ -527,6 +527,20 @@ class TemplateBlock(SingleBlock):
         new_parent = parent_blk.add_field(parent_prop, value=new_template)
         return getattr(new_parent, parent_prop)
 
+    def add_fields(self, *empty_fields, **set_fields):
+        if any(field in set_fields for field in empty_fields):
+            raise ValueError("A new field cannot be both empty and set in the same call.")
+
+        all_fields = {field: None for field in empty_fields}
+        all_fields.update(set_fields)
+
+        current_template = self
+
+        for field, value in all_fields.items():
+            current_template = current_template.add_field(field, value=value)
+
+        return current_template
+
     def stage_template(self, prop_name, template=None):
         cached_value = getattr(self, prop_name, None)
         if cached_value is not None:
