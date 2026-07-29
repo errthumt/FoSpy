@@ -2266,8 +2266,10 @@ class ListBlock(Block):
         if temp_id is None:
             _, temp_id = template.get_id(id_key=self._reqCls._id_key)
 
-        if isinstance(temp_id, TemplateField) or temp_id in (TemplateField().serialize(), None):
+        if isinstance(temp_id, TemplateField) or temp_id in (TemplateField.serialize(), None):
             temp_id = getattr(template, "template_name", template.__class__.__name__)
+
+        temp_id = str(temp_id)
 
         if temp_id in self._staged_templates:
             temp_id += f" ({next(self._temp_id_gen)})"

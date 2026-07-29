@@ -24,8 +24,7 @@ orcid: 0000-0002-8551-3627
 
 -name: <!TEMPLATE-FIELD>
 -affiliation: <!TEMPLATE-FIELD>
-template_name: [;;;
-<FoSpy.blocks.template.TemplateField object at 0x00000261FA75EA30>]
+template_name: olivia
 
 [Reaction]
 nominal_formula: Ba8Cu13Zn11As28.5

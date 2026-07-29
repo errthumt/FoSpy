@@ -15,6 +15,9 @@ class TemplateField:
     def serialize(cls,**kwargs):
         from ..parsing.format_fos import format_field
         return format_field("template")
+
+    def __str__(self):
+        return self.serialize()
     
 class FailedTemplateField(SimpleWrapper,TemplateField):
     def serialize(self, *args, **kwargs):
@@ -339,7 +342,7 @@ class TemplateBlock(SingleBlock):
                     val = serial.pop(key, validator([]).serialize())
 
             if val is None:
-                val = serial.pop(key, TemplateField("").serialize())
+                val = serial.pop(key, TemplateField.serialize())
 
             out[key] = val
         
@@ -375,7 +378,7 @@ class TemplateBlock(SingleBlock):
                 super().__setattr__(name, value)
 
             elif issubclass(cached_val, SingleBlock):
-                if isinstance(value, TemplateField) or value == TemplateField().serialize():
+                if isinstance(value, TemplateField) or value == TemplateField.serialize():
                     value = {}
                 self.stage_template(name, value)
 
