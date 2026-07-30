@@ -138,6 +138,12 @@ class Block:
 
     def staged(self, temp_id):
         return self._staged_templates.get(temp_id, None)
+
+    def find_parent(self):
+        if self.is_staged():
+            return self._staged_parent
+
+        return getattr(self, "_parent_block", None)
     
     def get_parent_prop(self, for_path=False):
         is_staged = self.is_staged()

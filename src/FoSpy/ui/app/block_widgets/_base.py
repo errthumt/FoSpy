@@ -47,7 +47,7 @@ def _add_header(widget:QWidget,label, view_name=None):
 
     prop = blk.get_parent_prop()
     if prop is not None and "[" not in prop:
-        rename_dict = blk._parent_block.rename_dict()
+        rename_dict = blk.find_parent().rename_dict()
         if prop in rename_dict.values():
             renamed_from = next(k for k,v in rename_dict.items() if v == prop)
             label += " |"
