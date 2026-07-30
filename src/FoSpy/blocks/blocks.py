@@ -71,7 +71,9 @@ class Block:
     """
     The base class for any set of data found in a FOS file.
     """
-    @classmethod
+    # fallback, should be overridden during init
+    _staged_templates = {}
+
     def inspect(self):
         # for breaking to debugger from gui
         raise Exception("put a break point here")
@@ -96,35 +98,69 @@ class Block:
             else:
                 blk = None
         raise FileBlockNotFoundError("Could not find a FileBlock containing the current object")
+
+    def is_staged(self):
+        # overwritten by TemplateBlock
+        return False
     
     def get_prop_path(self):
         from .files import FileBlock
 
-        if not hasattr(self, "_parent_block"):
+        is_staged = self.is_staged()
+
+        if is_staged:
+            parent = self._staged_parent
+        else:
+            parent = getattr(self, "_parent_block", None)
+
+        if parent is None:
             if isinstance(self, FileBlock):
                 root_path = f"<{str(self.get_file_name())}>"
             else:
-                root_path = f"<Root {type(self).__name__}"
+                root_path = f"<Detached {type(self).__name__}"
                 if isinstance(self, SingleBlock):
                     id_key, id_txt = self.get_id()
                     if id_key is not None:
                         root_path += f" ({id_key}={id_txt})"
                 root_path += ">"
             return root_path
-        
-        parent_path = self._parent_block.get_prop_path()
-        parent_prop = self.get_parent_prop()
 
-        if "[" not in parent_prop:
-            return parent_path + "." + parent_prop
+        parent_path = parent.get_prop_path()
+        parent_prop = self.get_parent_prop(for_path=True)
+
+        if not parent_prop.startswith("["):
+            parent_path += "."
         
         return parent_path + parent_prop
+
+    def staged(self, temp_id):
+        return self._staged_templates.get(temp_id, None)
     
-    def get_parent_prop(self):
-        if not hasattr(self, "_parent_block"):
+    def get_parent_prop(self, for_path=False):
+        is_staged = self.is_staged()
+
+        if is_staged:
+            parent_blk = self._staged_parent
+        else:
+            parent_blk = getattr(self, "_parent_block", None)
+
+        if parent_blk is None:
             return None
-        parent_blk = self._parent_block
-        
+
+        if is_staged:
+            staged_id = self.get_staged_id()
+
+            if getattr(parent_blk, staged_id, None) is self:
+                return staged_id
+
+            if not "'" in staged_id:
+                quote_ch = "'"
+            else:
+                quote_ch = '"'
+                staged_id = staged_id.replace('"', '\\"')
+
+            return f"staged({quote_ch}{staged_id}{quote_ch})" if for_path else None
+
         if isinstance(parent_blk, SingleBlock):
             for prop, val in parent_blk.get_prop_dict().items():
                 if val is self:
@@ -136,6 +172,101 @@ class Block:
             return f"[{parent_blk.get_idx(self)}]"
         
         raise err.FoSpyStructureError(f"Block {self} has an unknown parent block type: {type(parent_blk)}")
+
+    def resolve_prop_path(self, prop_path):
+        import re
+
+        if not prop_path.startswith("<"):
+            # relative path
+            prop_path = "<>." + prop_path
+
+        root, *path_str = prop_path.split(">", 1)
+        root += ">"
+
+        self_path = self.get_prop_path()
+        if root not in ("<>.", self_path):
+            err.FOSWarning(
+                f"Property path {prop_path} is being resolved from {self_path}, which may not be the correct parent block (expected {root})."
+            )
+
+        if not path_str:
+            return self
+
+        path_str = path_str[0]
+
+        def staged_finder(staged_id):
+            def finder(current, _id=staged_id):
+                staged = current.staged(_id)
+                if staged is not None:
+                    return staged
+
+                attr = getattr(current, _id, None)
+                if attr is not None:
+                    return attr
+
+                raise err.FoSpyStructureError(
+                    f"Could not find {_id} as a staged template or attribute of {current.get_prop_path()}."
+                )
+            return finder
+
+        def list_finder(idx):
+            def finder(current, _i=idx):
+                try:
+                    return current[int(_i)]
+                except IndexError:
+                    raise err.FoSpyStructureError(
+                        f"Could not find list index {_i} in {current.get_prop_path()}."
+                    )
+            return finder
+
+        def attr_finder(attr):
+            def finder(current, _a=attr):
+                if not _a:
+                    return current
+
+                attr = getattr(current, _a, None)
+                if attr is not None:
+                    return attr
+
+                staged = current.staged(_a)
+                if staged is not None:
+                    return staged
+
+                raise err.FoSpyStructureError(
+                    f"Could not find {_a} as an attribute or staged template of {current.get_prop_path()}."
+                )
+            return finder
+
+
+        finders = []
+        pattern = re.compile(
+            r"\.?staged\('(.+?)(?<!\\)'\)|"
+            r"\.?staged\(\"(.+?)(?<!\\)\"\)|"
+            r"\[(\d+)\]|"
+            r"\.?([^\.\[\(]+)"
+        )
+
+        for match in pattern.finditer(path_str):
+            single_staged, double_staged, idx, attr = match.groups()
+
+            if single_staged is not None:
+                finders.append(staged_finder(single_staged))
+            elif double_staged is not None:
+                unescaped = double_staged.replace('\\"', '"')
+                finders.append(staged_finder(unescaped))
+            elif idx is not None:
+                finders.append(list_finder(idx))
+            elif attr is not None:
+                finders.append(attr_finder(attr))
+
+        current = self
+        for finder in finders:
+            try:
+                current = finder(current)
+            except err.FoSpyStructureError as e:
+                raise err.FoSpyStructureError(f"Could not resolve {prop_path}.") from e
+
+        return current
     
     def add_comments(self, *comments):
         """

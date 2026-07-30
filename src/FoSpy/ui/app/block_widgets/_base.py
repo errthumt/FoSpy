@@ -863,12 +863,11 @@ class ListBlockWidget(QWidget):
         if not self.win._custom_popup(
             "Delete this block?",
             "Are you sure you want to delete this block? "
-            "Deleted blocks cannot be recovered once any changes are saved.",
+            "Deleted blocks can only be recovered by re-opening a saved file.",
             ("Delete", True),
             cancel=True
         ):
             return
-
 
         self.blk.remove_block(blk)
         self.win._flag_edited(self.blk)
