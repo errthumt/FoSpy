@@ -207,8 +207,7 @@ class TemplateBlock(SingleBlock):
             rename_dict = {}
 
         for field in self._fields:
-            if field in rename_dict:
-                field = rename_dict[field]
+            field = rename_dict.get(field, field)
 
             if field not in validators:
                 continue
@@ -373,7 +372,12 @@ class TemplateBlock(SingleBlock):
         except err.FailedValidatorError as e:
             validators = self.get_validators()
 
-            cached_val = validators.get(name, None)
+            if "$" in name:
+                prop_name = name.split("$")[0]
+            else:
+                prop_name = name
+
+            cached_val = validators.get(prop_name, None)
 
             if not isinstance(cached_val, type) or not issubclass(cached_val, Block):
                 self._val_exceptions[name] = e
@@ -661,7 +665,12 @@ class FlexTemplate:
                 fields.append(name)
 
         for prop, val in blockDict.items():
-            if prop not in fields and _template_found(val):
+            alias = False
+            if "$" in prop:
+                alias = True
+                prop = prop.split("$")[0]
+
+            if prop not in fields and (alias or _template_found(val)):
                 fields.append(prop)
 
         try:

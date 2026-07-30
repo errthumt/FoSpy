@@ -1598,7 +1598,7 @@ class SingleBlock(Block):
 
         if as_template:
             for key, staged in self._staged_templates.items():
-                out.setdefault(key, staged.serialize(keepListType=keepListType, shallow=shallow, clean=clean))
+                out.setdefault(add_alias(key), staged.serialize(keepListType=keepListType, shallow=shallow, clean=clean))
 
         if clean:
             scan = out.copy()
