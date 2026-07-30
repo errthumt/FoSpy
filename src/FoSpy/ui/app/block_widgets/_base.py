@@ -299,10 +299,12 @@ class SingleBlockWidget(QWidget):
                 prop_name = None
 
         prop_alias = prop_name + "$" + alias
-        def pending_refresh(s, p=prop_alias):
+
+        @SingleBlockWidget.hard_refresh
+        def pending_refresh(s, p):
             s.blk.stage_template(p)
 
-        self.hard_refresh(pending_refresh)(self)
+        pending_refresh(self, prop_alias)
 
     def _add_footnote(self, txt):
         i = next(self.footnote_iter)
@@ -620,16 +622,18 @@ class SingleBlockWidget(QWidget):
         pending_refresh = None
         validator = validators.get(prop_name, None)
         if isinstance(validator, type) and issubclass(validator, ListBlock):
-            def pending_refresh(self,p=prop_name):
+            @SingleBlock.hard_refresh
+            def pending_refresh(self,p):
                 setattr(self.blk, p, [])
                 self.win._flag_edited(self.blk)
 
         elif isinstance(validator, type) and issubclass(validator, SingleBlock):
-            def pending_refresh(self, p=prop_name):
+            @SingleBlock.hard_refresh
+            def pending_refresh(self, p):
                 self.stage_template(p)
 
         if pending_refresh is not None:
-            return self.hard_refresh(pending_refresh)(self)
+            return pending_refresh(self, prop_name)
 
         row_layout = self.missing_prop_rows.pop(prop_name, None)
         if row_layout is not None:
@@ -664,15 +668,20 @@ class SingleBlockWidget(QWidget):
 
         pending_delete = None
         if hasattr(self.blk, prop):
-            def pending_delete(s,p=prop):
-                delattr(s.blk, p)
+            @SingleBlockWidget.hard_refresh
+            def pending_delete(s,p):
+                try:
+                    delattr(s.blk, p)
+                except AttributeError:
+                    s.blk._staged_templates.pop(p, None)
                 self.win._flag_edited(s.blk)
         elif prop in self.blk._staged_templates:
-            def pending_delete(s,p=prop):
+            @SingleBlockWidget.hard_refresh
+            def pending_delete(s,p):
                 s.blk._staged_templates.pop(p)
                 s.win._flag_edited(s.blk)
         if pending_delete is not None:
-            return self.hard_refresh(pending_delete)(self)
+            return pending_delete(self, prop)
 
         # shouldn't get here
         raise Exception(f"Could not find property to delete: {prop}. Try Window > Refresh.")
