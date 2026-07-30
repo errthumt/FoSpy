@@ -25,6 +25,11 @@ class FileBlockNotFoundError(Exception):
 class FoSpyStructureError(Exception):
     pass
 
+class PropertyResolveError(FoSpyStructureError):
+    def __init__(self, *args, current_block=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.current_block = current_block
+
 def _summarize_exception_group(exc: Exception, indent: int = 0) -> list[str]:
     """Return a list of summary lines for an ExceptionGroup or PropertyError."""
     pad = "  " * indent

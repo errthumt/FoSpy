@@ -273,7 +273,7 @@ class Block:
             try:
                 current = finder(current)
             except err.FoSpyStructureError as e:
-                raise err.FoSpyStructureError(f"Could not resolve {prop_path}.") from e
+                raise err.PropertyResolveError(f"Could not resolve {prop_path}.", current_block=current) from e
 
         return current
     

@@ -805,6 +805,7 @@ class MainWindow(QMainWindow):
         return find_widget
     
     def hard_refresh(self, blk=None, func=lambda: None, to_editor=None, to_blk=True):
+        from ... import _errors as err
 
         def _editor_active(widget):
             return (hasattr(widget, "active") and
@@ -840,7 +841,8 @@ class MainWindow(QMainWindow):
                 cancel=True
         )):
             return None
-
+        # cache prop path before changes
+        prop_path = blk.get_prop_path(relative_to=self.root_block)
         out = func()
 
         # root = self.root_block
@@ -850,7 +852,14 @@ class MainWindow(QMainWindow):
         self.refresh_tree()
 
         if to_blk:
-            new_blk_widget = self.find_widget(blk=blk, go_to=True)
+
+            try:
+                new_blk = self.root_block.resolve_prop_path(prop_path)
+            except err.PropertyResolveError as e:
+                new_blk = e.current_block
+
+
+            new_blk_widget = self.find_widget(blk=new_blk, go_to=True)
 
             if to_editor is not None:
                 from .editors._base import BasePropEditor
