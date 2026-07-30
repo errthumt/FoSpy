@@ -103,7 +103,10 @@ class Block:
         # overwritten by TemplateBlock
         return False
     
-    def get_prop_path(self):
+    def get_prop_path(self, relative_to=None):
+        if relative_to is self:
+            return "."
+
         from .files import FileBlock
 
         is_staged = self.is_staged()
@@ -125,10 +128,10 @@ class Block:
                 root_path += ">"
             return root_path
 
-        parent_path = parent.get_prop_path()
+        parent_path = parent.get_prop_path(relative_to=relative_to)
         parent_prop = self.get_parent_prop(for_path=True)
 
-        if not parent_prop.startswith("["):
+        if not (parent_prop.endswith("]") or parent_prop.endswith(".")):
             parent_path += "."
         
         return parent_path + parent_prop
