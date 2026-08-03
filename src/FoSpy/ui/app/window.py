@@ -842,7 +842,10 @@ class MainWindow(QMainWindow):
         )):
             return None
         # cache prop path before changes
-        prop_path = blk.get_prop_path(relative_to=self.root_block)
+        if blk is not None:
+            prop_path = blk.get_prop_path(relative_to=self.root_block)
+        else:
+            prop_path = "."
         out = func()
 
         # root = self.root_block

@@ -1,6 +1,11 @@
 from ._base import SingleBlockWidget
 from .. import editors as ed
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import (
+    QLabel, QDialog, QVBoxLayout, QListWidget, QListWidgetItem,
+    QDialogButtonBox, QHBoxLayout
+)
+
+from PySide6.QtCore import Qt
 
 class TemplateBlockWidget(SingleBlockWidget):
     def __init__(self, label, blk, window):
@@ -103,6 +108,76 @@ class TemplateBlockWidget(SingleBlockWidget):
         parent_widget = self.win.find_widget(filled._parent_block)
         return parent_widget.push_filled()
         
+    def add_fields_dlg(self):
+        dlg = TemplateFieldDialog(self, self.blk)
+        dlg.exec()
+        
+
+class TemplateFieldDialog(QDialog):
+    def __init__(self, parent, blk):
+
+        super().__init__(parent)
+        self.blk = blk
+        self.start_fields = self.get_fields(blk)
+        self.setWindowTitle("Manage Template Fields")
+
+        layout = QVBoxLayout(self)
+
+        desc = QLabel("""
+            <h4>Select which properties you would like to set as template fields.</h4>
+                <ul>
+                    <li>Simple properties will be cleared and replaced with a template field.</li>
+                    <li>Properties containing nested blocks will be converted to a template
+                        which allows template fields, but will keep any current values filled in.
+                    </li>
+                    <li>To add a list of templates under a single property, add a non-template list under that
+                        property and add new items to the list instead. As long as one field is left unfilled, 
+                        these items are treated as templates.
+                    </li>
+                </ul>""")
+        desc.setWordWrap(True)
+        layout.addWidget(desc)
+
+        self.selector = QListWidget(self)
+        layout.addWidget(self.selector)
+
+        for prop_name, is_template in self.start_fields.items():
+            item = QListWidgetItem(prop_name)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            item.setCheckState(Qt.CheckState.Checked if is_template else Qt.CheckState.Unchecked)
+            self.selector.addItem(item)
+
+        btns = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self)
+        btns.accepted.connect(self.accept)
+        btns.rejected.connect(self.reject)
+        layout.addWidget(btns)
+
+    @classmethod
+    def get_fields(cls, blk):
+        from ....blocks.blocks import ListBlock, SingleBlock
+        from ....blocks.template import TemplateField
+        validators = blk.get_validators()
+
+        for prop in ('ext', 'rename', 'template_name'):
+            validators.pop(prop, None)
+
+        fields = {}
+
+        for prop_name, validator in validators.items():
+            if not isinstance(validator, type) or issubclass(validator, ListBlock):
+                continue
+
+            if issubclass(validator, SingleBlock):
+                is_template = prop_name in blk._staged_templates
+
+            else:
+                is_template = issubclass(validator, TemplateField)
+
+            fields[prop_name] = is_template
+
+        return fields
+
+
 
 
         
