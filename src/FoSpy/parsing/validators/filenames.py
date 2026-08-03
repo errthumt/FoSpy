@@ -62,7 +62,7 @@ def file_name(name: str, sourceDict={}, **kwargs) -> str:
         raise ValueError("Filename must not contain path separators")
 
     if "," in name:
-        err.warn_fos(f"Comma in embedded filename: '{name}' may lead to unexpected behavior.", SyntaxWarning, only_once=True)
+        err.warn_fos(f"Comma in attachment filename: '{name}' may lead to unexpected behavior.", SyntaxWarning, only_once=True)
 
     if not FILENAME_RE.match(name):
         raise ValueError(
