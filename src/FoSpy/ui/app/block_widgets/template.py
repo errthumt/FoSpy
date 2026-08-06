@@ -2,7 +2,7 @@ from ._base import SingleBlockWidget
 from .. import editors as ed
 from PySide6.QtWidgets import (
     QLabel, QDialog, QVBoxLayout, QListWidget, QListWidgetItem,
-    QDialogButtonBox, QHBoxLayout
+    QDialogButtonBox, QHBoxLayout, QPushButton
 )
 
 from PySide6.QtCore import Qt
@@ -16,6 +16,10 @@ class TemplateBlockWidget(SingleBlockWidget):
         else:
             disclaimer = QLabel("This file is currently incomplete. It can be saved as a template to be filled in later, or, once all required fields are filled in, it can be saved as a complete file.")
         self.layout().insertWidget(1, disclaimer)
+
+        fields_btn = QPushButton("Template Fields...")
+        fields_btn.clicked.connect(self.add_fields_dlg)
+        self.custom_btn_layout.insertWidget(2,fields_btn, stretch=0)
 
     @staticmethod
     def hard_refresh(func):
@@ -104,13 +108,56 @@ class TemplateBlockWidget(SingleBlockWidget):
 
         if not hasattr(filled, "_parent_block") or isinstance(filled, TemplateBlock) or not isinstance(filled._parent_block, TemplateBlock):
             return filled
+
+        self.win.go_to_block(self.win.root_block)
         
         parent_widget = self.win.find_widget(filled._parent_block)
         return parent_widget.push_filled()
         
     def add_fields_dlg(self):
         dlg = TemplateFieldDialog(self, self.blk)
-        dlg.exec()
+        if not dlg.exec():
+            return
+
+        return self._add_fields(dlg)
+
+    @hard_refresh
+    def _add_fields(self, dlg):
+        from ....blocks.template import TemplateBlock   
+
+        start_fields = dlg.start_fields
+        new_fields = dlg.get_results()
+
+        changes = {
+            k: v for k, v in new_fields.items() if v != start_fields[k]
+        }
+
+        fill_fields = [k for k, v in changes.items() if not v]
+        new_fields = [k for k, v in changes.items() if v]
+
+        fill_values = {}
+
+        for prop_name in fill_fields:
+            current = getattr(self.blk, prop_name, None)
+            if current is None:
+                return
+
+            if isinstance(current, TemplateBlock):
+                current = current.serialize()
+
+            fill_values[prop_name] = current
+
+        filled = self.blk.fill(**fill_values)
+
+        filled = filled.add_fields(*new_fields)
+        self.filled = filled
+
+        return filled
+
+
+        
+
+
         
 
 class TemplateFieldDialog(QDialog):
@@ -176,6 +223,14 @@ class TemplateFieldDialog(QDialog):
             fields[prop_name] = is_template
 
         return fields
+
+    def get_results(self):
+        results = {}
+        for i in range(self.selector.count()):
+            item = self.selector.item(i)
+            results[item.text()] = item.checkState() == Qt.CheckState.Checked
+        return results
+
 
 
 

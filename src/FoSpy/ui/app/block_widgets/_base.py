@@ -117,6 +117,7 @@ class SingleBlockWidget(QWidget):
         custom_blk_btn.clicked.connect(lambda *_: self.add_custom_block())
         custom_btn_layout.addWidget(custom_blk_btn)
         custom_btn_layout.addStretch()
+        self.custom_btn_layout = custom_btn_layout
 
         if hasattr(blk, "rename"):
             rename_btn = QPushButton("Rename Properties")
