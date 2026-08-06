@@ -2396,7 +2396,7 @@ class ListBlock(Block):
             yield "template_" + str(i)
             i += 1
     
-    def stage_template(self, temp_id=None, template:Block|dict=None):
+    def stage_template(self, temp_id=None, template:Block|dict=None, replace=False):
         from .template import TemplateBlock, TemplateField
         if template is None:
             template = {}
@@ -2418,7 +2418,7 @@ class ListBlock(Block):
 
         temp_id = str(temp_id)
 
-        if temp_id in self._staged_templates:
+        if temp_id in self._staged_templates and not replace:
             temp_id += f" ({next(self._temp_id_gen)})"
         
         template.template_name=temp_id

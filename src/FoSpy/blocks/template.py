@@ -520,7 +520,7 @@ class TemplateBlock(SingleBlock):
 
         if getattr(self, "_staged_parent", None) is not None:
             prop_name = next(k for k, v in self._staged_parent._staged_templates.items() if v is self)
-            _, new_template = self._staged_parent.stage_template(prop_name, template=new_template)
+            _, new_template = self._staged_parent.stage_template(prop_name, template=new_template, replace=True)
             return new_template
 
         parent_blk = self._parent_block
