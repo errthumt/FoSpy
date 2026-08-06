@@ -22,7 +22,7 @@ src/FoSpy/ui/app/block_widgets/_base.py:26: unused variable 'SCROLL_WIDTH' (60% 
 src/FoSpy/ui/app/check_update.py:302: unused attribute 'env' (60% confidence, 1 line)
 src/FoSpy/ui/app/console.py:282: unused attribute 'run_command' (60% confidence, 1 line)
 src/FoSpy/ui/app/window.py:85: unused attribute 'tree_visible' (60% confidence, 1 line)
-src/FoSpy/ui/app/window.py:1001: unreachable code after 'raise' (100% confidence, 1 line)
+src/FoSpy/ui/app/window.py:1004: unreachable code after 'raise' (100% confidence, 1 line)
 src/FoSpy/ui/sliders/abstract.py:51: unused attribute 'sl_rows' (60% confidence, 1 line)
 src/FoSpy/ui/sliders/pyqtgraph.py:150: unused attribute '_ctrl_col' (60% confidence, 1 line)
 tests/FoSpy/blocks/test_attachments.py:13: unused variable 'expected' (100% confidence, 1 line)

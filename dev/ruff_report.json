@@ -8173,7 +8173,7 @@
     "code": "I001",
     "end_location": {
       "column": 54,
-      "row": 268
+      "row": 269
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": {
@@ -8183,11 +8183,11 @@
           "content": "        from ....blocks import ListBlock, SingleBlock\n",
           "end_location": {
             "column": 1,
-            "row": 269
+            "row": 270
           },
           "location": {
             "column": 1,
-            "row": 268
+            "row": 269
           }
         }
       ],
@@ -8195,11 +8195,11 @@
     },
     "location": {
       "column": 9,
-      "row": 268
+      "row": 269
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 268,
+    "noqa_row": 269,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
@@ -8208,7 +8208,7 @@
     "code": "F401",
     "end_location": {
       "column": 43,
-      "row": 268
+      "row": 269
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": {
@@ -8218,11 +8218,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 269
+            "row": 270
           },
           "location": {
             "column": 1,
-            "row": 268
+            "row": 269
           }
         }
       ],
@@ -8230,11 +8230,11 @@
     },
     "location": {
       "column": 32,
-      "row": 268
+      "row": 269
     },
     "message": "`....blocks.SingleBlock` imported but unused",
     "name": "unused-import",
-    "noqa_row": 268,
+    "noqa_row": 269,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -8243,7 +8243,7 @@
     "code": "F401",
     "end_location": {
       "column": 54,
-      "row": 268
+      "row": 269
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": {
@@ -8253,11 +8253,11 @@
           "content": "",
           "end_location": {
             "column": 1,
-            "row": 269
+            "row": 270
           },
           "location": {
             "column": 1,
-            "row": 268
+            "row": 269
           }
         }
       ],
@@ -8265,11 +8265,11 @@
     },
     "location": {
       "column": 45,
-      "row": 268
+      "row": 269
     },
     "message": "`....blocks.ListBlock` imported but unused",
     "name": "unused-import",
-    "noqa_row": 268,
+    "noqa_row": 269,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
   },
@@ -8278,17 +8278,17 @@
     "code": "TRY002",
     "end_location": {
       "column": 60,
-      "row": 572
+      "row": 573
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": null,
     "location": {
       "column": 23,
-      "row": 571
+      "row": 572
     },
     "message": "Create your own exception",
     "name": "raise-vanilla-class",
-    "noqa_row": 571,
+    "noqa_row": 572,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/raise-vanilla-class"
   },
@@ -8297,7 +8297,7 @@
     "code": "I001",
     "end_location": {
       "column": 43,
-      "row": 618
+      "row": 619
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": {
@@ -8307,11 +8307,11 @@
           "content": "        from ....blocks import ListBlock, SingleBlock\n        from .._utils import _clear_layout\n",
           "end_location": {
             "column": 1,
-            "row": 619
+            "row": 620
           },
           "location": {
             "column": 1,
-            "row": 617
+            "row": 618
           }
         }
       ],
@@ -8319,11 +8319,11 @@
     },
     "location": {
       "column": 9,
-      "row": 617
+      "row": 618
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 617,
+    "noqa_row": 618,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
@@ -8332,17 +8332,17 @@
     "code": "TRY002",
     "end_location": {
       "column": 93,
-      "row": 687
+      "row": 688
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": null,
     "location": {
       "column": 15,
-      "row": 687
+      "row": 688
     },
     "message": "Create your own exception",
     "name": "raise-vanilla-class",
-    "noqa_row": 687,
+    "noqa_row": 688,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/raise-vanilla-class"
   },
@@ -8351,17 +8351,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 710
+      "row": 711
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/_base.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 710
+      "row": 711
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 710,
+    "noqa_row": 711,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -8652,18 +8652,18 @@
     "cell": null,
     "code": "I001",
     "end_location": {
-      "column": 37,
-      "row": 3
+      "column": 30,
+      "row": 8
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/template.py",
     "fix": {
       "applicability": "safe",
       "edits": [
         {
-          "content": "from PySide6.QtWidgets import QLabel\n\nfrom .. import editors as ed\nfrom ._base import SingleBlockWidget\n\n\n",
+          "content": "from PySide6.QtCore import Qt\nfrom PySide6.QtWidgets import (\n    QDialog,\n    QDialogButtonBox,\n    QHBoxLayout,\n    QLabel,\n    QListWidget,\n    QListWidgetItem,\n    QPushButton,\n    QVBoxLayout,\n)\n\nfrom .. import editors as ed\nfrom ._base import SingleBlockWidget\n\n\n",
           "end_location": {
             "column": 1,
-            "row": 5
+            "row": 10
           },
           "location": {
             "column": 1,
@@ -8717,6 +8717,76 @@
     "noqa_row": 2,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "F401",
+    "end_location": {
+      "column": 34,
+      "row": 5
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/template.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "from PySide6.QtWidgets import (\n    QLabel, QDialog, QVBoxLayout, QListWidget, QListWidgetItem,\n    QDialogButtonBox, QPushButton\n)",
+          "end_location": {
+            "column": 2,
+            "row": 6
+          },
+          "location": {
+            "column": 1,
+            "row": 3
+          }
+        }
+      ],
+      "message": "Remove unused import: `PySide6.QtWidgets.QHBoxLayout`"
+    },
+    "location": {
+      "column": 23,
+      "row": 5
+    },
+    "message": "`PySide6.QtWidgets.QHBoxLayout` imported but unused",
+    "name": "unused-import",
+    "noqa_row": 5,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-import"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 54,
+      "row": 126
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/block_widgets/template.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "        from ....blocks.template import TemplateBlock\n",
+          "end_location": {
+            "column": 1,
+            "row": 127
+          },
+          "location": {
+            "column": 1,
+            "row": 126
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 9,
+      "row": 126
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 126,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
   {
     "cell": null,
@@ -9133,7 +9203,7 @@
     "code": "F541",
     "end_location": {
       "column": 114,
-      "row": 999
+      "row": 1002
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/window.py",
     "fix": {
@@ -9143,11 +9213,11 @@
           "content": "\"You cannot save the current file with that extension. Allowed extensions are:\"",
           "end_location": {
             "column": 114,
-            "row": 999
+            "row": 1002
           },
           "location": {
             "column": 34,
-            "row": 999
+            "row": 1002
           }
         }
       ],
@@ -9155,11 +9225,11 @@
     },
     "location": {
       "column": 34,
-      "row": 999
+      "row": 1002
     },
     "message": "f-string without any placeholders",
     "name": "f-string-missing-placeholders",
-    "noqa_row": 999,
+    "noqa_row": 1002,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/f-string-missing-placeholders"
   },
