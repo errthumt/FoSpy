@@ -1,0 +1,238 @@
+fos_id: E072-2
+// fos_type is used to distinguish between template sets and syntheses
+fos_type: synthesis
+// description is the free field where ammonolysis can be mentioned
+description: synthesis of beta tantalum oxynitride by ammonolysis
+
+// two new required fields; will be used for database organization and
+// permission setting (Users can be authorized to edit the entire group's
+// dataset, or only certain projects.)
+group_id: wenderott-0000-0001-8268-1249
+project_id: b-TaON/ammonolysis
+
+fos_date: 07/15/2025
+
+[[Experimenters]]
+name: Aksha Prince
+// You had an empty orcid property, but orcid is still optional right now, so it can be omitted
+affiliation: Wenderott Group - Drexel University
+
+// We haven't set much expectations for this section yet... but the fact that
+// every line starts with "lab_" hints that we could be a little more granular.
+// Maybe a list of locations?
+[Environment]
+lab_temp: 27
+lab_temp_unit: C
+lab_humidity: 38
+lab_humidity_unit: %
+
+// The new products heading that we added during SSMC might render this heading
+// obsolete.
+[Reaction]
+target_product: beta tantalum oxynitride
+nominal_formula: TaON
+nominal_amount: 96.4
+nominal_amount_unit: mg
+
+// Information about expected or obtained products.
+[Products]
+name: beta tantalum oxynitride
+formula: TaON
+expected: true
+obtained: true
+expected_amount: 96.4
+expected_amount_unit: mg 
+obtained_amount: 97.8
+obtained_amount_unit: mg
+observations: light yellow powder
+
+// FYI: These last two properties are definitely placeholders for more in-depth
+// characterization format. Maybe a list of characterization objects with
+// conclusions from each? Allow reference to attachment list?
+characterizations: PXRD, UV-Vis, XPS
+structure_comments: distorted Ta(O,N)6 octahedra with anion ordering
+
+
+[[Materials]]
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:color
+:purity
+:env
+:amount
+// omitted optional/empty treatments property
+:amount_unit
+
+	tantalum oxide
+	precursor
+	Ta2O5
+	Thermo Fisher
+	1314-61-0
+	powder
+	white
+	0.9995
+	// Currently "env" is expected as a text field, but I really like the idea
+	// of having a list or object here instead. Maybe establish the environment
+	// under the "environment" heading and reference it by name here?
+	// (you had [] instead of ambient)
+	ambient
+	101.1
+	mg
+    
+
+[[Treatments]]
+// Since there's a really long treatment at the end with a lot of properties, I
+// opted to make this an explicit-keyed list instead of the looped keys.
+type: grind
+repeats: 1
+observations: [;;;
+	Grind precursor by hand with mortar
+and pestle for 15 minutes]
+
+// FYI: we have classes in progress for more structured adding/removing of
+// reagents/products/chemicals, but they still haven't been fully integrated
+// into the examples.
+type: weigh
+repeats: 1
+observations: [;;;
+	Weigh approximately 100 mg with analytical balance
+and add to quartz boat]
+
+// the "type" of a treatment is used to assign special validation routines
+// for it, so it's safer to use the closest existing type (annealing), then
+// add custom properties as needed
+type: annealing
+repeats: 1
+// Newest code should be able to recognize double line breaks as paragraphs
+// and word-wrap them separately when saving.
+observations: [;;;
+Load into tube furnace 
+and set ammonolysis conditions.
+
+Argon flows through custom made bubbler
+filled with DI water.
+
+Cool naturally while continuing gas flow
+at end of program.]
+
+// the "$equipment" tag here makes sure the unique bubbler is identified as equipment.
+bubbler$equipment: [
+	pre_wt: 20.66
+	pre_wt_unit: oz
+	post_wt: 20.56 
+	post_wt_unit: oz
+]
+
+start_temp: 25
+start_temp_unit: C
+
+// The "program" property is a list of steps, whereas (it seems) the gas flows
+// are applied for the entire treatment, so they should be under their own
+// property applying to the entire treatment instead of mixed in with the
+// annealing program
+gas_flow: [[
+	gas: argon
+	rate: 100
+	rate_unit: cm^3/min
+
+	gas: ammonia
+	flow: 150
+	flow_unit: cm^3/min
+]]
+
+program: [[
+	type: ramp
+	temp: 777
+	temp_unit: C
+	rate: 5
+	rate_unit: C/min
+	
+	type: dwell
+	time: 20
+	time_unit: hr
+]]
+
+
+// We very recently changed the "cifs" header to "attachments", since anything
+// can be attached now (either as embedded or path)
+// If you want it to be called cifs anyway, you could use
+// [[cifs$attachments]]
+[attachments]
+file_name: TaON_P121c1_(14)_Code1032.cif
+embedded: {{{
+
+#(C) 2019 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_1032-ICSD
+_database_code_ICSD 1032
+_audit_creation_date 1980-01-01
+_audit_update_record 2010-02-01
+_chemical_name_systematic 'Tantalum nitride oxide'
+_chemical_formula_structural 'Ta N O'
+_chemical_formula_sum 'N1 O1 Ta1'
+_chemical_name_structure_type Baddeleyite-ZrO2(mP12)
+_exptl_crystal_density_diffrn 10.95
+_publ_section_title
+
+;
+Darstellung der Oxidnitride V O N, Nb O N und Ta O N. Die Kristallstruktur von
+Nb O N und Ta O N
+;
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Zeitschrift fuer Anorganische und Allgemeine Chemie (1950) (DE)' 1977
+429 261 269 ZAACAB
+loop_
+_publ_author_name
+'Weishaupt, M.'
+'Straehle, J.'
+_cell_length_a 4.968(1)
+_cell_length_b 5.037(1)
+_cell_length_c 5.185(1)
+_cell_angle_alpha 90.
+_cell_angle_beta 99.56(1)
+_cell_angle_gamma 90.
+_cell_volume 127.95
+_cell_formula_units_Z 4
+_symmetry_space_group_name_H-M 'P 1 21/c 1'
+_symmetry_Int_Tables_number 14
+_refine_ls_R_factor_all 0.084
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+1 'x, -y+1/2, z+1/2'
+2 '-x, -y, -z'
+3 '-x, y+1/2, -z+1/2'
+4 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Ta5+ 5
+O2- -2
+N3- -3
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+Ta1 Ta5+ 4 e 0.2921(1) 0.0440(2) 0.2150(1) 0.1 1. 0
+O1 O2- 4 e 0.0650(31) 0.3331(47) 0.3439(29) 0.9 1. 0
+N1 N3- 4 e 0.4425(34) 0.7529(28) 0.4819(35) 0.5 1. 0
+#End of TTdata_1032-ICSD
+
+#################### END FOS EMBED }}}

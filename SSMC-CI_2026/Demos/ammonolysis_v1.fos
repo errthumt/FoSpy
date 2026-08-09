@@ -1,0 +1,201 @@
+fos_id: E072-2
+fos_type: ammonolysis
+fos_date: 07/15/2025
+// Any information before the first header is considered metadata.
+
+[[Experimenters]]
+// You can have multiple experimenters, but here we just have one.
+name: Aksha Prince
+affiliation: Wenderott Group - Drexel University
+orcid: 
+
+// Lab conditions
+[Environment]
+lab_temp: 27
+lab_temp_unit: C
+lab_humidity: 38
+lab_humidity_unit: %
+
+// General information about the reaction.
+[Reaction]
+nominal_formula: beta-TaON
+nominal_amount: 96.4
+nominal_amount_unit: mg
+
+// Information about expected or obtained products.
+[Products]
+name: beta tantalum oxynitride
+formula: TaON
+expected: true
+obtained: true
+expected_amount: 96.4
+expected_amount_unit: mg 
+obtained_amount: 97.8
+obtained_amount_unit: mg
+observations: light yellow powder
+characterizations: PXRD, UV-Vis, XPS
+structure_comments: distorted Ta(O,N)6 octahedra with anion ordering
+
+
+[[Materials]]
+// For multiple blocks under a header, you can declare all the common fields at
+// the top, and then just list the values for each block.
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:color
+:purity
+:env
+:amount
+:amount_unit
+:treatments
+
+	tantalum oxide
+	precursor
+	Ta2O5
+	Thermo Fisher
+	1314-61-0
+	powder
+	white
+	0.9995
+	[]
+	101.1
+	mg
+	[]
+    
+// Treatments are anything that you do to facilitate the reaction. Any
+// treatments done to a material before the reaction should be listed in that
+// material's treatments (above). This section is for treatments combining or
+// modifying multiple materials at once.
+[[Treatments]]
+:type
+:repeats
+:observations
+
+	grind
+	1
+	[;;;
+    	Grind precursor by hand with mortar
+	and pestle for 15 minutes]
+	
+	weigh
+	1
+	[;;;
+    	Weigh approximately 100 mg with analytical balance
+	and add to quartz boat]
+
+	nitridation
+	1
+	[;;;
+    	Load into tube furnace 
+	and set ammonolysis conditions.
+	Argon flows through custom made bubbler
+	filled with DI water.
+	Cool naturally while continuing gas flow
+	at end of program.]
+	start_temp: 25
+	start_temp_unit: C
+	program: [[
+		type: ramp
+		temp: 777
+		temp_unit: C
+		heat_rate: 5
+		heat_rate_unit: C/min
+		
+		type: dwell
+		time: 20
+		time_unit: hr
+
+		gas_1: argon
+		gas_1_flow: 100
+		gas_1_flow_unit: sccm
+
+		gas_2: ammonia
+		gas_2_flow: 150
+		gas_2_flow_unit: sccm
+		
+		bubbler_pre_wt: 20.66
+		bubbler_pre_wt_unit: oz
+		bubbler_post_wt: 20.56 
+		bubbler_post_wt_unit: oz
+	]]
+
+// (Experimental) Files can be embedded directly as text.
+[CIFs]
+file_name: TaON P121c1 (14) Code1032.cif
+embedded: {{{
+
+#(C) 2019 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_1032-ICSD
+_database_code_ICSD 1032
+_audit_creation_date 1980-01-01
+_audit_update_record 2010-02-01
+_chemical_name_systematic 'Tantalum nitride oxide'
+_chemical_formula_structural 'Ta N O'
+_chemical_formula_sum 'N1 O1 Ta1'
+_chemical_name_structure_type Baddeleyite-ZrO2(mP12)
+_exptl_crystal_density_diffrn 10.95
+_publ_section_title
+
+;
+Darstellung der Oxidnitride V O N, Nb O N und Ta O N. Die Kristallstruktur von
+Nb O N und Ta O N
+;
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Zeitschrift fuer Anorganische und Allgemeine Chemie (1950) (DE)' 1977
+429 261 269 ZAACAB
+loop_
+_publ_author_name
+'Weishaupt, M.'
+'Straehle, J.'
+_cell_length_a 4.968(1)
+_cell_length_b 5.037(1)
+_cell_length_c 5.185(1)
+_cell_angle_alpha 90.
+_cell_angle_beta 99.56(1)
+_cell_angle_gamma 90.
+_cell_volume 127.95
+_cell_formula_units_Z 4
+_symmetry_space_group_name_H-M 'P 1 21/c 1'
+_symmetry_Int_Tables_number 14
+_refine_ls_R_factor_all 0.084
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+1 'x, -y+1/2, z+1/2'
+2 '-x, -y, -z'
+3 '-x, y+1/2, -z+1/2'
+4 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Ta5+ 5
+O2- -2
+N3- -3
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+_atom_site_attached_hydrogens
+Ta1 Ta5+ 4 e 0.2921(1) 0.0440(2) 0.2150(1) 0.1 1. 0
+O1 O2- 4 e 0.0650(31) 0.3331(47) 0.3439(29) 0.9 1. 0
+N1 N3- 4 e 0.4425(34) 0.7529(28) 0.4819(35) 0.5 1. 0
+#End of TTdata_1032-ICSD
+
+#################### END FOS EMBED }}}
