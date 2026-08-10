@@ -63,6 +63,7 @@ class Attachment(SingleBlock):
     @classmethod
     def reflex(cls, serialize=True, clean=False, **kwargs:dict):
         from .template import TemplateField
+        add_embedded=False
         if "file_name" not in kwargs:
             kwargs["file_name"] = TemplateField.serialize()
             kwargs.pop("path", None)
