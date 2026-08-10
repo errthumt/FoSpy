@@ -7,7 +7,7 @@ _debug = Debug()
 _debug.on = True
 
 # Allowed filename characters (no slashes)
-FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,]+$")
+FILENAME_RE = re.compile(r"^[A-Za-z0-9._\-,()]+$")
 
 basePath = type(Path(""))
 

@@ -19,9 +19,12 @@ class FOSUnit(Unit):
         dim_rules = []
         for dim in allow_dims if isinstance(allow_dims, list) else [allow_dims]:
             if isinstance(dim, dict):
-                if len(dim) != 1:
+                if len(dim) == 0:
+                    dim = "<dimensionless>"
+                elif len(dim) != 1:
                     raise ValueError(f"Unrecognized dimension rule: {dim}")
-                dim = list(dim.keys())[0] + "^" + str(list(dim.values())[0])
+                else:
+                    dim = list(dim.keys())[0] + "^" + str(list(dim.values())[0])
             dim_rules.append(dim)
 
         @_validator_rules(

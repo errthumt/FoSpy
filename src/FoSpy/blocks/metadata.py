@@ -65,6 +65,10 @@ class Equipment(SingleBlock):
 
 EquipmentList = ListBlock.Simple(Equipment)
 
+class Environment(SingleBlock):
+    _id_key = "name"
+    pass
+
 
 class Rename(SingleBlock):
     allow_rename = False

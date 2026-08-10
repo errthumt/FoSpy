@@ -20,11 +20,12 @@ affiliation: Wenderott Group - Drexel University
 // We haven't set much expectations for this section yet... but the fact that
 // every line starts with "lab_" hints that we could be a little more granular.
 // Maybe a list of locations?
-[Environment]
-lab_temp: 27
-lab_temp_unit: C
-lab_humidity: 38
-lab_humidity_unit: %
+[Environments]
+name: lab
+temp: 27
+temp_unit: C
+humidity: 38
+humidity_unit: %
 
 // The new products heading that we added during SSMC might render this heading
 // obsolete.

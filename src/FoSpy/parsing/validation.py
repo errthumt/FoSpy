@@ -135,6 +135,9 @@ required_keys = {
     },
     b.Rename: {
         "__all__": validators.rename.rename_value
+    },
+    b.Environment: {
+        "name": str
     }
 }
 """Maps block classes to dictionaries of required keys and their validators.
@@ -157,6 +160,7 @@ optional_keys = {
         "rename": b.Rename
     },
     b.Synthesis: {
+        "environments": b.ListBlock.Simple(b.Environment),
         "attachments": b.AttachmentList,
         "laboratory_conditions": b.LabConditions,
         "equipment": b.EquipmentList
@@ -204,6 +208,13 @@ optional_keys = {
     b.Rename: {
         "rename": False
     },
+
+    b.Environment: {
+        "temp": validators.numbers.positive_decimal("b.Environment/temp", "temp", require_unit=True),
+        "temp_unit": validators.units.FOSTempUnit,
+        "humidity": validators.numbers.positive_decimal("b.Environment/humidity", "humidity", require_unit=True),
+        "humidity_unit": validators.units.FOSUnit.enforce_dims({})
+    }
 }
 """
 Maps block classes to dictionaries of optional keys and their validators.

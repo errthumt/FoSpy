@@ -409,7 +409,8 @@ class TemplateBlock(SingleBlock):
                     except err.MultipleListBlockErrors as e:
                         try:
                             new_listblock.stage_template(template=item)
-                        except Exception as e:  # noqa: BLE001
+                        except Exception as e:
+                            raise  # noqa: BLE001
                             warnings.append("The following item could not be set to a ListBlock or staged as a template:"
                                             f"\n\nCANDIDATE:\n{item}"
                                             f"\n\nERROR:\n{e}")
