@@ -5930,17 +5930,17 @@
     "code": "D419",
     "end_location": {
       "column": 11,
-      "row": 133
+      "row": 137
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/parsing/read.py",
     "fix": null,
     "location": {
       "column": 5,
-      "row": 133
+      "row": 137
     },
     "message": "Docstring is empty",
     "name": "empty-docstring",
-    "noqa_row": 133,
+    "noqa_row": 137,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/empty-docstring"
   },
