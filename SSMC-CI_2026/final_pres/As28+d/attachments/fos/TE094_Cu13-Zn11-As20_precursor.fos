@@ -1,0 +1,100 @@
+fos_id: TE094
+fos_type: synthesis
+description: Premixture of Cu,Zn,As to reduce static when loading into ampoules
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
+
+[Experimenters]
+name: Travis Errthum
+affiliation: Kovnir Group - Iowa State
+orcid: 0009-0006-1937-5672
+
+[Reaction]
+nominal_formula: Cu13Zn11As20
+nominal_amount: 3.0
+nominal_amount_unit: gram
+
+[Products]
+formula: Cu13Zn11As20
+name: Mixed Powder
+expected: True
+obtained: True
+observations: Homogeneous color and particle size
+cif: Ba8-Cu13-Zn11-As29.8.cif
+
+[[Materials]]
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:env
+:amount
+:amount_unit
+
+    Copper Powder
+    reagent
+    Cu
+    fisher
+    7440-50-8
+    powder
+    ambient
+    13
+    mol ratio
+
+    Zinc Powder
+    reagent
+    Zn
+    fisher
+    7440-66-6
+    powder
+    ambient
+    11
+    mol ratio
+
+    Metallic Arsenic
+    reagent
+    As
+    Furukawa
+    7440-38-2
+    lump
+    glovebox
+    20
+    mol ratio
+    treatments: [
+        type: grind
+        repeats: 1
+        observations: ground from metallic lump to fine powder before use
+    ]
+
+[[Treatments]]
+:type
+:repeats
+
+    composition
+    1
+    changes: [[
+        :formula
+        :amount
+        :amount_unit
+
+            Cu
+            814.2
+            mg
+
+            Zn
+            709.0
+            mg
+
+            As
+            1.4768
+            g
+    ]]
+
+    grind
+    1
+    observations: [;;;
+    Ground continously in agate mortar and pestle until homogeneous color and
+    particle size were achieved.]
+

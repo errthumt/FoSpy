@@ -94,6 +94,7 @@ def dict_from_file(filepath):
             + "embedded document."
         )
 
+
     for block, (typ, lines) in blocks.items():
         if typ == "single":
             blockDict = create_single_block_dict(lines)
@@ -107,6 +108,9 @@ def dict_from_file(filepath):
             raise ValueError(f"Unrecognized block type: '{typ}', expected either single or list")
     blocks[mk["comments"]] = comments
 
+    if current_block not in blocks:
+        blocks[current_block] = []
+        
     for meta_key in mk.values():
         if meta_key not in blocks:
             try:

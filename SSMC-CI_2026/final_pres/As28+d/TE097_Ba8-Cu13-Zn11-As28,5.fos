@@ -1,0 +1,1164 @@
+fos_id: TE097
+fos_type: synthesis
+description: Attempted synthesis of As28+d clathrate
+group_id: kovnir-0000-0003-1152-1912
+project_id: travis5672/clathrates/As28+d
+
+[Experimenters]
+name: Travis Errthum
+affiliation: Kovnir Group - Iowa State
+orcid: 0009-0006-1937-5672
+
+[Reaction]
+nominal_formula: Ba8Cu13Zn11As28.5
+nominal_amount: 250
+nominal_amount_unit: milligram
+
+[[Products]]
+:formula
+:name
+:expected
+:obtained
+:observations
+:obtained_amount
+:obtained_amount_unit
+:characterizations
+:cif
+
+    Ba8Cu13Zn11As28.5
+    Target Phase
+    True
+    True
+    Unable to characterize exact Cu/Zn ratio with available methods
+    186
+    milligram
+    PXRD Rietveld Refinement
+    Ba8-Cu13-Zn11-As29.8.cif
+    expected_amount: 250
+    expected_amount_unit: milligram
+    structure_comments: [;;;
+    Arsenic occupancy variable from 28.2~29.8. CIF File is from single crystal
+    determination from another sample and may not have the same Arsenic
+    occupancy or Cu/Zn ratio]
+
+    Ba2Zn5As6
+    2-5-6 Clathrate
+    False
+    True
+    Zn-Rich, As/Cu-poor
+    33
+    milligram
+    PXRD Rietveld Refinement
+    Ba2-Zn5-As6.cif
+
+    ZnAs2
+    Zinc Arsenide (1-2)
+    False
+    True
+    As-rich, Ba/Cu-poor
+    18
+    milligram
+    PXRD Rietveld Refinement
+    Zn-As2.cif
+
+    BaZn2As2
+    Ba-Zn-As 1-2-2
+    False
+    True
+    Zn-rich, Cu/As-poor
+    13
+    milligram
+    PXRD Rietveld Refinement
+    Ba-Zn2-As2.cif
+
+[[Materials]]
+:name
+:type
+:formula
+:supplier
+:cas
+:form
+:env
+:amount
+:amount_unit
+
+    Dendritic Barium
+    reagent
+    Ba
+    thermoscientific
+    7440-39-3
+    dendritic lump
+    glovebox
+    8
+    mol ratio
+
+    CuZnAs Precursor
+    reagent
+    Cu13Zn11As20
+    internal
+    None
+    powder
+    glovebox
+    1
+    mol ratio
+
+    Metallic Arsenic
+    reagent
+    As
+    Furukawa
+    7440-38-2
+    lump
+    glovebox
+    8.5
+    mol ratio
+    treatments: [
+        type: grind
+        repeats: 1
+        observations: ground from metallic lump to fine powder before use
+    ]
+
+[[Treatments]]
+:type
+:repeats
+
+    composition
+    1
+    changes: [[
+        :formula
+        :amount
+        :amount_unit
+
+            Ba
+            172.4
+            mg
+
+            Cu13Zn11As20
+            466.7
+            mg
+
+            As
+            99.9
+            mg
+    ]]
+
+    anneal
+    1
+    observations: Carbonized and evacuated silica ampoule
+    program: [[
+        type: ramp
+        temp: 600
+        time: 10
+        temp_unit: degree_Celsius
+        time_unit: hour
+
+        type: dwell
+        time: 120
+        time_unit: hour
+    ]]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
+
+    grind
+    1
+    observations: [;;;
+    Barium lumps have reacted with powder to form brittle lumps for grinding.
+
+    Homogenized lumps with remainder of powder in ampoule by grinding in agate
+    mortar and pestle]
+
+    anneal
+    1
+    observations: [;;;
+    Carbonized and evacuated silica ampoule.
+
+    Wrapped in ceramic wool for uniform heating]
+    program: [[
+        type: ramp
+        temp: 600
+        time: 10
+        temp_unit: degree_Celsius
+        time_unit: hour
+
+        type: dwell
+        time: 120
+        time_unit: hour
+    ]]
+    start_temp: 25
+    start_temp_unit: degree_Celsius
+
+    grind
+    1
+    observations: [;;;
+    Appeared homogeneous before grinding. Final grinding to ensure homogeneity.]
+
+[[Attachments]]
+:file_name
+
+    Ba2-Zn5-As6.cif
+    path: attachments/cif
+
+    Zn-As2.cif
+    path: attachments/cif
+
+    Ba-Zn2-As2.cif
+    path: attachments/cif
+
+    TE094_Cu13-Zn11-As20_precursor.fos
+    path: attachments/fos
+
+    Ba8-Cu13-Zn11-As29.8.cif
+    embedded: {{{
+ 
+data_PY618_BaCuZnAs_0m_a
+ 
+_audit_creation_method            'SHELXL-2018/3'
+_shelx_SHELXL_version_number      '2018/3'
+_chemical_name_systematic         ?
+_chemical_name_common             ?
+_chemical_melting_point           ?
+_chemical_formula_moiety          ?
+_chemical_formula_sum
+ 'As28 Ba8 Cu13 Zn11' 
+_chemical_formula_weight          4741.57
+
+loop_
+ _atom_type_symbol
+ _atom_type_description
+ _atom_type_scat_dispersion_real
+ _atom_type_scat_dispersion_imag
+ _atom_type_scat_source
+ 'As'  'As'   0.0499   2.0058
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'Ba'  'Ba'  -0.3244   2.2819
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'Cu'  'Cu'   0.3201   1.2651
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'Zn'  'Zn'   0.2839   1.4301
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 
+_space_group_crystal_system       orthorhombic
+_space_group_IT_number            63
+_space_group_name_H-M_alt         'C m c m'
+_space_group_name_Hall            '-C 2c 2'
+ 
+_shelx_space_group_comment
+;
+The symmetry employed for this shelxl refinement is uniquely defined
+by the following loop, which should always be used as a source of
+symmetry information in preference to the above space-group names.
+They are only intended as comments.
+;
+ 
+loop_
+ _space_group_symop_operation_xyz
+ 'x, y, z'
+ '-x, -y, z+1/2'
+ '-x, y, -z+1/2'
+ 'x, -y, -z'
+ 'x+1/2, y+1/2, z'
+ '-x+1/2, -y+1/2, z+1/2'
+ '-x+1/2, y+1/2, -z+1/2'
+ 'x+1/2, -y+1/2, -z'
+ '-x, -y, -z'
+ 'x, y, -z-1/2'
+ 'x, -y, z-1/2'
+ '-x, y, z'
+ '-x+1/2, -y+1/2, -z'
+ 'x+1/2, y+1/2, -z-1/2'
+ 'x+1/2, -y+1/2, z-1/2'
+ '-x+1/2, y+1/2, z'
+ 
+_cell_length_a                    6.5582(4)
+_cell_length_b                    16.8410(10)
+_cell_length_c                    10.9959(6)
+_cell_angle_alpha                 90
+_cell_angle_beta                  90
+_cell_angle_gamma                 90
+_cell_volume                      1214.46(12)
+_cell_formula_units_Z             1
+_cell_measurement_temperature     273(2)
+_cell_measurement_reflns_used     ?
+_cell_measurement_theta_min       ?
+_cell_measurement_theta_max       ?
+ 
+_exptl_crystal_description        ?
+_exptl_crystal_colour             ?
+_exptl_crystal_density_meas       ?
+_exptl_crystal_density_method     ?
+_exptl_crystal_density_diffrn     6.483          
+_exptl_crystal_F_000              2079
+_exptl_transmission_factor_min    ?
+_exptl_transmission_factor_max    ?
+_exptl_crystal_size_max           ?
+_exptl_crystal_size_mid           ?
+_exptl_crystal_size_min           ?
+_exptl_absorpt_coefficient_mu     36.161
+_shelx_estimated_absorpt_T_min    ?
+_shelx_estimated_absorpt_T_max    ?
+_exptl_absorpt_correction_type    ?
+_exptl_absorpt_correction_T_min   ?
+_exptl_absorpt_correction_T_max   ?
+_exptl_absorpt_process_details    ?
+_exptl_absorpt_special_details    ?
+_diffrn_ambient_temperature       273(2)
+_diffrn_radiation_wavelength      0.71073
+_diffrn_radiation_type            MoK\a
+_diffrn_source                    ?
+_diffrn_measurement_device_type   ?
+_diffrn_measurement_method        ?
+_diffrn_detector_area_resol_mean  ?
+_diffrn_reflns_number             12831
+_diffrn_reflns_av_unetI/netI      0.0383
+_diffrn_reflns_av_R_equivalents   0.0742
+_diffrn_reflns_limit_h_min        -9
+_diffrn_reflns_limit_h_max        10
+_diffrn_reflns_limit_k_min        -24
+_diffrn_reflns_limit_k_max        25
+_diffrn_reflns_limit_l_min        -14
+_diffrn_reflns_limit_l_max        16
+_diffrn_reflns_theta_min          2.419
+_diffrn_reflns_theta_max          33.156
+_diffrn_reflns_theta_full         25.242
+_diffrn_measured_fraction_theta_max   1.000
+_diffrn_measured_fraction_theta_full  1.000
+_diffrn_reflns_Laue_measured_fraction_max    1.000
+_diffrn_reflns_Laue_measured_fraction_full   1.000
+_diffrn_reflns_point_group_measured_fraction_max   1.000
+_diffrn_reflns_point_group_measured_fraction_full  1.000
+_reflns_number_total              1292
+_reflns_number_gt                 1024
+_reflns_threshold_expression      'I > 2\s(I)'
+_reflns_Friedel_coverage          0.000
+_reflns_Friedel_fraction_max      .
+_reflns_Friedel_fraction_full     .
+ 
+_reflns_special_details
+;
+ Reflections were merged by SHELXL according to the crystal
+ class for the calculation of statistics and refinement.
+ 
+ _reflns_Friedel_fraction is defined as the number of unique
+ Friedel pairs measured divided by the number that would be
+ possible theoretically, ignoring centric projections and
+ systematic absences.
+;
+ 
+_computing_data_collection        ?
+_computing_cell_refinement        ?
+_computing_data_reduction         ?
+_computing_structure_solution     'SHELXT 2014/5 (Sheldrick, 2014)'
+_computing_structure_refinement 'SHELXL-2018/3 (Sheldrick, 2018)'
+_computing_molecular_graphics     ?
+_computing_publication_material   ?
+_refine_special_details           ?
+_refine_ls_structure_factor_coef  Fsqd
+_refine_ls_matrix_type            full
+_refine_ls_weighting_scheme       calc
+_refine_ls_weighting_details
+'w=1/[\s^2^(Fo^2^)+(0.0101P)^2^] where P=(Fo^2^+2Fc^2^)/3'
+_atom_sites_solution_primary      ?
+_atom_sites_solution_secondary    ?
+_atom_sites_solution_hydrogens    .
+_refine_ls_hydrogen_treatment     undef
+_refine_ls_extinction_method      none
+_refine_ls_extinction_coef        .
+_refine_ls_number_reflns          1292
+_refine_ls_number_parameters      51
+_refine_ls_number_restraints      0
+_refine_ls_R_factor_all           0.0396
+_refine_ls_R_factor_gt            0.0215
+_refine_ls_wR_factor_ref          0.0356
+_refine_ls_wR_factor_gt           0.0333
+_refine_ls_goodness_of_fit_ref    1.031
+_refine_ls_restrained_S_all       1.031
+_refine_ls_shift/su_max           0.001
+_refine_ls_shift/su_mean          0.000
+ 
+loop_
+ _atom_site_label
+ _atom_site_type_symbol
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_U_iso_or_equiv
+ _atom_site_adp_type
+ _atom_site_occupancy
+ _atom_site_site_symmetry_order  
+ _atom_site_calc_flag
+ _atom_site_refinement_flags_posn
+ _atom_site_refinement_flags_adp
+ _atom_site_refinement_flags_occupancy
+ _atom_site_disorder_assembly
+ _atom_site_disorder_group
+Ba01 Ba 0.000000 0.500000 0.500000 0.00421(8) Uani 1 4 d S T P . .
+Ba02 Ba 0.000000 0.21663(2) 0.750000 0.00681(8) Uani 1 4 d S T P . .
+As03 As 0.500000 0.43837(3) 0.44183(4) 0.00256(9) Uani 1 2 d S T P . .
+As04 As 0.19219(7) 0.39708(3) 0.750000 0.00382(9) Uani 1 2 d S T P . .
+As05 As 0.000000 0.37571(4) 0.250000 0.00267(13) Uani 1 4 d S T P . .
+As06 As 0.000000 0.29482(3) 0.43739(4) 0.00279(10) Uani 1 2 d S T P . .
+Zn07 Zn 0.30243(8) 0.53432(3) 0.750000 0.00396(11) Uani 0.5 2 d S T P . .
+Cu07 Cu 0.30243(8) 0.53432(3) 0.750000 0.00396(11) Uani 0.5 2 d S T P . .
+Zn08 Zn 0.30277(6) 0.33526(2) 0.55850(3) 0.00530(9) Uani 0.5 1 d . . P . .
+Cu08 Cu 0.30277(6) 0.33526(2) 0.55850(3) 0.00530(9) Uani 0.5 1 d . . P . .
+As09 As 0.500000 0.29019(9) 0.750000 0.0091(5) Uani 0.450(3) 4 d S T P . .
+ 
+loop_
+ _atom_site_aniso_label
+ _atom_site_aniso_U_11
+ _atom_site_aniso_U_22
+ _atom_site_aniso_U_33
+ _atom_site_aniso_U_23
+ _atom_site_aniso_U_13
+ _atom_site_aniso_U_12
+Ba01 0.00280(18) 0.00682(18) 0.00300(15) -0.00042(13) 0.000 0.000
+Ba02 0.0098(2) 0.00223(18) 0.00836(16) 0.000 0.000 0.000
+As03 0.0047(2) 0.0018(2) 0.00114(18) -0.00024(16) 0.000 0.000
+As04 0.0026(2) 0.0041(2) 0.00477(19) 0.000 0.000 0.00021(17)
+As05 0.0043(3) 0.0025(3) 0.0013(2) 0.000 0.000 0.000
+As06 0.0035(2) 0.0020(2) 0.00293(18) 0.00046(16) 0.000 0.000
+Zn07 0.0042(3) 0.0048(3) 0.0029(2) 0.000 0.000 -0.0018(2)
+Cu07 0.0042(3) 0.0048(3) 0.0029(2) 0.000 0.000 -0.0018(2)
+Zn08 0.00384(19) 0.0072(2) 0.00489(16) 0.00112(14) 0.00092(15) 0.00036(15)
+Cu08 0.00384(19) 0.0072(2) 0.00489(16) 0.00112(14) 0.00092(15) 0.00036(15)
+As09 0.0088(9) 0.0124(9) 0.0060(7) 0.000 0.000 0.000
+ 
+_geom_special_details
+;
+ All esds (except the esd in the dihedral angle between two l.s. planes)
+ are estimated using the full covariance matrix.  The cell esds are taken
+ into account individually in the estimation of esds in distances, angles
+ and torsion angles; correlations between esds in cell parameters are only
+ used when they are defined by crystal symmetry.  An approximate (isotropic)
+ treatment of cell esds is used for estimating esds involving l.s. planes.
+;
+ 
+loop_
+ _geom_bond_atom_site_label_1
+ _geom_bond_atom_site_label_2
+ _geom_bond_distance
+ _geom_bond_site_symmetry_2
+ _geom_bond_publ_flag
+Ba01 Zn07 3.4387(4) 9_566 ?
+Ba01 Zn07 3.4387(4) 11_565 ?
+Ba01 Zn07 3.4387(4) 3_556 ?
+Ba01 Zn07 3.4387(4) . ?
+Ba01 As05 3.4552(4) 9_566 ?
+Ba01 As05 3.4552(4) . ?
+Ba01 Zn08 3.4718(4) . ?
+Ba01 Zn08 3.4719(4) 12 ?
+Ba01 Zn08 3.4719(4) 4_566 ?
+Ba01 Zn08 3.4719(4) 9_566 ?
+Ba02 As04 3.2900(6) . ?
+Ba02 As04 3.2900(6) 3_556 ?
+Ba02 Zn07 3.3325(7) 5_445 ?
+Ba02 Zn07 3.3325(7) 7_546 ?
+Ba02 As03 3.3559(6) 13_556 ?
+Ba02 As03 3.3559(6) 6 ?
+Ba02 As09 3.5053(6) 1_455 ?
+Ba02 As09 3.5054(6) . ?
+Ba02 Zn08 3.5169(4) . ?
+Ba02 Zn08 3.5169(4) 10_557 ?
+Ba02 Zn08 3.5169(4) 12 ?
+As03 As03 2.4386(9) 9_666 ?
+As03 Zn08 2.5167(5) 12_655 ?
+As03 Zn08 2.5167(5) . ?
+As03 Zn07 2.5179(5) 11_565 ?
+As03 Zn07 2.5179(5) 9_666 ?
+As04 Zn07 2.4218(7) . ?
+As04 Zn08 2.4584(4) . ?
+As04 Zn08 2.4585(4) 10_557 ?
+As04 As04 2.5208(10) 3_556 ?
+As04 As09 2.7047(12) . ?
+As05 As06 2.4701(5) . ?
+As05 As06 2.4701(5) 10_556 ?
+As05 Zn07 2.4960(7) 11_565 ?
+As05 Zn07 2.4960(7) 9_566 ?
+As05 As09 2.7939(17) 13_556 ?
+As06 Zn08 2.4859(5) 12 ?
+As06 Zn08 2.4859(5) . ?
+As06 As09 2.5091(10) 13_556 ?
+As06 Zn08 2.5445(6) 8_456 ?
+As06 Zn08 2.5445(6) 13_556 ?
+Zn07 Zn07 2.5914(11) 3_656 ?
+Zn08 As09 2.5852(6) . ?
+Zn08 Zn08 2.5869(8) 12_655 ?
+ 
+loop_
+ _geom_angle_atom_site_label_1
+ _geom_angle_atom_site_label_2
+ _geom_angle_atom_site_label_3
+ _geom_angle
+ _geom_angle_site_symmetry_1
+ _geom_angle_site_symmetry_3
+ _geom_angle_publ_flag
+Zn07 Ba01 Zn07 70.449(16) 9_566 11_565 ?
+Zn07 Ba01 Zn07 109.551(16) 9_566 3_556 ?
+Zn07 Ba01 Zn07 180.0 11_565 3_556 ?
+Zn07 Ba01 Zn07 180.0 9_566 . ?
+Zn07 Ba01 Zn07 109.550(16) 11_565 . ?
+Zn07 Ba01 Zn07 70.450(16) 3_556 . ?
+Zn07 Ba01 As05 137.548(10) 9_566 9_566 ?
+Zn07 Ba01 As05 137.548(10) 11_565 9_566 ?
+Zn07 Ba01 As05 42.452(10) 3_556 9_566 ?
+Zn07 Ba01 As05 42.451(10) . 9_566 ?
+Zn07 Ba01 As05 42.452(10) 9_566 . ?
+Zn07 Ba01 As05 42.452(10) 11_565 . ?
+Zn07 Ba01 As05 137.548(10) 3_556 . ?
+Zn07 Ba01 As05 137.549(10) . . ?
+As05 Ba01 As05 180.000(17) 9_566 . ?
+Zn07 Ba01 Zn08 110.102(11) 9_566 . ?
+Zn07 Ba01 Zn08 71.574(10) 11_565 . ?
+Zn07 Ba01 Zn08 108.426(10) 3_556 . ?
+Zn07 Ba01 Zn08 69.899(11) . . ?
+As05 Ba01 Zn08 109.676(9) 9_566 . ?
+As05 Ba01 Zn08 70.324(9) . . ?
+Zn07 Ba01 Zn08 71.574(10) 9_566 12 ?
+Zn07 Ba01 Zn08 110.101(11) 11_565 12 ?
+Zn07 Ba01 Zn08 69.899(11) 3_556 12 ?
+Zn07 Ba01 Zn08 108.427(10) . 12 ?
+As05 Ba01 Zn08 109.677(9) 9_566 12 ?
+As05 Ba01 Zn08 70.323(9) . 12 ?
+Zn08 Ba01 Zn08 69.769(14) . 12 ?
+Zn07 Ba01 Zn08 108.426(10) 9_566 4_566 ?
+Zn07 Ba01 Zn08 69.899(11) 11_565 4_566 ?
+Zn07 Ba01 Zn08 110.101(11) 3_556 4_566 ?
+Zn07 Ba01 Zn08 71.573(10) . 4_566 ?
+As05 Ba01 Zn08 70.323(9) 9_566 4_566 ?
+As05 Ba01 Zn08 109.677(9) . 4_566 ?
+Zn08 Ba01 Zn08 110.231(14) . 4_566 ?
+Zn08 Ba01 Zn08 180.0 12 4_566 ?
+Zn07 Ba01 Zn08 69.899(11) 9_566 9_566 ?
+Zn07 Ba01 Zn08 108.426(10) 11_565 9_566 ?
+Zn07 Ba01 Zn08 71.574(10) 3_556 9_566 ?
+Zn07 Ba01 Zn08 110.100(11) . 9_566 ?
+As05 Ba01 Zn08 70.323(9) 9_566 9_566 ?
+As05 Ba01 Zn08 109.677(9) . 9_566 ?
+Zn08 Ba01 Zn08 180.0 . 9_566 ?
+Zn08 Ba01 Zn08 110.231(14) 12 9_566 ?
+Zn08 Ba01 Zn08 69.769(14) 4_566 9_566 ?
+As04 Ba02 As04 45.051(18) . 3_556 ?
+As04 Ba02 Zn07 179.645(14) . 5_445 ?
+As04 Ba02 Zn07 134.594(13) 3_556 5_445 ?
+As04 Ba02 Zn07 134.594(13) . 7_546 ?
+As04 Ba02 Zn07 179.645(14) 3_556 7_546 ?
+Zn07 Ba02 Zn07 45.76(2) 5_445 7_546 ?
+As04 Ba02 As03 135.926(8) . 13_556 ?
+As04 Ba02 As03 135.926(8) 3_556 13_556 ?
+Zn07 Ba02 As03 44.227(9) 5_445 13_556 ?
+Zn07 Ba02 As03 44.227(9) 7_546 13_556 ?
+As04 Ba02 As03 135.926(8) . 6 ?
+As04 Ba02 As03 135.926(8) 3_556 6 ?
+Zn07 Ba02 As03 44.227(9) 5_445 6 ?
+Zn07 Ba02 As03 44.227(9) 7_546 6 ?
+As03 Ba02 As03 77.884(17) 13_556 6 ?
+As04 Ba02 As09 91.83(3) . 1_455 ?
+As04 Ba02 As09 46.78(3) 3_556 1_455 ?
+Zn07 Ba02 As09 87.82(3) 5_445 1_455 ?
+Zn07 Ba02 As09 133.58(3) 7_546 1_455 ?
+As03 Ba02 As09 105.956(19) 13_556 1_455 ?
+As03 Ba02 As09 105.956(19) 6 1_455 ?
+As04 Ba02 As09 46.78(3) . . ?
+As04 Ba02 As09 91.83(3) 3_556 . ?
+Zn07 Ba02 As09 133.58(3) 5_445 . ?
+Zn07 Ba02 As09 87.82(3) 7_546 . ?
+As03 Ba02 As09 105.957(19) 13_556 . ?
+As03 Ba02 As09 105.957(19) 6 . ?
+As09 Ba02 As09 138.60(5) 1_455 . ?
+As04 Ba02 Zn08 42.179(8) . . ?
+As04 Ba02 Zn08 72.034(12) 3_556 . ?
+Zn07 Ba02 Zn08 137.981(10) 5_445 . ?
+Zn07 Ba02 Zn08 107.690(11) 7_546 . ?
+As03 Ba02 Zn08 93.757(9) 13_556 . ?
+As03 Ba02 Zn08 144.904(8) 6 . ?
+As09 Ba02 Zn08 109.11(2) 1_455 . ?
+As09 Ba02 Zn08 43.202(14) . . ?
+As04 Ba02 Zn08 42.180(8) . 10_557 ?
+As04 Ba02 Zn08 72.034(12) 3_556 10_557 ?
+Zn07 Ba02 Zn08 137.980(10) 5_445 10_557 ?
+Zn07 Ba02 Zn08 107.690(11) 7_546 10_557 ?
+As03 Ba02 Zn08 144.904(8) 13_556 10_557 ?
+As03 Ba02 Zn08 93.756(9) 6 10_557 ?
+As09 Ba02 Zn08 109.11(2) 1_455 10_557 ?
+As09 Ba02 Zn08 43.202(14) . 10_557 ?
+Zn08 Ba02 Zn08 73.561(14) . 10_557 ?
+As04 Ba02 Zn08 72.034(12) . 12 ?
+As04 Ba02 Zn08 42.180(8) 3_556 12 ?
+Zn07 Ba02 Zn08 107.690(10) 5_445 12 ?
+Zn07 Ba02 Zn08 137.980(10) 7_546 12 ?
+As03 Ba02 Zn08 93.756(9) 13_556 12 ?
+As03 Ba02 Zn08 144.904(8) 6 12 ?
+As09 Ba02 Zn08 43.202(14) 1_455 12 ?
+As09 Ba02 Zn08 109.11(2) . 12 ?
+Zn08 Ba02 Zn08 68.749(14) . 12 ?
+Zn08 Ba02 Zn08 110.766(17) 10_557 12 ?
+As03 As03 Zn08 108.66(2) 9_666 12_655 ?
+As03 As03 Zn08 108.66(2) 9_666 . ?
+Zn08 As03 Zn08 61.85(2) 12_655 . ?
+As03 As03 Zn07 106.50(2) 9_666 11_565 ?
+Zn08 As03 Zn07 144.84(2) 12_655 11_565 ?
+Zn08 As03 Zn07 106.775(18) . 11_565 ?
+As03 As03 Zn07 106.50(2) 9_666 9_666 ?
+Zn08 As03 Zn07 106.775(18) 12_655 9_666 ?
+Zn08 As03 Zn07 144.84(2) . 9_666 ?
+Zn07 As03 Zn07 61.94(2) 11_565 9_666 ?
+As03 As03 Ba02 172.70(3) 9_666 13_556 ?
+Zn08 As03 Ba02 77.511(15) 12_655 13_556 ?
+Zn08 As03 Ba02 77.512(15) . 13_556 ?
+Zn07 As03 Ba02 67.392(15) 11_565 13_556 ?
+Zn07 As03 Ba02 67.392(15) 9_666 13_556 ?
+As03 As03 Ba01 69.604(7) 9_666 1_655 ?
+Zn08 As03 Ba01 68.271(10) 12_655 1_655 ?
+Zn08 As03 Ba01 126.387(15) . 1_655 ?
+Zn07 As03 Ba01 125.542(17) 11_565 1_655 ?
+Zn07 As03 Ba01 67.457(11) 9_666 1_655 ?
+Ba02 As03 Ba01 110.224(7) 13_556 1_655 ?
+As03 As03 Ba01 69.604(7) 9_666 . ?
+Zn08 As03 Ba01 126.387(15) 12_655 . ?
+Zn08 As03 Ba01 68.271(10) . . ?
+Zn07 As03 Ba01 67.457(11) 11_565 . ?
+Zn07 As03 Ba01 125.542(17) 9_666 . ?
+Ba02 As03 Ba01 110.224(7) 13_556 . ?
+Ba01 As03 Ba01 139.207(14) 1_655 . ?
+Zn07 As04 Zn08 108.426(16) . . ?
+Zn07 As04 Zn08 108.426(16) . 10_557 ?
+Zn08 As04 Zn08 117.86(3) . 10_557 ?
+Zn07 As04 As04 107.370(17) . 3_556 ?
+Zn08 As04 As04 107.158(14) . 3_556 ?
+Zn08 As04 As04 107.158(14) 10_557 3_556 ?
+Zn07 As04 As09 114.35(3) . . ?
+Zn08 As04 As09 59.867(14) . . ?
+Zn08 As04 As09 59.867(14) 10_557 . ?
+As04 As04 As09 138.28(3) 3_556 . ?
+Zn07 As04 Ba02 174.85(2) . . ?
+Zn08 As04 Ba02 73.850(14) . . ?
+Zn08 As04 Ba02 73.850(14) 10_557 . ?
+As04 As04 Ba02 67.475(9) 3_556 . ?
+As09 As04 Ba02 70.80(3) . . ?
+Zn07 As04 Ba01 68.492(11) . 2_565 ?
+Zn08 As04 Ba01 173.099(18) . 2_565 ?
+Zn08 As04 Ba01 69.007(10) 10_557 2_565 ?
+As04 As04 Ba01 68.802(8) 3_556 2_565 ?
+As09 As04 Ba01 126.929(8) . 2_565 ?
+Ba02 As04 Ba01 108.712(10) . 2_565 ?
+Zn07 As04 Ba01 68.492(11) . . ?
+Zn08 As04 Ba01 69.007(10) . . ?
+Zn08 As04 Ba01 173.099(18) 10_557 . ?
+As04 As04 Ba01 68.802(8) 3_556 . ?
+As09 As04 Ba01 126.929(8) . . ?
+Ba02 As04 Ba01 108.712(10) . . ?
+Ba01 As04 Ba01 104.120(13) 2_565 . ?
+As06 As05 As06 113.06(3) . 10_556 ?
+As06 As05 Zn07 109.559(8) . 11_565 ?
+As06 As05 Zn07 109.560(8) 10_556 11_565 ?
+As06 As05 Zn07 109.559(8) . 9_566 ?
+As06 As05 Zn07 109.560(8) 10_556 9_566 ?
+Zn07 As05 Zn07 105.24(3) 11_565 9_566 ?
+As06 As05 As09 56.532(16) . 13_556 ?
+As06 As05 As09 56.532(16) 10_556 13_556 ?
+Zn07 As05 As09 127.379(17) 11_565 13_556 ?
+Zn07 As05 As09 127.379(17) 9_566 13_556 ?
+As06 As05 Ba01 70.755(11) . . ?
+As06 As05 Ba01 176.18(2) 10_556 . ?
+Zn07 As05 Ba01 68.422(12) 11_565 . ?
+Zn07 As05 Ba01 68.422(12) 9_566 . ?
+As09 As05 Ba01 127.287(9) 13_556 . ?
+As06 As05 Ba01 176.18(2) . 2_564 ?
+As06 As05 Ba01 70.755(12) 10_556 2_564 ?
+Zn07 As05 Ba01 68.422(12) 11_565 2_564 ?
+Zn07 As05 Ba01 68.422(12) 9_566 2_564 ?
+As09 As05 Ba01 127.287(9) 13_556 2_564 ?
+Ba01 As05 Ba01 105.426(17) . 2_564 ?
+As06 As05 Ba02 76.332(10) . 13_456 ?
+As06 As05 Ba02 76.332(10) 10_556 13_456 ?
+Zn07 As05 Ba02 167.99(2) 11_565 13_456 ?
+Zn07 As05 Ba02 62.751(14) 9_566 13_456 ?
+As09 As05 Ba02 64.628(11) 13_556 13_456 ?
+Ba01 As05 Ba02 105.045(4) . 13_456 ?
+Ba01 As05 Ba02 105.045(4) 2_564 13_456 ?
+As06 As05 Ba02 76.332(10) . 13_556 ?
+As06 As05 Ba02 76.332(10) 10_556 13_556 ?
+Zn07 As05 Ba02 62.751(14) 11_565 13_556 ?
+Zn07 As05 Ba02 167.99(2) 9_566 13_556 ?
+As09 As05 Ba02 64.628(11) 13_556 13_556 ?
+Ba01 As05 Ba02 105.045(4) . 13_556 ?
+Ba01 As05 Ba02 105.045(4) 2_564 13_556 ?
+Ba02 As05 Ba02 129.26(2) 13_456 13_556 ?
+As05 As06 Zn08 107.205(16) . 12 ?
+As05 As06 Zn08 107.206(16) . . ?
+Zn08 As06 Zn08 106.02(2) 12 . ?
+As05 As06 As09 68.26(3) . 13_556 ?
+Zn08 As06 As09 126.599(12) 12 13_556 ?
+Zn08 As06 As09 126.600(12) . 13_556 ?
+As05 As06 Zn08 119.316(19) . 8_456 ?
+Zn08 As06 Zn08 79.647(15) 12 8_456 ?
+Zn08 As06 Zn08 129.225(18) . 8_456 ?
+As09 As06 Zn08 61.53(3) 13_556 8_456 ?
+As05 As06 Zn08 119.316(19) . 13_556 ?
+Zn08 As06 Zn08 129.225(18) 12 13_556 ?
+Zn08 As06 Zn08 79.647(15) . 13_556 ?
+As09 As06 Zn08 61.53(3) 13_556 13_556 ?
+Zn08 As06 Zn08 61.11(2) 8_456 13_556 ?
+As05 As06 Ba01 67.800(16) . . ?
+Zn08 As06 Ba01 68.080(13) 12 . ?
+Zn08 As06 Ba01 68.079(13) . . ?
+As09 As06 Ba01 136.06(3) 13_556 . ?
+Zn08 As06 Ba01 147.236(12) 8_456 . ?
+Zn08 As06 Ba01 147.236(12) 13_556 . ?
+As05 As06 Ba02 167.50(2) . . ?
+Zn08 As06 Ba02 66.283(13) 12 . ?
+Zn08 As06 Ba02 66.283(13) . . ?
+As09 As06 Ba02 124.24(3) 13_556 . ?
+Zn08 As06 Ba02 71.057(13) 8_456 . ?
+Zn08 As06 Ba02 71.057(13) 13_556 . ?
+Ba01 As06 Ba02 99.695(12) . . ?
+As05 As06 Ba02 65.427(9) . 13_456 ?
+Zn08 As06 Ba02 67.840(10) 12 13_456 ?
+Zn08 As06 Ba02 166.846(19) . 13_456 ?
+As09 As06 Ba02 62.304(11) 13_556 13_456 ?
+Zn08 As06 Ba02 62.402(11) 8_456 13_456 ?
+Zn08 As06 Ba02 113.360(16) 13_556 13_456 ?
+Ba01 As06 Ba02 98.779(10) . 13_456 ?
+Ba02 As06 Ba02 118.583(7) . 13_456 ?
+As05 As06 Ba02 65.427(9) . 13_556 ?
+Zn08 As06 Ba02 166.846(19) 12 13_556 ?
+Zn08 As06 Ba02 67.841(10) . 13_556 ?
+As09 As06 Ba02 62.304(11) 13_556 13_556 ?
+Zn08 As06 Ba02 113.360(16) 8_456 13_556 ?
+Zn08 As06 Ba02 62.402(11) 13_556 13_556 ?
+Ba01 As06 Ba02 98.779(10) . 13_556 ?
+Ba02 As06 Ba02 118.583(7) . 13_556 ?
+Ba02 As06 Ba02 115.485(11) 13_456 13_556 ?
+As04 Zn07 As05 110.01(3) . 9_566 ?
+As04 Zn07 As03 109.148(18) . 2_665 ?
+As05 Zn07 As03 107.338(17) 9_566 2_665 ?
+As04 Zn07 As03 109.148(18) . 9_666 ?
+As05 Zn07 As03 107.338(17) 9_566 9_666 ?
+As03 Zn07 As03 113.80(2) 2_665 9_666 ?
+As04 Zn07 Zn07 107.370(17) . 3_656 ?
+As05 Zn07 Zn07 142.624(17) 9_566 3_656 ?
+As03 Zn07 Zn07 59.030(12) 2_665 3_656 ?
+As03 Zn07 Zn07 59.030(12) 9_666 3_656 ?
+As04 Zn07 Ba02 174.49(3) . 5 ?
+As05 Zn07 Ba02 75.503(18) 9_566 5 ?
+As03 Zn07 Ba02 68.382(15) 2_665 5 ?
+As03 Zn07 Ba02 68.382(15) 9_666 5 ?
+Zn07 Zn07 Ba02 67.121(10) 3_656 5 ?
+As04 Zn07 Ba01 70.572(11) . . ?
+As05 Zn07 Ba01 69.126(12) 9_566 . ?
+As03 Zn07 Ba01 175.73(2) 2_665 . ?
+As03 Zn07 Ba01 69.991(8) 9_666 . ?
+Zn07 Zn07 Ba01 125.225(8) 3_656 . ?
+Ba02 Zn07 Ba01 112.279(11) 5 . ?
+As04 Zn07 Ba01 70.572(11) . 2_565 ?
+As05 Zn07 Ba01 69.126(12) 9_566 2_565 ?
+As03 Zn07 Ba01 69.991(8) 2_665 2_565 ?
+As03 Zn07 Ba01 175.73(2) 9_666 2_565 ?
+Zn07 Zn07 Ba01 125.225(8) 3_656 2_565 ?
+Ba02 Zn07 Ba01 112.279(11) 5 2_565 ?
+Ba01 Zn07 Ba01 106.148(15) . 2_565 ?
+As04 Zn08 As06 109.83(2) . . ?
+As04 Zn08 As03 107.22(2) . . ?
+As06 Zn08 As03 109.053(18) . . ?
+As04 Zn08 As06 119.957(19) . 13_556 ?
+As06 Zn08 As06 100.352(15) . 13_556 ?
+As03 Zn08 As06 109.987(18) . 13_556 ?
+As04 Zn08 As09 64.80(3) . . ?
+As06 Zn08 As09 139.07(3) . . ?
+As03 Zn08 As09 111.14(3) . . ?
+As06 Zn08 As09 58.56(3) 13_556 . ?
+As04 Zn08 Zn08 107.159(14) . 12_655 ?
+As06 Zn08 Zn08 143.010(12) . 12_655 ?
+As03 Zn08 Zn08 59.073(11) . 12_655 ?
+As06 Zn08 Zn08 59.446(11) 13_556 12_655 ?
+As09 Zn08 Zn08 59.978(11) . 12_655 ?
+As04 Zn08 Ba01 69.609(13) . . ?
+As06 Zn08 Ba01 70.295(13) . . ?
+As03 Zn08 Ba01 69.400(11) . . ?
+As06 Zn08 Ba01 169.123(17) 13_556 . ?
+As09 Zn08 Ba01 132.20(3) . . ?
+Zn08 Zn08 Ba01 124.885(7) 12_655 . ?
+As04 Zn08 Ba02 63.970(14) . . ?
+As06 Zn08 Ba02 73.390(13) . . ?
+As03 Zn08 Ba02 170.871(18) . . ?
+As06 Zn08 Ba02 77.717(13) 13_556 . ?
+As09 Zn08 Ba02 68.16(2) . . ?
+Zn08 Zn08 Ba02 124.375(7) 12_655 . ?
+Ba01 Zn08 Ba02 104.004(12) . . ?
+As04 Zn08 Ba02 168.347(19) . 13_556 ?
+As06 Zn08 Ba02 74.094(12) . 13_556 ?
+As03 Zn08 Ba02 61.339(14) . 13_556 ?
+As06 Zn08 Ba02 68.811(13) 13_556 13_556 ?
+As09 Zn08 Ba02 119.86(2) . 13_556 ?
+Zn08 Zn08 Ba02 69.733(6) 12_655 13_556 ?
+Ba01 Zn08 Ba02 102.522(10) . 13_556 ?
+Ba02 Zn08 Ba02 127.340(11) . 13_556 ?
+As06 As09 As06 110.41(6) 13_556 6 ?
+As06 As09 Zn08 59.908(13) 13_556 . ?
+As06 As09 Zn08 146.77(3) 6 . ?
+As06 As09 Zn08 146.77(3) 13_556 3_656 ?
+As06 As09 Zn08 59.907(13) 6 3_656 ?
+Zn08 As09 Zn08 145.86(7) . 3_656 ?
+As06 As09 Zn08 146.77(3) 13_556 10_557 ?
+As06 As09 Zn08 59.907(13) 6 10_557 ?
+Zn08 As09 Zn08 109.08(3) . 10_557 ?
+Zn08 As09 Zn08 60.04(2) 3_656 10_557 ?
+As06 As09 Zn08 59.907(13) 13_556 12_655 ?
+As06 As09 Zn08 146.77(3) 6 12_655 ?
+Zn08 As09 Zn08 60.04(2) . 12_655 ?
+Zn08 As09 Zn08 109.09(3) 3_656 12_655 ?
+Zn08 As09 Zn08 145.86(7) 10_557 12_655 ?
+As06 As09 As04 112.319(10) 13_556 . ?
+As06 As09 As04 112.319(10) 6 . ?
+Zn08 As09 As04 55.33(2) . . ?
+Zn08 As09 As04 100.26(4) 3_656 . ?
+Zn08 As09 As04 55.33(2) 10_557 . ?
+Zn08 As09 As04 100.26(4) 12_655 . ?
+As06 As09 As04 112.319(10) 13_556 3_656 ?
+As06 As09 As04 112.319(10) 6 3_656 ?
+Zn08 As09 As04 100.26(4) . 3_656 ?
+Zn08 As09 As04 55.33(2) 3_656 3_656 ?
+Zn08 As09 As04 100.26(4) 10_557 3_656 ?
+Zn08 As09 As04 55.33(2) 12_655 3_656 ?
+As04 As09 As04 96.55(5) . 3_656 ?
+As06 As09 As05 55.21(3) 13_556 13_556 ?
+As06 As09 As05 55.21(3) 6 13_556 ?
+Zn08 As09 As05 107.07(3) . 13_556 ?
+Zn08 As09 As05 107.07(3) 3_656 13_556 ?
+Zn08 As09 As05 107.07(3) 10_557 13_556 ?
+Zn08 As09 As05 107.07(3) 12_655 13_556 ?
+As04 As09 As05 131.72(3) . 13_556 ?
+As04 As09 As05 131.72(3) 3_656 13_556 ?
+As06 As09 Ba02 78.36(2) 13_556 1_655 ?
+As06 As09 Ba02 78.36(2) 6 1_655 ?
+Zn08 As09 Ba02 124.876(10) . 1_655 ?
+Zn08 As09 Ba02 68.637(11) 3_656 1_655 ?
+Zn08 As09 Ba02 124.876(10) 10_557 1_655 ?
+Zn08 As09 Ba02 68.637(11) 12_655 1_655 ?
+As04 As09 Ba02 158.98(5) . 1_655 ?
+As04 As09 Ba02 62.421(12) 3_656 1_655 ?
+As05 As09 Ba02 69.30(3) 13_556 1_655 ?
+As06 As09 Ba02 78.36(2) 13_556 . ?
+As06 As09 Ba02 78.36(2) 6 . ?
+Zn08 As09 Ba02 68.637(11) . . ?
+Zn08 As09 Ba02 124.876(10) 3_656 . ?
+Zn08 As09 Ba02 68.637(11) 10_557 . ?
+Zn08 As09 Ba02 124.876(10) 12_655 . ?
+As04 As09 Ba02 62.421(12) . . ?
+As04 As09 Ba02 158.98(5) 3_656 . ?
+As05 As09 Ba02 69.30(3) 13_556 . ?
+Ba02 As09 Ba02 138.60(5) 1_655 . ?
+ 
+_refine_diff_density_max    1.227
+_refine_diff_density_min   -1.857
+_refine_diff_density_rms    0.335
+
+_shelx_res_file
+;
+TITL PY618_BaCuZnAs_0m_a.res in Cmcm
+    PY618_BaCuZnAs_0m_a.res
+    created by SHELXL-2018/3 at 18:44:07 on 02-Oct-2020
+REM Old TITL PY618_BaCuZnAs_0m in Cmcm
+
+REM SHELXT solution in Cmcm
+REM R1 0.055,  Rweak 0.004,  Alpha 0.013,  Orientation as input
+REM Formula found by SHELXT:  As9 Ba2 Cu Zn4
+
+CELL  0.71073   6.5582  16.8410  10.9959   90.000   90.000   90.000
+ZERR    1.000   0.0004   0.0010   0.0006    0.000    0.000    0.000
+LATT  7
+SYMM -X, -Y, 1/2+Z
+SYMM -X, Y, 1/2-Z
+SYMM X, -Y, -Z
+SFAC AS BA CU ZN
+UNIT 28 8 13 11
+TEMP 0
+L.S. 9
+BOND
+LIST 6
+FMAP 2
+PLAN -20
+
+eadp Zn07 Cu07
+exyz Zn07 Cu07
+eadp Zn08 Cu08
+exyz Zn08 Cu08
+ACTA
+
+WGHT    0.010100
+FVAR       0.10438   0.45031
+BA01  2    0.000000    0.500000    0.500000    10.25000    0.00280    0.00682 =
+         0.00300   -0.00042    0.00000    0.00000
+BA02  2    0.000000    0.216625    0.750000    10.25000    0.00983    0.00223 =
+         0.00836    0.00000    0.00000    0.00000
+AS03  1    0.500000    0.438365    0.441829    10.50000    0.00472    0.00182 =
+         0.00114   -0.00024    0.00000    0.00000
+AS04  1    0.192185    0.397078    0.750000    10.50000    0.00257    0.00414 =
+         0.00477    0.00000    0.00000    0.00021
+AS05  1    0.000000    0.375709    0.250000    10.25000    0.00427    0.00247 =
+         0.00126    0.00000    0.00000    0.00000
+AS06  1    0.000000    0.294824    0.437391    10.50000    0.00346    0.00198 =
+         0.00293    0.00046    0.00000    0.00000
+ZN07  4    0.302433    0.534321    0.750000    10.25000    0.00419    0.00483 =
+         0.00286    0.00000    0.00000   -0.00178
+CU07  3    0.302433    0.534321    0.750000    10.25000    0.00419    0.00483 =
+         0.00286    0.00000    0.00000   -0.00178
+ZN08  4    0.302773    0.335260    0.558498    10.50000    0.00384    0.00717 =
+         0.00489    0.00112    0.00092    0.00036
+CU08  3    0.302773    0.335260    0.558498    10.50000    0.00384    0.00717 =
+         0.00489    0.00112    0.00092    0.00036
+AS09  1    0.500000    0.290194    0.750000    20.25000    0.00879    0.01240 =
+         0.00604    0.00000    0.00000    0.00000
+HKLF 4
+
+
+
+
+REM  PY618_BaCuZnAs_0m_a.res in Cmcm
+REM wR2 = 0.0356, GooF = S = 1.031, Restrained GooF = 1.031 for all data
+REM R1 = 0.0215 for 1024 Fo > 4sig(Fo) and 0.0396 for all 1292 data
+REM 51 parameters refined using 0 restraints
+
+END
+
+WGHT      0.0101      0.0000
+
+REM Highest difference peak  1.227,  deepest hole -1.857,  1-sigma level  0.335
+Q1    1   0.0000  0.3456  0.3627  10.50000  0.05    1.23
+Q2    1   0.0836  0.3140  0.3009  11.00000  0.05    1.19
+Q3    1   0.0880  0.1216  0.6991  11.00000  0.05    1.18
+Q4    1   0.0000  0.4722  0.7500  10.25000  0.05    1.12
+Q5    1   0.1370  0.2126  0.4224  11.00000  0.05    1.06
+Q6    1   0.1031  0.2482  0.5896  11.00000  0.05    1.05
+Q7    1   0.2301  0.2778  0.6131  11.00000  0.05    1.04
+Q8    1   0.0000  0.4915  0.2500  10.25000  0.05    1.04
+Q9    1  -0.3702  0.6222  0.3866  11.00000  0.05    1.04
+Q10   1   0.0835  0.3866  0.6671  11.00000  0.05    1.03
+Q11   1  -0.2515  0.6808  0.3567  11.00000  0.05    1.03
+Q12   1   0.5000  0.5505  0.2839  10.50000  0.05    1.03
+Q13   1   0.0000  0.3005  0.7137  10.50000  0.05    1.01
+Q14   1   0.2504  0.1318  0.7500  10.50000  0.05    1.00
+Q15   1   0.0974  0.2024  0.4698  11.00000  0.05    0.97
+Q16   1   0.1425  0.3004  0.6949  11.00000  0.05    0.95
+Q17   1   0.0000  0.2305  0.4211  10.50000  0.05    0.95
+Q18   1   0.1451  0.1889  0.7500  10.50000  0.05    0.94
+Q19   1  -0.2815  0.5885  0.3990  11.00000  0.05    0.93
+Q20   1  -0.4204  0.5175  0.4219  11.00000  0.05    0.92
+;
+_shelx_res_checksum   96033
+
+_shelx_hkl_file
+;
+  -2   0   0 1148.59   45.10
+   2   0   0 1220.78   45.40
+   2   0   0 1209.18   57.79
+  -2   0   0 1170.78   56.69
+  -4   0   0 8687.73  333.87
+   4   0   0 8301.77  311.77
+   4   0   0 8472.35  335.47
+  -4   0   0 8559.34  310.97
+   6   0   0 7080.49  260.47
+  -6   0   0 7073.99  258.37
+   6   0   0 6720.73  295.47
+   8   0   0  168.88   20.50
+   8   0   0  132.39   52.09
+  10   0   0 3764.62  159.28
+  10   0   0 3877.01  251.37
+   1   1   0    0.30    0.70
+   1  -1   0    1.40    4.80
+  -1   1   0   -0.60    0.80
+  -1  -1   0   -1.00    0.60
+   1   1   0    4.30    3.60
+   1  -1   0    1.00    1.10
+  -1   1   0   -1.80    4.70
+   3  -1   0  517.25   39.90
+   3   1   0  532.45   25.30
+  -3  -1   0  520.75   22.60
+  -3   1   0  520.05   41.70
+  -3  -1   0  593.14   36.00
+  -3   1   0  522.85   23.10
+   3  -1   0  540.55   23.70
+   3   1   0  575.54   40.60
+  -5  -1   0  100.19    9.80
+   5   1   0   97.79   10.10
+   5   1   0   51.19   22.30
+  -5   1   0  120.89   33.10
+  -5   1   0  131.99   16.20
+   5  -1   0   84.19    9.90
+   5  -1   0   91.19   25.30
+  -7  -1   0  213.78   38.50
+  -7   1   0  215.58   20.40
+   7   1   0  219.68   48.10
+   7  -1   0  280.77   51.79
+   7  -1   0  222.88   20.40
+   7   1   0  225.68   20.00
+   9  -1   0   62.39   64.49
+   9   1   0  117.69   70.69
+   0  -2   0    1.60    0.50
+   0   2   0   -0.40    1.60
+   0  -2   0    1.30    0.70
+   0  -2   0    1.80    2.10
+   0   2   0    1.40    0.40
+   0   2   0    0.10    0.50
+   0   2   0    1.10    2.00
+   2   2   0   76.69   12.10
+   2   2   0   87.59    5.50
+  -2   2   0   98.79    6.40
+  -2   2   0   67.59   14.70
+   2  -2   0   56.79   13.20
+  -2  -2   0   89.99    9.10
+   2  -2   0   86.39    6.30
+  -4  -2   0   13.20    8.70
+  -4   2   0    8.10    4.30
+   4  -2   0   24.20   17.10
+  -4   2   0   18.10   23.50
+  -4  -2   0   14.30    4.20
+   4  -2   0    6.80    4.20
+   4   2   0   10.00    3.50
+   4   2   0   32.00   14.90
+  -6   2   0    4.30    8.00
+  -6  -2   0   31.10   18.50
+   6   2   0  -19.40   23.60
+   6   2   0    4.50    5.60
+  -6   2   0  -11.10   39.40
+   6  -2   0   14.20    6.80
+   6  -2   0   10.20   25.70
+   8   2   0   32.20   12.70
+   8  -2   0   16.80   48.60
+  -8   2   0  -15.40   14.90
+   8   2   0  -23.60   44.50
+   8  -2   0   -3.10   11.50
+  10  -2   0  -48.60   84.19
+  10   2   0    6.60   22.40
+  10   2   0  -83.19   94.69
+  10  -2   0   68.59   24.90
+   1   3   0   34.00    5.70
+   1  -3   0   19.60    2.90
+  -1  -3   0   24.50    5.40
+  -1   3   0   17.80    2.70
+   1  -3   0   22.30    3.10
+  -1   3   0   30.80    9.10
+   1  -3   0   17.70    7.20
+   3   3   0  106.99   22.50
+  -3   3   0  145.09   26.50
+   3   3   0  146.49    9.10
+  -3  -3   0  139.69   14.50
+   3  -3   0  144.49   22.70
+  -3   3   0  155.08   10.20
+   3  -3   0  155.78    9.90
+   5  -3   0  100.49   25.40
+  -5   3   0  153.68   39.80
+  -5  -3   0  117.29   19.90
+   5   3   0   95.39   10.10
+   5   3   0   98.19   28.30
+   5  -3   0   94.29   10.40
+  -5   3   0  105.89   12.00
+   7   3   0   13.80   34.50
+   7  -3   0   37.30    9.50
+  -7   3   0   41.80   12.90
+  -7  -3   0   11.60   29.40
+   7  -3   0   49.80   36.30
+   7   3   0   50.99   10.30
+   9  -3   0   -0.80   63.39
+   9   3   0   11.70   15.60
+   9  -3   0  -11.20   15.40
+   0   4   0   18.90    5.90
+   0   4   0   31.10    2.20
+   0  -4   0   30.00    3.00
+   0  -4   0   33.50    2.20
+   0  -4   0   30.70    7.30
+   0   4   0   38.90    3.20
+   0   4   0   21.90    6.40
+  -2   4   0 2773.82  121.59
+   2  -4   0 2831.12  105.59
+   2  -4   0 2576.94  119.69
+  -2   4   0 2852.71  103.69
+   2   4   0 2727.83  105.99
+  -2  -4   0 2929.01  108.59
+   2  -4   0 2593.14  103.49
+  -4   4   0  510.55   56.99
+   4  -4   0  527.05   47.80
+   4   4   0  515.65   23.20
+  -4   4   0  514.85   24.90
+  -4  -4   0  542.25   33.00
+   4   4   0  504.15   43.50
+   4  -4   0  485.15   24.70
+   4  -4   0  428.06   30.40
+  -6  -4   0  142.19   26.30
+  -6   4   0  140.39   56.19
+   6  -4   0  127.49   15.00
+   6   4   0  159.98   36.60
+   6   4   0  112.59   13.00
+   6  -4   0  149.59   38.10
+   6  -4   0  100.49   23.00
+  -6   4   0  138.89   16.50
+  -8   4   0  662.63   46.80
+   8  -4   0  835.72  106.29
+  -8  -4   0 1189.18  123.09
+   8   4   0  800.92   42.80
+   8   4   0  860.81  104.69
+  -1   5   0   11.90    2.90
+  -1  -5   0    6.30    6.40
+   1  -5   0    8.00    2.50
+   1  -5   0   11.70    2.40
+  -1   5   0   13.40    3.30
+  -1   5   0    0.10    7.90
+   1   5   0    9.50    6.50
+   1  -5   0    7.60    7.10
+   3  -5   0 2759.52  136.19
+  -3   5   0 3055.09  114.49
+   3  -5   0 2904.61  114.69
+  -3  -5   0 3232.48  121.99
+   3  -5   0 3096.29  117.79
+   5  -5   0  340.27   20.70
+   5   5   0  339.87   19.00
+  -5   5   0  335.67   21.20
+   5   5   0  362.36   44.70
+   5  -5   0  364.36   48.60
+  -5   5   0  231.98   47.40
+   5  -5   0  391.76   29.30
+  -5  -5   0  359.76   37.40
+   7  -5   0  877.11   44.90
+   7   5   0  878.81   86.69
+   7   5   0  898.11   42.80
+  -7   5   0  839.42   46.10
+  -7  -5   0  975.50   77.09
+   7  -5   0  761.32   89.69
+   9   5   0   61.89   72.39
+   9  -5   0  141.39   73.09
+   9   5   0  146.69   23.00
+   9  -5   0   73.39   21.00
+   0   6   0  876.51   44.50
+   0   6   0  833.52   43.90
+   0  -6   0  868.81   31.90
+   0  -6   0  832.32   33.20
+   0   6   0  849.12   33.60
+   0  -6   0  864.81   43.00
+   0   6   0  833.82   32.20
+   2   6   0  486.05   26.80
+  -2   6   0  524.55   22.90
+   2  -6   0  419.76   36.30
+  -2  -6   0  485.25   29.70
+  -2   6   0  490.05   43.80
+   2  -6   0  490.85   22.00
+   2  -6   0  428.76   21.80
+   4  -6   0   29.20   19.00
+   4  -6   0   69.49   11.60
+   4  -6   0   48.40    7.90
+   4   6   0   44.90    6.10
+  -4   6   0   39.90    7.70
+  -4   6   0   41.20   30.90
+   4   6   0   34.10   15.70
+  -6  -6   0    5.30   22.60
+   6  -6   0   12.10   24.50
+   6  -6   0   21.70    8.40
+   6   6   0   32.50   29.60
+  -6   6   0   33.30   11.80
+   6   6   0   22.30    6.60
+  -6   6   0  -14.60   59.89
+   6  -6   0   27.90   16.30
+   8   6   0   62.69   56.39
+   8  -6   0   66.69   15.50
+   8  -6   0   43.60   56.49
+   8   6   0
+#################### END FOS EMBED }}}
+
