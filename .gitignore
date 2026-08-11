@@ -6,6 +6,7 @@ __pycache__/
 # Windows editing files
 *~$*
 
+.venvs/
 dist_venv/
 mkdocs/site/
 src/FoSpy/config/user.json
