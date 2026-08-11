@@ -2327,17 +2327,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 257
+      "row": 258
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 257
+      "row": 258
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 257,
+    "noqa_row": 258,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -2346,7 +2346,7 @@
     "code": "FURB122",
     "end_location": {
       "column": 52,
-      "row": 263
+      "row": 264
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
     "fix": {
@@ -2356,11 +2356,11 @@
           "content": "f.writelines(line.rstrip(\"\\r\\n\") + \"\\n\" for line in self.embedded)",
           "end_location": {
             "column": 52,
-            "row": 263
+            "row": 264
           },
           "location": {
             "column": 13,
-            "row": 262
+            "row": 263
           }
         }
       ],
@@ -2368,11 +2368,11 @@
     },
     "location": {
       "column": 13,
-      "row": 262
+      "row": 263
     },
     "message": "Use of `f.write` in a for loop",
     "name": "for-loop-writes",
-    "noqa_row": 262,
+    "noqa_row": 263,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/for-loop-writes"
   },
@@ -2381,7 +2381,7 @@
     "code": "TRY201",
     "end_location": {
       "column": 24,
-      "row": 351
+      "row": 352
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
     "fix": {
@@ -2391,11 +2391,11 @@
           "content": "raise",
           "end_location": {
             "column": 24,
-            "row": 351
+            "row": 352
           },
           "location": {
             "column": 17,
-            "row": 351
+            "row": 352
           }
         }
       ],
@@ -2403,11 +2403,11 @@
     },
     "location": {
       "column": 23,
-      "row": 351
+      "row": 352
     },
     "message": "Use `raise` without specifying exception name",
     "name": "verbose-raise",
-    "noqa_row": 351,
+    "noqa_row": 352,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/verbose-raise"
   },
@@ -2416,7 +2416,7 @@
     "code": "I001",
     "end_location": {
       "column": 24,
-      "row": 357
+      "row": 358
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/attachments.py",
     "fix": {
@@ -2426,11 +2426,11 @@
           "content": "        import warnings\n        from pathlib import Path\n",
           "end_location": {
             "column": 1,
-            "row": 358
+            "row": 359
           },
           "location": {
             "column": 1,
-            "row": 356
+            "row": 357
           }
         }
       ],
@@ -2438,11 +2438,11 @@
     },
     "location": {
       "column": 9,
-      "row": 356
+      "row": 357
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 356,
+    "noqa_row": 357,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
@@ -4618,6 +4618,41 @@
   },
   {
     "cell": null,
+    "code": "PIE790",
+    "end_location": {
+      "column": 9,
+      "row": 70
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/metadata.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 71
+          },
+          "location": {
+            "column": 1,
+            "row": 70
+          }
+        }
+      ],
+      "message": "Remove unnecessary `pass`"
+    },
+    "location": {
+      "column": 5,
+      "row": 70
+    },
+    "message": "Unnecessary `pass` statement",
+    "name": "unnecessary-placeholder",
+    "noqa_row": 70,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unnecessary-placeholder"
+  },
+  {
+    "cell": null,
     "code": "I001",
     "end_location": {
       "column": 30,
@@ -4818,10 +4853,64 @@
   },
   {
     "cell": null,
+    "code": "TRY203",
+    "end_location": {
+      "column": 64,
+      "row": 416
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
+    "fix": null,
+    "location": {
+      "column": 25,
+      "row": 412
+    },
+    "message": "Remove exception handler; error is immediately re-raised",
+    "name": "useless-try-except",
+    "noqa_row": 412,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/useless-try-except"
+  },
+  {
+    "cell": null,
+    "code": "RUF100",
+    "end_location": {
+      "column": 50,
+      "row": 413
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 50,
+            "row": 413
+          },
+          "location": {
+            "column": 34,
+            "row": 413
+          }
+        }
+      ],
+      "message": "Remove unused `noqa` directive"
+    },
+    "location": {
+      "column": 36,
+      "row": 413
+    },
+    "message": "Unused `noqa` directive (unused: `BLE001`)",
+    "name": "unused-noqa",
+    "noqa_row": 413,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unused-noqa"
+  },
+  {
+    "cell": null,
     "code": "I001",
     "end_location": {
       "column": 58,
-      "row": 484
+      "row": 485
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -4831,11 +4920,11 @@
           "content": "        from .blocks import Block, ListBlock, SingleBlock\n",
           "end_location": {
             "column": 1,
-            "row": 485
+            "row": 486
           },
           "location": {
             "column": 1,
-            "row": 484
+            "row": 485
           }
         }
       ],
@@ -4843,11 +4932,11 @@
     },
     "location": {
       "column": 9,
-      "row": 484
+      "row": 485
     },
     "message": "Import block is un-sorted or un-formatted",
     "name": "unsorted-imports",
-    "noqa_row": 484,
+    "noqa_row": 485,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
   },
@@ -4856,7 +4945,7 @@
     "code": "F841",
     "end_location": {
       "column": 20,
-      "row": 650
+      "row": 651
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/blocks/template.py",
     "fix": {
@@ -4866,11 +4955,11 @@
           "content": "",
           "end_location": {
             "column": 23,
-            "row": 650
+            "row": 651
           },
           "location": {
             "column": 9,
-            "row": 650
+            "row": 651
           }
         }
       ],
@@ -4878,11 +4967,11 @@
     },
     "location": {
       "column": 9,
-      "row": 650
+      "row": 651
     },
     "message": "Local variable `rename_from` is assigned to but never used",
     "name": "unused-variable",
-    "noqa_row": 650,
+    "noqa_row": 651,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unused-variable"
   },
@@ -6477,8 +6566,8 @@
     "cell": null,
     "code": "RUF015",
     "end_location": {
-      "column": 42,
-      "row": 24
+      "column": 46,
+      "row": 27
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/parsing/validators/units.py",
     "fix": {
@@ -6487,24 +6576,24 @@
         {
           "content": "next(iter(dim.keys()))",
           "end_location": {
-            "column": 42,
-            "row": 24
+            "column": 46,
+            "row": 27
           },
           "location": {
-            "column": 23,
-            "row": 24
+            "column": 27,
+            "row": 27
           }
         }
       ],
       "message": "Replace with `next(iter(dim.keys()))`"
     },
     "location": {
-      "column": 23,
-      "row": 24
+      "column": 27,
+      "row": 27
     },
     "message": "Prefer `next(iter(dim.keys()))` over single element slice",
     "name": "unnecessary-iterable-allocation-for-first-element",
-    "noqa_row": 24,
+    "noqa_row": 27,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unnecessary-iterable-allocation-for-first-element"
   },
@@ -6512,8 +6601,8 @@
     "cell": null,
     "code": "RUF015",
     "end_location": {
-      "column": 76,
-      "row": 24
+      "column": 80,
+      "row": 27
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/parsing/validators/units.py",
     "fix": {
@@ -6522,24 +6611,24 @@
         {
           "content": "next(iter(dim.values()))",
           "end_location": {
-            "column": 76,
-            "row": 24
+            "column": 80,
+            "row": 27
           },
           "location": {
-            "column": 55,
-            "row": 24
+            "column": 59,
+            "row": 27
           }
         }
       ],
       "message": "Replace with `next(iter(dim.values()))`"
     },
     "location": {
-      "column": 55,
-      "row": 24
+      "column": 59,
+      "row": 27
     },
     "message": "Prefer `next(iter(dim.values()))` over single element slice",
     "name": "unnecessary-iterable-allocation-for-first-element",
-    "noqa_row": 24,
+    "noqa_row": 27,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/unnecessary-iterable-allocation-for-first-element"
   },
