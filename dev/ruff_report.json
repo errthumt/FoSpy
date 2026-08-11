@@ -7964,7 +7964,7 @@
       "applicability": "safe",
       "edits": [
         {
-          "content": "import argparse\nimport importlib.metadata\nimport inspect\nimport os\nimport pathlib\nimport platform\nimport subprocess\nimport sys\nimport types\nimport urllib.request\nfrom typing import Any, Union, get_args, get_origin\nfrom urllib.error import HTTPError, URLError\n\nfrom PySide6.QtWidgets import (\n    QComboBox,\n    QDialog,\n    QDialogButtonBox,\n    QHBoxLayout,\n    QLabel,\n    QLineEdit,\n    QVBoxLayout,\n)\n\nfrom ...blocks.files import EXT_READ_MAP\n\n",
+          "content": "import argparse\nimport importlib.metadata\nimport inspect\nimport os\nimport pathlib\nimport platform\nimport subprocess\nimport sys\nimport types\nimport urllib.request\nfrom typing import Any, Union, get_args, get_origin\nfrom urllib.error import HTTPError, URLError\n\nfrom PySide6.QtWidgets import (\n    QComboBox,\n    QDialog,\n    QDialogButtonBox,\n    QHBoxLayout,\n    QLabel,\n    QLineEdit,\n    QVBoxLayout,\n)\n\nfrom ...blocks.files import EXT_DESC_MAP, EXT_READ_MAP\n\n",
           "end_location": {
             "column": 1,
             "row": 26
@@ -8059,20 +8059,195 @@
   },
   {
     "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 18,
+      "row": 403
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "import os\nimport platform\nimport subprocess\n\n\n",
+          "end_location": {
+            "column": 1,
+            "row": 405
+          },
+          "location": {
+            "column": 1,
+            "row": 401
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 1,
+      "row": 401
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 401,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
+    "code": "F811",
+    "end_location": {
+      "column": 10,
+      "row": 401
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 402
+          },
+          "location": {
+            "column": 1,
+            "row": 401
+          }
+        }
+      ],
+      "message": "Remove definition: `os`"
+    },
+    "location": {
+      "column": 8,
+      "row": 401
+    },
+    "message": "Redefinition of unused `os` from line 2: `os` redefined here",
+    "name": "redefined-while-unused",
+    "noqa_row": 401,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/redefined-while-unused"
+  },
+  {
+    "cell": null,
+    "code": "F811",
+    "end_location": {
+      "column": 16,
+      "row": 402
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 403
+          },
+          "location": {
+            "column": 1,
+            "row": 402
+          }
+        }
+      ],
+      "message": "Remove definition: `platform`"
+    },
+    "location": {
+      "column": 8,
+      "row": 402
+    },
+    "message": "Redefinition of unused `platform` from line 3: `platform` redefined here",
+    "name": "redefined-while-unused",
+    "noqa_row": 402,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/redefined-while-unused"
+  },
+  {
+    "cell": null,
+    "code": "F811",
+    "end_location": {
+      "column": 18,
+      "row": 403
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "",
+          "end_location": {
+            "column": 1,
+            "row": 404
+          },
+          "location": {
+            "column": 1,
+            "row": 403
+          }
+        }
+      ],
+      "message": "Remove definition: `subprocess`"
+    },
+    "location": {
+      "column": 8,
+      "row": 403
+    },
+    "message": "Redefinition of unused `subprocess` from line 4: `subprocess` redefined here",
+    "name": "redefined-while-unused",
+    "noqa_row": 403,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/redefined-while-unused"
+  },
+  {
+    "cell": null,
+    "code": "I001",
+    "end_location": {
+      "column": 22,
+      "row": 424
+    },
+    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
+    "fix": {
+      "applicability": "safe",
+      "edits": [
+        {
+          "content": "        import ctypes\n        import winreg\n",
+          "end_location": {
+            "column": 1,
+            "row": 425
+          },
+          "location": {
+            "column": 1,
+            "row": 423
+          }
+        }
+      ],
+      "message": "Organize imports"
+    },
+    "location": {
+      "column": 9,
+      "row": 423
+    },
+    "message": "Import block is un-sorted or un-formatted",
+    "name": "unsorted-imports",
+    "noqa_row": 423,
+    "severity": "error",
+    "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+  },
+  {
+    "cell": null,
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 449
+      "row": 470
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 449
+      "row": 470
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 449,
+    "noqa_row": 470,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -8081,17 +8256,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 476
+      "row": 521
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 476
+      "row": 521
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 476,
+    "noqa_row": 521,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -8100,17 +8275,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 25,
-      "row": 502
+      "row": 572
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
     "fix": null,
     "location": {
       "column": 16,
-      "row": 502
+      "row": 572
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 502,
+    "noqa_row": 572,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
@@ -8119,17 +8294,17 @@
     "code": "BLE001",
     "end_location": {
       "column": 21,
-      "row": 556
+      "row": 626
     },
     "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/ui/app/_utils.py",
     "fix": null,
     "location": {
       "column": 12,
-      "row": 556
+      "row": 626
     },
     "message": "Do not catch blind exception: `Exception`",
     "name": "blind-except",
-    "noqa_row": 556,
+    "noqa_row": 626,
     "severity": "error",
     "url": "https://docs.astral.sh/ruff/rules/blind-except"
   },
