@@ -87,16 +87,16 @@ def open_fosx(fosx_path, ext_dir=None, **kwargs):
 
 EXT_MAP = {
     "fos": (dict_from_file, write_dict_to_file,
-            "FoS Format"),
+            "Complete File of Synthesis (FoS)"),
     "fost": (dict_from_file, write_dict_to_file,
-             "FoS Format (Template)"),
+             "Incomplete/Template File of Synthesis (FoST)"),
     "fosx": (open_fosx, save_fosx,
-            "FoSX Package"),
+            "File of Synthesis packaged archive (FoSX)"),
     "json": (
         lambda fp: json.load(open(fp, "r")),
         lambda blockDict, fp, **kwargs: 
             json.dump(blockDict, open(fp, "w"), indent=kwargs.pop("json_indent",4), **kwargs),
-        "FoS-style JSON"
+        "File-of-Synthesis-styled JSON"
     )
 }
 

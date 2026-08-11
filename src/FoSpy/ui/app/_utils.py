@@ -11,7 +11,7 @@ import pathlib
 import types
 from typing import Any, Union, get_args, get_origin
 from urllib.error import URLError, HTTPError
-from ...blocks.files import EXT_READ_MAP
+from ...blocks.files import EXT_READ_MAP, EXT_DESC_MAP
 
 from PySide6.QtWidgets import(
     QDialog,
@@ -398,50 +398,71 @@ def _get_executable(full=True):
     return os.path.basename(executable_path)
 
 
+import os
+import platform
+import subprocess
+
 def _main_registration():
     print("Registering FoSpy GUI as a handler for the following extensions...")
     for ext in SUPPORTED_EXTENSIONS:
-        print("*"+ext)
+        print("*" + ext)
 
     fospy_version = _get_version()
 
-    app_id = f"FoSpy-App_{fospy_version.replace(' ', '_')}"
-    description = "FoS-style viewer using the FoSpy framework"
-    current_os = platform.system()
+    # 1. Non-unique app ID (Constant) so subsequent runs overwrite old keys/files
+    app_id = "FoSpy_GUI"
+    
+    # 2. Display text for the UI / Open With menus (includes version)
+    display_name = f"{app_id} {fospy_version}"
 
-    # --- 1. Find the target executable platform-agnostically ---
-    # If frozen via PyInstaller, sys.executable is the compiled binary wrapper.
-    # If running via pip entry points, it will point to an executable entry script wrapper.
+    current_os = platform.system()
     executable_path = _get_executable()
 
-
-    # --- 2. Windows Implementation ---
+    # --- 1. Windows Implementation ---
     if current_os == "Windows":
         import winreg
+        import ctypes
         try:
-            # Format command directly targeting the executable path wrapper
             win_command = f'"{executable_path}" "%1"'
+            exe_basename = os.path.basename(executable_path) # e.g., "fospy-app.exe"
             
-            app_key_path = f"Software\\Classes\\{app_id}"
-            with winreg.CreateKey(winreg.HKEY_CURRENT_USER, app_key_path) as key:
-                winreg.SetValue(key, "", winreg.REG_SZ, description)
-                
-            # Set FriendlyAppName so Windows displays "FoSpy GUI X.X.X" in "Open With"
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, app_key_path, 0, winreg.KEY_SET_VALUE) as key:
-                winreg.SetValueEx(key, "FriendlyAppName", 0, winreg.REG_SZ, app_id)
-
-            cmd_key_path = f"{app_key_path}\\shell\\open\\command"
-            with winreg.CreateKey(winreg.HKEY_CURRENT_USER, cmd_key_path) as key:
+            # Explicitly map the literal .exe filename to the versioned display name
+            exe_key_path = f"Software\\Classes\\Applications\\{exe_basename}"
+            with winreg.CreateKey(winreg.HKEY_CURRENT_USER, exe_key_path) as key:
+                winreg.SetValueEx(key, "FriendlyAppName", 0, winreg.REG_SZ, display_name)
+            with winreg.CreateKey(winreg.HKEY_CURRENT_USER, f"{exe_key_path}\\shell\\open\\command") as key:
                 winreg.SetValue(key, "", winreg.REG_SZ, win_command)
 
+            # Map each extension to its own ProgID to support distinct filetype descriptions
             for ext in SUPPORTED_EXTENSIONS:
-                if not ext.startswith('.'):
-                    ext = f".{ext}"
-                ext_key_path = f"Software\\Classes\\{ext}"
-                with winreg.CreateKey(winreg.HKEY_CURRENT_USER, ext_key_path) as key:
-                    winreg.SetValue(key, "", winreg.REG_SZ, app_id)
+                ext_clean = ext.lstrip('.')
+                prog_id = f"{app_id}.{ext_clean}"
+                
+                # Retrieve custom description from map
+                description = EXT_DESC_MAP.get(ext_clean, "FoS-Style")
+                
+                # Register the Custom ProgID
+                prog_key_path = f"Software\\Classes\\{prog_id}"
+                with winreg.CreateKey(winreg.HKEY_CURRENT_USER, prog_key_path) as key:
+                    winreg.SetValue(key, "", winreg.REG_SZ, description)
+                    winreg.SetValueEx(key, "FriendlyTypeName", 0, winreg.REG_SZ, description)
 
-            import ctypes
+                # Shell command
+                cmd_key_path = f"{prog_key_path}\\shell\\open\\command"
+                with winreg.CreateKey(winreg.HKEY_CURRENT_USER, cmd_key_path) as key:
+                    winreg.SetValue(key, "", winreg.REG_SZ, win_command)
+                
+                # Modern Windows UI fallback for app name
+                shell_key_path = f"{prog_key_path}\\shell"
+                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, shell_key_path, 0, winreg.KEY_SET_VALUE) as key:
+                    winreg.SetValueEx(key, "AppName", 0, winreg.REG_SZ, display_name)
+
+                # Link extension to the ProgID
+                ext_key_path = f"Software\\Classes\\.{ext_clean}"
+                with winreg.CreateKey(winreg.HKEY_CURRENT_USER, ext_key_path) as key:
+                    winreg.SetValue(key, "", winreg.REG_SZ, prog_id)
+
+            # Clear shell caches
             ctypes.windll.shell32.SHChangeNotify(0x08000000, 0x0000, None, None)
             print("Windows extension registration complete.")
             return True
@@ -450,25 +471,49 @@ def _main_registration():
             print(f"Windows extension registration failed: {e}")
             return False
 
-    # --- 3. Linux Implementation ---
+    # --- 2. Linux Implementation ---
     elif current_os == "Linux":
         try:
+            # Generate shared-mime-info XML to support custom filetype descriptions in file explorers
+            mime_dir = os.path.expanduser("~/.local/share/mime/packages")
+            os.makedirs(mime_dir, exist_ok=True)
+            mime_xml_path = os.path.join(mime_dir, f"{app_id.lower()}.xml")
+            
+            mime_types = []
+            with open(mime_xml_path, "w") as f:
+                f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+                f.write('<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">\n')
+                for ext in SUPPORTED_EXTENSIONS:
+                    ext_clean = ext.lstrip('.')
+                    description = EXT_DESC_MAP.get(ext_clean, "FoS-Style")
+                    mime_type = f"application/x-{app_id.lower()}-{ext_clean}"
+                    mime_types.append(mime_type)
+                    
+                    f.write(f'  <mime-type type="{mime_type}">\n')
+                    f.write(f'    <comment>{description}</comment>\n')
+                    f.write(f'    <glob pattern="*.{ext_clean}"/>\n')
+                    f.write('  </mime-type>\n')
+                f.write('</mime-info>\n')
+            
+            subprocess.run(["update-mime-database", os.path.expanduser("~/.local/share/mime")], check=True)
+
+            # Create the desktop entry using the versioned display name
             apps_dir = os.path.expanduser("~/.local/share/applications")
             os.makedirs(apps_dir, exist_ok=True)
             
             desktop_filename = f"{app_id.lower()}.desktop"
             desktop_file_path = os.path.join(apps_dir, desktop_filename)
-            mime_type = f"application/x-{app_id.lower().replace('_', '-')}"
             
             with open(desktop_file_path, "w") as f:
                 f.write("[Desktop Entry]\n")
                 f.write("Type=Application\n")
-                f.write(f"Name={description}\n")
+                f.write(f"Name={display_name}\n")
                 f.write(f"Exec=\"{executable_path}\" %f\n")
-                f.write(f"MimeType={mime_type};\n")
+                f.write(f"MimeType={';'.join(mime_types)};\n")
                 f.write("NoDisplay=true\n")
 
-            for ext in SUPPORTED_EXTENSIONS:
+            # Bind defaults
+            for mime_type in mime_types:
                 subprocess.run(["xdg-mime", "default", desktop_filename, mime_type], check=True)
             
             print("Linux extension registration complete.")
@@ -477,16 +522,41 @@ def _main_registration():
             print(f"Linux extension registration failed: {e}")
             return False
 
-    # --- 4. macOS (Darwin) Implementation ---
+    # --- 3. macOS (Darwin) Implementation ---
     elif current_os == "Darwin":
         try:
-            # On macOS, associations are handled natively by Launch Services via App Bundles.
-            # If the app path contains '.app', we trigger the core registry system.
             if ".app" in executable_path:
-                # Isolate the outer absolute folder path to the actual MyApp.app directory
                 app_bundle_path = executable_path.split(".app")[0] + ".app"
                 
-                # Use macOS built-in Launch Services tool to dynamically register the App bundle
+                # macOS reads descriptions and app names strictly from Info.plist
+                # We dynamically inject the mapped descriptions and versioned app name here.
+                import plistlib
+                plist_path = os.path.join(app_bundle_path, "Contents", "Info.plist")
+                
+                if os.path.exists(plist_path):
+                    with open(plist_path, 'rb') as f:
+                        plist = plistlib.load(f)
+                        
+                    # Inject display name with version
+                    plist["CFBundleName"] = display_name
+                    
+                    # Inject filetype mappings and descriptions
+                    doc_types = []
+                    for ext in SUPPORTED_EXTENSIONS:
+                        ext_clean = ext.lstrip('.')
+                        description = EXT_DESC_MAP.get(ext_clean, "FoS-Style")
+                        doc_types.append({
+                            "CFBundleTypeName": description,
+                            "CFBundleTypeRole": "Editor",
+                            "LSHandlerRank": "Owner",
+                            "LSItemContentTypes": [f"com.{app_id.lower()}.{ext_clean}"]
+                        })
+                    
+                    plist["CFBundleDocumentTypes"] = doc_types
+                    
+                    with open(plist_path, 'wb') as f:
+                        plistlib.dump(plist, f)
+                        
                 lsregister_path = "/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
                 
                 if os.path.exists(lsregister_path):
