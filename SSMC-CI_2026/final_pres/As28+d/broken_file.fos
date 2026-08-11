@@ -1,6 +1,6 @@
 fos_id: TE097
 fos_type: synthesis
-description: Attempted synthesis of As28+d clathrate
+// description: Attempted synthesis of As28+d clathrate
 group_id: kovnir-0000-0003-1152-1912
 project_id: travis5672/clathrates/As28+d
 

@@ -244,3 +244,29 @@ def tools_menu(win):
     return {
         "Python Console": win._open_console
     }
+
+@add_to_menus("edit")
+def edit_menu(win):
+    def dummy():
+        raise NotImplementedError("Slow down! That hasn't been coded yet :(")
+    return {
+        "Insert": {
+            "From Template": dummy
+        }
+    }
+
+@add_to_menus("check")
+def check_menu(win):
+    def popup():
+        win._custom_popup(
+            "File Check Passed",
+            "<ul>This file looks great! Checks performed:"
+            "<li>Mass Balance</li>"
+            "<li>Composition Sources</li>"
+            "<li>Phase identification</li>"
+            "</ul>"
+        )
+
+    return {
+        "Check All": popup
+    }

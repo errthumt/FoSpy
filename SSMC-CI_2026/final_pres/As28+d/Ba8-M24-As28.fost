@@ -1,4 +1,4 @@
-fos_id: TE097
+-fos_id: TE097
 fos_type: synthesis
 description: Attempted synthesis of As28+d clathrate
 group_id: kovnir-0000-0003-1152-1912
@@ -10,191 +10,168 @@ affiliation: Kovnir Group - Iowa State
 orcid: 0009-0006-1937-5672
 
 [Reaction]
-nominal_formula: Ba8Cu13Zn11As28.5
+-nominal_formula: Ba8Cu13Zn11As28.5
 nominal_amount: 250
 nominal_amount_unit: milligram
 
 [[Products]]
-:formula
-:name
-:expected
-:obtained
-:observations
-:obtained_amount
-:obtained_amount_unit
-:characterizations
-:cif
+formula: Ba8Cu13Zn11As28.5
+name: Target Phase
+expected: True
+obtained: True
+observations: Unable to characterize exact Cu/Zn ratio with available methods
+-obtained_amount: 186
+obtained_amount_unit: milligram
+characterizations: PXRD Rietveld Refinement
+cif: Ba8-Cu13-Zn11-As29.8.cif
+expected_amount: 250
+expected_amount_unit: milligram
+structure_comments: [;;;
+Arsenic occupancy variable from 28.2~29.8. CIF File is from single crystal
+determination from another sample and may not have the same Arsenic occupancy or
+Cu/Zn ratio]
 
-    Ba8Cu13Zn11As28.5
-    Target Phase
-    True
-    True
-    Unable to characterize exact Cu/Zn ratio with available methods
-    186
-    milligram
-    PXRD Rietveld Refinement
-    Ba8-Cu13-Zn11-As29.8.cif
-    expected_amount: 250
-    expected_amount_unit: milligram
-    structure_comments: [;;;
-    Arsenic occupancy variable from 28.2~29.8. CIF File is from single crystal
-    determination from another sample and may not have the same Arsenic
-    occupancy or Cu/Zn ratio]
+formula: Ba2Zn5As6
+name: 2-5-6 Clathrate
+expected: False
+obtained: True
+observations: Zn-Rich, As/Cu-poor
+-obtained_amount: 33
+obtained_amount_unit: milligram
+characterizations: PXRD Rietveld Refinement
+cif: Ba2-Zn5-As6.cif
 
-    Ba2Zn5As6
-    2-5-6 Clathrate
-    False
-    True
-    Zn-Rich, As/Cu-poor
-    33
-    milligram
-    PXRD Rietveld Refinement
-    Ba2-Zn5-As6.cif
+formula: ZnAs2
+name: Zinc Arsenide (1-2)
+expected: False
+obtained: True
+observations: As-rich, Ba/Cu-poor
+-obtained_amount: 18
+obtained_amount_unit: milligram
+characterizations: PXRD Rietveld Refinement
+cif: Zn-As2.cif
 
-    ZnAs2
-    Zinc Arsenide (1-2)
-    False
-    True
-    As-rich, Ba/Cu-poor
-    18
-    milligram
-    PXRD Rietveld Refinement
-    Zn-As2.cif
-
-    BaZn2As2
-    Ba-Zn-As 1-2-2
-    False
-    True
-    Zn-rich, Cu/As-poor
-    13
-    milligram
-    PXRD Rietveld Refinement
-    Ba-Zn2-As2.cif
+formula: BaZn2As2
+name: Ba-Zn-As 1-2-2
+expected: False
+obtained: True
+observations: Zn-rich, Cu/As-poor
+-obtained_amount: 13
+obtained_amount_unit: milligram
+characterizations: PXRD Rietveld Refinement
+cif: Ba-Zn2-As2.cif
 
 [[Materials]]
-:name
-:type
-:formula
-:supplier
-:cas
-:form
-:env
-:amount
-:amount_unit
+name: Dendritic Barium
+type: reagent
+formula: Ba
+supplier: thermoscientific
+cas: 7440-39-3
+form: dendritic lump
+env: glovebox
+amount: 8
+amount_unit: mol ratio
 
-    Dendritic Barium
-    reagent
-    Ba
-    thermoscientific
-    7440-39-3
-    dendritic lump
-    glovebox
-    8
-    mol ratio
+name: CuZnAs Precursor
+type: reagent
+formula: Cu13Zn11As20
+supplier: internal
+cas: None
+form: powder
+env: glovebox
+amount: 1
+amount_unit: mol ratio
 
-    CuZnAs Precursor
-    reagent
-    Cu13Zn11As20
-    internal
-    None
-    powder
-    glovebox
-    1
-    mol ratio
-
-    Metallic Arsenic
-    reagent
-    As
-    Furukawa
-    7440-38-2
-    lump
-    glovebox
-    8.5
-    mol ratio
-    treatments: [
-        type: grind
-        repeats: 1
-        observations: ground from metallic lump to fine powder before use
-    ]
+name: Metallic Arsenic
+type: reagent
+formula: As
+supplier: Furukawa
+cas: 7440-38-2
+form: lump
+env: glovebox
+amount: 8.5
+amount_unit: mol ratio
+treatments: [
+    type: grind
+    repeats: 1
+    observations: ground from metallic lump to fine powder before use
+]
 
 [[Treatments]]
-:type
-:repeats
+type: composition
+repeats: 1
+changes: [[
+    :formula
+    :amount
+    :amount_unit
 
-    composition
-    1
-    changes: [[
-        :formula
-        :amount
-        :amount_unit
+        Ba
+        172.4
+        mg
 
-            Ba
-            172.4
-            mg
+        Cu13Zn11As20
+        466.7
+        mg
 
-            Cu13Zn11As20
-            466.7
-            mg
+        As
+        99.9
+        mg
+]]
 
-            As
-            99.9
-            mg
-    ]]
+type: anneal
+repeats: 1
+observations: Carbonized and evacuated silica ampoule
+program: [[
+    type: ramp
+    temp: 600
+    time: 10
+    temp_unit: degree_Celsius
+    time_unit: hour
 
-    anneal
-    1
-    observations: Carbonized and evacuated silica ampoule
-    program: [[
-        type: ramp
-        temp: 600
-        time: 10
-        temp_unit: degree_Celsius
-        time_unit: hour
+    type: dwell
+    time: 120
+    time_unit: hour
+]]
+start_temp: 25
+start_temp_unit: degree_Celsius
 
-        type: dwell
-        time: 120
-        time_unit: hour
-    ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
+type: grind
+repeats: 1
+observations: [;;;
+Barium lumps have reacted with powder to form brittle lumps for grinding.
 
-    grind
-    1
-    observations: [;;;
-    Barium lumps have reacted with powder to form brittle lumps for grinding.
+Homogenized lumps with remainder of powder in ampoule by grinding in agate
+mortar and pestle]
 
-    Homogenized lumps with remainder of powder in ampoule by grinding in agate
-    mortar and pestle]
+type: anneal
+repeats: 1
+observations: [;;;
+Carbonized and evacuated silica ampoule.
 
-    anneal
-    1
-    observations: [;;;
-    Carbonized and evacuated silica ampoule.
+Wrapped in ceramic wool for uniform heating]
+program: [[
+    type: ramp
+    temp: 600
+    time: 10
+    temp_unit: degree_Celsius
+    time_unit: hour
 
-    Wrapped in ceramic wool for uniform heating]
-    program: [[
-        type: ramp
-        temp: 600
-        time: 10
-        temp_unit: degree_Celsius
-        time_unit: hour
+    type: dwell
+    time: 120
+    time_unit: hour
+]]
+start_temp: 25
+start_temp_unit: degree_Celsius
 
-        type: dwell
-        time: 120
-        time_unit: hour
-    ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
-
-    grind
-    1
-    observations: [;;;
-    Appeared homogeneous before grinding. Final grinding to ensure homogeneity.]
+type: grind
+repeats: 1
+observations: [;;;
+Appeared homogeneous before grinding. Final grinding to ensure homogeneity.]
 
 [[Environments]]
 name: ambient
 temp: 25
-temp_unit: C
+temp_unit: degree_Celsius
 
 name: glovebox
 atmosphere: argon
@@ -203,16 +180,16 @@ atmosphere: argon
 :file_name
 
     Ba2-Zn5-As6.cif
-    path: attachments/cif
+    path: ../../../../FoSpy/SSMC-CI_2026/final_pres/As28+d/attachments/cif
 
     Zn-As2.cif
-    path: attachments/cif
+    path: ../../../../FoSpy/SSMC-CI_2026/final_pres/As28+d/attachments/cif
 
     Ba-Zn2-As2.cif
-    path: attachments/cif
+    path: ../../../../FoSpy/SSMC-CI_2026/final_pres/As28+d/attachments/cif
 
     TE094_Cu13-Zn11-As20_precursor.fos
-    path: attachments/fos
+    path: ../../../../FoSpy/SSMC-CI_2026/final_pres/As28+d/attachments/fos
 
     Ba8-Cu13-Zn11-As29.8.cif
     embedded: {{{

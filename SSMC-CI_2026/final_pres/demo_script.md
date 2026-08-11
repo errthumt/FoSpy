@@ -15,7 +15,9 @@ Highlight:
   - From tree: dropdown materials
   - From tree: dropdown metallic arsenic to show treatments
   - Go to arsenic (not treatments)
-  - highlight environment reference
-  - 
+  - point out environment reference
   - From tab: go to 2nd material
-    - 
+  - point out attachment and manually jump to attachment in tree.
+  - Show FOS attachment in editor
+- Products
+  - Show products, show failing units and amounts

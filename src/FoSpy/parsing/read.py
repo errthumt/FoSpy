@@ -268,10 +268,12 @@ def create_list_block_dict(lines):
     nested = 0
     m = False
     for ln in lines:
+        nested += ln.count(open_br)
+        nested -= ln.count(close_br)
         if rx.COMMENT_LINE.match(ln):
             continue
         m = rx.LOOP_KEY.match(ln)
-        if m:
+        if m and nested == 0:
             break
 
     if m: # loop_key mode
