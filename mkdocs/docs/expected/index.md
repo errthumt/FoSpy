@@ -325,6 +325,34 @@ Attachment types are dispatched based on which optional properties they have. Fi
 
 
 ---
+### `Environment`
+
+[Class Documentation][blockdocs-Environment]
+
+**[Subclass of `SingleBlock`](#singleblock)**
+
+#### Required properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------------------|--------------------------------------|
+| **Universal** | Rules that apply to all properties of this block. | <ul><li>No Universal Rules</li></ul> |
+| name |  | <ul><li>Any text entry</li></ul> |
+
+
+#### Optional properties
+
+| Property | Description | Validation Rules |
+|---------------|---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+| temp |  | <ul><li>Positive decimal value</li><li>Requires that `temp_unit` also be present</li></ul> |
+| temp_unit |  | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With more flexibility for recognizing temperature units.</li><li>Must be a recognizable unit for temperature.</li></ul> |
+| humidity |  | <ul><li>Positive decimal value</li><li>Requires that `humidity_unit` also be present</li></ul> |
+| humidity_unit |  | <ul><li>Validator is a subclass of [`pint`'s `Unit` class](https://pint.readthedocs.io/en/stable/) With additional rules enforcing the correct dimensionality of the unit.</li><li>Allowed dimensions:<ul><li><dimensionless></li></ul></li></ul> |
+
+
+
+
+---
 ### `Equipment`
 
 [Class Documentation][blockdocs-Equipment]
@@ -818,8 +846,9 @@ Note that renaming a property will keep all relevant validation rules attached t
 #### Optional properties
 
 | Property | Description | Validation Rules |
-|-----------------------|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+|-----------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | rename | See [`Rename` documentation](#rename) | <ul><li>[A `Rename` object.](#rename)</li></ul> |
+| environments |  | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Environment` objects.](#environment)</li></ul> |
 | attachments | A list of files either attached by relative path or with embedded text. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Attachment` objects.](#attachment)</li></ul> |
 | laboratory_conditions | General conditions of the laboratory during the synthesis. | <ul><li>[A `LabConditions` object.](#labconditions)</li></ul> |
 | equipment | Specialized equipment or apparatuses used during the synthesis. | <ul><li>A [simple `ListBlock`](#listblock-and-simple-lists) of [`Equipment` objects.](#equipment)</li></ul> |

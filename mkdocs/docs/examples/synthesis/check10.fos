@@ -135,6 +135,8 @@ group Cmcm]
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         // ! Rate for ramp: 262.5 delta_degree_Celsius / hour
@@ -150,12 +152,12 @@ group Cmcm]
         type: quench
         medium: water
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         // ! Rate for ramp: 62.5 delta_degree_Celsius / hour
@@ -168,8 +170,6 @@ group Cmcm]
         time: 72
         time_unit: hour
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif

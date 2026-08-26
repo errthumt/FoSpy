@@ -201,14 +201,12 @@ template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
 program: [[
-    template_name: AnnealSectionFlexTemplate
     type: ramp
     temp: 600
     time: 10
     temp_unit: degree_Celsius
     time_unit: hour
 
-    template_name: AnnealSectionFlexTemplate
     type: dwell
     time: 120
     time_unit: hour
@@ -292,14 +290,12 @@ template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
 program: [[
-    template_name: AnnealSectionFlexTemplate
     type: ramp
     temp: 600
     time: 10
     temp_unit: degree_Celsius
     time_unit: hour
 
-    template_name: AnnealSectionFlexTemplate
     type: dwell
     time: 120
     time_unit: hour
@@ -505,14 +501,12 @@ template_name: Empty Anneal Template
 type: anneal
 -repeats: <!TEMPLATE-FIELD>
 program: [[
-    template_name: AnnealSectionFlexTemplate
     type: ramp
     temp: 600
     time: 10
     temp_unit: degree_Celsius
     time_unit: hour
 
-    template_name: AnnealSectionFlexTemplate
     type: dwell
     time: 120
     time_unit: hour

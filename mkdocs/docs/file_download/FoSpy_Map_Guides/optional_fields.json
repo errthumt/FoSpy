@@ -152,6 +152,24 @@
             "end_time": "treatments[1].end_time"
         }
     ],
+    "environments": [
+        {
+            "rename": {},
+            "name": "environments[0].name",
+            "temp": "environments[0].temp",
+            "temp_unit": "environments[0].temp_unit",
+            "humidity": "environments[0].humidity",
+            "humidity_unit": "environments[0].humidity_unit"
+        },
+        {
+            "rename": {},
+            "name": "environments[1].name",
+            "temp": "environments[1].temp",
+            "temp_unit": "environments[1].temp_unit",
+            "humidity": "environments[1].humidity",
+            "humidity_unit": "environments[1].humidity_unit"
+        }
+    ],
     "attachments": [
         {
             "rename": {},

@@ -9,6 +9,15 @@ documentation](../full/index.md).
 ## Block Types in this Module
 
 ---
+[](){ #blockdocs-Environment }
+### `Environment`
+::: FoSpy.blocks.metadata.Environment
+    options:
+        show_if_no_docstring: true
+        inherited_members: true
+        summary:
+           functions: true
+---
 [](){ #blockdocs-Equipment }
 ### `Equipment`
 ::: FoSpy.blocks.metadata.Equipment

@@ -1716,10 +1716,10 @@ formula: As
 supplier: Furukama
 cas: 7440-38-2
 form: lump
+purity: 0.9995
 env: Ar (g)
 amount: 28.5
 amount_unit: mol ratio
-purity: 0.9995
 treatments: [
     type: Grinding
     repeats: 1
@@ -1973,10 +1973,10 @@ formula: As
 supplier: Furukama
 cas: 7440-38-2
 form: lump
+purity: 0.9995
 env: Ar (g)
 amount: 28.5
 amount_unit: mol ratio
-purity: 0.9995
 treatments: [
     type: Grinding
     repeats: 1
@@ -2002,6 +2002,8 @@ treatments: [
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         temp: 550
@@ -2016,12 +2018,12 @@ treatments: [
         type: quench
         medium: water
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         temp: 650
@@ -2033,8 +2035,6 @@ treatments: [
         time: 72
         time_unit: hour
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
 [Rename]
 materials: reagents
@@ -2243,10 +2243,10 @@ formula: As
 supplier: Furukama
 cas: 7440-38-2
 form: lump
+purity: 0.9995
 env: Ar (g)
 amount: 28.5
 amount_unit: mol ratio
-purity: 0.9995
 treatments: [
     type: Grinding
     repeats: 1
@@ -2272,6 +2272,8 @@ treatments: [
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         temp: 550
@@ -2286,12 +2288,12 @@ treatments: [
         type: quench
         medium: water
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         temp: 650
@@ -2303,8 +2305,6 @@ treatments: [
         time: 72
         time_unit: hour
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
 [Rename]
 materials: reagents
@@ -2457,6 +2457,8 @@ group Cmcm]
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         // ! Rate for ramp: 262.5 delta_degree_Celsius / hour
@@ -2472,12 +2474,12 @@ group Cmcm]
         type: quench
         medium: water
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
     anneal
     1
     None
+    start_temp: 25
+    start_temp_unit: degree_Celsius
     program: [[
         type: ramp
         // ! Rate for ramp: 62.5 delta_degree_Celsius / hour
@@ -2490,8 +2492,6 @@ group Cmcm]
         time: 72
         time_unit: hour
     ]]
-    start_temp: 25
-    start_temp_unit: degree_Celsius
 
 [Cifs]
 file_name: PY618_Ba8-Cu12-Zn12-As29,8.cif

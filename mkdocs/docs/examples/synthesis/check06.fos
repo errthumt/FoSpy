@@ -86,10 +86,10 @@ formula: As
 supplier: Furukama
 cas: 7440-38-2
 form: lump
+purity: 0.9995
 env: Ar (g)
 amount: 28.5
 amount_unit: mol ratio
-purity: 0.9995
 treatments: [
     type: Grinding
     repeats: 1
