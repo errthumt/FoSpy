@@ -573,25 +573,6 @@
   },
   {
     "cell": null,
-    "code": "DTZ005",
-    "end_location": {
-      "column": 31,
-      "row": 18
-    },
-    "filename": "/home/runner/work/FoSpy/FoSpy/src/FoSpy/_dev/testing/load_test.py",
-    "fix": null,
-    "location": {
-      "column": 17,
-      "row": 18
-    },
-    "message": "`datetime.datetime.now()` called without a `tz` argument",
-    "name": "call-datetime-now-without-tzinfo",
-    "noqa_row": 18,
-    "severity": "error",
-    "url": "https://docs.astral.sh/ruff/rules/call-datetime-now-without-tzinfo"
-  },
-  {
-    "cell": null,
     "code": "BLE001",
     "end_location": {
       "column": 21,
